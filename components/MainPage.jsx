@@ -12,6 +12,8 @@ import CommunityMainPage from "../Screens/main/Community/CommunityMainPage";
 import { TouchableOpacity } from "react-native";
 import NotificationsScreen from "../Screens/main/NotificationsScreen";
 import RootLogScreens from "../Screens/main/LogScreens/RootLogScreens";
+import { Text } from "@gluestack-ui/themed";
+import LogOutButtonInDrawer from "./LogOutButtonInDrawer";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -100,6 +102,7 @@ const MainTabs = () => {
 export default function MainPage({ navigation }) {
 	return (
 		<Drawer.Navigator
+			drawerContent={(props) => <LogOutButtonInDrawer {...props} />}
 			screenOptions={{
 				tabBarShowLabel: false,
 				tabBarStyle: {

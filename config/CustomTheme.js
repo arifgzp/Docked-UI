@@ -733,8 +733,8 @@ const customButton = createStyle({
 				},
 
 				":active": {
-					bg: "#40E0D0",
-					borderColor: "#40E0D0",
+					bg: "",
+					borderColor: "",
 				},
 
 				_text: {
@@ -1020,6 +1020,108 @@ const customButton = createStyle({
 				":active": {
 					bg: "#357A71",
 					borderColor: "#357A71",
+				},
+
+				_text: {
+					color: "#1E1E1E",
+					textAlign: "left",
+					fontFamily: "Inter",
+					":hover": {
+						color: "#1E1E1E",
+					},
+					":active": {
+						color: "#1E1E1E",
+					},
+				},
+
+				_icon: {
+					color: "$primary600",
+					":hover": {
+						color: "$primary600",
+					},
+					":active": {
+						color: "$primary700",
+					},
+				},
+
+				_spinner: {
+					props: {
+						color: "$primary600",
+					},
+					":hover": {
+						props: {
+							color: "$primary600",
+						},
+					},
+					":active": {
+						props: {
+							color: "$primary700",
+						},
+					},
+				},
+
+				_dark: {
+					bg: "$primary400",
+					borderColor: "$primary700",
+					":hover": {
+						bg: "$primary500",
+						borderColor: "$primary400",
+					},
+					":active": {
+						bg: "$primary600",
+						borderColor: "$primary300",
+					},
+					_text: {
+						color: "$primary300",
+						":hover": {
+							color: "$primary300",
+						},
+						":active": {
+							color: "$primary200",
+						},
+					},
+					_icon: {
+						color: "$primary300",
+						":hover": {
+							color: "$primary300",
+						},
+						":active": {
+							color: "$primary200",
+						},
+					},
+					_spinner: {
+						props: { color: "$primary300" },
+						":hover": {
+							props: { color: "$primary300" },
+						},
+						":active": {
+							props: { color: "$primary200" },
+						},
+					},
+
+					":focusVisible": {
+						_web: {
+							boxShadow: "offset 0 0 0 2px $info400",
+						},
+					},
+				},
+			},
+			logEntry: {
+				bg: "",
+				borderColor: "",
+				borderRadius: 10,
+				width: "$95%",
+				borderBottomWidth: 1,
+				size: "lg",
+
+				":hover": {
+					bg: "#A3A3A3",
+					borderColor: "",
+				},
+
+				":active": {
+					bg: "",
+					borderColor: "",
 				},
 
 				_text: {

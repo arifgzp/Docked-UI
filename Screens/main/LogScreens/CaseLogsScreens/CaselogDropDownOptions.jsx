@@ -2,6 +2,7 @@ import { CheckIcon, CheckboxGroup, CheckboxIndicator, KeyboardAvoidingView } fro
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
+import DatePicker from "react-native-date-picker";
 import {
 	Box,
 	Center,
@@ -43,8 +44,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Controller } from "react-hook-form";
+import { useState } from "react";
 
 const CaselogDropDownOptions = ({ navigation, control, formState }) => {
+	const [date, setDate] = useState(new Date());
+	const [open, setOpen] = useState(false);
 	return (
 		<VStack space='lg'>
 			<HStack space='sm' justifyContent='center'>
@@ -125,20 +129,34 @@ const CaselogDropDownOptions = ({ navigation, control, formState }) => {
 						render={({ field: { onChange, onBlur, value } }) => {
 							console.log("Your Expertise: ", value);
 							return (
-								<Select width={"$90%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder='Faculty' />
-										<SelectIcon mr='$3'>
-											<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-										</SelectIcon>
-									</SelectTrigger>
-									<SelectPortal>
-										<SelectBackdrop />
-										<SelectContent>
-											<SelectItem label='MBBS' value='MBBS' />
-										</SelectContent>
-									</SelectPortal>
-								</Select>
+								<Input
+									onBlur={onBlur}
+									onChangeText={onChange}
+									value={value}
+									width={"$90%"}
+									variant='underlined'
+									size='md'
+									isDisabled={false}
+									isInvalid={false}
+									isReadOnly={false}>
+									<InputField placeholder='Date   --/--/--' />
+								</Input>
+								// <Button onPress={() => setOpen(true)}>
+								// 	<ButtonText>Date</ButtonText>
+								// 	<DatePicker
+								// 		modal
+								// 		onBlur={onBlur}
+								// 		onValueChange={onChange}
+								// 		selectedValue={value}
+								// 		open={open}
+								// 		date={date}
+								// 		maximumDate={new Date()}
+								// 		onDateChange={(date) => setDate(date)}
+								// 		onCancel={() => {
+								// 			setOpen(false);
+								// 		}}
+								// 	/>
+								// </Button>
 							);
 						}}
 						name='faculty'

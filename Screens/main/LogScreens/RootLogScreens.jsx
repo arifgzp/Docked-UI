@@ -1,6 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CaseLogFormScreen from "./CaseLogFormScreen";
+import CaseLogFormScreen from "./CaseLogsScreens/CaseLogFormScreen";
 import MainLogScreen from "./MainLogScreen";
+import ViewLogsPage from "./ViewLogs";
+import ThesisLogsPage from "./ThesisLogs/ThesisLog";
+import AcademicLogPage from "./Academic Log/AcademicLog";
+import SpecialCaseDetails from "./SpecialCaseLog/SpecialCaseDetails";
+import LogProfilePage from "./LogProfile";
 
 export default function RootLogScreens() {
 	const Stack = createNativeStackNavigator();
@@ -15,7 +20,7 @@ export default function RootLogScreens() {
 				name='Logbook'
 				component={MainLogScreen}
 				options={{
-					title: "CaseLog",
+					title: "Logbook",
 					headerShown: false,
 				}}
 			/>
@@ -23,7 +28,57 @@ export default function RootLogScreens() {
 				name='CaseLogFormScreen'
 				component={CaseLogFormScreen}
 				options={{
-					title: "CaseLog",
+					title: "Case Log",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#E8EEF3" },
+					headerTitleAlign: "center",
+				}}
+			/>
+			<Stack.Screen
+				name='ViewLogs'
+				component={ViewLogsPage}
+				options={{
+					title: "View Logs",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#E8EEF3" },
+					headerTitleAlign: "center",
+				}}
+			/>
+			<Stack.Screen
+				name='AcademicLog'
+				component={AcademicLogPage}
+				options={{
+					title: "Academic Logs",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#E8EEF3" },
+					headerTitleAlign: "center",
+				}}
+			/>
+			<Stack.Screen
+				name='ThesisLogs'
+				component={ThesisLogsPage}
+				options={{
+					title: "Thesis Logs",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#E8EEF3" },
+					headerTitleAlign: "center",
+				}}
+			/>
+			<Stack.Screen
+				name='SpecialCaseLogs'
+				component={SpecialCaseDetails}
+				options={{
+					title: "Special Case Logs",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#E8EEF3" },
+					headerTitleAlign: "center",
+				}}
+			/>
+			<Stack.Screen
+				name='LogProfilePage'
+				component={LogProfilePage}
+				options={{
+					title: "Log Profile",
 					headerShown: true,
 					headerStyle: { backgroundColor: "#E8EEF3" },
 					headerTitleAlign: "center",

@@ -28,21 +28,21 @@ const CaseLogFormScreen = ({ navigation }) => {
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<ScrollView>
-					<Box paddingTop={10} justifyContent='center' alignItems='center' flex={1 / 4}>
+					<Box paddingTop={10} justifyContent='center' alignItems='center'>
 						<Box width={"$100%"}>
 							<CaselogDropDownOptions control={control} formState={formState} />
 							<Divider />
 						</Box>
 					</Box>
-					<Box justifyContent='center' alignItems='center' flex={2 / 4}>
+					<Box justifyContent='center' alignItems='center'>
 						<Box width={"$100%"}>
 							<SpecialCaseLogSelectOptions control={control} formState={formState} />
 						</Box>
 					</Box>
-					<Box paddingBottom={"$30%"} paddingTop={10} flex={1 / 4} width={"$100%"}>
+					<Box paddingBottom={"$30%"} paddingTop={10} width={"$100%"}>
 						<VStack space='lg'>
 							<Box paddingLeft={15} width={"$100%"}>
-								<Button size='sm' variant='secondary' borderRadius={50}>
+								<Button size='sm' variant='secondary' borderRadius={10}>
 									<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
 										Add to spl. log
 									</ButtonText>
@@ -50,14 +50,14 @@ const CaseLogFormScreen = ({ navigation }) => {
 							</Box>
 							<HStack>
 								<Box width={"$50%"} alignItems='center'>
-									<Button width={"$85%"} height={50} size='lg' variant='secondary' borderRadius={50}>
+									<Button width={"$85%"} height={50} size='lg' variant='secondary' borderRadius={10}>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
 											Save
 										</ButtonText>
 									</Button>
 								</Box>
 								<Box width={"$50%"} alignItems='center'>
-									<Button width={"$85%"} height={50} size='lg' variant='secondary' borderRadius={50}>
+									<Button width={"$85%"} height={50} size='lg' variant='secondary' borderRadius={10}>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
 											View Logs
 										</ButtonText>
@@ -65,7 +65,7 @@ const CaseLogFormScreen = ({ navigation }) => {
 								</Box>
 							</HStack>
 							<Box alignItems='center' width={"$100%"}>
-								<Button width={"$90%"} borderRadius={50} height={50} size='lg' variant='primary'>
+								<Button width={"$90%"} borderRadius={10} height={50} size='lg' variant='primary'>
 									<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
 										Submit for approval
 									</ButtonText>

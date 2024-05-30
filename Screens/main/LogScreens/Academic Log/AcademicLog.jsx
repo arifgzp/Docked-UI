@@ -29,8 +29,8 @@ import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "@gluestack-ui/themed";
 
-const MainLogScreen = ({ navigation }) => {
-	const logButtons = ["Case Log", "Academic Log", "Thesis Log", "Spl. cases Log", "Custom Log 1", "Custom log 2"];
+const AcademicLogPage = ({ navigation }) => {
+	const academicLogButtons = ["Academic works", "Admin Work", "Publications"];
 
 	const handleButtonPress = (button) => {
 		switch (button) {
@@ -47,7 +47,6 @@ const MainLogScreen = ({ navigation }) => {
 				console.log("Navigating to Case Log3");
 				break;
 			case "Spl. cases Log":
-				navigation.navigate("RootLogBook", { screen: "SpecialCaseLogs" });
 				console.log("Navigating to Case Log4");
 				break;
 			case "Custom Log 1":
@@ -64,22 +63,11 @@ const MainLogScreen = ({ navigation }) => {
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box paddingRight={10} flex={0.7 / 4} justifyContent='center'>
-					<VStack space='lg' alignItems='flex-end'>
-						<Button onPress={() => navigation.navigate("RootLogBook", { screen: "LogProfilePage" })} variant='tertiary' size='xs'>
-							<ButtonText>Log Profile</ButtonText>
-						</Button>
-						<Button onPress={() => navigation.navigate("RootLogBook", { screen: "ViewLogs" })} variant='tertiary' size='xs'>
-							<ButtonText>View Logs</ButtonText>
-						</Button>
-					</VStack>
-				</Box>
-
-				<Box width={"$100%"} flex={3.3 / 4} justifyContent='flex-start'>
+				<Box width={"$100%"} flex={1} paddingTop={30}>
 					<ScrollView>
 						<VStack space='2xl' alignItems='center'>
-							{logButtons.map((button, index) => (
-								<Button onPress={() => handleButtonPress(button)} key={index} size='lg' variant='logs'>
+							{academicLogButtons.map((button, index) => (
+								<Button key={index} size='lg' variant='logs'>
 									<ButtonText>{button}</ButtonText>
 								</Button>
 							))}
@@ -91,4 +79,4 @@ const MainLogScreen = ({ navigation }) => {
 	);
 };
 
-export default MainLogScreen;
+export default AcademicLogPage;
