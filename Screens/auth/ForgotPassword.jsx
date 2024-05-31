@@ -41,7 +41,7 @@ const ForgotPasswordPage = ({ navigation }) => {
 		// Check if email and password match predefined credentials
 		if (formData.email === "docked@gmail.com") {
 			// If credentials match, navigate to Main Page
-			navigation.navigate("Main Page");
+			navigation.navigate("ResetPasswordEmailSentPage", { enteredMail: formData.email });
 		} else {
 			// If credentials don't match, display error message
 			setEmailError("Please enter valid email");

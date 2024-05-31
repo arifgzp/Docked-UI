@@ -1,4 +1,4 @@
-import { CheckIcon, CheckboxGroup, CheckboxIndicator, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import { CheckIcon, CheckboxGroup, CheckboxIndicator, Divider, KeyboardAvoidingView } from "@gluestack-ui/themed";
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
@@ -88,6 +88,10 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 										<SelectPortal>
 											<SelectBackdrop />
 											<SelectContent>
+												<Text padding={10} size='xl'>
+													Hospital
+												</Text>
+												<Divider borderWidth={0.1} />
 												<SelectItem label='Apollo Hospitals' value='APOLLOHOSPITALS' />
 												<SelectItem label='Fortis Healthcare' value='FORTISHEALTHCARE' />
 												<SelectItem label='Narayana Health' value='NARAYANAHEALTH' />
@@ -124,6 +128,10 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 										<SelectPortal>
 											<SelectBackdrop />
 											<SelectContent>
+												<Text padding={10} size='xl'>
+													Faculty
+												</Text>
+												<Divider borderWidth={0.1} />
 												<SelectItem label='Dr. Ravi Gupta - Nephrology' value='DR_RAVI_GUPTA_NEPHROLOGY' />
 												<SelectItem label='Dr. Mudit Dixit - Cardiology' value='DR_MUDIT_DIXIT_CARDIOLOGY' />
 												<SelectItem label='Dr. Priya Singh - Dermatology' value='DR_PRIYA_SINGH_DERMATOLOGY' />
@@ -176,26 +184,25 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 					<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 				</Box>
 			</Box>
-			<Box p={12} pt={20}>
-				<Actionsheet isOpen={showActionSheet} onClose={handleCloseDateModal} zIndex={999}>
-					<ActionsheetBackdrop />
-					<ActionsheetContent zIndex={999}>
-						<ActionsheetDragIndicatorWrapper>
-							<ActionsheetDragIndicator />
-						</ActionsheetDragIndicatorWrapper>
 
-						<DatePicker
-							theme='light'
-							date={date}
-							onDateChange={(date) => {
-								//setDate(date);
-								handelSetDate(date);
-							}}
-							mode='date'
-						/>
-					</ActionsheetContent>
-				</Actionsheet>
-			</Box>
+			<Actionsheet isOpen={showActionSheet} onClose={handleCloseDateModal} zIndex={999}>
+				<ActionsheetBackdrop />
+				<ActionsheetContent zIndex={999}>
+					<ActionsheetDragIndicatorWrapper>
+						<ActionsheetDragIndicator />
+					</ActionsheetDragIndicatorWrapper>
+
+					<DatePicker
+						theme='light'
+						date={date}
+						onDateChange={(date) => {
+							//setDate(date);
+							handelSetDate(date);
+						}}
+						mode='date'
+					/>
+				</ActionsheetContent>
+			</Actionsheet>
 		</VStack>
 	);
 };

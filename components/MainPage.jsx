@@ -14,6 +14,7 @@ import NotificationsScreen from "../Screens/main/NotificationsScreen";
 import RootLogScreens from "../Screens/main/LogScreens/RootLogScreens";
 import { Text } from "@gluestack-ui/themed";
 import LogOutButtonInDrawer from "./LogOutButtonInDrawer";
+import DrawerContent from "./DrawerContent";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -102,7 +103,7 @@ const MainTabs = () => {
 export default function MainPage({ navigation }) {
 	return (
 		<Drawer.Navigator
-			drawerContent={(props) => <LogOutButtonInDrawer {...props} />}
+			drawerContent={(props) => <DrawerContent {...props} />}
 			screenOptions={{
 				tabBarShowLabel: false,
 				tabBarStyle: {
@@ -137,8 +138,6 @@ export default function MainPage({ navigation }) {
 				headerRight: () => <NotificationButton onPress={() => navigation.navigate("NotificationsScreen")} />,
 			}}>
 			<Drawer.Screen name='Home' component={MainTabs} />
-			<Drawer.Screen name='Settings' component={SettingsScreenPage} />
-			{/* Add additional screens for drawer navigation here if needed */}
 		</Drawer.Navigator>
 	);
 }

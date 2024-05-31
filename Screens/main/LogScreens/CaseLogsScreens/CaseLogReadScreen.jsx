@@ -40,38 +40,6 @@ const parserForConvertingIntoTreeFormData = (input, key) => {
 	return result;
 };
 
-const transformInput2 = (input) => {
-	const result = {};
-
-	Object.keys(input).forEach((key) => {
-		const parts = key.split("/");
-		const value = input[key];
-
-		let current = result;
-		for (let i = 0; i < parts.length; i++) {
-			const part = parts[i];
-			if (i === parts.length - 1) {
-				// If it's the last part, set the value
-				if (Array.isArray(value)) {
-					if (!current[part]) {
-						current[part] = value;
-					}
-				} else {
-					current[part] = value;
-				}
-			} else {
-				// If it's not the last part, move deeper in the object
-				if (!current[part]) {
-					current[part] = {};
-				}
-				current = current[part];
-			}
-		}
-	});
-
-	return result;
-};
-
 const transformInput = (input) => {
 	const result = {};
 

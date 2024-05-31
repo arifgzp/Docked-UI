@@ -89,26 +89,28 @@ const SetupProfile = ({ config, navigation }) => {
 			</Box>
 			<Box width={"$100%"} justifyContent='center' flex={2.3 / 4}>
 				{CurrentStepComponent && (
-					<React.Suspense
-						fallback={
-							<Box justifyContent='center' alignItems='center'>
-								<Text>Loading...</Text>
-							</Box>
-						}>
-						<ScrollView>
-							<CurrentStepComponent control={control} formState={formState} formFields={formFields} />
-						</ScrollView>
-					</React.Suspense>
+					<ScrollView>
+						<CurrentStepComponent control={control} formState={formState} formFields={formFields} />
+					</ScrollView>
 				)}
 			</Box>
 			<Box flex={0.7 / 4} justifyContent='center'>
-				<Box justifycontent='center' alignItems='center'>
-					<Button onPress={handleSubmit(handleOnClick)} size='lg' variant='primary'>
-						<ButtonText fontFamily='Inter_Bold' textAlign='center'>
-							{currentStep === config.length ? "Finish" : "Next"}
-						</ButtonText>
-					</Button>
-				</Box>
+				<VStack space='lg'>
+					<Box justifycontent='center' alignItems='center'>
+						<Button onPress={handleSubmit(handleOnClick)} size='lg' variant='primary'>
+							<ButtonText fontFamily='Inter_Bold' textAlign='center'>
+								{currentStep === config.length ? "Finish" : "Next"}
+							</ButtonText>
+						</Button>
+					</Box>
+					<Box justifycontent='center' alignItems='center'>
+						<Button width={"$40%"} onPress={() => navigation.navigate("Main Page")} size='lg' variant='secondary'>
+							<ButtonText fontFamily='Inter_Bold' textAlign='center'>
+								Skip
+							</ButtonText>
+						</Button>
+					</Box>
+				</VStack>
 			</Box>
 		</Box>
 	);

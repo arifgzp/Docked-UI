@@ -32,7 +32,7 @@ import { Platform } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 
-const RegisterPage = ({ navigation }) => {
+const ResetPasswordScreen = ({ navigation }) => {
 	const [formData, setFormData] = useState({ name: "", email: "", password: "", reEnterPassword: "" });
 	const [passwordVisible, setPasswordVisible] = useState(false);
 	const [joinPressed, setJoinPressed] = useState(false);
@@ -41,46 +41,29 @@ const RegisterPage = ({ navigation }) => {
 	const [nameError, setNameError] = useState("");
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	const handleJoining = () => {
+	const handleResetingPassword = () => {
 		setJoinPressed(true);
 
-		if (formData.password !== formData.reEnterPassword) {
-			setPasswordError("Entered password do not match");
-		}
-
-		if (!formData.name) {
-			setNameError("Name is required");
-		} else {
-			setNameError("");
-		}
-
-		if (!formData.email) {
-			setEmailError("Email is required");
-			return;
-		}
-
-		if (!emailRegex.test(formData.email)) {
-			setEmailError("Invalid email address");
-			return;
-		} else {
-			setEmailError("");
-		}
-
+		// Check if password and re-entered password fields are empty first
 		if (!formData.password) {
 			setPasswordError("Password is required");
 			return;
-		} else {
-			setPasswordError("");
 		}
 
 		if (!formData.reEnterPassword) {
 			setPasswordError("Password is required");
 			return;
-		} else {
-			setPasswordError("");
 		}
 
-		navigation.navigate("Email Sent Page", { enteredMail: formData.email });
+		// Check if the passwords match
+		if (formData.password !== formData.reEnterPassword) {
+			setPasswordError("Entered passwords do not match");
+			return;
+		}
+
+		// Clear any password error and navigate
+		setPasswordError("");
+		navigation.navigate("PasswordResetSuccessfully", { enteredMail: formData.email });
 	};
 
 	const handleChangeName = (text) => {
@@ -108,41 +91,13 @@ const RegisterPage = ({ navigation }) => {
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<Box flex={1} backgroundColor='$primaryBackground'>
-					<Box flex={3 / 4}>
+					<Box paddingLeft={20} justifyContent='center' flex={1 / 4}>
+						<Text size='xl' fontFamily='Inter_Bold'>
+							Reset Password
+						</Text>
+					</Box>
+					<Box flex={3 / 4} justifyContent='center'>
 						<VStack space='3xl'>
-							<Text bold size='xl' paddingTop={20} paddingLeft={20}>
-								Member Onboarding
-							</Text>
-							<Box>
-								<FormControl size='md' isDisabled={false} isInvalid={joinPressed && nameError} isReadOnly={false} isRequired={false}>
-									<Box justifycontent='center' alignItems='center'>
-										<Input width={"$80%"} variant='underlined'>
-											<InputField onChangeText={handleChangeName} value={formData.name} placeholder='Name' />
-										</Input>
-										{joinPressed && nameError && (
-											<FormControlError width={"$80%"}>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{nameError}</FormControlErrorText>
-											</FormControlError>
-										)}
-									</Box>
-								</FormControl>
-							</Box>
-							<Box>
-								<FormControl isInvalid={joinPressed && emailError} size='md' isDisabled={false} isReadOnly={false} isRequired={false}>
-									<Box justifycontent='center' alignItems='center'>
-										<Input width={"$80%"} variant='underlined'>
-											<InputField onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' />
-										</Input>
-										{joinPressed && emailError && (
-											<FormControlError width={"$80%"}>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{emailError}</FormControlErrorText>
-											</FormControlError>
-										)}
-									</Box>
-								</FormControl>
-							</Box>
 							<Box>
 								<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
 									<Box justifycontent='center' alignItems='center'>
@@ -190,25 +145,9 @@ const RegisterPage = ({ navigation }) => {
 								</FormControl>
 							</Box>
 							<Box justifycontent='center' alignItems='center'>
-								<Button onPress={handleJoining} variant='primary' size='lg'>
-									<ButtonText>Join As Member</ButtonText>
+								<Button onPress={handleResetingPassword} variant='primary' size='lg'>
+									<ButtonText>Reset Password</ButtonText>
 								</Button>
-							</Box>
-							<Box>
-								<VStack space='lg' justifycontent='center' alignItems='center'>
-									<Text width={"$80%"} size='xs' textAlign='center'>
-										By joining as a member, you agree to Docked's{" "}
-										<Button variant='link' size='sm' onPress={() => navigation.navigate("Privacy Policy Page")}>
-											<ButtonText underline>Terms & Conditions of Use.</ButtonText>
-										</Button>
-									</Text>
-									<Text width={"$80%"} size='xs' textAlign='center'>
-										To learn more about how Docked collects, uses, share and protects your personal data, please see{" "}
-										<Button variant='link' size='sm' onPress={() => navigation.navigate("Privacy Policy Page")}>
-											<ButtonText underline>Docked's Privacy Policy.</ButtonText>
-										</Button>
-									</Text>
-								</VStack>
 							</Box>
 						</VStack>
 					</Box>
@@ -230,4 +169,4 @@ const RegisterPage = ({ navigation }) => {
 	);
 };
 
-export default RegisterPage;
+export default ResetPasswordScreen;

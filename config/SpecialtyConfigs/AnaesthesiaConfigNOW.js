@@ -1,6 +1,6 @@
-const typeOfAnaesthesia = [
+const TypeOfAnesthesia = [
 	{
-		id: "typeOfAnaesthesia",
+		id: "TypeOfAnesthesia",
 		name: "Type of Anesthesia",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -126,9 +126,9 @@ const typeOfAnaesthesia = [
 	},
 ];
 
-const airManagement = [
+const AirwayManagement = [
 	{
-		id: "airManagement",
+		id: "AirwayManagement",
 		name: "Airway Management",
 		selectType: "none",
 		nodeType: "parent",
@@ -467,9 +467,9 @@ const airManagement = [
 	},
 ];
 
-const regionalTechniques = [
+const RegionalTechniques = [
 	{
-		id: "regionalTechniques",
+		id: "RegionalTechniques",
 		name: "Regional Techniques",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -864,18 +864,13 @@ const regionalTechniques = [
 					},
 				],
 			},
-			{
-				id: "SingleNerveBlock",
-				name: "Single Nerve Block",
-				nodeType: "leaf",
-			},
 		],
 	},
 ];
 
-const interventionalProcedures = [
+const InterventionalProcedures = [
 	{
-		id: "interventionalProcedures",
+		id: "InterventionalProcedures",
 		name: "Interventional Procedures",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -1015,9 +1010,9 @@ const interventionalProcedures = [
 	},
 ];
 
-const monitoring = [
+const Monitoring = [
 	{
-		id: "monitoring",
+		id: "Monitoring",
 		name: "Monitoring",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -1401,4 +1396,4 @@ const monitoring = [
 	},
 ];
 
-export default { typeOfAnaesthesia, airManagement, regionalTechniques, interventionalProcedures, monitoring };
+export default { TypeOfAnesthesia, AirwayManagement, RegionalTechniques, InterventionalProcedures, Monitoring };

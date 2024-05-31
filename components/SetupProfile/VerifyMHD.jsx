@@ -16,6 +16,7 @@ import {
 	SelectItem,
 	Button,
 	ButtonText,
+	Divider,
 } from "@gluestack-ui/themed";
 import { ChevronDown } from "lucide-react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -48,6 +49,10 @@ const VerifyMHD = ({ control, formState, formFields }) => {
 													<SelectPortal>
 														<SelectBackdrop />
 														<SelectContent>
+															<Text padding={10} size='xl'>
+																{field.name}
+															</Text>
+															<Divider borderWidth={0.1} />
 															{field.options.map((option, index) => {
 																return <SelectItem key={index} label={option.label} value={option.value} />;
 															})}

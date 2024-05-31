@@ -133,7 +133,7 @@ const LoginPage = ({ navigation }) => {
 								</FormControl>
 							</Box>
 							<Box>
-								<VStack space='sm'>
+								<VStack space='lg'>
 									<Box justifycontent='center' alignItems='center'>
 										<Button onPress={handleLogin} borderRadius={10} variant='primary' size='lg'>
 											<HStack justifyContent='center' alignItems='center' space='sm'>
@@ -142,7 +142,7 @@ const LoginPage = ({ navigation }) => {
 											</HStack>
 										</Button>
 									</Box>
-									<Box>
+									<Box justifycontent='center' alignItems='center'>
 										<Button variant='link' size='sm' onPress={() => navigation.navigate("Forgot Password Page")}>
 											<ButtonText underline>Reset Password</ButtonText>
 										</Button>
@@ -157,7 +157,7 @@ const LoginPage = ({ navigation }) => {
 								Create Member Account
 							</Text>
 							<Box justifycontent='center' alignItems='center'>
-								<Button onPress={() => navigation.navigate("Profile Setup Page")} size='lg' variant='secondary'>
+								<Button onPress={() => navigation.navigate("Register Mobile Number Page")} size='lg' variant='secondary'>
 									<ButtonText fontFamily='Inter_Bold' textAlign='center'>
 										Join
 									</ButtonText>

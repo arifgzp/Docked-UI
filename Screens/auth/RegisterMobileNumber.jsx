@@ -66,7 +66,7 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 						</Text>
 						<FormControl size='md' isDisabled={false} isInvalid={sendOTPPressed && errorMessage} isReadOnly={false} isRequired={false} gap={"$4"}>
 							<Box justifycontent='center' alignItems='center'>
-								<Input width={"$80%"} variant='underlined'>
+								<Input keyboardType='numeric' width={"$80%"} variant='underlined'>
 									<InputField onChangeText={handleChangeNumberInput} fontFamily='Inter' placeholder='Enter Your Phone Number' />
 								</Input>
 								{sendOTPPressed && errorMessage && (

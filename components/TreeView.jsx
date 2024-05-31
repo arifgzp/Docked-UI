@@ -34,6 +34,7 @@ import { ModalBody } from "@gluestack-ui/themed";
 import { Button } from "@gluestack-ui/themed";
 import { ButtonText } from "@gluestack-ui/themed";
 import { ButtonGroup } from "@gluestack-ui/themed";
+import { Ionicons } from "@expo/vector-icons";
 
 function noop() {}
 
@@ -168,37 +169,44 @@ class TreeView extends React.Component {
 
 	getNodeIndicator = (isExpanded, node) => {
 		if (isExpanded) {
-			return "-";
+			return <Ionicons name='remove-circle-outline' size={20} color='#000' />;
 		} else {
-			return "+";
+			return <Ionicons name='add-circle-outline' size={20} color='#000' />;
 		}
 	};
 
 	renderNode = (props) => {
 		const { node, level, isExpanded } = props;
 		return (
-			<Box>
-				<Text
-					style={{
-						marginLeft: 25 * level,
-						textAlign: "left",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
-					{this.getNodeIndicator(isExpanded, node)} {node.name}
-				</Text>
-			</Box>
+			<HStack
+				gap='$2'
+				style={
+					level != 0
+						? {
+								marginLeft: 25 * level,
+								paddingBottom: isExpanded ? 4 : 0,
+						  }
+						: { paddingBottom: isExpanded ? 4 : 0 }
+				}>
+				{this.getNodeIndicator(isExpanded, node)}
+				<Text>{node.name}</Text>
+			</HStack>
 		);
 	};
 
 	renderLeafNode = (props) => {
-		const { node, selectType } = props;
+		const { node, selectType, level } = props;
 
 		switch (selectType) {
 			case "multiple":
 				return (
-					<Checkbox key={node.id} value={node.id} aria-label={node.name}>
+					<Checkbox
+						style={{
+							marginLeft: 25 * level,
+						}}
+						key={node.id}
+						value={node.id}
+						aria-label={node.name}>
 						<CheckboxIndicator mr='$2'>
 							<CheckboxIcon as={CheckIcon} />
 						</CheckboxIndicator>
@@ -207,7 +215,13 @@ class TreeView extends React.Component {
 				);
 			case "single":
 				return (
-					<Radio key={node.id} value={node.id} aria-label={node.name}>
+					<Radio
+						style={{
+							marginLeft: 25 * level,
+						}}
+						key={node.id}
+						value={node.id}
+						aria-label={node.name}>
 						<RadioIndicator mr='$2'>
 							<RadioIcon as={CircleIcon} />
 						</RadioIndicator>
@@ -227,42 +241,18 @@ class TreeView extends React.Component {
 			case "multiple":
 				const checkBoxValues = this.state.selectedNodeKeys[selectionBreadcrumbKey] || [];
 				return (
-					<CheckboxGroup
-						style={{
-							marginLeft: 10 * level,
-							textAlign: "left",
-							flexDirection: "row",
-							justifyContent: "center",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-						key={"abc"}
-						value={checkBoxValues}
-						onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
-						<HStack height={"$100%"} spcae='lg'>
-							<Divider mx='$2.5' h={"$100%"} orientation='vertical' />
-							<VStack space='sm'>{leafChildList}</VStack>
+					<CheckboxGroup key={"abc"} value={checkBoxValues} onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
+						<HStack space='lg'>
+							<VStack gap='$2'>{leafChildList}</VStack>
 						</HStack>
 					</CheckboxGroup>
 				);
 			case "single":
 				const radioValues = this.state.selectedNodeKeys[selectionBreadcrumbKey] || null;
 				return (
-					<RadioGroup
-						style={{
-							marginLeft: 25 * level,
-							textAlign: "left",
-							flexDirection: "row",
-							justifyContent: "center",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-						key={"abc"}
-						value={radioValues}
-						onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
-						<HStack height={"$100%"} spcae='lg'>
-							<Divider mx='$2.5' h={"$100%"} orientation='vertical' />
-							<VStack space='sm'>{leafChildList}</VStack>
+					<RadioGroup key={"abc"} value={radioValues} onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
+						<HStack space='lg'>
+							<VStack gap='$2'>{leafChildList}</VStack>
 						</HStack>
 					</RadioGroup>
 				);
@@ -304,15 +294,17 @@ class TreeView extends React.Component {
 							hasChildrenNodes,
 						})}
 					</TouchableOpacity>
-					{shouldRenderLevel && (
-						<NodeComponent
-							nodes={node[this.props.childrenKey]}
-							level={level + 1}
-							selectType={node.selectType}
-							parentId={nodeId}
-							selectionBreadcrumbKey={selectionBreadcrumbKey ? `${selectionBreadcrumbKey}/${nodeId}` : nodeId}
-						/>
-					)}
+					<VStack gap='$2'>
+						{shouldRenderLevel && (
+							<NodeComponent
+								nodes={node[this.props.childrenKey]}
+								level={level + 1}
+								selectType={node.selectType}
+								parentId={nodeId}
+								selectionBreadcrumbKey={selectionBreadcrumbKey ? `${selectionBreadcrumbKey}/${nodeId}` : nodeId}
+							/>
+						)}
+					</VStack>
 				</View>
 			);
 		});
@@ -345,11 +337,7 @@ class TreeView extends React.Component {
 			selectWrapperActionButtonGroup = (
 				<ButtonGroup
 					style={{
-						marginLeft: 25 * (level + 1),
-						textAlign: "left",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
+						marginLeft: 25 * level,
 						marginTop: 10,
 					}}
 					space='md'>
@@ -378,9 +366,9 @@ class TreeView extends React.Component {
 
 	render() {
 		return (
-			<Modal isOpen={this.state.showModal}>
+			<Modal isOpen={this.state.showModal} size='lg'>
 				<ModalBackdrop />
-				<ModalContent h='$2/3'>
+				<ModalContent h='$4/5'>
 					<ModalHeader>
 						<Heading size='lg'>{this.props.data[0].name}</Heading>
 						<ModalCloseButton onPress={this.closeModal}>
@@ -388,10 +376,10 @@ class TreeView extends React.Component {
 						</ModalCloseButton>
 					</ModalHeader>
 					<Divider />
-					<ModalBody p='$4'>
-						<Box w='$full' h='$full' py='$4'>
+					<ModalBody p='$0'>
+						<HStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start'>
 							<this.Node nodes={this.props.data} level={0} />
-						</Box>
+						</HStack>
 					</ModalBody>
 					<Divider />
 					<ModalFooter>
