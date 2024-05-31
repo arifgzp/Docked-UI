@@ -38,17 +38,34 @@ import {
 	SelectItem,
 	Icon,
 } from "@gluestack-ui/themed";
-
+import { Keyboard } from "react-native";
 import { ChevronDown } from "lucide-react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Controller } from "react-hook-form";
 import { useState } from "react";
-
-const CaselogDropDownOptions = ({ navigation, control, formState }) => {
-	const [date, setDate] = useState(new Date());
+import { Actionsheet } from "@gluestack-ui/themed";
+import { ActionsheetBackdrop } from "@gluestack-ui/themed";
+import { ActionsheetContent } from "@gluestack-ui/themed";
+import { ActionsheetDragIndicatorWrapper } from "@gluestack-ui/themed";
+import { ActionsheetDragIndicator } from "@gluestack-ui/themed";
+import { CalendarDaysIcon } from "@gluestack-ui/themed";
+import { InputSlot } from "@gluestack-ui/themed";
+import { InputIcon } from "@gluestack-ui/themed";
+import { format } from "date-fns";
+const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly }) => {
 	const [open, setOpen] = useState(false);
+	const [showActionSheet, setShowActionsheet] = useState(false);
+	const [date, setDate] = useState(new Date());
+	const handleCloseDateModal = () => {
+		setShowActionsheet(false);
+	};
+
+	const handelSetDate = (date) => {
+		setValue("date", date);
+	};
+
 	return (
 		<VStack space='lg'>
 			<HStack space='sm' justifyContent='center'>
@@ -56,29 +73,33 @@ const CaselogDropDownOptions = ({ navigation, control, formState }) => {
 					<Box alignItems='center' paddingBottom={10}>
 						<Controller
 							control={control}
+							key={"hospital"}
+							name={"hospital"}
 							rules={{
 								required: true,
 							}}
 							render={({ field: { onChange, onBlur, value } }) => {
-								console.log("Your Expertise: ", value);
 								return (
-									<Select width={"$80%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+									<Select width={"$80%"} onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
 										<SelectTrigger variant='underlined' size='md'>
 											<SelectInput placeholder='Hospital' />
-											<SelectIcon mr='$3'>
-												<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-											</SelectIcon>
+											<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 										</SelectTrigger>
 										<SelectPortal>
 											<SelectBackdrop />
 											<SelectContent>
-												<SelectItem label='JJ' value='JJ' />
+												<SelectItem label='Apollo Hospitals' value='APOLLOHOSPITALS' />
+												<SelectItem label='Fortis Healthcare' value='FORTISHEALTHCARE' />
+												<SelectItem label='Narayana Health' value='NARAYANAHEALTH' />
+												<SelectItem label='Manipal Hospitals' value='MANIPALHOSPITALS' />
+												<SelectItem label='Max Healthcare' value='MAXHEALTHCARE' />
+												<SelectItem label='Christian Medical College (CMC), Vellore' value='CMCVELLORE' />
+												<SelectItem label='Tata Memorial Hospital' value='TATAMEMORIALHOSPITAL' />
 											</SelectContent>
 										</SelectPortal>
 									</Select>
 								);
 							}}
-							name='hospital'
 						/>
 					</Box>
 					<Box alignItems='center'>
@@ -88,24 +109,29 @@ const CaselogDropDownOptions = ({ navigation, control, formState }) => {
 				<Box width={"$50%"}>
 					<Box alignItems='center' paddingBottom={10}>
 						<Controller
+							key={"faculty"}
 							control={control}
 							rules={{
 								required: true,
 							}}
 							render={({ field: { onChange, onBlur, value } }) => {
-								console.log("Your Expertise: ", value);
 								return (
-									<Select width={"$80%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+									<Select width={"$80%"} isReadOnly={readOnly} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
 										<SelectTrigger variant='underlined' size='md'>
 											<SelectInput placeholder='Faculty' />
-											<SelectIcon mr='$3'>
-												<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-											</SelectIcon>
+											<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 										</SelectTrigger>
 										<SelectPortal>
 											<SelectBackdrop />
 											<SelectContent>
-												<SelectItem label='MBBS' value='MBBS' />
+												<SelectItem label='Dr. Ravi Gupta - Nephrology' value='DR_RAVI_GUPTA_NEPHROLOGY' />
+												<SelectItem label='Dr. Mudit Dixit - Cardiology' value='DR_MUDIT_DIXIT_CARDIOLOGY' />
+												<SelectItem label='Dr. Priya Singh - Dermatology' value='DR_PRIYA_SINGH_DERMATOLOGY' />
+												<SelectItem label='Dr. Suresh Kumar - Gastroenterology' value='DR_SURESH_KUMAR_GASTROENTEROLOGY' />
+												<SelectItem label='Dr. Meera Joshi - Neurology' value='DR_MEERA_JOSHI_NEUROLOGY' />
+												<SelectItem label='Dr. Arjun Patel - Oncology' value='DR_ARJUN_PATEL_ONCOLOGY' />
+												<SelectItem label='Dr. Kavita Menon - Pediatrics' value='DR_KAVITA_MENON_PEDIATRICS' />
+												<SelectItem label='Dr. Vikram Desai - Psychiatry' value='DR_VIKRAM_DESAI_PSYCHIATRY' />
 											</SelectContent>
 										</SelectPortal>
 									</Select>
@@ -123,48 +149,52 @@ const CaselogDropDownOptions = ({ navigation, control, formState }) => {
 				<Box alignItems='center' paddingBottom={10}>
 					<Controller
 						control={control}
+						key={"date"}
+						name={"date"}
 						rules={{
 							required: true,
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
-							console.log("Your Expertise: ", value);
 							return (
 								<Input
-									onBlur={onBlur}
-									onChangeText={onChange}
-									value={value}
-									width={"$90%"}
-									variant='underlined'
-									size='md'
-									isDisabled={false}
-									isInvalid={false}
-									isReadOnly={false}>
-									<InputField placeholder='Date   --/--/--' />
+									isReadOnly={readOnly}
+									onFocus={() => {
+										Keyboard.dismiss();
+										setShowActionsheet(true);
+									}}
+									variant='outline'>
+									<InputSlot pl='$3'>
+										<InputIcon as={CalendarDaysIcon} />
+									</InputSlot>
+									<InputField value={format(value, "MM/dd/yyyy")} placeholder='Enter Text here' />
 								</Input>
-								// <Button onPress={() => setOpen(true)}>
-								// 	<ButtonText>Date</ButtonText>
-								// 	<DatePicker
-								// 		modal
-								// 		onBlur={onBlur}
-								// 		onValueChange={onChange}
-								// 		selectedValue={value}
-								// 		open={open}
-								// 		date={date}
-								// 		maximumDate={new Date()}
-								// 		onDateChange={(date) => setDate(date)}
-								// 		onCancel={() => {
-								// 			setOpen(false);
-								// 		}}
-								// 	/>
-								// </Button>
 							);
 						}}
-						name='faculty'
 					/>
 				</Box>
 				<Box alignItems='center'>
 					<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 				</Box>
+			</Box>
+			<Box p={12} pt={20}>
+				<Actionsheet isOpen={showActionSheet} onClose={handleCloseDateModal} zIndex={999}>
+					<ActionsheetBackdrop />
+					<ActionsheetContent zIndex={999}>
+						<ActionsheetDragIndicatorWrapper>
+							<ActionsheetDragIndicator />
+						</ActionsheetDragIndicatorWrapper>
+
+						<DatePicker
+							theme='light'
+							date={date}
+							onDateChange={(date) => {
+								//setDate(date);
+								handelSetDate(date);
+							}}
+							mode='date'
+						/>
+					</ActionsheetContent>
+				</Actionsheet>
 			</Box>
 		</VStack>
 	);

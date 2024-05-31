@@ -2,27 +2,42 @@ import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider 
 import { Platform } from "react-native";
 import { ScrollView } from "@gluestack-ui/themed";
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CaselogDropDownOptions from "./CaselogDropDownOptions";
 import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
+import { useQuery } from "../../../../src/models";
+import { formatRFC3339 } from "date-fns";
 
 const CaseLogFormScreen = ({ navigation }) => {
-	const [date, setDate] = useState(new Date());
-	const [open, setOpen] = useState(false);
+	const queryInfo = useQuery();
+	const { store, setQuery } = queryInfo;
 
-	const { control, handleSubmit, formState, reset, watch } = useForm({
+	const { control, formState, reset, watch, handleSubmit, setValue } = useForm({
 		defaultValues: {
-			hospital: "",
-			faculty: "",
-			date: "",
-			designation: "",
-			workPlace: "",
-			city: "",
-			medicalCouncilName: "",
-			yearOfRegistration: "",
-			medicalRegistrationNumber: "",
+			date: new Date(),
 		},
 	});
+
+	useEffect(() => {
+		reset({
+			date: new Date("2024-07-30T15:01:00.000Z"),
+		});
+	}, []);
+
+	const handleSaveClick = async (formData) => {
+		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
+		formData.date = formatRFC3339(formData.date);
+		try {
+			const query = store.addAnaesthesiaCaseLog(formData);
+			setQuery(query);
+			const data = await query;
+			if (data) {
+				navigation.navigate("Logbook");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
@@ -30,7 +45,7 @@ const CaseLogFormScreen = ({ navigation }) => {
 				<ScrollView>
 					<Box paddingTop={10} justifyContent='center' alignItems='center'>
 						<Box width={"$100%"}>
-							<CaselogDropDownOptions control={control} formState={formState} />
+							<CaselogDropDownOptions control={control} setValue={setValue} formState={formState} />
 							<Divider />
 						</Box>
 					</Box>
@@ -50,7 +65,7 @@ const CaseLogFormScreen = ({ navigation }) => {
 							</Box>
 							<HStack>
 								<Box width={"$50%"} alignItems='center'>
-									<Button width={"$85%"} height={50} size='lg' variant='secondary' borderRadius={10}>
+									<Button width={"$85%"} height={50} onPress={handleSubmit(handleSaveClick)} size='lg' variant='secondary' borderRadius={10}>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
 											Save
 										</ButtonText>

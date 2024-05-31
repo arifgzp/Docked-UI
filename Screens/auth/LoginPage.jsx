@@ -25,6 +25,8 @@ import { Platform } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ImageAssets } from "../../assets/Assets";
+import { useQuery } from "../../src/models";
+import AppStore from "../../src/stores/AppStore";
 
 const LoginPage = ({ navigation }) => {
 	const [passwordVisible, setPasswordVisible] = useState(false);
@@ -32,6 +34,9 @@ const LoginPage = ({ navigation }) => {
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
 	const [loginPressed, setLoginPressed] = useState(false);
+
+	const queryInfo = useQuery();
+	const { store, setQuery } = queryInfo;
 
 	const handleChangeEmail = (text) => {
 		setFormData({ ...formData, email: text });
@@ -46,36 +51,30 @@ const LoginPage = ({ navigation }) => {
 			return !showState;
 		});
 	};
-	const handleLogin = () => {
-		// setLoginPressed(true);
-
-		// if (!formData.email) {
-		// 	setEmailError("Email is required");
-		// 	return;
-		// } else {
-		// 	setEmailError("");
-		// }
-
-		// if (!formData.password) {
-		// 	setPasswordError("Password is required");
-		// 	return;
-		// } else {
-		// 	setPasswordError("");
-		// }
-
-		// // Check if email and password match predefined credentials
-		// if (formData.email === "docked@gmail.com" && formData.password === "docked@gmail.com") {
-		// 	// If credentials match, navigate to Main Page
-		// 	navigation.navigate("Main Page");
-		// } else {
-		// 	// If credentials don't match, display error message
-
-		// 	setEmailError("Please enter valid credentials");
-		// 	setPasswordError("Please enter valid credentials");
-		// }
-
-		// bypassing the login for development purposes
-		navigation.navigate("Main Page");
+	const handleLogin = async () => {
+		setLoginPressed(true);
+		if (!formData.email) {
+			setEmailError("Email is required");
+			return;
+		} else {
+			setEmailError("");
+		}
+		if (!formData.password) {
+			setPasswordError("Password is required");
+			return;
+		} else {
+			setPasswordError("");
+		}
+		const response = await AppStore.SignIn({ userName: formData.email, password: formData.password });
+		if (response) {
+			navigation.navigate("Main Page");
+		} else {
+			// If credentials don't match, display error message
+			setEmailError("Please enter valid credentials");
+			setPasswordError("Please enter valid credentials");
+		}
+		//bypassing the login for development purposes
+		//navigation.navigate("Main Page");
 	};
 
 	return (

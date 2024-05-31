@@ -27,8 +27,23 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "../../src/models";
 
 const HomeScreenPage = ({ navigation }) => {
+	const queryInfo = useQuery();
+	const { store, setQuery } = queryInfo;
+
+	const testFetch = async () => {
+		try {
+			const query = store.fetchAnaesthesiaCaseLog();
+			setQuery(query);
+			const data = query;
+			console.log("data", data);
+		} catch (error) {
+			console.log("error", error);
+		}
+	};
+
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Box flex={1} backgroundColor='$primaryBackground'>
@@ -40,9 +55,9 @@ const HomeScreenPage = ({ navigation }) => {
 									<Ionicons name='person-circle-outline' size={50} color='grey' />
 									<VStack>
 										<Text bold size='lg'>
-											Dr Strange
+											Dr Dixit
 										</Text>
-										<Text size='sm'>Designation</Text>
+										<Text size='sm'>Dean</Text>
 									</VStack>
 								</HStack>
 								<HStack space='lg'>

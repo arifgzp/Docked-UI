@@ -6,6 +6,7 @@ import ThesisLogsPage from "./ThesisLogs/ThesisLog";
 import AcademicLogPage from "./Academic Log/AcademicLog";
 import SpecialCaseDetails from "./SpecialCaseLog/SpecialCaseDetails";
 import LogProfilePage from "./LogProfile";
+import CaseLogReadScreen from "./CaseLogsScreens/CaseLogReadScreen";
 
 export default function RootLogScreens() {
 	const Stack = createNativeStackNavigator();
@@ -27,6 +28,16 @@ export default function RootLogScreens() {
 			<Stack.Screen
 				name='CaseLogFormScreen'
 				component={CaseLogFormScreen}
+				options={{
+					title: "Case Log",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#E8EEF3" },
+					headerTitleAlign: "center",
+				}}
+			/>
+			<Stack.Screen
+				name='CaseLogReadScreen'
+				component={CaseLogReadScreen}
 				options={{
 					title: "Case Log",
 					headerShown: true,
