@@ -1,16 +1,13 @@
-import { createHttpClient } from 'mst-gql';
-import Constants from 'expo-constants';
+import { createHttpClient } from "mst-gql";
+import Constants from "expo-constants";
 
-//const DEV_SERVER_URL = '216.48.178.53:6061';
-//const DEV_SERVER_URL = '192.168.29.119:6061';
-const DEV_SERVER_URL = '192.168.1.12:6062';
-//const PROD_SERVER_URL = "216.48.178.53:6061";
-//const PROD_SERVER_URL = '216.48.178.53:6061';
+const DEV_SERVER_URL = "localhost:6062";
+//const PROD_SERVER_URL = "164.52.218.115:6062";
 
 let _gqlHttpClient = null;
 
 function getProtocol() {
-	if (process.env.REACT_NATIVE_MODE === 'PRODUCTION') {
+	if (process.env.REACT_NATIVE_MODE === "PRODUCTION") {
 		return `http`;
 	} else {
 		return `http`;
@@ -18,7 +15,7 @@ function getProtocol() {
 }
 
 function getServerIP() {
-	if (process.env.REACT_NATIVE_MODE === 'PRODUCTION') {
+	if (process.env.REACT_NATIVE_MODE === "PRODUCTION") {
 		return `${PROD_SERVER_URL}`;
 	} else {
 		return `${DEV_SERVER_URL}`;
@@ -45,14 +42,14 @@ function getGraphQLHTTPClient(requestConfig = {}) {
 }
 
 function setTokenInHeader(token) {
-	getGraphQLHTTPClient().setHeader('sessionKey', token);
+	getGraphQLHTTPClient().setHeader("sessionKey", token);
 }
 
-console.log('======================== Network Utils ========================');
+console.log("======================== Network Utils ========================");
 console.log(`Server REACT_NATIVE_MODE = ${process.env.REACT_NATIVE_MODE}`);
 console.log(`Server NODE_ENV = ${process.env.NODE_ENV}`);
 console.log(getServerURL());
-console.log('======================== Network Utils ========================');
+console.log("======================== Network Utils ========================");
 
 export default {
 	getProtocol,
