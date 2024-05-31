@@ -24,13 +24,77 @@ import { ModalBackdrop } from "@gluestack-ui/themed";
 import AnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnaesthesiaConfig";
 import TreeView from "../../../../components/TreeView";
 
-const SpecialCaseLogSelectOptions = ({ navigation, control, formState }) => {
+const parserForConvertingIntoTreeFormData = (input, key) => {
+	const result = {};
+
+	input[key].forEach((item) => {
+		const parts = item.split("/");
+		const mainKey = parts.slice(0, -1).join("/");
+		const value = parts[parts.length - 1];
+
+		if (mainKey in result) {
+			if (Array.isArray(result[mainKey])) {
+				result[mainKey].push(value);
+			} else {
+				result[mainKey] = [result[mainKey], value];
+			}
+		} else {
+			result[mainKey] = value;
+		}
+	});
+
+	// Convert single values to arrays where needed
+	for (const key in result) {
+		if (key.includes(key) && !Array.isArray(result[key])) {
+			result[key] = [result[key]];
+		}
+	}
+
+	return result;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function flattenObject(obj, prefix = "") {
+	let result = [];
+	for (const key in obj) {
+		if (Array.isArray(obj[key])) {
+			obj[key].forEach((value) => {
+				if (typeof value === "string") {
+					result.push(`${prefix}${key}/${value}`);
+				} else {
+					result = result.concat(flattenObject(value, `${prefix}${key}/`));
+				}
+			});
+		} else if (typeof obj[key] === "object") {
+			result = result.concat(flattenObject(obj[key], `${prefix}${key}/`));
+		} else {
+			result.push(`${prefix}${key}/${obj[key]}`);
+		}
+	}
+	return result;
+}
+
+function parserToConvertTreeFromIntoDataBaseForm(input, type) {
+	return { [type]: flattenObject(input) };
+}
+
+const input = {
+	typeOfAnaesthesia: ["MAC", "LA", "GA"],
+	"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE"],
+	"typeOfAnaesthesia/DRUGS/INTRAVENOUS": "Etomidate",
+	"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial"],
+};
+
+const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue, specialCaseLogsOption }) => {
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
 	const [showTreeView, setShowTreeView] = useState(false);
 	const [activeTreeSelector, setActiveTreeSelector] = useState("");
 
 	const handleOnSave = (selectedNodes) => {
+		console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
+		setValue(activeTreeSelector, parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 		setShowTreeView(false);
 		console.log("\n\n");
 		console.log("!!!!! Tree Selector Predicate Key : ", activeTreeSelector);
@@ -51,11 +115,14 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState }) => {
 	};
 
 	const treeConfigData = getTreeConfigData();
+	console.log("DATA", treeConfigData);
 
-	const specialCaseLogsOption = [
-		{ id: "TypeOfAnesthesia", name: "Type of Anesthesia" },
-		{ id: "AirwayManagement", name: "Airway Management" },
-	];
+	const flattened = parserToConvertTreeFromIntoDataBaseForm(input, "typeOfAnaesthesia");
+	//console.log("Parsed to save into data", JSON.stringify(flattened, null, 2));
+
+	const x = parserForConvertingIntoTreeFormData(flattened, "typeOfAnaesthesia");
+
+	//console.log("TEST PLEASE WORK=>", x);
 
 	return (
 		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20}>

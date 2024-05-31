@@ -1,6 +1,6 @@
-const TypeOfAnesthesia = [
+const typeOfAnaesthesia = [
 	{
-		id: "TypeOfAnesthesia",
+		id: "typeOfAnaesthesia",
 		name: "Type of Anesthesia",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -128,9 +128,9 @@ const TypeOfAnesthesia = [
 	},
 ];
 
-const AirwayManagement = [
+const airManagement = [
 	{
-		id: "AirwayManagement",
+		id: "airManagement",
 		name: "Airway Management",
 		selectType: "none",
 		nodeType: "parent",
@@ -162,4 +162,4 @@ const AirwayManagement = [
 	},
 ];
 
-export default { TypeOfAnesthesia, AirwayManagement };
+export default { typeOfAnaesthesia, airManagement };
