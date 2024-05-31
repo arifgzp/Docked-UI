@@ -68,92 +68,113 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 
 	return (
 		<VStack space='lg'>
-			<HStack space='sm' justifyContent='center'>
-				<Box width={"$50%"}>
-					<Box alignItems='center' paddingBottom={10}>
-						<Controller
-							control={control}
-							key={"hospital"}
-							name={"hospital"}
-							rules={{
-								required: true,
-							}}
-							render={({ field: { onChange, onBlur, value } }) => {
-								return (
-									<Select width={"$80%"} onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
-										<SelectTrigger variant='underlined' size='md'>
-											<SelectInput placeholder='Hospital' />
-											<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-										</SelectTrigger>
-										<SelectPortal>
-											<SelectBackdrop />
-											<SelectContent>
-												<Text padding={10} size='xl'>
-													Hospital
-												</Text>
-												<Divider borderWidth={0.1} />
-												<SelectItem label='Apollo Hospitals' value='APOLLOHOSPITALS' />
-												<SelectItem label='Fortis Healthcare' value='FORTISHEALTHCARE' />
-												<SelectItem label='Narayana Health' value='NARAYANAHEALTH' />
-												<SelectItem label='Manipal Hospitals' value='MANIPALHOSPITALS' />
-												<SelectItem label='Max Healthcare' value='MAXHEALTHCARE' />
-												<SelectItem label='Christian Medical College (CMC), Vellore' value='CMCVELLORE' />
-												<SelectItem label='Tata Memorial Hospital' value='TATAMEMORIALHOSPITAL' />
-											</SelectContent>
-										</SelectPortal>
-									</Select>
-								);
-							}}
-						/>
-					</Box>
-					<Box alignItems='center'>
-						<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-					</Box>
-				</Box>
-				<Box width={"$50%"}>
-					<Box alignItems='center' paddingBottom={10}>
-						<Controller
-							key={"faculty"}
-							control={control}
-							rules={{
-								required: true,
-							}}
-							render={({ field: { onChange, onBlur, value } }) => {
-								return (
-									<Select width={"$80%"} isReadOnly={readOnly} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-										<SelectTrigger variant='underlined' size='md'>
-											<SelectInput placeholder='Faculty' />
-											<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-										</SelectTrigger>
-										<SelectPortal>
-											<SelectBackdrop />
-											<SelectContent>
-												<Text padding={10} size='xl'>
-													Faculty
-												</Text>
-												<Divider borderWidth={0.1} />
-												<SelectItem label='Dr. Ravi Gupta - Nephrology' value='DR_RAVI_GUPTA_NEPHROLOGY' />
-												<SelectItem label='Dr. Mudit Dixit - Cardiology' value='DR_MUDIT_DIXIT_CARDIOLOGY' />
-												<SelectItem label='Dr. Priya Singh - Dermatology' value='DR_PRIYA_SINGH_DERMATOLOGY' />
-												<SelectItem label='Dr. Suresh Kumar - Gastroenterology' value='DR_SURESH_KUMAR_GASTROENTEROLOGY' />
-												<SelectItem label='Dr. Meera Joshi - Neurology' value='DR_MEERA_JOSHI_NEUROLOGY' />
-												<SelectItem label='Dr. Arjun Patel - Oncology' value='DR_ARJUN_PATEL_ONCOLOGY' />
-												<SelectItem label='Dr. Kavita Menon - Pediatrics' value='DR_KAVITA_MENON_PEDIATRICS' />
-												<SelectItem label='Dr. Vikram Desai - Psychiatry' value='DR_VIKRAM_DESAI_PSYCHIATRY' />
-											</SelectContent>
-										</SelectPortal>
-									</Select>
-								);
-							}}
-							name='faculty'
-						/>
-					</Box>
-					<Box alignItems='center'>
-						<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-					</Box>
-				</Box>
-			</HStack>
 			<Box width={"$100%"}>
+				<Box alignItems='center' paddingBottom={10}>
+					<Controller
+						control={control}
+						key={"hospital"}
+						name={"hospital"}
+						rules={{
+							required: true,
+						}}
+						render={({ field: { onChange, onBlur, value } }) => {
+							return (
+								<Select width={"$90%"} onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
+									<SelectTrigger variant='underlined' size='md'>
+										<SelectInput placeholder='Hospital' />
+										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+									</SelectTrigger>
+									<SelectPortal>
+										<SelectBackdrop />
+										<SelectContent>
+											<Text padding={10} size='xl'>
+												Hospital
+											</Text>
+											<Divider borderWidth={0.1} />
+											<SelectItem label='Apollo Hospitals' value='APOLLOHOSPITALS' />
+											<SelectItem label='Fortis Healthcare' value='FORTISHEALTHCARE' />
+											<SelectItem label='Narayana Health' value='NARAYANAHEALTH' />
+											<SelectItem label='Manipal Hospitals' value='MANIPALHOSPITALS' />
+											<SelectItem label='Max Healthcare' value='MAXHEALTHCARE' />
+											<SelectItem label='Christian Medical College (CMC), Vellore' value='CMCVELLORE' />
+											<SelectItem label='Tata Memorial Hospital' value='TATAMEMORIALHOSPITAL' />
+										</SelectContent>
+									</SelectPortal>
+								</Select>
+							);
+						}}
+					/>
+				</Box>
+				<Box alignItems='center'>
+					<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+				</Box>
+			</Box>
+			<Box width={"$100%"}>
+				<Box alignItems='center' paddingBottom={10}>
+					<Controller
+						key={"faculty"}
+						control={control}
+						rules={{
+							required: true,
+						}}
+						render={({ field: { onChange, onBlur, value } }) => {
+							return (
+								<Select width={"$90%"} isReadOnly={readOnly} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+									<SelectTrigger variant='underlined' size='md'>
+										<SelectInput placeholder='Faculty' />
+										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+									</SelectTrigger>
+									<SelectPortal>
+										<SelectBackdrop />
+										<SelectContent>
+											<Text padding={10} size='xl'>
+												Faculty
+											</Text>
+											<Divider borderWidth={0.1} />
+											<SelectItem label='Dr. Ravi Gupta - Nephrology' value='DR_RAVI_GUPTA_NEPHROLOGY' />
+											<SelectItem label='Dr. Mudit Dixit - Cardiology' value='DR_MUDIT_DIXIT_CARDIOLOGY' />
+											<SelectItem label='Dr. Priya Singh - Dermatology' value='DR_PRIYA_SINGH_DERMATOLOGY' />
+											<SelectItem label='Dr. Suresh Kumar - Gastroenterology' value='DR_SURESH_KUMAR_GASTROENTEROLOGY' />
+											<SelectItem label='Dr. Meera Joshi - Neurology' value='DR_MEERA_JOSHI_NEUROLOGY' />
+											<SelectItem label='Dr. Arjun Patel - Oncology' value='DR_ARJUN_PATEL_ONCOLOGY' />
+											<SelectItem label='Dr. Kavita Menon - Pediatrics' value='DR_KAVITA_MENON_PEDIATRICS' />
+											<SelectItem label='Dr. Vikram Desai - Psychiatry' value='DR_VIKRAM_DESAI_PSYCHIATRY' />
+										</SelectContent>
+									</SelectPortal>
+								</Select>
+							);
+						}}
+						name='faculty'
+					/>
+				</Box>
+				<Box alignItems='center'>
+					<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+				</Box>
+			</Box>
+			<Button disabled={readOnly} justifyContent='flex-start' alignItems='flex-start' variant='link' width='$90%' onPress={() => setOpen(true)}>
+				<ButtonText paddingLeft={15} fontFamily='Inter'>
+					Date - {date.toDateString()}
+				</ButtonText>
+			</Button>
+			<DatePicker
+				modal
+				open={open}
+				theme='light'
+				date={date}
+				// onDateChange={(date) => {
+				// 	//setDate(date);
+				// 	handelSetDate(date);
+				// }}
+				onConfirm={(date) => {
+					setOpen(false);
+					handelSetDate(date);
+				}}
+				onCancel={() => {
+					setOpen(false);
+				}}
+				mode='date'
+			/>
+			{/* <Box width={"$100%"}>
 				<Box alignItems='center' paddingBottom={10}>
 					<Controller
 						control={control}
@@ -191,18 +212,29 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 					<ActionsheetDragIndicatorWrapper>
 						<ActionsheetDragIndicator />
 					</ActionsheetDragIndicatorWrapper>
-
+					<Button onPress={() => setOpen(true)}>
+						<Button Text>Date</Button>
+					</Button>
 					<DatePicker
+						modal
+						open={open}
 						theme='light'
 						date={date}
-						onDateChange={(date) => {
-							//setDate(date);
+						// onDateChange={(date) => {
+						// 	//setDate(date);
+						// 	handelSetDate(date);
+						// }}
+						onConfirm={(date) => {
+							setOpen(false);
 							handelSetDate(date);
+						}}
+						onCancel={() => {
+							setOpen(false);
 						}}
 						mode='date'
 					/>
 				</ActionsheetContent>
-			</Actionsheet>
+			</Actionsheet> */}
 		</VStack>
 	);
 };

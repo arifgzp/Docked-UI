@@ -12,6 +12,9 @@ import Loader from "../../../../components/Loader";
 const specialCaseLogsOption = [
 	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
 	{ id: "airManagement", name: "Airway Management" },
+	{ id: "regionalTechniques", name: "Regional Techniques" },
+	{ id: "interventionalProcedures", name: "Interventional Procedures" },
+	{ id: "monitoring", name: "Monitoring" },
 ];
 
 const CaseLogFormScreen = ({ navigation }) => {

@@ -94,6 +94,9 @@ const outPut = {
 const specialCaseLogsOption = [
 	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
 	{ id: "airManagement", name: "Airway Management" },
+	{ id: "regionalTechniques", name: "Regional Techniques" },
+	{ id: "interventionalProcedures", name: "Interventional Procedures" },
+	{ id: "monitoring", name: "Monitoring" },
 ];
 
 const CaseLogReadScreen = ({ navigation }) => {
@@ -223,13 +226,18 @@ const CaseLogReadScreen = ({ navigation }) => {
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>
 							<Box width={"$100%"}>
 								<CaselogDropDownOptions control={control} readOnly={true} setValue={setValue} formState={formState} />
-
 								<Divider />
 							</Box>
 						</Box>
 						<Box justifyContent='center' alignItems='center'>
 							{specialCaseLogsOption.map((log) => {
-								return <Box width={"$100%"}>{renderLogCard(log.id)}</Box>;
+								return (
+									<Box width={"$100%"} justifyContent='center' alignItems='center'>
+										<Box backgroundColor='#FFFFFF' width={"$90%"} justifyContent='center' borderRadius={10}>
+											{renderLogCard(log.id)}
+										</Box>
+									</Box>
+								);
 							})}
 						</Box>
 					</ScrollView>
