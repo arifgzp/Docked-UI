@@ -1,4 +1,4 @@
-import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider } from "@gluestack-ui/themed";
+import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider, View, useToken } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
 import { ScrollView } from "@gluestack-ui/themed";
 import { useForm, Controller } from "react-hook-form";
@@ -10,6 +10,9 @@ import { formatRFC3339 } from "date-fns";
 import { useRoute } from "@react-navigation/native";
 import Loader from "../../../../components/Loader";
 import { Text } from "@gluestack-ui/themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnaesthesiaConfig";
+import { forEach } from "lodash";
 
 const parserForConvertingIntoTreeFormData = (input, key) => {
 	const result = {};
@@ -91,6 +94,30 @@ const outPut = {
 	REGIONAL: ["PB", "Neuraxial"],
 };
 
+const getTreeConfigData = (key) => {
+	return AnaesthesiaConfig[key];
+};
+
+const getLabel = (key, configData) => {
+	//console.log("key", key);
+	//console.log("configData", configData);
+	let label = key;
+	forEach(configData, (config) => {
+		if (config.id == key) {
+			label = config.name;
+			//console.log("!!!!! Match Found ", label);
+			return false;
+		} else if (config.children) {
+			label = getLabel(key, config.children);
+			if (label != key) {
+				return false;
+			}
+		}
+	});
+	//console.log("Finakl LAbel >>>>> ", label);
+	return label;
+};
+
 const specialCaseLogsOption = [
 	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
 	{ id: "airManagement", name: "Airway Management" },
@@ -111,6 +138,8 @@ const CaseLogReadScreen = ({ navigation }) => {
 			date: new Date(),
 		},
 	});
+	const figmaRed = useToken("colors", "figmared");
+	const figmaLightRed = useToken("colors", "figmalightred2");
 
 	useEffect(() => {
 		setLoading(true);
@@ -130,98 +159,110 @@ const CaseLogReadScreen = ({ navigation }) => {
 	console.log("typeOfAnaesthesia", JSON.stringify(typeOfAnaesthesia, null, 2));
 	console.log("TRANSFORMED OUTPUT++>", transformInput(typeOfAnaesthesia));
 
-	useEffect(() => {
-		console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
-		reset({
-			...store.getAnaesthesiaCaseLogById(routes.params.id)[0],
-		});
-	}, []);
-
 	const getArrowIcon = (level) => {
-		let arrow = ">";
-		for (let index = 1; index < level; index++) {
-			arrow = arrow + arrow;
+		switch (level) {
+			case 1:
+				return <MaterialCommunityIcons name='menu-right' size={28} color={figmaRed} />;
+
+			case 2:
+				return <MaterialCommunityIcons name='menu-right' size={28} color='#e96363' />;
+
+			case 3:
+				return <MaterialCommunityIcons name='menu-right' size={24} color='#fababa' />;
+
+			default:
+				return <MaterialCommunityIcons name='menu-right' size={24} color='#ffe5e5' />;
 		}
-		return `${arrow}`;
 	};
 
-	const renderCard = (input, key, level) => {
+	const renderCard = (input, key, level, configData) => {
 		if (Array.isArray(input)) {
+			if (input.length == 1 && key == input[0] && level == 1) {
+				return null;
+			}
 			if (input.length == 1 && key == input[0]) {
-				return <Text>{input[0]}</Text>;
-			} else {
+				console.log("level >> ", level);
+				const label = getLabel(input[0], configData);
 				return (
-					<HStack>
-						<Text>
-							{key}
-							{getArrowIcon(level)}
-						</Text>
-						<Text>
+					<Text flexShrink={1} bg='$red400'>
+						{label}
+					</Text>
+				);
+			} else {
+				const label = getLabel(key, configData);
+				return (
+					<>
+						<Text flexShrink={1}>{level !== 1 && label}</Text>
+						{getArrowIcon(level)}
+						<>
 							{input.map((obj, index) => {
 								const length = input.length;
 								if (index == length - 1) {
+									const label = getLabel(obj, configData);
 									return (
 										<>
-											<Text>{obj}</Text>
+											<Text flexShrink={1}>{label}</Text>
 										</>
 									);
 								} else {
+									const label = getLabel(obj, configData);
 									return (
 										<>
-											<Text>
-												{obj}
-												{getArrowIcon(level)}
-											</Text>
+											<Text flexShrink={1}>{label}</Text>
+											{getArrowIcon(level)}
 										</>
 									);
 								}
 							})}
-						</Text>
-					</HStack>
+						</>
+					</>
 				);
 			}
 		} else {
+			const label = getLabel(key, configData);
 			return (
-				<Box>
-					<VStack>
-						<HStack>
-							<Text>{key}</Text>
-							{Object.keys(input).map((keyChild) => {
-								return (
-									<>
-										<Text display='flex' flexWrap='wrap' textAlign='right'>
-											{getArrowIcon(level)}
-										</Text>
-										{renderCard(input[keyChild], keyChild, level + 1)}
-									</>
-								);
-							})}
-						</HStack>
-					</VStack>
-				</Box>
+				<>
+					<Text flexShrink={1}>{level !== 1 && label}</Text>
+					{Object.keys(input).map((keyChild) => {
+						return (
+							<>
+								{getArrowIcon(level)}
+								{renderCard(input[keyChild], keyChild, level + 1, configData)}
+							</>
+						);
+					})}
+				</>
 			);
 		}
 	};
 
 	const renderLogCard = (value) => {
 		const data = parserForConvertingIntoTreeFormData(watch(value), value);
+		//console.log("value > ", value);
+		const configData = getTreeConfigData(value);
+
 		return (
-			<>
+			<VStack gap='$1' w='$full'>
 				{Object.keys(transformInput(data)).map((key) => {
+					//console.log("key", key);
+					//console.log("configData", configData);
 					return (
-						<>
-							<Box>{renderCard(transformInput(data)[key], key, 1)}</Box>
-						</>
+						<HStack w='$full' gap='$2'>
+							<Text>{getLabel(key, configData)}</Text>
+							<HStack flexWrap='wrap' alignItems='center'>
+								{renderCard(transformInput(data)[key], key, 1, configData)}
+							</HStack>
+						</HStack>
 					);
 				})}
-			</>
+			</VStack>
 		);
 	};
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader apiLoadingInfo={loading} showSuccessMsg={false} navigation={navigation}>
-				<Box flex={1} backgroundColor='$primaryBackground'>
+				<Box h='$full' backgroundColor='$primaryBackground' pb='$24'>
 					<ScrollView>
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>
 							<Box width={"$100%"}>
@@ -229,17 +270,24 @@ const CaseLogReadScreen = ({ navigation }) => {
 								<Divider />
 							</Box>
 						</Box>
-						<Box justifyContent='center' alignItems='center'>
+						<VStack p='$4' gap='$6'>
 							{specialCaseLogsOption.map((log) => {
+								const logValue = watch(log.id);
+								if (!logValue || logValue.length == 0) {
+									return null;
+								}
 								return (
-									<Box width={"$100%"} justifyContent='center' alignItems='center'>
-										<Box backgroundColor='#FFFFFF' width={"$90%"} justifyContent='center' borderRadius={10}>
+									<VStack key={log.id} gap='$1'>
+										<Text fontSize='$lg' fontWeight='$semibold'>
+											{log.name}
+										</Text>
+										<Box width={"$80%"} justifyContent='center' borderRadius={10}>
 											{renderLogCard(log.id)}
 										</Box>
-									</Box>
+									</VStack>
 								);
 							})}
-						</Box>
+						</VStack>
 					</ScrollView>
 				</Box>
 			</Loader>

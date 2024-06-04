@@ -59,7 +59,9 @@ const ViewLogsPage = ({ navigation }) => {
 									onPress={handleButtonPress.bind(null, "CaseLogReadScreen", entry.id)}
 									justifyContent='space-between'
 									variant='logEntry'
-									width={"$100%"}>
+									width={"$100%"}
+									borderColor='$figmacardgray'
+									pb='$4'>
 									<ButtonText>{`Case Log - Reported on ${format(new Date(entry.date), "MM/dd/yyyy")}`}</ButtonText>
 									<ButtonIcon as={ChevronRight} size={20} name='arrow-forward-outline' color='#666666' />
 								</Button>

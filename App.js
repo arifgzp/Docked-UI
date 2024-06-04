@@ -27,6 +27,9 @@ import rootStore from "./src/stores/MobXRootStore";
 import ResetPasswordEmailSent from "./Screens/auth/ResetPasswordEmailSent";
 import ResetPasswordScreen from "./Screens/auth/ResetPasswordScreen";
 import PasswordResetSuccessfully from "./Screens/auth/PasswordResetSuccessfully";
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
+LogBox.ignoreAllLogs();
 
 export default function App() {
 	const [fontsLoaded] = useFonts({

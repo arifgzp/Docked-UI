@@ -44,6 +44,7 @@ class TreeView extends React.Component {
 		showTreeView: PropTypes.bool.isRequired,
 		onSave: PropTypes.func.isRequired,
 		onCancel: PropTypes.func.isRequired,
+		initialData: PropTypes.object,
 		renderNode: PropTypes.func,
 		initialExpanded: PropTypes.bool,
 		idKey: PropTypes.string,
@@ -74,7 +75,7 @@ class TreeView extends React.Component {
 
 	getInitialState = () => ({
 		expandedNodeKeys: {},
-		selectedNodeKeys: {},
+		selectedNodeKeys: this.props.initialData || {},
 		showModal: this.props.showTreeView,
 	});
 
@@ -179,6 +180,7 @@ class TreeView extends React.Component {
 		const { node, level, isExpanded } = props;
 		return (
 			<HStack
+				key={node.id}
 				gap='$2'
 				style={
 					level != 0
@@ -241,7 +243,7 @@ class TreeView extends React.Component {
 			case "multiple":
 				const checkBoxValues = this.state.selectedNodeKeys[selectionBreadcrumbKey] || [];
 				return (
-					<CheckboxGroup key={"abc"} value={checkBoxValues} onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
+					<CheckboxGroup key={selectionBreadcrumbKey} value={checkBoxValues} onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
 						<HStack space='lg'>
 							<VStack gap='$2'>{leafChildList}</VStack>
 						</HStack>
@@ -250,7 +252,7 @@ class TreeView extends React.Component {
 			case "single":
 				const radioValues = this.state.selectedNodeKeys[selectionBreadcrumbKey] || null;
 				return (
-					<RadioGroup key={"abc"} value={radioValues} onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
+					<RadioGroup key={selectionBreadcrumbKey} value={radioValues} onChange={this.selectNode.bind(this, selectionBreadcrumbKey)}>
 						<HStack space='lg'>
 							<VStack gap='$2'>{leafChildList}</VStack>
 						</HStack>
@@ -336,6 +338,7 @@ class TreeView extends React.Component {
 		if (selectType === "multiple" || selectType === "single") {
 			selectWrapperActionButtonGroup = (
 				<ButtonGroup
+					key={`${parentId}-action-button`}
 					style={{
 						marginLeft: 25 * level,
 						marginTop: 10,

@@ -270,7 +270,7 @@ const HomeScreenPage = ({ navigation }) => {
 							<HStack gap='$8'>
 								{months.map((month) => {
 									return (
-										<Box flex={1 / 3} justifyContent='center' alignItems='center'>
+										<Box key={month.name} flex={1 / 3} justifyContent='center' alignItems='center'>
 											<Box w='$24' h='$20' rounded='$xl' justifyContent='center' alignItems='center' bg='$figmacardred'>
 												<Text color='$font'>{month.name}</Text>
 
@@ -289,7 +289,7 @@ const HomeScreenPage = ({ navigation }) => {
 							<HStack gap='$8'>
 								{months.map((month) => {
 									return (
-										<Box flex={1 / 3} justifyContent='center' alignItems='center'>
+										<Box key={month.name} flex={1 / 3} justifyContent='center' alignItems='center'>
 											<Box w='$24' h='$20' rounded='$xl' justifyContent='center' alignItems='center' bg='$figmalightaqua'>
 												<Text color='$figmaaqua'>{month.name}</Text>
 
