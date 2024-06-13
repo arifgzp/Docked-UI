@@ -36,7 +36,8 @@ verifiedMedicalRegistrationNumber="verifiedMedicalRegistrationNumber",
 targetedCaseLogNumber="targetedCaseLogNumber",
 anaesthesiaCaseLog="anaesthesiaCaseLog",
 orthodonticsCaseLog="orthodonticsCaseLog",
-orthopaedicsCaseLog="orthopaedicsCaseLog"
+orthopaedicsCaseLog="orthopaedicsCaseLog",
+logProfile="logProfile"
 }
 
 /**
@@ -72,4 +73,5 @@ export const UserHasFilterEnumType = types.enumeration("UserHasFilter", [
   "anaesthesiaCaseLog",
   "orthodonticsCaseLog",
   "orthopaedicsCaseLog",
+  "logProfile",
       ])

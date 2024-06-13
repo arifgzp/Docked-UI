@@ -97,6 +97,10 @@ const AppStore = types
 			return self._userId;
 		},
 
+		get UserBroadSpecialty() {
+			return self._broadSpecialty;
+		},
+
 		get isUserSignedIn() {
 			return self._isSignedIn && self._userToken != null;
 		},
@@ -174,6 +178,18 @@ const AppStore = types
 		},
 	}))
 	.actions((self) => ({
+		setUserId(userId) {
+			self._userId = userId;
+		},
+
+		setBroadSpecialty(broadSpecialty) {
+			self._broadSpecialty = broadSpecialty;
+		},
+
+		setSpecialty(specialtyValue) {
+			self._specialty = specialtyValue;
+		},
+
 		markUserSignedIn(token, id, userName, role) {
 			self._isSignedIn = true;
 			self._userToken = token;
@@ -195,22 +211,74 @@ const AppStore = types
 			self._userId = null;
 		},
 
-		Register: flow(function* Register(formData) {
+		register: flow(function* register(formData) {
+			let result = {};
 			try {
 				self._isLoading = true;
-				console.log(formData);
-				const responseData = yield execute("/register", formData);
-				if (responseData.data) {
-					return "success";
-				} else if (responseData.message) {
-					return responseData.message;
+				let data = {
+					User: formData,
+					isUserVerificationRequired: true,
+				};
+				console.log("Register FORM Data", data);
+				const responseData = yield execute("/register", data);
+				console.log("responseData for registeration", responseData);
+				if (responseData.message === "UserAlreadyExistsException") {
+					result = {
+						status: "FAILED",
+						data: {
+							reason: "User already registered.",
+						},
+					};
+				} else if (responseData.data) {
+					result = {
+						status: "SUCCESS",
+						data: responseData.data,
+					};
 				} else {
-					return false;
+					result = {
+						status: "ERROR",
+						data: {
+							reason: "We're sorry, but we're having trouble processing your request. Please try again later.",
+						},
+					};
 				}
 			} catch (error) {
 				console.error("AppStore > Register ", error);
+				result = {
+					status: "ERROR",
+					data: {
+						reason: "We're sorry, but we're having trouble processing your request. Please try again later.",
+					},
+				};
 			} finally {
 				self._isLoading = false;
+				return result;
+			}
+		}),
+
+		VerifyAccount: flow(function* VerifyAccount(formData) {
+			let status = "unknown";
+			try {
+				self._isLoading = true;
+				let data = {
+					User: formData,
+					isUserVerificationRequired: true,
+				};
+				console.log("Verify Account Form", data);
+				const responseData = yield execute("/verifyAccount", data);
+
+				console.log("responseData for OTP", responseData);
+				if (responseData.message === "InvalidOTPException") {
+					status = "FAILED";
+				} else {
+					status = "SUCCESS";
+				}
+			} catch (error) {
+				console.error("AppStore > Register ", error);
+				status = "ERROR";
+			} finally {
+				self._isLoading = false;
+				return status;
 			}
 		}),
 
@@ -229,7 +297,7 @@ const AppStore = types
 
 					self.markUserSignedIn(userToken, response.id, userName, userRole);
 
-					return true;
+					return response;
 				} else {
 					return false;
 				}

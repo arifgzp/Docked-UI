@@ -1,3 +1,79 @@
+const complications = [
+	{
+		id: "complications",
+		name: "Compliations",
+		selectType: "multiple",
+		nodeType: "parent",
+		children: [
+			{
+				id: "AirwayCompromise",
+				name: "Airway compromise",
+				nodeType: "leaf",
+			},
+			{
+				id: "ARRYTHMIA",
+				name: "Arrythmia",
+				nodeType: "leaf",
+			},
+			{
+				id: "HYPERTENSION",
+				name: "Hypertension",
+				nodeType: "leaf",
+			},
+			{
+				id: "HYPOTENSION",
+				name: "Hypotension",
+				nodeType: "leaf",
+			},
+			{
+				id: "PAIN",
+				name: "Pain",
+				nodeType: "leaf",
+			},
+			{
+				id: "PONV",
+				name: "PONV",
+				nodeType: "leaf",
+			},
+			{
+				id: "Decreases Urine Output",
+				name: "Decreases urine output",
+				nodeType: "leaf",
+			},
+			{
+				id: "EMERGENCEDELIRIUM",
+				name: "Emergence delirium",
+				nodeType: "leaf",
+			},
+			{
+				id: "delayedEmergence",
+				name: "Delayed emergence",
+				nodeType: "leaf",
+			},
+			{
+				id: "Shivering",
+				name: "Shivering",
+				nodeType: "leaf",
+			},
+			{
+				id: "POPE",
+				name: "Post-Obstructive pulmonary edema",
+				nodeType: "leaf",
+			},
+			{
+				id: "PacingRequried",
+				name: "Pacing Requried",
+				nodeType: "leaf",
+			},
+			{
+				id: "CPR",
+				name: "CPR",
+				nodeType: "leaf",
+			},
+		],
+	},
+];
+
 const typeOfAnaesthesia = [
 	{
 		id: "typeOfAnaesthesia",
@@ -1401,4 +1477,169 @@ const monitoring = [
 	},
 ];
 
-export default { typeOfAnaesthesia, airManagement, regionalTechniques, interventionalProcedures, monitoring };
+const comorbidity = [
+	{
+		id: "comorbidity",
+		name: "Comorbidity",
+		selectType: "multiple",
+		nodeType: "parent",
+		children: [
+			{
+				id: "cardiacDisease",
+				name: "Cardiac Disease",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "HISTORYOFMI",
+						name: "History of MI",
+						nodeType: "leaf",
+					},
+					{
+						id: "CAD",
+						name: "CAD",
+						nodeType: "leaf",
+					},
+					{
+						id: "angina",
+						name: "Angina",
+						nodeType: "leaf",
+					},
+					{
+						id: "CHF",
+						name: "CHF",
+						nodeType: "leaf",
+					},
+					{
+						id: "HTN",
+						name: "HTN",
+						nodeType: "leaf",
+					},
+					{
+						id: "AF",
+						name: "AF",
+						nodeType: "leaf",
+					},
+					{
+						id: "PAD",
+						name: "PAD",
+						nodeType: "leaf",
+					},
+					{
+						id: "valvularDisease",
+						name: "Valvular Disease",
+						nodeType: "leaf",
+					},
+					{
+						id: "pacemaker",
+						name: "Pacemaker",
+						nodeType: "leaf",
+					},
+					{
+						id: "othersForCardiacDisease",
+						name: "Other",
+						nodeType: "leaf",
+						type: "text",
+					},
+				],
+			},
+			{
+				id: "CNSDISORDER",
+				name: "CNS Disorder",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "COPD",
+						name: "COPD",
+						nodeType: "leaf",
+					},
+					{
+						id: "ILD",
+						name: "ILD",
+						nodeType: "leaf",
+					},
+					{
+						id: "ASTHMA",
+						name: "Asthma",
+						nodeType: "leaf",
+					},
+					{
+						id: "othersForCNSORDER",
+						name: "Others",
+						nodeType: "leaf",
+						type: "text",
+					},
+				],
+			},
+			{
+				id: "SMOKER",
+				name: "Smoker",
+				selectType: "text",
+				nodeType: "parent",
+				children: [
+					{
+						id: "packYears",
+						name: "Pack Years",
+						nodeType: "leaf",
+					},
+				],
+			},
+			{
+				id: "ALCHOLOLINTAKE",
+				name: "Alcholol Intake",
+				selectType: "text",
+				nodeType: "parent",
+				children: [
+					{
+						id: "mlPerDay",
+						name: "ml per day",
+						nodeType: "leaf",
+					},
+				],
+			},
+			{
+				id: "DIABETES",
+				name: "Diabetes",
+				nodeType: "leaf",
+			},
+			{
+				id: "LIVERDISEASE",
+				name: "Liver Disease",
+				nodeType: "leaf",
+			},
+			{
+				id: "RENALDISEASE",
+				name: "Renal Disease",
+				nodeType: "leaf",
+			},
+			{
+				id: "HaematologicDisorder",
+				name: "Haematologic disorder",
+				nodeType: "leaf",
+			},
+			{
+				id: "Coagulopathies",
+				name: "Coagulopathies",
+				nodeType: "leaf",
+			},
+			{
+				id: "VascularDisorder",
+				name: "Vascular disorder",
+				nodeType: "leaf",
+			},
+			{
+				id: "EndocrinologicDisorder",
+				name: "Endocrinologic disorder",
+				nodeType: "leaf",
+			},
+			{
+				id: "Obesity",
+				name: "Obesity",
+				nodeType: "leaf",
+			},
+		],
+	},
+];
+
+export default { typeOfAnaesthesia, airManagement, regionalTechniques, interventionalProcedures, monitoring, comorbidity, complications };

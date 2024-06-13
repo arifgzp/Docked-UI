@@ -249,7 +249,6 @@ function Loader(props) {
 	const bgColorHEX = useToken("colors", "coolGray600");
 
 	const bgColorRGBA = useMemo(() => hexToRgbA(bgColorHEX), [bgColorHEX]);
-	console.log("bgColorRGBA", bgColorRGBA);
 
 	return (
 		<>

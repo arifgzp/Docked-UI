@@ -1,4 +1,4 @@
-import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider, View, useToken } from "@gluestack-ui/themed";
+import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
 import { ScrollView } from "@gluestack-ui/themed";
 import { useForm, Controller } from "react-hook-form";
@@ -10,9 +10,17 @@ import { formatRFC3339 } from "date-fns";
 import { useRoute } from "@react-navigation/native";
 import Loader from "../../../../components/Loader";
 import { Text } from "@gluestack-ui/themed";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import AnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnaesthesiaConfig";
-import { forEach } from "lodash";
+import { observer } from "mobx-react";
+
+const specialCaseLogsOption = [
+	{ id: "comorbidity", name: "Comorbidity" },
+	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
+	{ id: "airManagement", name: "Airway Management" },
+	{ id: "regionalTechniques", name: "Regional Techniques" },
+	{ id: "interventionalProcedures", name: "Interventional Procedures" },
+	{ id: "monitoring", name: "Monitoring" },
+	{ id: "complications", name: "Complications" },
+];
 
 const parserForConvertingIntoTreeFormData = (input, key) => {
 	const result = {};
@@ -43,94 +51,12 @@ const parserForConvertingIntoTreeFormData = (input, key) => {
 	return result;
 };
 
-const transformInput = (input) => {
-	const result = {};
-
-	Object.keys(input).forEach((key) => {
-		const parts = key.split("/");
-		const value = input[key];
-
-		let current = result;
-		for (let i = 1; i < parts.length; i++) {
-			const part = parts[i];
-			if (i === parts.length - 1) {
-				// If it's the last part, set the value
-				if (Array.isArray(value)) {
-					if (!current[part]) {
-						current[part] = value;
-					}
-				} else {
-					current[part] = value;
-				}
-			} else {
-				// If it's not the last part, move deeper in the object
-				if (!current[part]) {
-					current[part] = {};
-				}
-				current = current[part];
-			}
-		}
-	});
-
-	// Ensure that the top-level keys are preserved
-	if (input.typeOfAnaesthesia) {
-		input.typeOfAnaesthesia.forEach((value) => {
-			result[value] = [value];
-		});
-	}
-
-	return result;
-};
-const input = {
-	typeOfAnaesthesia: ["MAC"],
-	"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["SEVOFLURANE", "NO2"],
-	"typeOfAnaesthesia/DRUGS/INTRAVENOUS": ["Thiopentone"],
-	"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial"],
-};
-
-const outPut = {
-	DRUGS: { INHALATIONAL: ["SEVOFLURANE", "NO2"], INTRAVENOUS: ["Thiopentone"] },
-	MAC: ["MAC"],
-	REGIONAL: ["PB", "Neuraxial"],
-};
-
-const getTreeConfigData = (key) => {
-	return AnaesthesiaConfig[key];
-};
-
-const getLabel = (key, configData) => {
-	//console.log("key", key);
-	//console.log("configData", configData);
-	let label = key;
-	forEach(configData, (config) => {
-		if (config.id == key) {
-			label = config.name;
-			//console.log("!!!!! Match Found ", label);
-			return false;
-		} else if (config.children) {
-			label = getLabel(key, config.children);
-			if (label != key) {
-				return false;
-			}
-		}
-	});
-	//console.log("Finakl LAbel >>>>> ", label);
-	return label;
-};
-
-const specialCaseLogsOption = [
-	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
-	{ id: "airManagement", name: "Airway Management" },
-	{ id: "regionalTechniques", name: "Regional Techniques" },
-	{ id: "interventionalProcedures", name: "Interventional Procedures" },
-	{ id: "monitoring", name: "Monitoring" },
-];
-
 const CaseLogReadScreen = ({ navigation }) => {
 	const routes = useRoute();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [loading, setLoading] = useState(false);
+	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const { control, formState, reset, watch, handleSubmit, setValue } = useForm({
 		defaultValues: {
 			hospital: "",
@@ -138,9 +64,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 			date: new Date(),
 		},
 	});
-	const figmaRed = useToken("colors", "figmared");
-	const figmaLightRed = useToken("colors", "figmalightred2");
-
+	const typeOfAnaesthesia = parserForConvertingIntoTreeFormData(watch("typeOfAnaesthesia"), "typeOfAnaesthesia");
 	useEffect(() => {
 		setLoading(true);
 		setTimeout(() => {
@@ -152,142 +76,96 @@ const CaseLogReadScreen = ({ navigation }) => {
 		});
 	}, []);
 
-	const typeOfAnaesthesia = parserForConvertingIntoTreeFormData(watch("typeOfAnaesthesia"), "typeOfAnaesthesia");
-	const airManagement = parserForConvertingIntoTreeFormData(watch("airManagement"), "airManagement");
+	useEffect(() => {
+		console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
+		reset({
+			...store.getAnaesthesiaCaseLogById(routes.params.id)[0],
+		});
+	}, []);
 
-	console.log("airManagement", watch("airManagement"));
-	console.log("typeOfAnaesthesia", JSON.stringify(typeOfAnaesthesia, null, 2));
-	console.log("TRANSFORMED OUTPUT++>", transformInput(typeOfAnaesthesia));
-
-	const getArrowIcon = (level) => {
-		switch (level) {
-			case 1:
-				return <MaterialCommunityIcons name='menu-right' size={28} color={figmaRed} />;
-
-			case 2:
-				return <MaterialCommunityIcons name='menu-right' size={28} color='#e96363' />;
-
-			case 3:
-				return <MaterialCommunityIcons name='menu-right' size={24} color='#fababa' />;
-
-			default:
-				return <MaterialCommunityIcons name='menu-right' size={24} color='#ffe5e5' />;
-		}
-	};
-
-	const renderCard = (input, key, level, configData) => {
-		if (Array.isArray(input)) {
-			if (input.length == 1 && key == input[0] && level == 1) {
-				return null;
+	useEffect(() => {
+		const fetchLogProfilePrefilledData = async () => {
+			try {
+				console.log("AppStore.UserId", AppStore.UserName);
+				const query = store.fetchUserLogProfile(AppStore.UserName);
+				setQuery(query);
+				const finishFetchingLogProfile = await query;
+				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+				if (finishFetchingLogProfile) {
+					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
+					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					const facultiesList = userData.logProfile.faculties;
+					const rotationsList = userData.logProfile.rotations;
+					const hospitalData = userData.logProfile.hospital;
+					console.log("facultiesList", facultiesList);
+					console.log("rotationsList", rotationsList);
+					console.log("hospitalData", hospitalData);
+					console.log("rotations[0].department", rotationsList[0].department);
+					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+					setValue("hospital", hospitalData);
+					setValue("faculty", faculty);
+					setValue("rotation", rotationsList[0].department);
+				}
+			} catch (error) {
+				console.log(error);
 			}
-			if (input.length == 1 && key == input[0]) {
-				console.log("level >> ", level);
-				const label = getLabel(input[0], configData);
-				return (
-					<Text flexShrink={1} bg='$red400'>
-						{label}
-					</Text>
-				);
-			} else {
-				const label = getLabel(key, configData);
-				return (
-					<>
-						<Text flexShrink={1}>{level !== 1 && label}</Text>
-						{getArrowIcon(level)}
-						<>
-							{input.map((obj, index) => {
-								const length = input.length;
-								if (index == length - 1) {
-									const label = getLabel(obj, configData);
-									return (
-										<>
-											<Text flexShrink={1}>{label}</Text>
-										</>
-									);
-								} else {
-									const label = getLabel(obj, configData);
-									return (
-										<>
-											<Text flexShrink={1}>{label}</Text>
-											{getArrowIcon(level)}
-										</>
-									);
-								}
-							})}
-						</>
-					</>
-				);
+		};
+		fetchLogProfilePrefilledData();
+	}, []);
+
+	const handleOnUpdateClick = async (formData) => {
+		delete formData.id;
+		delete formData.__typename;
+		formData.updatedOn = formatRFC3339(new Date());
+		try {
+			const query = store.updateAnaesthesiaCaseLog(routes.params.id, { set: formData });
+			setQuery(query);
+			const data = await query;
+			if (data) {
+				setTimeout(() => {
+					navigation.goBack();
+				}, 1000);
 			}
-		} else {
-			const label = getLabel(key, configData);
-			return (
-				<>
-					<Text flexShrink={1}>{level !== 1 && label}</Text>
-					{Object.keys(input).map((keyChild) => {
-						return (
-							<>
-								{getArrowIcon(level)}
-								{renderCard(input[keyChild], keyChild, level + 1, configData)}
-							</>
-						);
-					})}
-				</>
-			);
+		} catch (error) {
+			console.log(error);
 		}
-	};
-
-	const renderLogCard = (value) => {
-		const data = parserForConvertingIntoTreeFormData(watch(value), value);
-		//console.log("value > ", value);
-		const configData = getTreeConfigData(value);
-
-		return (
-			<VStack gap='$1' w='$full'>
-				{Object.keys(transformInput(data)).map((key) => {
-					//console.log("key", key);
-					//console.log("configData", configData);
-					return (
-						<HStack w='$full' gap='$2'>
-							<Text>{getLabel(key, configData)}</Text>
-							<HStack flexWrap='wrap' alignItems='center'>
-								{renderCard(transformInput(data)[key], key, 1, configData)}
-							</HStack>
-						</HStack>
-					);
-				})}
-			</VStack>
-		);
 	};
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader apiLoadingInfo={loading} showSuccessMsg={false} navigation={navigation}>
-				<Box h='$full' backgroundColor='$primaryBackground' pb='$24'>
+				<Box flex={1} backgroundColor='$primaryBackground'>
 					<ScrollView>
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>
 							<Box width={"$100%"}>
-								<CaselogDropDownOptions control={control} readOnly={true} setValue={setValue} formState={formState} />
+								<CaselogDropDownOptions
+									prefilledData={caseLogPrefilledData}
+									control={control}
+									readOnly={false}
+									setValue={setValue}
+									formState={formState}
+								/>
 								<Divider />
 							</Box>
 						</Box>
-						<VStack p='$4' gap='$6'>
-							{specialCaseLogsOption.map((log) => {
-								const logValue = watch(log.id);
-								if (!logValue || logValue.length == 0) {
-									return null;
-								}
-								return (
-									<VStack key={log.id} gap='$1'>
-										<Text fontSize='$lg' fontWeight='$semibold'>
-											{log.name}
-										</Text>
-										<Box width={"$80%"} justifyContent='center' borderRadius={10}>
-											{renderLogCard(log.id)}
-										</Box>
-									</VStack>
-								);
-							})}
-						</VStack>
+
+						<Box justifyContent='center' alignItems='center'>
+							<Box width={"$100%"}>
+								<SpecialCaseLogSelectOptions
+									control={control}
+									setValue={setValue}
+									formState={formState}
+									specialCaseLogsOption={specialCaseLogsOption}
+								/>
+							</Box>
+						</Box>
+						<Box mt='$5' mb={"$20%"} width={"$100%"} justifyContent='center' alignItems='center'>
+							<Button width={"$50%"} height={50} onPress={handleSubmit(handleOnUpdateClick)} size='lg' variant='secondary' borderRadius={10}>
+								<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
+									Update Log
+								</ButtonText>
+							</Button>
+						</Box>
 					</ScrollView>
 				</Box>
 			</Loader>
@@ -295,4 +173,4 @@ const CaseLogReadScreen = ({ navigation }) => {
 	);
 };
 
-export default CaseLogReadScreen;
+export default observer(CaseLogReadScreen);

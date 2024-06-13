@@ -28,26 +28,28 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "@gluestack-ui/themed";
+import { useNavigation } from "@react-navigation/native";
 
-const MainLogScreen = ({ navigation }) => {
+const MainLogScreen = ({ onClose }) => {
 	const logButtons = ["Case Log", "Academic Log", "Thesis Log", "Spl. cases Log", "Custom Log 1", "Custom log 2"];
+	const navigation = useNavigation();
 
 	const handleButtonPress = (button) => {
 		switch (button) {
 			case "Case Log":
-				navigation.navigate("RootLogBook", { screen: "CaseLogFormScreen" });
+				navigation.navigate("Plus", { screen: "CaseLogFormScreen" });
 				console.log("Navigating to Case Log");
 				break;
 			case "Academic Log":
-				navigation.navigate("RootLogBook", { screen: "AcademicLog" });
+				navigation.navigate("Plus", { screen: "AcademicLog" });
 				console.log("Navigating to Case Log2");
 				break;
 			case "Thesis Log":
-				navigation.navigate("RootLogBook", { screen: "ThesisLogs" });
+				navigation.navigate("Plus", { screen: "ThesisLogs" });
 				console.log("Navigating to Case Log3");
 				break;
 			case "Spl. cases Log":
-				navigation.navigate("RootLogBook", { screen: "SpecialCaseLogs" });
+				navigation.navigate("Plus", { screen: "SpecialCaseLogs" });
 				console.log("Navigating to Case Log4");
 				break;
 			case "Custom Log 1":
@@ -66,7 +68,7 @@ const MainLogScreen = ({ navigation }) => {
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<Box paddingRight={10} flex={0.7 / 4} justifyContent='center'>
 					<VStack space='lg' alignItems='flex-end'>
-						<Button onPress={() => navigation.navigate("RootLogBook", { screen: "LogProfilePage" })} variant='tertiary' size='xs'>
+						<Button onPress={() => navigation.navigate("Plus", { screen: "LogProfilePage" })} variant='tertiary' size='xs'>
 							<ButtonText>Log Profile</ButtonText>
 						</Button>
 						<Button onPress={() => navigation.navigate("RootLogBook", { screen: "ViewLogs" })} variant='tertiary' size='xs'>
@@ -74,7 +76,6 @@ const MainLogScreen = ({ navigation }) => {
 						</Button>
 					</VStack>
 				</Box>
-
 				<Box width={"$100%"} flex={3.3 / 4} justifyContent='flex-start'>
 					<ScrollView>
 						<VStack space='2xl' alignItems='center'>

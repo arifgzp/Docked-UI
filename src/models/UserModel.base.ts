@@ -11,6 +11,8 @@ import { AnaesthesiaCaseLogAggregateResultModelSelector } from "./AnaesthesiaCas
 import { AnaesthesiaCaseLogModel, AnaesthesiaCaseLogModelType } from "./AnaesthesiaCaseLogModel"
 import { AnaesthesiaCaseLogModelSelector } from "./AnaesthesiaCaseLogModel.base"
 import { GenderEnumType } from "./GenderEnum"
+import { LogProfileModel, LogProfileModelType } from "./LogProfileModel"
+import { LogProfileModelSelector } from "./LogProfileModel.base"
 import { OrthodonticsCaseLogAggregateResultModel, OrthodonticsCaseLogAggregateResultModelType } from "./OrthodonticsCaseLogAggregateResultModel"
 import { OrthodonticsCaseLogAggregateResultModelSelector } from "./OrthodonticsCaseLogAggregateResultModel.base"
 import { OrthodonticsCaseLogModel, OrthodonticsCaseLogModelType } from "./OrthodonticsCaseLogModel"
@@ -19,7 +21,7 @@ import { OrthopaedicsCaseLogAggregateResultModel, OrthopaedicsCaseLogAggregateRe
 import { OrthopaedicsCaseLogAggregateResultModelSelector } from "./OrthopaedicsCaseLogAggregateResultModel.base"
 import { OrthopaedicsCaseLogModel, OrthopaedicsCaseLogModelType } from "./OrthopaedicsCaseLogModel"
 import { OrthopaedicsCaseLogModelSelector } from "./OrthopaedicsCaseLogModel.base"
-import { AnaesthesiaCaseLogFilter, AnaesthesiaCaseLogOrder, OrthodonticsCaseLogFilter, OrthodonticsCaseLogOrder, OrthopaedicsCaseLogFilter, OrthopaedicsCaseLogOrder } from "./RootStore.base"
+import { AnaesthesiaCaseLogFilter, AnaesthesiaCaseLogOrder, LogProfileFilter, OrthodonticsCaseLogFilter, OrthodonticsCaseLogOrder, OrthopaedicsCaseLogFilter, OrthopaedicsCaseLogOrder } from "./RootStore.base"
 import { UserRoleEnumType } from "./UserRoleEnum"
 import { UserStatusEnumType } from "./UserStatusEnum"
 import { RootStoreType } from "./index"
@@ -30,6 +32,7 @@ type Refs = {
   anaesthesiaCaseLog: IObservableArray<AnaesthesiaCaseLogModelType>;
   orthodonticsCaseLog: IObservableArray<OrthodonticsCaseLogModelType>;
   orthopaedicsCaseLog: IObservableArray<OrthopaedicsCaseLogModelType>;
+  logProfile: LogProfileModelType;
 }
 
 /**
@@ -70,6 +73,7 @@ export const UserModelBase = withTypedRefs<Refs>()(ModelBase
     anaesthesiaCaseLog: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => AnaesthesiaCaseLogModel))))),
     orthodonticsCaseLog: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => OrthodonticsCaseLogModel))))),
     orthopaedicsCaseLog: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => OrthopaedicsCaseLogModel))))),
+    logProfile: types.union(types.undefined, types.null, MSTGQLRef(types.late((): any => LogProfileModel))),
     anaesthesiaCaseLogAggregate: types.union(types.undefined, types.null, types.late((): any => AnaesthesiaCaseLogAggregateResultModel)),
     orthodonticsCaseLogAggregate: types.union(types.undefined, types.null, types.late((): any => OrthodonticsCaseLogAggregateResultModel)),
     orthopaedicsCaseLogAggregate: types.union(types.undefined, types.null, types.late((): any => OrthopaedicsCaseLogAggregateResultModel)),
@@ -111,6 +115,7 @@ export class UserModelSelector extends QueryBuilder {
   anaesthesiaCaseLog(builder: string | AnaesthesiaCaseLogModelSelector | ((selector: AnaesthesiaCaseLogModelSelector) => AnaesthesiaCaseLogModelSelector) | undefined, args?: { filter?: (AnaesthesiaCaseLogFilter | null), order?: (AnaesthesiaCaseLogOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`anaesthesiaCaseLog`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), AnaesthesiaCaseLogModelSelector, builder) }
   orthodonticsCaseLog(builder: string | OrthodonticsCaseLogModelSelector | ((selector: OrthodonticsCaseLogModelSelector) => OrthodonticsCaseLogModelSelector) | undefined, args?: { filter?: (OrthodonticsCaseLogFilter | null), order?: (OrthodonticsCaseLogOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`orthodonticsCaseLog`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), OrthodonticsCaseLogModelSelector, builder) }
   orthopaedicsCaseLog(builder: string | OrthopaedicsCaseLogModelSelector | ((selector: OrthopaedicsCaseLogModelSelector) => OrthopaedicsCaseLogModelSelector) | undefined, args?: { filter?: (OrthopaedicsCaseLogFilter | null), order?: (OrthopaedicsCaseLogOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`orthopaedicsCaseLog`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), OrthopaedicsCaseLogModelSelector, builder) }
+  logProfile(builder: string | LogProfileModelSelector | ((selector: LogProfileModelSelector) => LogProfileModelSelector) | undefined, args?: { filter?: (LogProfileFilter | null) }) { return this.__child(`logProfile`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), LogProfileModelSelector, builder) }
   anaesthesiaCaseLogAggregate(builder: string | AnaesthesiaCaseLogAggregateResultModelSelector | ((selector: AnaesthesiaCaseLogAggregateResultModelSelector) => AnaesthesiaCaseLogAggregateResultModelSelector) | undefined, args?: { filter?: (AnaesthesiaCaseLogFilter | null) }) { return this.__child(`anaesthesiaCaseLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), AnaesthesiaCaseLogAggregateResultModelSelector, builder) }
   orthodonticsCaseLogAggregate(builder: string | OrthodonticsCaseLogAggregateResultModelSelector | ((selector: OrthodonticsCaseLogAggregateResultModelSelector) => OrthodonticsCaseLogAggregateResultModelSelector) | undefined, args?: { filter?: (OrthodonticsCaseLogFilter | null) }) { return this.__child(`orthodonticsCaseLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), OrthodonticsCaseLogAggregateResultModelSelector, builder) }
   orthopaedicsCaseLogAggregate(builder: string | OrthopaedicsCaseLogAggregateResultModelSelector | ((selector: OrthopaedicsCaseLogAggregateResultModelSelector) => OrthopaedicsCaseLogAggregateResultModelSelector) | undefined, args?: { filter?: (OrthopaedicsCaseLogFilter | null) }) { return this.__child(`orthopaedicsCaseLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), OrthopaedicsCaseLogAggregateResultModelSelector, builder) }

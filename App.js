@@ -1,5 +1,5 @@
 import { config } from "./config/gluestack-ui.config";
-import LoginPage from ".//Screens/auth/LoginPage";
+import LoginPage from "./Screens/auth/LoginPage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import RegisterPage from "./Screens/auth/RegisterPage";

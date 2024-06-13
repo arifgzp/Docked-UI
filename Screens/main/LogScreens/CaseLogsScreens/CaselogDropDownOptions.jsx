@@ -44,7 +44,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Controller } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Actionsheet } from "@gluestack-ui/themed";
 import { ActionsheetBackdrop } from "@gluestack-ui/themed";
 import { ActionsheetContent } from "@gluestack-ui/themed";
@@ -54,7 +54,14 @@ import { CalendarDaysIcon } from "@gluestack-ui/themed";
 import { InputSlot } from "@gluestack-ui/themed";
 import { InputIcon } from "@gluestack-ui/themed";
 import { format } from "date-fns";
-const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly }) => {
+import caseLogConfigTextAndSingleSelectOptions from "../../../../config/entity/CaseLogFormConfig";
+import { observer } from "mobx-react";
+import { useQuery } from "../../../../src/models";
+import AppStore from "../../../../src/stores/AppStore";
+
+const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly, prefilledData }) => {
+	const queryInfo = useQuery();
+	const { store, setQuery } = queryInfo;
 	const [open, setOpen] = useState(false);
 	const [showActionSheet, setShowActionsheet] = useState(false);
 	const [date, setDate] = useState(new Date());
@@ -66,22 +73,66 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 		setValue("date", date);
 	};
 
+	const formFields = caseLogConfigTextAndSingleSelectOptions;
+	console.log("prefilledData Mudit test", prefilledData);
 	return (
 		<VStack space='lg'>
 			<Box width={"$100%"}>
 				<Box alignItems='center' paddingBottom={10}>
 					<Controller
 						control={control}
-						key={"hospital"}
-						name={"hospital"}
+						key='rotation'
+						name='rotation'
 						rules={{
-							required: true,
+							required: false,
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
+								<Select width={"$90%"} onBlur={onBlur} isReadOnly onValueChange={onChange} selectedValue={value}>
 									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder='Hospital' />
+										<SelectInput placeholder={`Rotation ${prefilledData?.rotations[0].department}`} />
+										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+									</SelectTrigger>
+									<SelectPortal>
+										<SelectBackdrop />
+										<SelectContent>
+											<Text padding={10} size='xl'>
+												Department
+											</Text>
+											<Divider borderWidth={0.1} />
+											<SelectItem
+												key={prefilledData?.rotations[0].department}
+												label={prefilledData?.rotations[0].department}
+												value={prefilledData?.rotations[0].department}
+											/>
+											{/* {prefilledData?.rotations.map((item) => {
+												return <SelectItem key={item?.department} label={item?.department} value={item?.department} />;
+											})} */}
+										</SelectContent>
+									</SelectPortal>
+								</Select>
+							);
+						}}
+					/>
+				</Box>
+				<Box alignItems='center'>
+					<Box width={"$80%"}>{formState.errors.rotations && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+				</Box>
+			</Box>
+			<Box width={"$100%"}>
+				<Box alignItems='center' paddingBottom={10}>
+					<Controller
+						control={control}
+						key='hospital'
+						name='hospital'
+						rules={{
+							required: false,
+						}}
+						render={({ field: { onChange, onBlur, value } }) => {
+							return (
+								<Select width={"$90%"} onBlur={onBlur} isReadOnly onValueChange={onChange} selectedValue={value}>
+									<SelectTrigger variant='underlined' size='md'>
+										<SelectInput placeholder={`Hospital ${prefilledData?.hospital}`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
@@ -91,13 +142,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 												Hospital
 											</Text>
 											<Divider borderWidth={0.1} />
-											<SelectItem label='Apollo Hospitals' value='APOLLOHOSPITALS' />
-											<SelectItem label='Fortis Healthcare' value='FORTISHEALTHCARE' />
-											<SelectItem label='Narayana Health' value='NARAYANAHEALTH' />
-											<SelectItem label='Manipal Hospitals' value='MANIPALHOSPITALS' />
-											<SelectItem label='Max Healthcare' value='MAXHEALTHCARE' />
-											<SelectItem label='Christian Medical College (CMC), Vellore' value='CMCVELLORE' />
-											<SelectItem label='Tata Memorial Hospital' value='TATAMEMORIALHOSPITAL' />
+											<SelectItem key={prefilledData?.hospital} label={prefilledData?.hospital} value={value} />
 										</SelectContent>
 									</SelectPortal>
 								</Select>
@@ -112,45 +157,108 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 			<Box width={"$100%"}>
 				<Box alignItems='center' paddingBottom={10}>
 					<Controller
-						key={"faculty"}
 						control={control}
+						key='faculty'
+						name='faculty'
 						rules={{
 							required: true,
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} isReadOnly={readOnly} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+								<Select width={"$90%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
 									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder='Faculty' />
+										<SelectInput placeholder={`Faculty`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
 										<SelectBackdrop />
 										<SelectContent>
 											<Text padding={10} size='xl'>
-												Faculty
+												Faculties
 											</Text>
 											<Divider borderWidth={0.1} />
-											<SelectItem label='Dr. Ravi Gupta - Nephrology' value='DR_RAVI_GUPTA_NEPHROLOGY' />
-											<SelectItem label='Dr. Mudit Dixit - Cardiology' value='DR_MUDIT_DIXIT_CARDIOLOGY' />
-											<SelectItem label='Dr. Priya Singh - Dermatology' value='DR_PRIYA_SINGH_DERMATOLOGY' />
-											<SelectItem label='Dr. Suresh Kumar - Gastroenterology' value='DR_SURESH_KUMAR_GASTROENTEROLOGY' />
-											<SelectItem label='Dr. Meera Joshi - Neurology' value='DR_MEERA_JOSHI_NEUROLOGY' />
-											<SelectItem label='Dr. Arjun Patel - Oncology' value='DR_ARJUN_PATEL_ONCOLOGY' />
-											<SelectItem label='Dr. Kavita Menon - Pediatrics' value='DR_KAVITA_MENON_PEDIATRICS' />
-											<SelectItem label='Dr. Vikram Desai - Psychiatry' value='DR_VIKRAM_DESAI_PSYCHIATRY' />
+											{prefilledData?.faculty.map((item) => {
+												return <SelectItem key={item?.name} label={item?.name} value={item?.name} />;
+											})}
 										</SelectContent>
 									</SelectPortal>
 								</Select>
 							);
 						}}
-						name='faculty'
 					/>
 				</Box>
 				<Box alignItems='center'>
 					<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 				</Box>
 			</Box>
+			{formFields.map((field, index) => {
+				if (field.type === "select-single") {
+					return (
+						<Box width={"$100%"}>
+							<Box alignItems='center' paddingBottom={10}>
+								<Controller
+									control={control}
+									key={field.uid}
+									name={field.uid}
+									rules={{
+										required: false,
+									}}
+									render={({ field: { onChange, onBlur, value } }) => {
+										return (
+											<Select width={"$90%"} onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
+												<SelectTrigger variant='underlined' size='md'>
+													<SelectInput placeholder={field.name} />
+													<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+												</SelectTrigger>
+												<SelectPortal>
+													<SelectBackdrop />
+													<SelectContent>
+														<Text padding={10} size='xl'>
+															{field.name}
+														</Text>
+														<Divider borderWidth={0.1} />
+														{field.options.map((option, index) => {
+															return <SelectItem key={option.value} label={option.label} value={option.value} />;
+														})}
+													</SelectContent>
+												</SelectPortal>
+											</Select>
+										);
+									}}
+								/>
+							</Box>
+							<Box alignItems='center'>
+								<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+							</Box>
+						</Box>
+					);
+				} else if (field.type === "text") {
+					return (
+						<Box width={"$100%"}>
+							<Box alignItems='center' paddingBottom={10}>
+								<Controller
+									control={control}
+									key={field.uid}
+									name={field.uid}
+									rules={{
+										required: false,
+									}}
+									render={({ field: { onChange, onBlur, value } }) => {
+										return (
+											<Input width={"$90%"} variant='underlined'>
+												<InputField onChangeText={onChange} value={value} placeholder={field.name} />
+											</Input>
+										);
+									}}
+								/>
+							</Box>
+							<Box alignItems='center'>
+								<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+							</Box>
+						</Box>
+					);
+				}
+			})}
 			<Button disabled={readOnly} justifyContent='flex-start' alignItems='flex-start' variant='link' width='$90%' onPress={() => setOpen(true)}>
 				<ButtonText paddingLeft={15} fontFamily='Inter'>
 					Date - {date.toDateString()}
@@ -161,10 +269,6 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 				open={open}
 				theme='light'
 				date={date}
-				// onDateChange={(date) => {
-				// 	//setDate(date);
-				// 	handelSetDate(date);
-				// }}
 				onConfirm={(date) => {
 					setOpen(false);
 					handelSetDate(date);
@@ -174,69 +278,8 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 				}}
 				mode='date'
 			/>
-			{/* <Box width={"$100%"}>
-				<Box alignItems='center' paddingBottom={10}>
-					<Controller
-						control={control}
-						key={"date"}
-						name={"date"}
-						rules={{
-							required: true,
-						}}
-						render={({ field: { onChange, onBlur, value } }) => {
-							return (
-								<Input
-									isReadOnly={readOnly}
-									onFocus={() => {
-										Keyboard.dismiss();
-										setShowActionsheet(true);
-									}}
-									variant='outline'>
-									<InputSlot pl='$3'>
-										<InputIcon as={CalendarDaysIcon} />
-									</InputSlot>
-									<InputField value={format(value, "MM/dd/yyyy")} placeholder='Enter Text here' />
-								</Input>
-							);
-						}}
-					/>
-				</Box>
-				<Box alignItems='center'>
-					<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-				</Box>
-			</Box>
-
-			<Actionsheet isOpen={showActionSheet} onClose={handleCloseDateModal} zIndex={999}>
-				<ActionsheetBackdrop />
-				<ActionsheetContent zIndex={999}>
-					<ActionsheetDragIndicatorWrapper>
-						<ActionsheetDragIndicator />
-					</ActionsheetDragIndicatorWrapper>
-					<Button onPress={() => setOpen(true)}>
-						<Button Text>Date</Button>
-					</Button>
-					<DatePicker
-						modal
-						open={open}
-						theme='light'
-						date={date}
-						// onDateChange={(date) => {
-						// 	//setDate(date);
-						// 	handelSetDate(date);
-						// }}
-						onConfirm={(date) => {
-							setOpen(false);
-							handelSetDate(date);
-						}}
-						onCancel={() => {
-							setOpen(false);
-						}}
-						mode='date'
-					/>
-				</ActionsheetContent>
-			</Actionsheet> */}
 		</VStack>
 	);
 };
 
-export default CaselogDropDownOptions;
+export default observer(CaselogDropDownOptions);

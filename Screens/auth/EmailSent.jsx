@@ -21,7 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
 
 const EmailSentPage = ({ navigation, route }) => {
-	const { enteredMail } = route.params;
+	const { enteredMail, enteredNumber } = route.params;
 	useEffect(() => {
 		const backAction = () => {
 			// Prevent default behavior (navigating back)
@@ -60,7 +60,10 @@ const EmailSentPage = ({ navigation, route }) => {
 				</Box>
 				<Box flex={1 / 4} justifyContent='center'>
 					<Box justifycontent='center' alignItems='center'>
-						<Button onPress={() => navigation.navigate("Enter Email OTP Page", { enteredMail: enteredMail })} variant='primary' size='lg'>
+						<Button
+							onPress={() => navigation.navigate("Enter Email OTP Page", { enteredMail: enteredMail, enteredNumber: enteredNumber })}
+							variant='primary'
+							size='lg'>
 							<ButtonText textAlign='center'>Continue</ButtonText>
 						</Button>
 					</Box>

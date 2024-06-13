@@ -28,7 +28,7 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 		if (!otpInput) {
 			setOTPError("Please Enter OTP");
 		} else if (otpInput === "1234") {
-			navigation.navigate("Register Page");
+			navigation.navigate("Register Page", { enteredNumber: enteredNumber });
 		} else {
 			setOTPError("Invalid OTP");
 		}

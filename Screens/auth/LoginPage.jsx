@@ -70,7 +70,17 @@ const LoginPage = ({ navigation }) => {
 		}
 		const response = await AppStore.SignIn({ userName: formData.email, password: formData.password });
 		if (response) {
-			navigation.navigate("Main Page");
+			if (response.userStatus === "REGISTERED") {
+				navigation.navigate("Main Page");
+				AppStore.setBroadSpecialty(response.broadSpecialty);
+				AppStore.setUserId(response.id);
+				const broadSpecialty = AppStore.UserBroadSpecialty;
+				console.log("broadSpecialty", broadSpecialty);
+			} else if (response.userStatus === "WIZARD_PENDING") {
+				navigation.navigate("Setup ProfilePage");
+			} else {
+				navigation.navigate("Enter Email OTP Page");
+			}
 		} else {
 			// If credentials don't match, display error message
 			setEmailError("Please enter valid credentials");

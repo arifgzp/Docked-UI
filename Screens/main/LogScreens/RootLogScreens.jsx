@@ -7,19 +7,22 @@ import AcademicLogPage from "./Academic Log/AcademicLog";
 import SpecialCaseDetails from "./SpecialCaseLog/SpecialCaseDetails";
 import LogProfilePage from "./LogProfile";
 import CaseLogReadScreen from "./CaseLogsScreens/CaseLogReadScreen";
+import { Tabs, TabsList, TabsTrigger, TabsText, TabsContents, TabsContent, Text } from "@gluestack-ui/themed";
+import LogTabsMainScreen from "./CaseLogsScreens/TabScreens/LogTabsMainScreen";
+import CaseLogEditScreen from "./CaseLogsScreens/CaseLogOldReadScreen";
 
 export default function RootLogScreens() {
 	const Stack = createNativeStackNavigator();
 	return (
 		<Stack.Navigator
-			initialRouteName='Logbook'
+			initialRouteName='RootLogBook'
 			screenOptions={{
 				animation: "slide_from_right", // Define the animation type
 				gestureEnabled: false,
 			}}>
 			<Stack.Screen
-				name='Logbook'
-				component={MainLogScreen}
+				name='RootLogBook'
+				component={LogTabsMainScreen}
 				options={{
 					title: "Logbook",
 					headerShown: false,
@@ -45,6 +48,7 @@ export default function RootLogScreens() {
 					headerTitleAlign: "center",
 				}}
 			/>
+
 			<Stack.Screen
 				name='ViewLogs'
 				component={ViewLogsPage}

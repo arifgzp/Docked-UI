@@ -27,7 +27,7 @@ const ViewLogsPage = ({ navigation }) => {
 				break;
 
 			default:
-				console.log("Navigating to Case Log7");
+				console.log("Navigating to Case Log");
 		}
 	};
 

@@ -1,25 +1,7 @@
 const Options = {
 	broadSpecialty: [
-		{ label: "Anesthesia", value: "Anesthesia" },
-		{ label: "Cardiology", value: "Cardiology" },
-		{ label: "Dermatology", value: "Dermatology" },
-		{ label: "Emergency Medicine", value: "Emergency Medicine" },
-		{ label: "General Surgery", value: "General Surgery" },
-		{ label: "Neurology", value: "Neurology" },
-	],
-	superSpecialty: [
-		{ label: "MBBS", value: "MBBS" },
-		{ label: "MD", value: "MD" },
-		{ label: "MS", value: "MS" },
-		{ label: "DM", value: "DM" },
-		{ label: "MCh", value: "MCh" },
-	],
-	subSpecialty: [
-		{ label: "PMS", value: "PMS" },
-		{ label: "Endocrinology", value: "Endocrinology" },
-		{ label: "Gastroenterology", value: "Gastroenterology" },
-		{ label: "Nephrology", value: "Nephrology" },
-		{ label: "Rheumatology", value: "Rheumatology" },
+		{ label: "Internal Medicine", value: "InternalMedicine" },
+		{ label: "Paediatrics", value: "Paediatrics" },
 	],
 	designation: [
 		{ label: "Doctor", value: "Doctor" },
@@ -65,18 +47,49 @@ const Options = {
 	],
 };
 
+const Specialties = {
+	InternalMedicine: {
+		SuperSpeciality: [
+			{
+				label: "Cardilogy",
+				value: "Cardilogy",
+			},
+		],
+		SubSpeciality: [
+			{
+				label: "Hepatology, Endoscopy",
+				value: "Hepatology,Endoscopy",
+			},
+		],
+	},
+	Paediatrics: {
+		SuperSpeciality: [
+			{
+				label: "Neonatology",
+				value: "Neonatology",
+			},
+		],
+	},
+};
+
 const createProfileConfig = [
 	{
 		step: 1,
 		id: "step-1",
 		label: "Your Expertise",
 		content: {
-			component: () => import("../../components/SetupProfile/YourExpertise"),
+			component: require("../../components/SetupProfile/YourExpertise").default,
 			config: {
 				fields: [
 					{ name: "Broad Specialty", uid: "broadSpecialty", type: "select-single", options: Options.broadSpecialty, isRequire: true },
-					{ name: "Super Specialty", uid: "superSpecialty", type: "select-single", options: Options.superSpecialty, isRequire: true },
-					{ name: "Sub Specialty", uid: "subSpecialty", type: "select-single", options: Options.subSpecialty, isRequire: true },
+					{
+						name: "Super Specialty",
+						uid: "superSpecialty",
+						type: "select-single",
+						options: Options.superSpecialty,
+						isRequire: false,
+					},
+					{ name: "Sub Specialty", uid: "subSpecialty", type: "select-single", options: Options.subSpecialty, isRequire: false },
 				],
 			},
 		},
@@ -86,7 +99,7 @@ const createProfileConfig = [
 		id: "step-2",
 		label: "Your Workplace",
 		content: {
-			component: () => import("../../components/SetupProfile/YourWorkplace"),
+			component: require("../../components/SetupProfile/YourWorkplace").default,
 			config: {
 				fields: [
 					{ name: "Designation", uid: "designation", type: "select-single", options: Options.designation, isRequire: true },
@@ -101,7 +114,7 @@ const createProfileConfig = [
 		id: "step-3",
 		label: "Verify MHID",
 		content: {
-			component: () => import("../../components/SetupProfile/VerifyMHD"),
+			component: require("../../components/SetupProfile/VerifyMHD").default,
 			config: {
 				fields: [
 					{ name: "Medical Council Name", uid: "medicalCouncilName", type: "select-single", options: Options.medicalCouncilName, isRequire: true },
@@ -122,7 +135,7 @@ const createProfileConfig = [
 		id: "step-4",
 		label: "Your Profile Picture",
 		content: {
-			component: () => import("../../components/SetupProfile/ProfilePicture"),
+			component: require("../../components/SetupProfile/ProfilePicture").default,
 		},
 	},
 ];
