@@ -100,7 +100,15 @@ const MainTabs = ({ navigation }) => {
 										break;
 									case "CaseLog":
 										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("Plus", { screen: "CaseLogFormScreen" });
+										navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+										break;
+									case "ChronicPain":
+										console.log("Push to", keys.currentKey, "route");
+										navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+										break;
+									case "CriticalCareCaseLog":
+										console.log("Push to", keys.currentKey, "route");
+										navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
 										break;
 									case "AcademicLog":
 										console.log("Push to", keys.currentKey, "route");
@@ -142,6 +150,14 @@ const MainTabs = ({ navigation }) => {
 							<MenuItem justifyContent='center' key='CaseLog' textValue='CaseLog'>
 								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
 								<MenuItemLabel size='sm'>Case Log</MenuItemLabel>
+							</MenuItem>
+							<MenuItem justifyContent='center' key='ChronicPain' textValue='ChronicPain'>
+								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
+								<MenuItemLabel size='sm'>Chronic Pain</MenuItemLabel>
+							</MenuItem>
+							<MenuItem justifyContent='center' key='CriticalCareCaseLog' textValue='CriticalCareCaseLog'>
+								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
+								<MenuItemLabel size='sm'>Critical Care Case Log</MenuItemLabel>
 							</MenuItem>
 							<MenuItem justifyContent='center' key='AcademicLog' textValue='AcademicLog'>
 								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />

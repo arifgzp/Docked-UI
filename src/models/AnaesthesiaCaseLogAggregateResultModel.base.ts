@@ -51,6 +51,10 @@ export const AnaesthesiaCaseLogAggregateResultModelBase = ModelBase
     npoMax: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMin: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMax: types.union(types.undefined, types.null, types.string),
+    outcomeMin: types.union(types.undefined, types.null, types.string),
+    outcomeMax: types.union(types.undefined, types.null, types.string),
+    caseTypeMin: types.union(types.undefined, types.null, types.string),
+    caseTypeMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -94,9 +98,13 @@ export class AnaesthesiaCaseLogAggregateResultModelSelector extends QueryBuilder
   get npoMax() { return this.__attr(`npoMax`) }
   get medicalRegistrationNumberMin() { return this.__attr(`medicalRegistrationNumberMin`) }
   get medicalRegistrationNumberMax() { return this.__attr(`medicalRegistrationNumberMax`) }
+  get outcomeMin() { return this.__attr(`outcomeMin`) }
+  get outcomeMax() { return this.__attr(`outcomeMax`) }
+  get caseTypeMin() { return this.__attr(`caseTypeMin`) }
+  get caseTypeMax() { return this.__attr(`caseTypeMax`) }
 }
 export function selectFromAnaesthesiaCaseLogAggregateResult() {
   return new AnaesthesiaCaseLogAggregateResultModelSelector()
 }
 
-export const anaesthesiaCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.weightMin.weightMax.heightMin.heightMax.diagnosisMin.diagnosisMax.surgicalProcedureMin.surgicalProcedureMax.specialityMin.specialityMax.asaGradeMin.asaGradeMax.typeOfSurgeryMin.typeOfSurgeryMax.npoMin.npoMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax
+export const anaesthesiaCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.weightMin.weightMax.heightMin.heightMax.diagnosisMin.diagnosisMax.surgicalProcedureMin.surgicalProcedureMax.specialityMin.specialityMax.asaGradeMin.asaGradeMax.typeOfSurgeryMin.typeOfSurgeryMax.npoMin.npoMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax

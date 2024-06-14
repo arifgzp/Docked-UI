@@ -34,7 +34,8 @@ regionalTechniques="regionalTechniques",
 interventionalProcedures="interventionalProcedures",
 monitoring="monitoring",
 complications="complications",
-outcome="outcome"
+outcome="outcome",
+caseType="caseType"
 }
 
 /**
@@ -68,4 +69,5 @@ export const AnaesthesiaCaseLogHasFilterEnumType = types.enumeration("Anaesthesi
   "monitoring",
   "complications",
   "outcome",
+  "caseType",
       ])

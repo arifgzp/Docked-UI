@@ -23,10 +23,12 @@ import { useState, useRef } from "react";
 import { Heading } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
 import { ModalBackdrop } from "@gluestack-ui/themed";
-import AnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnaesthesiaConfig";
+import CaseLogAnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
+import ChronicPainAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/ChronicPainAnesthesiaCaseLogConfig";
 import TreeView from "../../../../components/TreeView";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { forEach } from "lodash";
+import CriticalCareLAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CriticalCareLAnesthesiaCaseLogConfig";
 
 const parserForConvertingIntoTreeFormData = (input, key) => {
 	const result = {};
@@ -151,7 +153,7 @@ const getLabel = (key, configData) => {
 	return label;
 };
 
-const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue, specialCaseLogsOption }) => {
+const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue, specialCaseLogsOption, refernceToGetSpecialOptions }) => {
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
 	const [showTreeView, setShowTreeView] = useState(false);
@@ -179,7 +181,16 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 	};
 
 	const getTreeConfigData = (key) => {
-		return AnaesthesiaConfig[key];
+		switch (refernceToGetSpecialOptions) {
+			case "CaseLog":
+				return CaseLogAnaesthesiaConfig[key];
+			case "ChronicPain":
+				return ChronicPainAnesthesiaCaseLogConfig[key];
+			case "CriticalCareCaseLog":
+				return CriticalCareLAnesthesiaCaseLogConfig[key];
+			default:
+				return [];
+		}
 	};
 
 	const getArrowIcon = (level) => {

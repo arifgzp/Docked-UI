@@ -12,6 +12,14 @@ import {
 	fetchUserLogProfileModel,
 	selectFromUpdateAnaesthesiaCaseLogPayload,
 	updatedAnesthesiaCaseLogModelSelector,
+	selectFromAddAnaesthesiaChronicPainLogPayload,
+	selectFromAddAnaesthesiaCriticalCareCaseLogPayload,
+	selectFromUpdateAnaesthesiaChronicPainLogPayload,
+	updatedAnesthesiaChronicPainLogModelSelector,
+	selectFromUpdateAnaesthesiaCriticalCareCaseLogPayload,
+	updatedAnesthesiaCritcalCareCaseLogModelSelector,
+	anaesthesiaChronicPainLogModelPrimitives,
+	anaesthesiaCriticalCareCaseLogModelPrimitives,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
@@ -115,6 +123,70 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return updateAnesthesiaCaseLogQuery;
 	},
 
+	addAnaesthesiaChronicPainLog(anaesthesiaChronicPainLogInfo) {
+		const inputVariable = { input: [anaesthesiaChronicPainLogInfo] };
+		const addAnaesthesiaChronicPainLogSelector = selectFromAddAnaesthesiaChronicPainLogPayload().toString();
+		console.log("********** addAnaesthesiaChronicPainLog Query STARTS **********");
+		console.log(addAnaesthesiaChronicPainLogSelector);
+		console.log(inputVariable);
+		console.log("********** addAnaesthesiaChronicPainLog Query ENDS **********");
+		return self.mutateAddAnaesthesiaChronicPainLog(inputVariable, addAnaesthesiaChronicPainLogSelector);
+	},
+
+	updateAnaesthesiaChronicPainLog(anaesthesiaChronicPainLogId, updatedAnesthesiaChronicPainLogInfo) {
+		const dataFilter = {
+			id: anaesthesiaChronicPainLogId,
+		};
+		console.log("anaesthesiaCaseLogId", anaesthesiaChronicPainLogId);
+		console.log("updatedAnesthesiaCaseLogInfo", updatedAnesthesiaChronicPainLogInfo);
+		const setDataPatch = updatedAnesthesiaChronicPainLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateAnesthesiaChronicPainLogResultSelector = selectFromUpdateAnaesthesiaChronicPainLogPayload()
+			.anaesthesiaChronicPainLog(updatedAnesthesiaChronicPainLogModelSelector)
+			.toString();
+		const updateAnesthesiaCaseLogQuery: Query = self.mutateUpdateAnaesthesiaChronicPainLog(
+			inputVariable,
+			updateAnesthesiaChronicPainLogResultSelector
+		);
+		console.log("********** updateAnaesthesiaChronicPainLog Query STARTS **********");
+		console.log({ query: updateAnesthesiaCaseLogQuery.query });
+		console.log(updateAnesthesiaCaseLogQuery.variables);
+		console.log("********** updateAnaesthesiaChronicPainLog Query ENDS **********");
+		return updateAnesthesiaCaseLogQuery;
+	},
+
+	addAnaesthesiaCriticalCareCaseLog(anaesthesiaCriticalCareCaseLogInfo) {
+		const inputVariable = { input: [anaesthesiaCriticalCareCaseLogInfo] };
+		const addAnaesthesiaChronicPainLogSelector = selectFromAddAnaesthesiaCriticalCareCaseLogPayload().toString();
+		console.log("********** addAnaesthesiaCriticalCareCaseLog Query STARTS **********");
+		console.log(addAnaesthesiaChronicPainLogSelector);
+		console.log(inputVariable);
+		console.log("********** addAnaesthesiaCriticalCareCaseLog Query ENDS **********");
+		return self.mutateAddAnaesthesiaCriticalCareCaseLog(inputVariable, addAnaesthesiaChronicPainLogSelector);
+	},
+
+	updateAnaesthesiaCriticalCareCaseLog(anaesthesiaCriticalCareCaseLogId, updatedAnesthesiaCriticalCareCaseLogInfo) {
+		const dataFilter = {
+			id: anaesthesiaCriticalCareCaseLogId,
+		};
+		console.log("anaesthesiaCaseLogId", anaesthesiaCriticalCareCaseLogId);
+		console.log("updatedAnesthesiaCaseLogInfo", updatedAnesthesiaCriticalCareCaseLogInfo);
+		const setDataPatch = updatedAnesthesiaCriticalCareCaseLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateAnesthesiaCriticalCareCaseLogResultSelector = selectFromUpdateAnaesthesiaCriticalCareCaseLogPayload()
+			.anaesthesiaCriticalCareCaseLog(updatedAnesthesiaCritcalCareCaseLogModelSelector)
+			.toString();
+		const updateAnesthesiaCriticalCareCaseLogQuery: Query = self.mutateUpdateAnaesthesiaCriticalCareCaseLog(
+			inputVariable,
+			updateAnesthesiaCriticalCareCaseLogResultSelector
+		);
+		console.log("********** updateAnaesthesiaCriticalCareCaseLog Query STARTS **********");
+		console.log({ query: updateAnesthesiaCriticalCareCaseLogQuery.query });
+		console.log(updateAnesthesiaCriticalCareCaseLogQuery.variables);
+		console.log("********** updateAnaesthesiaCriticalCareCaseLog Query ENDS **********");
+		return updateAnesthesiaCriticalCareCaseLogQuery;
+	},
+
 	fetchAnaesthesiaCaseLog() {
 		const inputVariable = {};
 		const fetchAnaesthesiaCaseLogSelector = anaesthesiaCaseLogModelPrimitives.toString();
@@ -125,6 +197,31 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("********** fetchAnaesthesiaCaseLog Query ENDS **********");
 		return fetchAnaesthesiaCaseLogQuery;
 	},
+
+	fetchAnaesthesiaChronicPainLog() {
+		const inputVariable = {};
+		const fetchAnaesthesiaChronicPainLogSelector = anaesthesiaChronicPainLogModelPrimitives.toString();
+		const fetchAnaesthesiaChronicPainLogQuery = self.queryQueryAnaesthesiaChronicPainLog(inputVariable, fetchAnaesthesiaChronicPainLogSelector);
+		console.log("********** fetchAnaesthesiaChronicPainLog Query STARTS **********");
+		console.log(fetchAnaesthesiaChronicPainLogQuery.query);
+		console.log(fetchAnaesthesiaChronicPainLogQuery.variables);
+		console.log("********** fetchAnaesthesiaChronicPainLog Query ENDS **********");
+		return fetchAnaesthesiaChronicPainLogQuery;
+	},
+
+	fetchAnaesthesiaCriticalCareCaseLog() {
+		const inputVariable = {};
+		const fetchAnaesthesiaCriticalCareCaseLogSelector = anaesthesiaCriticalCareCaseLogModelPrimitives.toString();
+		const fetchAnaesthesiaCriticalCareCaseLogQuery = self.queryQueryAnaesthesiaCriticalCareCaseLog(
+			inputVariable,
+			fetchAnaesthesiaCriticalCareCaseLogSelector
+		);
+		console.log("********** fetchAnaesthesiaCriticalCareCaseLog Query STARTS **********");
+		console.log(fetchAnaesthesiaCriticalCareCaseLogQuery.query);
+		console.log(fetchAnaesthesiaCriticalCareCaseLogQuery.variables);
+		console.log("********** fetchAnaesthesiaCriticalCareCaseLog Query ENDS **********");
+		return fetchAnaesthesiaCriticalCareCaseLogQuery;
+	},
 })).views((self) => ({
 	get AnaesthesiaCaseLogList() {
 		return values(self.anaesthesiaCaseLogs);
@@ -132,5 +229,21 @@ export const RootStore = RootStoreBase.actions((self) => ({
 
 	getAnaesthesiaCaseLogById(id) {
 		return values(self.anaesthesiaCaseLogs).filter((obj) => obj.id == id);
+	},
+
+	get AnaesthesiaChronicPainLogList() {
+		return values(self.anaesthesiaChronicPainLogs);
+	},
+
+	getAnaesthesiaChronicPainLogById(id) {
+		return values(self.anaesthesiaChronicPainLogs).filter((obj) => obj.id == id);
+	},
+
+	get AnaesthesiaCriticalCareCaseLogList() {
+		return values(self.anaesthesiaCriticalCareCaseLogs);
+	},
+
+	getAnaesthesiaCriticalCareCaseLogById(id) {
+		return values(self.anaesthesiaCriticalCareCaseLogs).filter((obj) => obj.id == id);
 	},
 }));

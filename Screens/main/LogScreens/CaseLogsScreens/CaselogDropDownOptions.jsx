@@ -54,12 +54,12 @@ import { CalendarDaysIcon } from "@gluestack-ui/themed";
 import { InputSlot } from "@gluestack-ui/themed";
 import { InputIcon } from "@gluestack-ui/themed";
 import { format } from "date-fns";
-import caseLogConfigTextAndSingleSelectOptions from "../../../../config/entity/CaseLogFormConfig";
+import caseLogConfigTextAndSingleSelectOptions from "../../../../config/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
 import { observer } from "mobx-react";
 import { useQuery } from "../../../../src/models";
 import AppStore from "../../../../src/stores/AppStore";
 
-const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly, prefilledData }) => {
+const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly, prefilledData, formFields, readOnlyFaculty }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [open, setOpen] = useState(false);
@@ -73,7 +73,6 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 		setValue("date", date);
 	};
 
-	const formFields = caseLogConfigTextAndSingleSelectOptions;
 	console.log("prefilledData Mudit test", prefilledData);
 	return (
 		<VStack space='lg'>
@@ -165,7 +164,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+								<Select width={"$90%"} onBlur={onBlur} isReadOnly={readOnlyFaculty} onValueChange={onChange} selectedValue={value}>
 									<SelectTrigger variant='underlined' size='md'>
 										<SelectInput placeholder={`Faculty`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>

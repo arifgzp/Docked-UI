@@ -2,28 +2,7 @@ import { ButtonIcon, CheckIcon, CheckboxGroup, CheckboxIndicator, KeyboardAvoidi
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
-import {
-	Box,
-	Center,
-	GluestackUIProvider,
-	Text,
-	StatusBar,
-	Input,
-	HStack,
-	VStack,
-	FormControlLabel,
-	FormControl,
-	FormControlLabelText,
-	InputField,
-	FormControlHelper,
-	FormControlHelperText,
-	FormControlError,
-	AlertCircleIcon,
-	FormControlErrorIcon,
-	FormControlErrorText,
-	Button,
-	ButtonText,
-} from "@gluestack-ui/themed";
+import { Box, Text, StatusBar, Input, HStack, VStack, Button, ButtonText } from "@gluestack-ui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -41,10 +20,10 @@ const CaseLogTab = ({ navigation }) => {
 	const logEntries = ["Case Log - Entry 1", "Case Log - Entry 2", "Case Log - Entry 3", "Case Log - Entry 4"];
 	const [cardDetails, setCardDetails] = useState([]);
 
-	const handleButtonPress = (button, id) => {
+	const handleButtonPress = (button, id, caseType) => {
 		switch (button) {
 			case "CaseLogReadScreen":
-				navigation.navigate("CaseLogReadScreen", { id: id });
+				navigation.navigate("CaseLogReadScreen", { id: id, caseType: caseType });
 				console.log("Navigating to Case Log");
 				break;
 
@@ -60,7 +39,21 @@ const CaseLogTab = ({ navigation }) => {
 				setQuery(fetchQuery);
 				const data = await fetchQuery;
 				console.log("data for anesthesia case log", data.queryAnaesthesiaCaseLog);
-				setCardDetails(data.queryAnaesthesiaCaseLog);
+				const AnaesthesiaCaseLogData = data.queryAnaesthesiaCaseLog;
+
+				const fetchQuery2 = store.fetchAnaesthesiaChronicPainLog();
+				setQuery(fetchQuery2);
+				const data2 = await fetchQuery2;
+				console.log("data for anesthesia case log", data2.queryAnaesthesiaChronicPainLog);
+				const AnaesthesiaChronicPainLogData = data2.queryAnaesthesiaChronicPainLog;
+
+				const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLog();
+				setQuery(fetchQuery3);
+				const data3 = await fetchQuery3;
+				console.log("data for anesthesia case log", data3.queryAnaesthesiaCriticalCareCaseLog);
+				const AnaesthesiaCriticalCareCaseLogData = data3.queryAnaesthesiaCriticalCareCaseLog;
+
+				setCardDetails([...AnaesthesiaCaseLogData, ...AnaesthesiaChronicPainLogData, ...AnaesthesiaCriticalCareCaseLogData]);
 			} catch (error) {
 				console.log(error);
 			}
@@ -78,14 +71,7 @@ const CaseLogTab = ({ navigation }) => {
 						<VStack width={"$100%"} alignItems='center' paddingTop={10} paddingBottom={"$15%"} p='$2'>
 							{cardDetails.length > 0 ? (
 								cardDetails.map((card, index) => (
-									<Card
-										key={card.id || index}
-										onPress={() => navigation.navigate("CaseLogReadScreen", { id: card.id })}
-										variant='filled'
-										m='$3'
-										width={"$100%"}
-										borderRadius='$3xl'
-										p='$0'>
+									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
 										<VStack width={"$100%"} space='xs'>
 											<HStack pt='$3' pl='$5' pr='$3' justifyContent='space-between' alignItems='center'>
 												<HStack space='sm'>
@@ -99,7 +85,7 @@ const CaseLogTab = ({ navigation }) => {
 														<ButtonIcon as={Ionicons} name='share-social-outline' color='#FFFFFF' />
 													</Button>
 													<Button
-														onPress={handleButtonPress.bind(null, "CaseLogReadScreen", card?.id)}
+														onPress={handleButtonPress.bind(null, "CaseLogReadScreen", card?.id, card?.caseType)}
 														width={20}
 														height={30}
 														borderRadius={"$full"}

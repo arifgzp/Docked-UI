@@ -7,7 +7,7 @@ import { types } from "mobx-state-tree"
  * Typescript enum
  */
 
-export enum AnaesthesiaCaseLogOrderable {
+export enum AnaesthesiaCriticalCareCaseLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
@@ -16,23 +16,17 @@ hospital="hospital",
 faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
-weight="weight",
-height="height",
 diagnosis="diagnosis",
-surgicalProcedure="surgicalProcedure",
-speciality="speciality",
-asaGrade="asaGrade",
-typeOfSurgery="typeOfSurgery",
-npo="npo",
-medicalRegistrationNumber="medicalRegistrationNumber",
+comorbidites="comorbidites",
+complication="complication",
 outcome="outcome",
 caseType="caseType"
 }
 
 /**
-* AnaesthesiaCaseLogOrderable
+* AnaesthesiaCriticalCareCaseLogOrderable
 */
-export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("AnaesthesiaCaseLogOrderable", [
+export const AnaesthesiaCriticalCareCaseLogOrderableEnumType = types.enumeration("AnaesthesiaCriticalCareCaseLogOrderable", [
         "createdOn",
   "updatedOn",
   "date",
@@ -41,15 +35,9 @@ export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("Anaesthesi
   "faculty",
   "patientAge",
   "patientSex",
-  "weight",
-  "height",
   "diagnosis",
-  "surgicalProcedure",
-  "speciality",
-  "asaGrade",
-  "typeOfSurgery",
-  "npo",
-  "medicalRegistrationNumber",
+  "comorbidites",
+  "complication",
   "outcome",
   "caseType",
       ])

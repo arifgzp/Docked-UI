@@ -42,4 +42,14 @@ const caseLogConfigTextAndSingleSelectOptions = [
 	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true },
 ];
 
-export default caseLogConfigTextAndSingleSelectOptions;
+const specialAnesthesiaCaseLogsOption = [
+	{ id: "comorbidity", name: "Comorbidity" },
+	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
+	{ id: "airManagement", name: "Airway Management" },
+	{ id: "regionalTechniques", name: "Regional Techniques" },
+	{ id: "interventionalProcedures", name: "Interventional Procedures" },
+	{ id: "monitoring", name: "Monitoring" },
+	{ id: "complications", name: "Complications" },
+];
+
+export { caseLogConfigTextAndSingleSelectOptions, specialAnesthesiaCaseLogsOption };

@@ -1,7 +1,6 @@
-import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider } from "@gluestack-ui/themed";
+import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider, Text, ScrollView } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
-import { ScrollView } from "@gluestack-ui/themed";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import CaselogDropDownOptions from "./CaselogDropDownOptions";
 import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
@@ -9,25 +8,53 @@ import { useQuery } from "../../../../src/models";
 import { formatRFC3339 } from "date-fns";
 import Loader from "../../../../components/Loader";
 import { observer } from "mobx-react";
-import appStoreInstance from "../../../../src/stores/AppStore";
 import AppStore from "../../../../src/stores/AppStore";
 import { toJS } from "mobx";
-import { Text } from "@gluestack-ui/themed";
+import { useIsFocused } from "@react-navigation/native";
+import {
+	caseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCaseLogsOption,
+} from "../../../../config/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
+import {
+	ChornicPainCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaChronicPainOptions,
+} from "../../../../config/entity/AnesthesiaCaseLogConfigs/ChronicPainLogConfig";
+import {
+	CriticalCareCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCriticalCareCaseLogOptions,
+} from "../../../../config/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
 
-const specialCaseLogsOption = [
-	{ id: "comorbidity", name: "Comorbidity" },
-	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
-	{ id: "airManagement", name: "Airway Management" },
-	{ id: "regionalTechniques", name: "Regional Techniques" },
-	{ id: "interventionalProcedures", name: "Interventional Procedures" },
-	{ id: "monitoring", name: "Monitoring" },
-	{ id: "complications", name: "Complications" },
-];
+const handleSetCurrentCaseLogDropDownOptions = (key) => {
+	switch (key) {
+		case "CaseLog":
+			return caseLogConfigTextAndSingleSelectOptions;
+		case "ChronicPain":
+			return ChornicPainCaseLogConfigTextAndSingleSelectOptions;
+		case "CriticalCareCaseLog":
+			return CriticalCareCaseLogConfigTextAndSingleSelectOptions;
+		default:
+			return [];
+	}
+};
 
-const CaseLogFormScreen = ({ navigation }) => {
+const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
+	switch (key) {
+		case "CaseLog":
+			return specialAnesthesiaCaseLogsOption;
+		case "ChronicPain":
+			return specialAnesthesiaChronicPainOptions;
+		case "CriticalCareCaseLog":
+			return specialAnesthesiaCriticalCareCaseLogOptions;
+		default:
+			return [];
+	}
+};
+
+const CaseLogFormScreen = ({ navigation, route }) => {
+	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
-
+	const { caseLogFormToGet } = route.params;
 	const { control, formState, reset, watch, handleSubmit, setValue } = useForm({
 		defaultValues: {
 			date: new Date(),
@@ -35,51 +62,64 @@ const CaseLogFormScreen = ({ navigation }) => {
 	});
 
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
-
-	const onSubmitData = async (data) => {
-		console.log("Case Log Form Data", data);
-	};
+	const [currentCaseLogDropDownOptions, setCurrentCaseLogDropDownOptions] = useState(handleSetCurrentCaseLogDropDownOptions(caseLogFormToGet));
+	const [specialCaseLogsOption, setSpecialCaseLogsOption] = useState(handleSetCurrentSpecialCaseLogDropDownOptions(caseLogFormToGet));
 
 	useEffect(() => {
-		const fetchLogProfilePrefilledData = async () => {
-			try {
-				console.log("AppStore.UserId", AppStore.UserName);
-				const query = store.fetchUserLogProfile(AppStore.UserName);
-				setQuery(query);
-				const finishFetchingLogProfile = await query;
-				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-				if (finishFetchingLogProfile) {
-					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
-					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-					const facultiesList = userData.logProfile.faculties;
-					const rotationsList = userData.logProfile.rotations;
-					const hospitalData = userData.logProfile.hospital;
-					console.log("facultiesList", facultiesList);
-					console.log("rotationsList", rotationsList);
-					console.log("hospitalData", hospitalData);
-					console.log("rotations[0].department", rotationsList[0].department);
-					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-					setValue("hospital", hospitalData);
-					setValue("faculty", faculty);
-					setValue("rotation", rotationsList[0].department);
+		if (isFocused) {
+			const fetchLogProfilePrefilledData = async () => {
+				try {
+					const query = store.fetchUserLogProfile(AppStore.UserName);
+					setQuery(query);
+					const finishFetchingLogProfile = await query;
+					if (finishFetchingLogProfile) {
+						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+						const facultiesList = userData.logProfile.faculties;
+						const rotationsList = userData.logProfile.rotations;
+						const hospitalData = userData.logProfile.hospital;
+						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+						setValue("hospital", hospitalData);
+						setValue("faculty", facultiesList);
+						setValue("rotation", rotationsList[0].department);
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchLogProfilePrefilledData();
-		reset({
-			date: new Date("2024-07-30T15:01:00.000Z"),
-		});
-	}, []);
+			};
+			fetchLogProfilePrefilledData();
+			reset({
+				date: new Date("2024-07-30T15:01:00.000Z"),
+			});
+		}
+	}, [isFocused, caseLogFormToGet]);
 
-	console.log("Mudit is papa=>", caseLogPrefilledData);
+	useEffect(() => {
+		setCurrentCaseLogDropDownOptions(handleSetCurrentCaseLogDropDownOptions(caseLogFormToGet));
+		setSpecialCaseLogsOption(handleSetCurrentSpecialCaseLogDropDownOptions(caseLogFormToGet));
+	}, [caseLogFormToGet]);
 
 	const handleSaveClick = async (formData) => {
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
+		formData.caseType = caseLogFormToGet;
+		let queryToRun;
+
+		switch (caseLogFormToGet) {
+			case "CaseLog":
+				queryToRun = "addAnaesthesiaCaseLog";
+				break;
+			case "ChronicPain":
+				queryToRun = "addAnaesthesiaChronicPainLog";
+				break;
+			case "CriticalCareCaseLog":
+				queryToRun = "addAnaesthesiaCriticalCareCaseLog";
+				break;
+			default:
+				throw new Error("Invalid case log type");
+		}
+
 		try {
-			const query = store.addAnaesthesiaCaseLog(formData);
+			const query = store[queryToRun](formData);
 			setQuery(query);
 			const data = await query;
 			if (data) {
@@ -96,11 +136,18 @@ const CaseLogFormScreen = ({ navigation }) => {
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} w='$100%' backgroundColor='$primaryBackground'>
-					{caseLogPrefilledData && (
+					{caseLogPrefilledData ? (
 						<ScrollView>
 							<Box paddingTop={10} justifyContent='center' alignItems='center'>
 								<Box width={"$100%"}>
-									<CaselogDropDownOptions prefilledData={caseLogPrefilledData} control={control} setValue={setValue} formState={formState} />
+									<CaselogDropDownOptions
+										formFields={currentCaseLogDropDownOptions}
+										prefilledData={caseLogPrefilledData}
+										control={control}
+										setValue={setValue}
+										formState={formState}
+										readOnlyFaculty={false}
+									/>
 									<Divider />
 								</Box>
 								<Box justifyContent='center' alignItems='center'>
@@ -110,6 +157,7 @@ const CaseLogFormScreen = ({ navigation }) => {
 											setValue={setValue}
 											formState={formState}
 											specialCaseLogsOption={specialCaseLogsOption}
+											refernceToGetSpecialOptions={caseLogFormToGet}
 										/>
 									</Box>
 								</Box>
@@ -149,8 +197,7 @@ const CaseLogFormScreen = ({ navigation }) => {
 								</Box>
 							</Box>
 						</ScrollView>
-					)}
-					{!caseLogPrefilledData && (
+					) : (
 						<Box flex={1 / 1} height={"$100%"} justifyContent='center' alignItems='center'>
 							<VStack width={"$100%"} alignItems='center' space='lg' mb='$20'>
 								<Text>Please create your log profile before filing a case</Text>

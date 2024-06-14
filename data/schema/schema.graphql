@@ -91,8 +91,46 @@ type AnaesthesiaCaseLog  {
     interventionalProcedures: [String] @search(by:[term]) @dgraph(pred:"interventionalProcedures")
     monitoring: [String] @search(by:[term]) @dgraph(pred:"monitoring")
     complications: [String] @search(by:[term]) @dgraph(pred:"complications")
-    outcome: [String] @search(by:[term]) @dgraph(pred:"outcome")
+    outcome: String @search(by:[term]) @dgraph(pred:"outcome")
+    caseType : String @dgraph(pred:"caseType")
+}
 
+type AnaesthesiaChronicPainLog  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    rotation: String @search(by:[term]) @dgraph(pred:"rotation")
+    hospital: String @search(by:[term]) @dgraph(pred:"hospital")
+    faculty: String @dgraph(pred:"faculty")
+    patientAge: String @dgraph(pred:"patientAge")
+    patientSex: String @dgraph(pred:"patientSex")
+    diagnosis: String @dgraph(pred:"diagnosis")
+    indication: String @dgraph(pred:"indication")
+    technique : [String] @dgraph(pred:"technique")
+    method : [String] @dgraph(pred:"method")
+    drugsUsed : [String] @dgraph(pred:"drugsUsed")
+    intervention: String @search(by:[term])@dgraph(pred:"intervention")
+    caseType : String @dgraph(pred:"caseType")
+}
+
+type AnaesthesiaCriticalCareCaseLog  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    rotation: String @search(by:[term]) @dgraph(pred:"rotation")
+    hospital: String @search(by:[term]) @dgraph(pred:"hospital")
+    faculty: String @dgraph(pred:"faculty")
+    patientAge: String @dgraph(pred:"patientAge")
+    patientSex: String @dgraph(pred:"patientSex")
+    diagnosis: String @dgraph(pred:"diagnosis")
+    comorbidites: String @dgraph(pred:"comorbidites")   
+    surgicalprocedure : String @dgraph(pred:"surgicalprocedure")
+    complication : String @dgraph(pred:"complication")
+    outcome: String @search(by:[term]) @dgraph(pred:"outcome")
+    procedures : [String] @dgraph(pred:"procedures")
+    caseType : String @dgraph(pred:"caseType")
 }
 
 type OrthodonticsCaseLog  {
@@ -126,7 +164,7 @@ type OrthopaedicsCaseLog  {
     site: [String] @search(by:[term]) @dgraph(pred:"site")
     joint: [String] @search(by:[term]) @dgraph(pred:"joint")
     bones: [String] @search(by:[term]) @dgraph(pred:"bones")
-    outcome: [String] @search(by:[term]) @dgraph(pred:"outcome")
+    outcome: String @search(by:[term]) @dgraph(pred:"outcome")
     diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
 }
 

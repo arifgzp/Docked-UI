@@ -11,16 +11,46 @@ import { useRoute } from "@react-navigation/native";
 import Loader from "../../../../components/Loader";
 import { Text } from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
+import { useIsFocused } from "@react-navigation/native";
+import {
+	caseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCaseLogsOption,
+} from "../../../../config/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
+import {
+	ChornicPainCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaChronicPainOptions,
+} from "../../../../config/entity/AnesthesiaCaseLogConfigs/ChronicPainLogConfig";
+import {
+	CriticalCareCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCriticalCareCaseLogOptions,
+} from "../../../../config/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
+import AppStore from "../../../../src/stores/AppStore";
 
-const specialCaseLogsOption = [
-	{ id: "comorbidity", name: "Comorbidity" },
-	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
-	{ id: "airManagement", name: "Airway Management" },
-	{ id: "regionalTechniques", name: "Regional Techniques" },
-	{ id: "interventionalProcedures", name: "Interventional Procedures" },
-	{ id: "monitoring", name: "Monitoring" },
-	{ id: "complications", name: "Complications" },
-];
+const handleSetCurrentCaseLogDropDownOptions = (key) => {
+	switch (key) {
+		case "CaseLog":
+			return caseLogConfigTextAndSingleSelectOptions;
+		case "ChronicPain":
+			return ChornicPainCaseLogConfigTextAndSingleSelectOptions;
+		case "CriticalCareCaseLog":
+			return CriticalCareCaseLogConfigTextAndSingleSelectOptions;
+		default:
+			return [];
+	}
+};
+
+const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
+	switch (key) {
+		case "CaseLog":
+			return specialAnesthesiaCaseLogsOption;
+		case "ChronicPain":
+			return specialAnesthesiaChronicPainOptions;
+		case "CriticalCareCaseLog":
+			return specialAnesthesiaCriticalCareCaseLogOptions;
+		default:
+			return [];
+	}
+};
 
 const parserForConvertingIntoTreeFormData = (input, key) => {
 	const result = {};
@@ -53,6 +83,7 @@ const parserForConvertingIntoTreeFormData = (input, key) => {
 
 const CaseLogReadScreen = ({ navigation }) => {
 	const routes = useRoute();
+	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [loading, setLoading] = useState(false);
@@ -65,60 +96,93 @@ const CaseLogReadScreen = ({ navigation }) => {
 		},
 	});
 	const typeOfAnaesthesia = parserForConvertingIntoTreeFormData(watch("typeOfAnaesthesia"), "typeOfAnaesthesia");
+	const [currentCaseLogDropDownOptions, setCurrentCaseLogDropDownOptions] = useState(handleSetCurrentCaseLogDropDownOptions(routes.params.caseType));
+	const [specialCaseLogsOption, setSpecialCaseLogsOption] = useState(handleSetCurrentSpecialCaseLogDropDownOptions(routes.params.caseType));
+
 	useEffect(() => {
 		setLoading(true);
 		setTimeout(() => {
 			setLoading(false);
 		}, 1000);
 		console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
-		reset({
-			...store.getAnaesthesiaCaseLogById(routes.params.id)[0],
-		});
+		switch (routes.params.caseType) {
+			case "CaseLog":
+				reset({
+					...store.getAnaesthesiaCaseLogById(routes.params.id)[0],
+				});
+				break;
+			case "ChronicPain":
+				reset({
+					...store.getAnaesthesiaChronicPainLogById(routes.params.id)[0],
+				});
+				break;
+			case "CriticalCareCaseLog":
+				reset({
+					...store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0],
+				});
+				break;
+		}
 	}, []);
 
 	useEffect(() => {
-		console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
-		reset({
-			...store.getAnaesthesiaCaseLogById(routes.params.id)[0],
-		});
-	}, []);
+		setCurrentCaseLogDropDownOptions(handleSetCurrentCaseLogDropDownOptions(routes.params.caseType));
+		setSpecialCaseLogsOption(handleSetCurrentSpecialCaseLogDropDownOptions(routes.params.caseType));
+	}, [routes.params.caseType]);
 
 	useEffect(() => {
-		const fetchLogProfilePrefilledData = async () => {
-			try {
-				console.log("AppStore.UserId", AppStore.UserName);
-				const query = store.fetchUserLogProfile(AppStore.UserName);
-				setQuery(query);
-				const finishFetchingLogProfile = await query;
-				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-				if (finishFetchingLogProfile) {
-					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
-					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-					const facultiesList = userData.logProfile.faculties;
-					const rotationsList = userData.logProfile.rotations;
-					const hospitalData = userData.logProfile.hospital;
-					console.log("facultiesList", facultiesList);
-					console.log("rotationsList", rotationsList);
-					console.log("hospitalData", hospitalData);
-					console.log("rotations[0].department", rotationsList[0].department);
-					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-					setValue("hospital", hospitalData);
-					setValue("faculty", faculty);
-					setValue("rotation", rotationsList[0].department);
+		if (isFocused) {
+			const fetchLogProfilePrefilledData = async () => {
+				try {
+					const query = store.fetchUserLogProfile(AppStore.UserName);
+					setQuery(query);
+					const finishFetchingLogProfile = await query;
+					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+					if (finishFetchingLogProfile) {
+						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
+						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+						const facultiesList = userData.logProfile.faculties;
+						const rotationsList = userData.logProfile.rotations;
+						const hospitalData = userData.logProfile.hospital;
+						console.log("facultiesList", facultiesList);
+						console.log("rotationsList", rotationsList);
+						console.log("hospitalData", hospitalData);
+						console.log("rotations[0].department", rotationsList[0].department);
+						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+						setValue("hospital", hospitalData);
+						setValue("faculty", facultiesList);
+						setValue("rotation", rotationsList[0].department);
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchLogProfilePrefilledData();
-	}, []);
+			};
+			fetchLogProfilePrefilledData();
+		}
+	}, [routes.params.caseType]);
 
 	const handleOnUpdateClick = async (formData) => {
 		delete formData.id;
 		delete formData.__typename;
 		formData.updatedOn = formatRFC3339(new Date());
+
+		let queryToRun;
+
+		switch (routes.params.caseType) {
+			case "CaseLog":
+				queryToRun = "updateAnaesthesiaCaseLog";
+				break;
+			case "ChronicPain":
+				queryToRun = "updateAnaesthesiaChronicPainLog";
+				break;
+			case "CriticalCareCaseLog":
+				queryToRun = "updateAnaesthesiaCriticalCareCaseLog";
+				break;
+			default:
+				throw new Error("Invalid case log type");
+		}
+
 		try {
-			const query = store.updateAnaesthesiaCaseLog(routes.params.id, { set: formData });
+			const query = store[queryToRun](routes.params.id, { set: formData });
 			setQuery(query);
 			const data = await query;
 			if (data) {
@@ -139,11 +203,13 @@ const CaseLogReadScreen = ({ navigation }) => {
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>
 							<Box width={"$100%"}>
 								<CaselogDropDownOptions
+									formFields={currentCaseLogDropDownOptions}
 									prefilledData={caseLogPrefilledData}
 									control={control}
 									readOnly={false}
 									setValue={setValue}
 									formState={formState}
+									readOnlyFaculty={true}
 								/>
 								<Divider />
 							</Box>
@@ -156,6 +222,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 									setValue={setValue}
 									formState={formState}
 									specialCaseLogsOption={specialCaseLogsOption}
+									refernceToGetSpecialOptions={routes.params.caseType}
 								/>
 							</Box>
 						</Box>

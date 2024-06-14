@@ -29,6 +29,8 @@ export const OrthopaedicsCaseLogAggregateResultModelBase = ModelBase
     facultyMax: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMin: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMax: types.union(types.undefined, types.null, types.string),
+    outcomeMin: types.union(types.undefined, types.null, types.string),
+    outcomeMax: types.union(types.undefined, types.null, types.string),
     diagnosisMin: types.union(types.undefined, types.null, types.string),
     diagnosisMax: types.union(types.undefined, types.null, types.string),
   })
@@ -52,6 +54,8 @@ export class OrthopaedicsCaseLogAggregateResultModelSelector extends QueryBuilde
   get facultyMax() { return this.__attr(`facultyMax`) }
   get medicalRegistrationNumberMin() { return this.__attr(`medicalRegistrationNumberMin`) }
   get medicalRegistrationNumberMax() { return this.__attr(`medicalRegistrationNumberMax`) }
+  get outcomeMin() { return this.__attr(`outcomeMin`) }
+  get outcomeMax() { return this.__attr(`outcomeMax`) }
   get diagnosisMin() { return this.__attr(`diagnosisMin`) }
   get diagnosisMax() { return this.__attr(`diagnosisMax`) }
 }
@@ -59,4 +63,4 @@ export function selectFromOrthopaedicsCaseLogAggregateResult() {
   return new OrthopaedicsCaseLogAggregateResultModelSelector()
 }
 
-export const orthopaedicsCaseLogAggregateResultModelPrimitives = selectFromOrthopaedicsCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.diagnosisMin.diagnosisMax
+export const orthopaedicsCaseLogAggregateResultModelPrimitives = selectFromOrthopaedicsCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.outcomeMin.outcomeMax.diagnosisMin.diagnosisMax

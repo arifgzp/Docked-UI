@@ -27,7 +27,7 @@ export const OrthopaedicsCaseLogModelBase = ModelBase
     site: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     joint: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     bones: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    outcome: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
+    outcome: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({

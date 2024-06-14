@@ -7,7 +7,7 @@ import { types } from "mobx-state-tree"
  * Typescript enum
  */
 
-export enum AnaesthesiaCaseLogOrderable {
+export enum AnaesthesiaChronicPainLogHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
@@ -16,23 +16,19 @@ hospital="hospital",
 faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
-weight="weight",
-height="height",
 diagnosis="diagnosis",
-surgicalProcedure="surgicalProcedure",
-speciality="speciality",
-asaGrade="asaGrade",
-typeOfSurgery="typeOfSurgery",
-npo="npo",
-medicalRegistrationNumber="medicalRegistrationNumber",
-outcome="outcome",
+indication="indication",
+technique="technique",
+method="method",
+drugsUsed="drugsUsed",
+intervention="intervention",
 caseType="caseType"
 }
 
 /**
-* AnaesthesiaCaseLogOrderable
+* AnaesthesiaChronicPainLogHasFilter
 */
-export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("AnaesthesiaCaseLogOrderable", [
+export const AnaesthesiaChronicPainLogHasFilterEnumType = types.enumeration("AnaesthesiaChronicPainLogHasFilter", [
         "createdOn",
   "updatedOn",
   "date",
@@ -41,15 +37,11 @@ export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("Anaesthesi
   "faculty",
   "patientAge",
   "patientSex",
-  "weight",
-  "height",
   "diagnosis",
-  "surgicalProcedure",
-  "speciality",
-  "asaGrade",
-  "typeOfSurgery",
-  "npo",
-  "medicalRegistrationNumber",
-  "outcome",
+  "indication",
+  "technique",
+  "method",
+  "drugsUsed",
+  "intervention",
   "caseType",
       ])

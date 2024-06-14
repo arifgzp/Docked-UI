@@ -20,4 +20,4 @@ export const AnaesthesiaCaseLogModel = AnaesthesiaCaseLogModelBase.actions((self
 export const updatedAnesthesiaCaseLogModelSelector =
 	selectFromAnaesthesiaCaseLog().updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality
 		.asaGrade.typeOfSurgery.npo.comorbidity.examination.laboratoryFindings.medicalRegistrationNumber.typeOfAnaesthesia.airManagement
-		.regionalTechniques.interventionalProcedures.monitoring.complications.outcome;
+		.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.caseType;
