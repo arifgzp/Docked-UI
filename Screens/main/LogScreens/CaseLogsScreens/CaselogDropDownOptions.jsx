@@ -160,7 +160,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						key='faculty'
 						name='faculty'
 						rules={{
-							required: true,
+							required: false,
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (

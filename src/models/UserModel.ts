@@ -1,6 +1,9 @@
 import { Instance } from "mobx-state-tree";
 import { UserModelBase, selectFromUser } from "./UserModel.base";
 import { fetchLogProfileModelSelector } from "./LogProfileModel";
+import { anaesthesiaCaseLogModelPrimitives } from "./AnaesthesiaCaseLogModel.base";
+import { anaesthesiaChronicPainLogModelPrimitives } from "./AnaesthesiaChronicPainLogModel.base";
+import { anaesthesiaCriticalCareCaseLogModelPrimitives } from "./AnaesthesiaCriticalCareCaseLogModel.base";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -20,3 +23,8 @@ export const UserModel = UserModelBase.actions((self) => ({
 
 export const updateLogProfileModelSelector = selectFromUser().logProfile(fetchLogProfileModelSelector);
 export const fetchUserLogProfileModel = selectFromUser().logProfile(fetchLogProfileModelSelector);
+export const AnaesthesiaCaseLogByModelSelector = selectFromUser().anaesthesiaCaseLog(anaesthesiaCaseLogModelPrimitives);
+export const AnaesthesiaChronicPainLogByModelSelector = selectFromUser().anaesthesiaChronicPainLog(anaesthesiaChronicPainLogModelPrimitives);
+export const AnaesthesiaCriticalCareCaseLogByModelSelector = selectFromUser().anaesthesiaCriticalCareCaseLog(
+	anaesthesiaCriticalCareCaseLogModelPrimitives
+);

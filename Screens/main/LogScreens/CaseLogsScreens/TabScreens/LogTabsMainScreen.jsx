@@ -1,7 +1,10 @@
+import { Button, ButtonIcon, HStack } from "@gluestack-ui/themed";
 import { Box, Text } from "@gluestack-ui/themed";
 import * as React from "react";
 import { View, useWindowDimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { ButtonText } from "@gluestack-ui/themed";
 
 const FirstRoute = require("./CaseLogMainTab").default;
 const SecondRoute = require("./AcademicLogTab").default;
@@ -30,7 +33,7 @@ const renderTabBar = (props) => (
 	/>
 );
 
-export default function LogTabsMainScreen() {
+export default function LogTabsMainScreen({ navigation }) {
 	const layout = useWindowDimensions();
 
 	const [index, setIndex] = React.useState(0);
@@ -44,6 +47,23 @@ export default function LogTabsMainScreen() {
 
 	return (
 		<Box p='$4' w='$full' h='$full' bg='$primaryBackground'>
+			<HStack justifyContent='space-between'>
+				<Text size='xl' fontFamily='Inter_Bold'>
+					Logbook
+				</Text>
+				<HStack space='sm' alignItems='center'>
+					<Button backgroundColor='$primaryBackground' borderRadius={"$full"} size='xs'>
+						<ButtonIcon as={Ionicons} size={20} name='search-outline' color='#979797' />
+					</Button>
+					<Button
+						onPress={() => navigation.navigate("Plus", { screen: "LogProfilePage" })}
+						backgroundColor='#367B71'
+						borderRadius={"$full"}
+						size='xs'>
+						<ButtonText>Log Profile</ButtonText>
+					</Button>
+				</HStack>
+			</HStack>
 			<TabView
 				renderTabBar={renderTabBar}
 				navigationState={{ index, routes }}

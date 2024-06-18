@@ -37,6 +37,8 @@ export const AnaesthesiaCriticalCareCaseLogAggregateResultModelBase = ModelBase
     diagnosisMax: types.union(types.undefined, types.null, types.string),
     comorbiditesMin: types.union(types.undefined, types.null, types.string),
     comorbiditesMax: types.union(types.undefined, types.null, types.string),
+    surgicalprocedureMin: types.union(types.undefined, types.null, types.string),
+    surgicalprocedureMax: types.union(types.undefined, types.null, types.string),
     complicationMin: types.union(types.undefined, types.null, types.string),
     complicationMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
@@ -72,6 +74,8 @@ export class AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector extends 
   get diagnosisMax() { return this.__attr(`diagnosisMax`) }
   get comorbiditesMin() { return this.__attr(`comorbiditesMin`) }
   get comorbiditesMax() { return this.__attr(`comorbiditesMax`) }
+  get surgicalprocedureMin() { return this.__attr(`surgicalprocedureMin`) }
+  get surgicalprocedureMax() { return this.__attr(`surgicalprocedureMax`) }
   get complicationMin() { return this.__attr(`complicationMin`) }
   get complicationMax() { return this.__attr(`complicationMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
@@ -83,4 +87,4 @@ export function selectFromAnaesthesiaCriticalCareCaseLogAggregateResult() {
   return new AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector()
 }
 
-export const anaesthesiaCriticalCareCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCriticalCareCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.comorbiditesMin.comorbiditesMax.complicationMin.complicationMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax
+export const anaesthesiaCriticalCareCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCriticalCareCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.comorbiditesMin.comorbiditesMax.surgicalprocedureMin.surgicalprocedureMax.complicationMin.complicationMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax

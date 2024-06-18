@@ -4,7 +4,7 @@ import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
 import { Box, Text, StatusBar, Input, HStack, VStack, Button, ButtonText } from "@gluestack-ui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Platform } from "react-native";
+import { AppState, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "../../../../../src/models";
 import { useEffect, useState } from "react";
@@ -13,7 +13,7 @@ import Loader from "../../../../../components/Loader";
 import { ScrollView } from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
 import { format } from "date-fns";
-
+import AppStore from "../../../../../src/stores/AppStore";
 const CaseLogTab = ({ navigation }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -35,23 +35,23 @@ const CaseLogTab = ({ navigation }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const fetchQuery = store.fetchAnaesthesiaCaseLog();
+				const fetchQuery = store.fetchAnaesthesiaCaseLogByUser(AppStore.UserName);
 				setQuery(fetchQuery);
 				const data = await fetchQuery;
-				console.log("data for anesthesia case log", data.queryAnaesthesiaCaseLog);
-				const AnaesthesiaCaseLogData = data.queryAnaesthesiaCaseLog;
+				console.log("data for anesthesia case log", data.queryUser[0].anaesthesiaCaseLog);
+				const AnaesthesiaCaseLogData = data.queryUser[0].anaesthesiaCaseLog;
 
-				const fetchQuery2 = store.fetchAnaesthesiaChronicPainLog();
+				const fetchQuery2 = store.fetchAnaesthesiaChronicPainLogByUser();
 				setQuery(fetchQuery2);
 				const data2 = await fetchQuery2;
-				console.log("data for anesthesia case log", data2.queryAnaesthesiaChronicPainLog);
-				const AnaesthesiaChronicPainLogData = data2.queryAnaesthesiaChronicPainLog;
+				console.log("data for anesthesia case log", data2.queryUser[0].anaesthesiaChronicPainLog);
+				const AnaesthesiaChronicPainLogData = data2.queryUser[0].anaesthesiaChronicPainLog;
 
-				const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLog();
+				const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLogByUser();
 				setQuery(fetchQuery3);
 				const data3 = await fetchQuery3;
-				console.log("data for anesthesia case log", data3.queryAnaesthesiaCriticalCareCaseLog);
-				const AnaesthesiaCriticalCareCaseLogData = data3.queryAnaesthesiaCriticalCareCaseLog;
+				console.log("data for anesthesia case log", data3.queryUser[0].anaesthesiaCriticalCareCaseLog);
+				const AnaesthesiaCriticalCareCaseLogData = data3.queryUser[0].anaesthesiaCriticalCareCaseLog;
 
 				setCardDetails([...AnaesthesiaCaseLogData, ...AnaesthesiaChronicPainLogData, ...AnaesthesiaCriticalCareCaseLogData]);
 			} catch (error) {
@@ -123,7 +123,7 @@ const CaseLogTab = ({ navigation }) => {
 											<HStack pr='$3' pl='$5' space='sm'>
 												<Text size='sm'>Case Type:</Text>
 												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.typeOfSurgery}
+													{card.caseType}
 												</Text>
 											</HStack>
 											<HStack pr='$3' pl='$5' space='sm'>

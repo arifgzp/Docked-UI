@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import HomeScreenPage from "../Screens/main/HomeScreen";
 import SettingsScreenPage from "../Screens/main/SettingsScreen";
 import MainLogScreen from "../Screens/main/LogScreens/MainLogScreen";
 import { ImageAssets } from "../assets/Assets";
-import { Divider, Image, MenuItem, Modal, ModalBackdrop, ModalBody, ModalCloseButton } from "@gluestack-ui/themed";
+import { Divider, Image, MenuItem, Modal, ModalBackdrop, ModalBody, ModalCloseButton, RadioGroup } from "@gluestack-ui/themed";
 import ResourcesMainPage from "../Screens/main/Resources/ResourcesMainPage";
 import CommunityMainPage from "../Screens/main/Community/CommunityMainPage";
 import NotificationsScreen from "../Screens/main/NotificationsScreen";
@@ -24,8 +24,24 @@ import { ButtonText } from "@gluestack-ui/themed";
 import { CloseIcon, GlobeIcon, PlusIcon } from "@gluestack-ui/themed";
 import { Menu } from "@gluestack-ui/themed";
 import { MenuItemLabel } from "@gluestack-ui/themed";
-import { ButtonIcon } from "@gluestack-ui/themed";
+import { ButtonIcon, Text } from "@gluestack-ui/themed";
 import { useNavigationState } from "@react-navigation/native";
+import { Radio } from "@gluestack-ui/themed";
+import { RadioIndicator } from "@gluestack-ui/themed";
+import { RadioIcon } from "@gluestack-ui/themed";
+import { CircleIcon } from "@gluestack-ui/themed";
+import { RadioLabel } from "@gluestack-ui/themed";
+import { VStack } from "@gluestack-ui/themed";
+import {
+	Actionsheet,
+	ActionsheetBackdrop,
+	ActionsheetDragIndicatorWrapper,
+	ActionsheetContent,
+	ActionsheetDragIndicator,
+	ActionsheetItem,
+	ActionsheetItemText,
+} from "@gluestack-ui/themed";
+import { Box } from "@gluestack-ui/themed";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -40,6 +56,31 @@ const NotificationButton = ({ onPress }) => {
 
 const MainTabs = ({ navigation }) => {
 	const [selected, setSelected] = useState(new Set([]));
+	const [selectedLogButton, setSelectedLogButton] = useState("");
+
+	const [showActionsheet, setShowActionsheet] = useState(false);
+	const handleClose = () => setShowActionsheet(!showActionsheet);
+
+	const handleDisplayingLogForm = (selectedLogButton) => {
+		switch (selectedLogButton) {
+			case "CaseLog":
+				handleClose();
+				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+				break;
+			case "ChronicPainLog":
+				handleClose();
+				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+				break;
+			case "CriticalCareCaseLog":
+				handleClose();
+				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
+				break;
+			default:
+				// Optional: handle cases where keys.currentKey does not match any of the specified cases
+				console.log("Key not recognized");
+				break;
+		}
+	};
 
 	return (
 		<Tab.Navigator
@@ -83,99 +124,74 @@ const MainTabs = ({ navigation }) => {
 			/>
 			<Tab.Screen
 				options={{
-					tabBarIcon: ({ color, size }) => <Ionicons name='add-circle' size={65} color={"rgba(64, 224, 208, 0.7)"} />,
+					tabBarIcon: ({ color, size }) => <Ionicons name='add-circle' size={65} color='#CC3F0C' />,
 					headerShown: false,
 					tabBarButton: (props) => (
-						<Menu
-							disabledKeys={["AcademicLog", "ThesisLog", "SpecialLog", "CustomLog"]}
-							selectionMode='single'
-							selectedKeys={selected}
-							onSelectionChange={(keys) => {
-								console.log("onSelectionChange", keys);
-								setSelected(keys);
-								switch (keys.currentKey) {
-									case "LogProfile":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("Plus", { screen: "LogProfilePage" });
-										break;
-									case "CaseLog":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
-										break;
-									case "ChronicPain":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
-										break;
-									case "CriticalCareCaseLog":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
-										break;
-									case "AcademicLog":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("MainLogScreen", { screen: "AcademicLog" });
-										break;
-									case "ThesisLog":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("MainLogScreen", { screen: "ThesisLogs" });
-										break;
-									case "SpecialLog":
-										console.log("Push to", keys.currentKey, "route");
-										navigation.navigate("MainLogScreen", { screen: "SpecialCaseLogs" });
-										break;
-									case "CustomLog":
-										console.log("Push to", keys.currentKey, "route");
-
-										break;
-									default:
-										// Optional: handle cases where keys.currentKey does not match any of the specified cases
-										console.log("Key not recognized");
-										break;
-								}
-							}}
-							closeOnSelect={true}
-							{...props}
-							placement='top'
-							style={{ backgroundColor: "#FFFFFF" }}
-							trigger={({ ...triggerProps }) => {
-								return (
-									<Button mt='$2' width={50} height={50} {...triggerProps}>
-										<ButtonIcon as={Ionicons} size='xl' name='add-circle' />
-									</Button>
-								);
-							}}>
-							<MenuItem justifyContent='center' key='LogProfile' textValue='LogProfile'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Log Profile</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='CaseLog' textValue='CaseLog'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Case Log</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='ChronicPain' textValue='ChronicPain'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Chronic Pain</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='CriticalCareCaseLog' textValue='CriticalCareCaseLog'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Critical Care Case Log</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='AcademicLog' textValue='AcademicLog'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Academic Log</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='ThesisLog' textValue='ThesisLog'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Thesis Log</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='SpecialLog' textValue='SpecialLog'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Special Log</MenuItemLabel>
-							</MenuItem>
-							<MenuItem justifyContent='center' key='CustomLog' textValue='CustomLog'>
-								<Icon as={Ionicons} name='add-circle-outline' size='lg' mr='$2' />
-								<MenuItemLabel size='sm'>Custom Log</MenuItemLabel>
-							</MenuItem>
-						</Menu>
+						<Box>
+							<Button onPress={handleClose} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={45} height={45}>
+								<ButtonIcon as={Ionicons} size='xl' name='add-outline' />
+							</Button>
+							<Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
+								<ActionsheetBackdrop />
+								<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
+									<ActionsheetDragIndicatorWrapper>
+										<ActionsheetDragIndicator />
+									</ActionsheetDragIndicatorWrapper>
+									<VStack space='lg' mt='$2' ml='$2'>
+										<Text color='#000000' size='lg' fontFamily='Inter_Bold'>
+											Choose type of log entry
+										</Text>
+										<RadioGroup value={selectedLogButton} onChange={setSelectedLogButton}>
+											<VStack alignItems='flex-start' space='lg' mb='$2'>
+												<Radio value='CaseLog'>
+													<RadioIndicator mr='$2'>
+														<RadioIcon as={CircleIcon} />
+													</RadioIndicator>
+													<RadioLabel>Case Log</RadioLabel>
+												</Radio>
+												<Radio value='ChronicPainLog'>
+													<RadioIndicator mr='$2'>
+														<RadioIcon as={CircleIcon} />
+													</RadioIndicator>
+													<RadioLabel>Chronic Pain Log</RadioLabel>
+												</Radio>
+												<Radio value='CriticalCareCaseLog'>
+													<RadioIndicator mr='$2'>
+														<RadioIcon as={CircleIcon} />
+													</RadioIndicator>
+													<RadioLabel>Critical Care Case Log</RadioLabel>
+												</Radio>
+												<Radio isReadOnly value='AcademicLog'>
+													<RadioIndicator mr='$2'>
+														<RadioIcon as={CircleIcon} />
+													</RadioIndicator>
+													<RadioLabel>Academic Log</RadioLabel>
+												</Radio>
+												<Radio isReadOnly value='ThesisLogs'>
+													<RadioIndicator mr='$2'>
+														<RadioIcon as={CircleIcon} />
+													</RadioIndicator>
+													<RadioLabel>Thesis Logs</RadioLabel>
+												</Radio>
+												<Radio isReadOnly value='SpecialCaseLogs'>
+													<RadioIndicator mr='$2'>
+														<RadioIcon as={CircleIcon} />
+													</RadioIndicator>
+													<RadioLabel>Special Case Logs</RadioLabel>
+												</Radio>
+											</VStack>
+										</RadioGroup>
+									</VStack>
+									<Box mt='$4' mb='$4' alignSelf='center'>
+										<Button onPress={() => handleDisplayingLogForm(selectedLogButton)} backgroundColor='#367B71' borderRadius={"$full"}>
+											<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
+												Proceed for log entry
+											</ButtonText>
+										</Button>
+									</Box>
+								</ActionsheetContent>
+							</Actionsheet>
+						</Box>
 					),
 				}}
 				name='Plus'

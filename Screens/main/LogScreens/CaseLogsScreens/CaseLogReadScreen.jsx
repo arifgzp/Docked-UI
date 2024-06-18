@@ -161,6 +161,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 	}, [routes.params.caseType]);
 
 	const handleOnUpdateClick = async (formData) => {
+		console.log("this is the update query");
 		delete formData.id;
 		delete formData.__typename;
 		formData.updatedOn = formatRFC3339(new Date());

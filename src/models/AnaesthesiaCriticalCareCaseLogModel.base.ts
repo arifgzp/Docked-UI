@@ -27,7 +27,7 @@ export const AnaesthesiaCriticalCareCaseLogModelBase = ModelBase
     patientSex: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
     comorbidites: types.union(types.undefined, types.null, types.string),
-    surgicalprocedure: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
+    surgicalprocedure: types.union(types.undefined, types.null, types.string),
     complication: types.union(types.undefined, types.null, types.string),
     outcome: types.union(types.undefined, types.null, types.string),
     procedures: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),

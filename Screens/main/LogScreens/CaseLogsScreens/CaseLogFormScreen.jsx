@@ -99,27 +99,32 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	}, [caseLogFormToGet]);
 
 	const handleSaveClick = async (formData) => {
+		console.log("FormData for Case Logs", formData);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
 		formData.caseType = caseLogFormToGet;
 		let queryToRun;
+		let caseLogToUpdate;
 
 		switch (caseLogFormToGet) {
 			case "CaseLog":
-				queryToRun = "addAnaesthesiaCaseLog";
+				queryToRun = "updateUserAnaesthesiaCaseLog";
+				caseLogToUpdate = "anaesthesiaCaseLog";
 				break;
 			case "ChronicPain":
-				queryToRun = "addAnaesthesiaChronicPainLog";
+				queryToRun = "updateUserAnaesthesiaChronicPainLog";
+				caseLogToUpdate = "anaesthesiaChronicPainLog";
 				break;
 			case "CriticalCareCaseLog":
-				queryToRun = "addAnaesthesiaCriticalCareCaseLog";
+				queryToRun = "updateUserAnaesthesiaCritcalCareCaseLog";
+				caseLogToUpdate = "anaesthesiaCriticalCareCaseLog";
 				break;
 			default:
 				throw new Error("Invalid case log type");
 		}
 
 		try {
-			const query = store[queryToRun](formData);
+			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
 			const data = await query;
 			if (data) {

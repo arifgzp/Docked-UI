@@ -57,8 +57,8 @@ const LogProfilePage = ({ navigation }) => {
 	const { control, handleSubmit, formState, reset, watch, setValue } = useForm({
 		defaultValues: {
 			hospital: "",
-			faculties: facultyList,
-			rotations: rotationList,
+			faculties: [],
+			rotations: [],
 			facultyName: "",
 			facultyDesignation: "",
 			department: "",
@@ -67,13 +67,16 @@ const LogProfilePage = ({ navigation }) => {
 			to: new Date(),
 		},
 	});
+
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [currentKey, setCurrentKey] = useState(null);
 
-	const [open, setOpen] = useState(false);
+	const [fromOpen, setFromOpen] = useState(false);
+	const [toOpen, setToOpen] = useState(false);
 	const [showActionSheet, setShowActionsheet] = useState(false);
-	const [date, setDate] = useState(new Date());
+	const [fromDate, setFromDate] = useState(new Date());
+	const [toDate, setToDate] = useState(new Date());
 
 	const [facultyList, setFacultyList] = useState([]);
 	const [rotationList, setRotationList] = useState([]);
@@ -83,7 +86,11 @@ const LogProfilePage = ({ navigation }) => {
 	};
 
 	const handleSetDate = (date, key) => {
-		setValue(key, date);
+		if (!isNaN(new Date(date).getTime())) {
+			setValue(key, date);
+		} else {
+			console.error("Invalid date value");
+		}
 	};
 
 	const handleSaveFaculty = () => {
@@ -102,18 +109,23 @@ const LogProfilePage = ({ navigation }) => {
 			to: watch("to"),
 		};
 		setRotationList([...rotationList, newRotation]);
+		reset({
+			department: null,
+			from: new Date(),
+			to: new Date(),
+		});
+		setFromDate(new Date());
+		setToDate(new Date());
 	};
 
 	const handleOnSave = async () => {
 		const data = { faculties: facultyList, rotations: rotationList, hospital: watch("hospital") };
-		console.log("data for log profile check", data);
 		try {
 			const query = store.updateUserLogProfile(AppStore.UserId, { set: { logProfile: data } });
 			setQuery(query);
 			const finishUpdatingLogProfile = await query;
 			if (finishUpdatingLogProfile) {
 				navigation.goBack();
-				onCancel();
 			}
 		} catch (error) {
 			console.log(error);
@@ -123,13 +135,10 @@ const LogProfilePage = ({ navigation }) => {
 	useEffect(() => {
 		const fetchLogProfile = async () => {
 			try {
-				console.log("AppStore.UserId", AppStore.UserName);
 				const query = store.fetchUserLogProfile(AppStore.UserName);
 				setQuery(query);
 				const finishFetchingLogProfile = await query;
-				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
 				if (finishFetchingLogProfile) {
-					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
 					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 					const facultiesList = userData.logProfile.faculties.map((faculty) => {
 						delete faculty.id;
@@ -141,7 +150,11 @@ const LogProfilePage = ({ navigation }) => {
 						delete rotation.__typename;
 						return rotation;
 					});
-					reset({ hospital: userData.logProfile.hospital });
+					reset({
+						hospital: userData.logProfile.hospital,
+						from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
+						to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
+					});
 					setFacultyList(facultiesList);
 					setRotationList(rotationsList);
 				}
@@ -216,7 +229,7 @@ const LogProfilePage = ({ navigation }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$80%"}>{formState.errors.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
@@ -314,6 +327,8 @@ const LogProfilePage = ({ navigation }) => {
 											rules={{
 												required: true,
 											}}
+											name='department'
+											key='department'
 											render={({ field: { onChange, onBlur, value } }) => {
 												return (
 													<Select width={"$100%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
@@ -334,11 +349,10 @@ const LogProfilePage = ({ navigation }) => {
 													</Select>
 												);
 											}}
-											name='department'
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$80%"}>{formState.errors.department && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<HStack width={"$90%"} justifyContent='space-between'>
@@ -349,9 +363,9 @@ const LogProfilePage = ({ navigation }) => {
 										variant='link'
 										onPress={() => {
 											setCurrentKey("from");
-											setOpen(true);
+											setFromOpen(true);
 										}}>
-										<ButtonText fontFamily='Inter'>From</ButtonText>
+										<ButtonText fontFamily='Inter'>From - {format(new Date(fromDate), "do MMM yyyy")}</ButtonText>
 									</Button>
 									<Button
 										width={"$50%"}
@@ -360,25 +374,45 @@ const LogProfilePage = ({ navigation }) => {
 										variant='link'
 										onPress={() => {
 											setCurrentKey("to");
-											setOpen(true);
+											setToOpen(true);
 										}}>
-										<ButtonText fontFamily='Inter'>To</ButtonText>
+										<ButtonText fontFamily='Inter'>To - {format(new Date(toDate), "do MMM yyyy")}</ButtonText>
 									</Button>
 									<DatePicker
 										modal
-										open={open}
+										open={fromOpen}
 										theme='light'
-										date={date}
+										date={fromDate}
 										// onDateChange={(date) => {
 										// 	//setDate(date);
 										// 	handelSetDate(date);
 										// }}
 										onConfirm={(date) => {
-											setOpen(false);
+											setFromDate(date);
+											setFromOpen(false);
 											handleSetDate(date, currentKey);
 										}}
 										onCancel={() => {
-											setOpen(false);
+											setFromOpen(false);
+										}}
+										mode='date'
+									/>
+									<DatePicker
+										modal
+										open={toOpen}
+										theme='light'
+										date={toDate}
+										// onDateChange={(date) => {
+										// 	//setDate(date);
+										// 	handelSetDate(date);
+										// }}
+										onConfirm={(date) => {
+											setToDate(date);
+											setToOpen(false);
+											handleSetDate(date, currentKey);
+										}}
+										onCancel={() => {
+											setToOpen(false);
 										}}
 										mode='date'
 									/>
@@ -396,7 +430,9 @@ const LogProfilePage = ({ navigation }) => {
 										return (
 											<HStack key={index} alignItems='center' space='lg' width={"$100%"}>
 												<Text width={"$10%"}>{index + 1}.</Text>
-												<Text width={"$20%"}>{rotation.department}</Text>
+												<Text width={"$25%"}>{rotation.department}</Text>
+												<Text width={"$25%"}>{format(new Date(rotation?.from), "do MMM yyyy")}</Text>
+												<Text width={"$25%"}>{format(new Date(rotation?.to), "do MMM yyyy")}</Text>
 											</HStack>
 										);
 									})}

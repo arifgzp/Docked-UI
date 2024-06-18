@@ -48,20 +48,13 @@ type User @secret(field: "password") {
     verifiedMedicalRegistrationNumber: Boolean @dgraph(pred:"verifiedMedicalRegistrationNumber")
     targetedCaseLogNumber: Int @dgraph(pred:"targetedCaseLogNumber")
     anaesthesiaCaseLog: [AnaesthesiaCaseLog] @dgraph(pred:"anaesthesiaCaseLog")
+    anaesthesiaChronicPainLog: [AnaesthesiaChronicPainLog] @dgraph(pred:"anaesthesiaChronicPainLog")
+    anaesthesiaCriticalCareCaseLog: [AnaesthesiaCriticalCareCaseLog] @dgraph(pred:"anaesthesiaCriticalCareCaseLog")
     orthodonticsCaseLog: [OrthodonticsCaseLog] @dgraph(pred:"orthodonticsCaseLog")
     orthopaedicsCaseLog: [OrthopaedicsCaseLog] @dgraph(pred:"orthopaedicsCaseLog")
     logProfile: LogProfile @dgraph(pred:"logProfile")
 }
 
-type CaseLog  {
-    id: ID!
-    createdOn: DateTime @search @dgraph(pred:"createdOn")
-    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
-    date: DateTime @search @dgraph(pred:"date")
-    hospital: String @search(by:[term]) @dgraph(pred:"hospital")
-    faculty: String @dgraph(pred:"faculty")
-    medicalRegistrationNumber: String @search(by:[term]) @dgraph(pred:"medicalRegistrationNumber")
-}
 
 type AnaesthesiaCaseLog  {
     id: ID!

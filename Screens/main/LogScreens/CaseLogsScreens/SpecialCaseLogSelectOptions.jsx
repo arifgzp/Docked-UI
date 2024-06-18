@@ -19,7 +19,7 @@ import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Controller } from "react-hook-form";
 import { Modal } from "@gluestack-ui/themed";
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Heading } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
 import { ModalBackdrop } from "@gluestack-ui/themed";
@@ -95,15 +95,21 @@ const input = {
 };
 
 const transformInput = (input) => {
+	console.log("data to be transformed", input);
 	const result = {};
 
 	Object.keys(input).forEach((key) => {
 		const parts = key.split("/");
+
+		console.log("what are parts", parts);
 		const value = input[key];
+		console.log("what are the values???", value);
 
 		let current = result;
 		for (let i = 1; i < parts.length; i++) {
 			const part = parts[i];
+			console.log("what is this part inside the loop?", part);
+			console.log("current loop,", i);
 			if (i === parts.length - 1) {
 				// If it's the last part, set the value
 				if (Array.isArray(value)) {
@@ -123,13 +129,20 @@ const transformInput = (input) => {
 		}
 	});
 
-	// Ensure that the top-level keys are preserved
-	if (input.typeOfAnaesthesia) {
-		input.typeOfAnaesthesia.forEach((value) => {
-			result[value] = [value];
-		});
-	}
-
+	// Ensure that all top-level keys are preserved
+	Object.keys(input).forEach((key) => {
+		if (!key.includes("/")) {
+			const value = input[key];
+			if (Array.isArray(value)) {
+				value.forEach((item) => {
+					result[item] = [item];
+				});
+			} else {
+				result[key] = value;
+			}
+		}
+	});
+	console.log("result after data has been transformed", result);
 	return result;
 };
 
@@ -162,6 +175,7 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 	const figmaRed = useToken("colors", "figmared");
 
 	const handleOnSave = (selectedNodes) => {
+		console.log("is this the data I am getting from the treeview component?", selectedNodes);
 		console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 		setValue(activeTreeSelector, parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 		setShowTreeView(false);
@@ -210,6 +224,11 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 	};
 
 	const renderCard = (input, key, level, configData) => {
+		console.log("input parameter for the render card", input);
+		console.log("key parameter for the render card", key);
+		console.log("level parameter for the render card", level);
+		console.log("configData parameter for the render card", configData);
+
 		if (Array.isArray(input)) {
 			if (input.length == 1 && key == input[0] && level == 1) {
 				return null;
@@ -274,49 +293,52 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 		const flattened = parserToConvertTreeFromIntoDataBaseForm(activeTreeSelectorValue[key], key);
 		console.log("flattened", flattened);
 		const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(flattened[key], key);
+		console.log("treeSelectorValue_Formatted", treeSelectorValue_Formatted);
 		return treeSelectorValue_Formatted;
 	};
 
 	const treeConfigData = getTreeConfigData(activeTreeSelector);
 	//console.log("DATA", treeConfigData);
-	console.log("activeTreeSelector", activeTreeSelector);
+	console.log("activeTreeSelector", `is this empty ??? ${activeTreeSelector}`);
 	console.log("activeTreeSelectorValue", activeTreeSelectorValue);
 
 	return (
 		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20} px='$4'>
-			{specialCaseLogsOption.map((option) => (
-				<VStack bg='$white' rounded='$lg' w='$full'>
-					<Button
-						w='$full'
-						key={option.id}
-						onPress={handleShowTreeSelector.bind(null, option.id)}
-						size='lg'
-						justifyContent='space-between'
-						variant='specialLogs'>
-						<ButtonText>{option.name}</ButtonText>
-						<ButtonIcon as={ChevronRight} size={20} name='arrow-forward-outline' color='#666666' />
-					</Button>
-					{activeTreeSelectorValue[option.id] && (
-						<VStack gap='$0' borderTopWidth={1} borderTopColor='$coolGray100' pl='$8' pb='$2' width={"$80%"}>
-							{Object.keys(transformInput(getInputValue(option.id))).map((key) => {
-								//console.log("key", key);
-								//console.log("configData", treeConfigData);
-								const configData = getTreeConfigData(option.id);
-								const x = renderCard(transformInput(getInputValue(option.id))[key], key, 1, configData);
-								console.log("x", x);
-								return (
-									<HStack w='$full' gap='$1'>
-										<Text pt='$1'>{getLabel(key, configData)}</Text>
-										<HStack flexWrap='wrap' alignItems='center'>
-											{x}
+			{specialCaseLogsOption.map((option) => {
+				return (
+					<VStack bg='$white' rounded='$lg' w={"$full"}>
+						<Button
+							w='$full'
+							key={option.id}
+							onPress={handleShowTreeSelector.bind(null, option.id)}
+							size='lg'
+							justifyContent='space-between'
+							variant='specialLogs'>
+							<ButtonText>{option.name}</ButtonText>
+							<ButtonIcon as={ChevronRight} size={20} name='arrow-forward-outline' color='#666666' />
+						</Button>
+						{activeTreeSelectorValue[option.id] && (
+							<VStack gap='$0' borderTopWidth={1} borderTopColor='$coolGray100' pl='$8' pb='$2' width={"$80%"}>
+								{Object.keys(transformInput(getInputValue(option.id))).map((key) => {
+									//console.log("key", key);
+									//console.log("configData", treeConfigData);
+									const configData = getTreeConfigData(option.id);
+									const x = renderCard(transformInput(getInputValue(option.id))[key], key, 1, configData);
+									console.log("x", x);
+									return (
+										<HStack w={"$full"} gap='$1'>
+											<Text pt='$1'>{getLabel(key, configData)}</Text>
+											<HStack flexWrap='wrap' alignItems='center'>
+												{x}
+											</HStack>
 										</HStack>
-									</HStack>
-								);
-							})}
-						</VStack>
-					)}
-				</VStack>
-			))}
+									);
+								})}
+							</VStack>
+						)}
+					</VStack>
+				);
+			})}
 			{activeTreeSelector && (
 				<TreeView
 					data={treeConfigData}
