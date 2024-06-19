@@ -36,6 +36,7 @@ const SetupProfile = ({ config, navigation }) => {
 			console.log("Finsished", data);
 			try {
 				const query = store.updateUser(AppStore.UserId, { set: { userStatus: "REGISTERED" } });
+				AppStore.setBroadSpecialty(data.broadSpecialty);
 				console.log("Current Data 2", query);
 				setQuery(query);
 				const finishWizardProcessData = await query;
@@ -76,13 +77,15 @@ const SetupProfile = ({ config, navigation }) => {
 	};
 
 	const handleSkip = async (data) => {
+		console.log("data when skipping the create profile", data);
 		try {
 			const query = store.updateUser(AppStore.UserId, { set: { userStatus: "REGISTERED" } });
+			AppStore.setBroadSpecialty(data.broadSpecialty);
 			console.log("Current Data 2", query);
 			setQuery(query);
 			const finishWizardProcessData = await query;
 			if (finishWizardProcessData) {
-				navigation.navigate("Main Page");
+				navigation.navigate("Main Page", { broadSpecialty: data.broadSpecialty });
 				onCancel();
 			}
 		} catch (error) {

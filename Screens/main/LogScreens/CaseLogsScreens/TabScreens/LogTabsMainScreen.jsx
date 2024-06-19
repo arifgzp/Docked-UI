@@ -1,10 +1,11 @@
 import { Button, ButtonIcon, HStack } from "@gluestack-ui/themed";
 import { Box, Text } from "@gluestack-ui/themed";
 import * as React from "react";
-import { View, useWindowDimensions } from "react-native";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { ButtonText } from "@gluestack-ui/themed";
+import { SearchBar } from "react-native-elements";
 
 const FirstRoute = require("./CaseLogMainTab").default;
 const SecondRoute = require("./AcademicLogTab").default;
@@ -35,6 +36,7 @@ const renderTabBar = (props) => (
 
 export default function LogTabsMainScreen({ navigation }) {
 	const layout = useWindowDimensions();
+	const [search, setSearch] = React.useState("");
 
 	const [index, setIndex] = React.useState(0);
 	const [routes] = React.useState([
@@ -45,16 +47,27 @@ export default function LogTabsMainScreen({ navigation }) {
 		{ key: "fifth", title: "Custom" },
 	]);
 
+	const updateSearch = (search) => {
+		setSearch(search);
+	};
+
 	return (
 		<Box p='$4' w='$full' h='$full' bg='$primaryBackground'>
-			<HStack justifyContent='space-between'>
+			<HStack alignItems='center' w='$100%' justifyContent='space-between'>
 				<Text size='xl' fontFamily='Inter_Bold'>
 					Logbook
 				</Text>
 				<HStack space='sm' alignItems='center'>
-					<Button backgroundColor='$primaryBackground' borderRadius={"$full"} size='xs'>
-						<ButtonIcon as={Ionicons} size={20} name='search-outline' color='#979797' />
-					</Button>
+					<Box>
+						<SearchBar
+							inputContainerStyle={styles.inputContainer}
+							containerStyle={styles.container}
+							inputStyle={styles.input}
+							placeholder='Type Here...'
+							onChangeText={updateSearch}
+							value={search}
+						/>
+					</Box>
 					<Button
 						onPress={() => navigation.navigate("Plus", { screen: "LogProfilePage" })}
 						backgroundColor='#367B71'
@@ -74,3 +87,22 @@ export default function LogTabsMainScreen({ navigation }) {
 		</Box>
 	);
 }
+
+const styles = StyleSheet.create({
+	inputContainer: {
+		backgroundColor: "#f0f0f0",
+		borderRadius: 10,
+		paddingHorizontal: 10,
+		height: 20,
+	},
+	container: {
+		backgroundColor: "#ffffff",
+		borderTopWidth: 0,
+		borderBottomWidth: 0,
+		height: 45, // Adjust the height to include padding, etc.
+		width: 120,
+	},
+	input: {
+		color: "#000",
+	},
+});

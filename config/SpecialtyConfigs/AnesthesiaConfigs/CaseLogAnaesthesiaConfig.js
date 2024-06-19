@@ -1535,12 +1535,6 @@ const comorbidity = [
 						name: "Pacemaker",
 						nodeType: "leaf",
 					},
-					{
-						id: "othersForCardiacDisease",
-						name: "Other",
-						nodeType: "leaf",
-						type: "text",
-					},
 				],
 			},
 			{
@@ -1564,40 +1558,9 @@ const comorbidity = [
 						name: "Asthma",
 						nodeType: "leaf",
 					},
-					{
-						id: "othersForCNSORDER",
-						name: "Others",
-						nodeType: "leaf",
-						type: "text",
-					},
 				],
 			},
-			{
-				id: "SMOKER",
-				name: "Smoker",
-				selectType: "text",
-				nodeType: "parent",
-				children: [
-					{
-						id: "packYears",
-						name: "Pack Years",
-						nodeType: "leaf",
-					},
-				],
-			},
-			{
-				id: "ALCHOLOLINTAKE",
-				name: "Alcholol Intake",
-				selectType: "text",
-				nodeType: "parent",
-				children: [
-					{
-						id: "mlPerDay",
-						name: "ml per day",
-						nodeType: "leaf",
-					},
-				],
-			},
+
 			{
 				id: "DIABETES",
 				name: "Diabetes",
@@ -1642,4 +1605,167 @@ const comorbidity = [
 	},
 ];
 
-export default { typeOfAnaesthesia, airManagement, regionalTechniques, interventionalProcedures, monitoring, comorbidity, complications };
+const examination = [
+	{
+		id: "Examination",
+		name: "Examination",
+		selectType: "multiple",
+		nodeType: "parent",
+		children: [
+			{
+				id: "AirwayAssessment",
+				name: "Airway Assessment",
+				selectType: "parent",
+				nodeType: "parent",
+				children: [
+					{
+						id: "Millampati",
+						name: "Millampati",
+						selectType: "multiple",
+						nodeType: "parent",
+						children: [
+							{
+								id: "0",
+								name: "0",
+								nodeType: "leaf",
+							},
+							{
+								id: "I",
+								name: "I",
+								nodeType: "leaf",
+							},
+							{
+								id: "II",
+								name: "II",
+								nodeType: "leaf",
+							},
+							{
+								id: "III",
+								name: "III",
+								nodeType: "leaf",
+							},
+							{
+								id: "IV",
+								name: "IV",
+								nodeType: "leaf",
+							},
+						],
+					},
+					{
+						id: "dentition",
+						name: "Dentition",
+						selectType: "single",
+						nodeType: "leaf",
+						children: [
+							{
+								id: "Firm",
+								name: "Firm",
+								nodeType: "leaf",
+							},
+							{
+								id: "Loose",
+								name: "Loose",
+								nodeType: "leaf",
+							},
+							{
+								id: "Dentures",
+								name: "Dentures",
+								nodeType: "leaf",
+							},
+							{
+								id: "Edentulous",
+								name: "Edentulous",
+								nodeType: "leaf",
+							},
+						],
+					},
+					{
+						id: "TMJMobility",
+						name: "TMJ Mobility",
+						selectType: "single",
+						nodeType: "leaf",
+						children: [
+							{
+								id: "A",
+								name: "A",
+								nodeType: "leaf",
+							},
+							{
+								id: "B",
+								name: "B",
+								nodeType: "leaf",
+							},
+							{
+								id: "C",
+								name: "C",
+								nodeType: "leaf",
+							},
+						],
+					},
+					{
+						id: "ULBTClass",
+						name: "ULBT Class",
+						selectType: "single",
+						nodeType: "leaf",
+						children: [
+							{
+								id: "I",
+								name: "I",
+								nodeType: "leaf",
+							},
+							{
+								id: "II",
+								name: "II",
+								nodeType: "leaf",
+							},
+							{
+								id: "III",
+								name: "III",
+								nodeType: "leaf",
+							},
+						],
+					},
+					{
+						id: "NeckMovementGrade",
+						name: "Neck Movement Grade",
+						selectType: "single",
+						nodeType: "leaf",
+						children: [
+							{
+								id: "I(>35 degrees)",
+								name: "I (>35 degrees)",
+								nodeType: "leaf",
+							},
+							{
+								id: "II(22 - 34 degress)",
+								name: "II (22 - 34 degress)",
+								nodeType: "leaf",
+							},
+							{
+								id: "III(12 -21 degrees)",
+								name: "III (12 -21 degrees)",
+								nodeType: "leaf",
+							},
+							{
+								id: "IV(<12 degrees)",
+								name: "IV (<12 degrees)",
+								nodeType: "leaf",
+							},
+						],
+					},
+				],
+			},
+		],
+	},
+];
+
+export default {
+	typeOfAnaesthesia,
+	airManagement,
+	regionalTechniques,
+	interventionalProcedures,
+	monitoring,
+	comorbidity,
+	complications,
+	examination,
+};

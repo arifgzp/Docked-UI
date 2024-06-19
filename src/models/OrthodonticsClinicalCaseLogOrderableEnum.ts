@@ -7,41 +7,35 @@ import { types } from "mobx-state-tree"
  * Typescript enum
  */
 
-export enum OrthopaedicsCaseLogHasFilter {
+export enum OrthodonticsClinicalCaseLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
+hospital="hospital",
 rotation="rotation",
-diseaseCategory="diseaseCategory",
-site="site",
-joint="joint",
-bones="bones",
-outcomes="outcomes",
+faculty="faculty",
 diagnosis="diagnosis",
+techniqueUsed="techniqueUsed",
+outcome="outcome",
 caseType="caseType"
 }
 
 /**
-* OrthopaedicsCaseLogHasFilter
+* OrthodonticsClinicalCaseLogOrderable
 */
-export const OrthopaedicsCaseLogHasFilterEnumType = types.enumeration("OrthopaedicsCaseLogHasFilter", [
+export const OrthodonticsClinicalCaseLogOrderableEnumType = types.enumeration("OrthodonticsClinicalCaseLogOrderable", [
         "createdOn",
   "updatedOn",
   "date",
-  "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
+  "hospital",
   "rotation",
-  "diseaseCategory",
-  "site",
-  "joint",
-  "bones",
-  "outcomes",
+  "faculty",
   "diagnosis",
+  "techniqueUsed",
+  "outcome",
   "caseType",
       ])

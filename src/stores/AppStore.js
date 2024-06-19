@@ -31,6 +31,7 @@ const execute = async (url, data, token, notifyError = true) => {
 		const responseData = await response.json();
 		return responseData;
 	} catch (error) {
+		console.log("error", error);
 		if (notifyError) appStoreInstance.setAPIError(error);
 	}
 };

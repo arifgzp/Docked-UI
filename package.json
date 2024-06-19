@@ -47,6 +47,7 @@
     "react-native": "0.73.2",
     "react-native-animated-nav-tab-bar": "^3.1.10",
     "react-native-date-picker": "^5.0.4",
+    "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-multiple-select": "^0.5.12",
@@ -61,6 +62,7 @@
     "react-native-sectioned-multi-select": "^0.10.0",
     "react-native-svg": "14.1.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {

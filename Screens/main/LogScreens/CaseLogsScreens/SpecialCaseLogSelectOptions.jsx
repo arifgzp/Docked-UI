@@ -29,6 +29,8 @@ import TreeView from "../../../../components/TreeView";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { forEach } from "lodash";
 import CriticalCareLAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CriticalCareLAnesthesiaCaseLogConfig";
+import OrthopeadicsCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicsCaseLogConfig";
+import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsSpecialClinicalCaseLogConfig";
 
 const parserForConvertingIntoTreeFormData = (input, key) => {
 	const result = {};
@@ -101,15 +103,10 @@ const transformInput = (input) => {
 	Object.keys(input).forEach((key) => {
 		const parts = key.split("/");
 
-		console.log("what are parts", parts);
 		const value = input[key];
-		console.log("what are the values???", value);
-
 		let current = result;
 		for (let i = 1; i < parts.length; i++) {
 			const part = parts[i];
-			console.log("what is this part inside the loop?", part);
-			console.log("current loop,", i);
 			if (i === parts.length - 1) {
 				// If it's the last part, set the value
 				if (Array.isArray(value)) {
@@ -142,7 +139,6 @@ const transformInput = (input) => {
 			}
 		}
 	});
-	console.log("result after data has been transformed", result);
 	return result;
 };
 
@@ -202,6 +198,10 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 				return ChronicPainAnesthesiaCaseLogConfig[key];
 			case "CriticalCareCaseLog":
 				return CriticalCareLAnesthesiaCaseLogConfig[key];
+			case "OrthopaedicsCaseLog":
+				return OrthopeadicsCaseLogConfig[key];
+			case "OrthodonticsClinicalCaseLog":
+				return OrthodonticsSpecialClinicalCaseLogConfig[key];
 			default:
 				return [];
 		}
@@ -224,11 +224,6 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 	};
 
 	const renderCard = (input, key, level, configData) => {
-		console.log("input parameter for the render card", input);
-		console.log("key parameter for the render card", key);
-		console.log("level parameter for the render card", level);
-		console.log("configData parameter for the render card", configData);
-
 		if (Array.isArray(input)) {
 			if (input.length == 1 && key == input[0] && level == 1) {
 				return null;

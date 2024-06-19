@@ -13,9 +13,11 @@ updatedOn="updatedOn",
 date="date",
 hospital="hospital",
 faculty="faculty",
-medicalRegistrationNumber="medicalRegistrationNumber",
-outcome="outcome",
-diagnosis="diagnosis"
+patientAge="patientAge",
+patientSex="patientSex",
+rotation="rotation",
+diagnosis="diagnosis",
+caseType="caseType"
 }
 
 /**
@@ -27,7 +29,9 @@ export const OrthopaedicsCaseLogOrderableEnumType = types.enumeration("Orthopaed
   "date",
   "hospital",
   "faculty",
-  "medicalRegistrationNumber",
-  "outcome",
+  "patientAge",
+  "patientSex",
+  "rotation",
   "diagnosis",
+  "caseType",
       ])

@@ -4,6 +4,8 @@ import { fetchLogProfileModelSelector } from "./LogProfileModel";
 import { anaesthesiaCaseLogModelPrimitives } from "./AnaesthesiaCaseLogModel.base";
 import { anaesthesiaChronicPainLogModelPrimitives } from "./AnaesthesiaChronicPainLogModel.base";
 import { anaesthesiaCriticalCareCaseLogModelPrimitives } from "./AnaesthesiaCriticalCareCaseLogModel.base";
+import { orthopaedicsCaseLogModelPrimitives } from "./OrthopaedicsCaseLogModel.base";
+import { orthodonticsClinicalCaseLogModelPrimitives } from "./OrthodonticsClinicalCaseLogModel.base";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -28,3 +30,5 @@ export const AnaesthesiaChronicPainLogByModelSelector = selectFromUser().anaesth
 export const AnaesthesiaCriticalCareCaseLogByModelSelector = selectFromUser().anaesthesiaCriticalCareCaseLog(
 	anaesthesiaCriticalCareCaseLogModelPrimitives
 );
+export const OrthopaedicsCaseLogByModelSelector = selectFromUser().orthopaedicsCaseLog(orthopaedicsCaseLogModelPrimitives);
+export const OrthodonticsClinicalCaseLogByModelSelector = selectFromUser().orthodonticsClinicalCaseLog(orthodonticsClinicalCaseLogModelPrimitives);

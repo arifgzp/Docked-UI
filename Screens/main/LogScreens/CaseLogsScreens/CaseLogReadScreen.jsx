@@ -25,6 +25,14 @@ import {
 	specialAnesthesiaCriticalCareCaseLogOptions,
 } from "../../../../config/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
 import AppStore from "../../../../src/stores/AppStore";
+import {
+	OrthopaedicsCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthopaedicsCaseLogsOption,
+} from "../../../../config/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
+import {
+	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthodonticsClinicalCaseLog,
+} from "../../../../config/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 
 const handleSetCurrentCaseLogDropDownOptions = (key) => {
 	switch (key) {
@@ -34,6 +42,10 @@ const handleSetCurrentCaseLogDropDownOptions = (key) => {
 			return ChornicPainCaseLogConfigTextAndSingleSelectOptions;
 		case "CriticalCareCaseLog":
 			return CriticalCareCaseLogConfigTextAndSingleSelectOptions;
+		case "OrthopaedicsCaseLog":
+			return OrthopaedicsCaseLogConfigTextAndSingleSelectOptions;
+		case "OrthodonticsClinicalCaseLog":
+			return OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions;
 		default:
 			return [];
 	}
@@ -47,6 +59,10 @@ const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
 			return specialAnesthesiaChronicPainOptions;
 		case "CriticalCareCaseLog":
 			return specialAnesthesiaCriticalCareCaseLogOptions;
+		case "OrthopaedicsCaseLog":
+			return specialOrthopaedicsCaseLogsOption;
+		case "OrthodonticsClinicalCaseLog":
+			return specialOrthodonticsClinicalCaseLog;
 		default:
 			return [];
 	}
@@ -121,6 +137,16 @@ const CaseLogReadScreen = ({ navigation }) => {
 					...store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0],
 				});
 				break;
+			case "OrthopaedicsCaseLog":
+				reset({
+					...store.getOrthopaedicsCaseLogById(routes.params.id)[0],
+				});
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				reset({
+					...store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0],
+				});
+				break;
 		}
 	}, []);
 
@@ -177,6 +203,12 @@ const CaseLogReadScreen = ({ navigation }) => {
 				break;
 			case "CriticalCareCaseLog":
 				queryToRun = "updateAnaesthesiaCriticalCareCaseLog";
+				break;
+			case "OrthopaedicsCaseLog":
+				queryToRun = "updateOrthopaedicsCaseLog";
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				queryToRun = "updateOrthodonticsClinicalCaseLog";
 				break;
 			default:
 				throw new Error("Invalid case log type");

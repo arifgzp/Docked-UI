@@ -50,7 +50,7 @@ type User @secret(field: "password") {
     anaesthesiaCaseLog: [AnaesthesiaCaseLog] @dgraph(pred:"anaesthesiaCaseLog")
     anaesthesiaChronicPainLog: [AnaesthesiaChronicPainLog] @dgraph(pred:"anaesthesiaChronicPainLog")
     anaesthesiaCriticalCareCaseLog: [AnaesthesiaCriticalCareCaseLog] @dgraph(pred:"anaesthesiaCriticalCareCaseLog")
-    orthodonticsCaseLog: [OrthodonticsCaseLog] @dgraph(pred:"orthodonticsCaseLog")
+    orthodonticsClinicalCaseLog: [OrthodonticsClinicalCaseLog] @dgraph(pred:"orthodonticsClinicalCaseLog")
     orthopaedicsCaseLog: [OrthopaedicsCaseLog] @dgraph(pred:"orthopaedicsCaseLog")
     logProfile: LogProfile @dgraph(pred:"logProfile")
 }
@@ -125,23 +125,22 @@ type AnaesthesiaCriticalCareCaseLog  {
     caseType : String @dgraph(pred:"caseType")
 }
 
-type OrthodonticsCaseLog  {
+type OrthodonticsClinicalCaseLog  {
     id: ID!
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
     date: DateTime @search @dgraph(pred:"date")
+    patientAge: String @dgraph(pred:"patientAge")
+    patientSex: String @dgraph(pred:"patientSex")
     hospital: String @search(by:[term]) @dgraph(pred:"hospital")
+    rotation: String @search(by:[term]) @dgraph(pred:"rotation")
     faculty: String @dgraph(pred:"faculty")
-    medicalRegistrationNumber: String @search(by:[term]) @dgraph(pred:"medicalRegistrationNumber")
-    wireBendingRecord: [String] @search(by:[term]) @dgraph(pred:"wireBendingRecord")
-    roundWireLoopRecord: [String] @search(by:[term]) @dgraph(pred:"roundWireLoopRecord")
-    loopInEdgewiseWireRecord: [String] @search(by:[term]) @dgraph(pred:"loopInEdgewiseWireRecord")
-    solderingExerciseRecord: [String] @search(by:[term]) @dgraph(pred:"solderingExerciseRecord")
-    cephalometricTracingRecord: [String] @search(by:[term]) @dgraph(pred:"cephalometricTracingRecord")
-    claspRecord: [String] @search(by:[term]) @dgraph(pred:"claspRecord")
-    springsrecord: [String] @search(by:[term]) @dgraph(pred:"springsrecord")
-    canineRetractorsRecord: [String] @search(by:[term]) @dgraph(pred:"canineRetractorsRecord")
-    bowsRecord: [String] @search(by:[term]) @dgraph(pred:"bowsRecord")
+    diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
+    techniqueUsed: String @search(by:[term]) @dgraph(pred:"techniqueUsed")
+    applianceUsed: [String] @search(by:[term]) @dgraph(pred:"applianceUsed")
+    treatmentPlan: [String] @search(by:[term]) @dgraph(pred:"treatmentPlan")
+    outcome: String @dgraph(pred:"outcome")
+    caseType : String @dgraph(pred:"caseType")
 }
 
 type OrthopaedicsCaseLog  {
@@ -151,13 +150,16 @@ type OrthopaedicsCaseLog  {
     date: DateTime @search @dgraph(pred:"date")
     hospital: String @search(by:[term]) @dgraph(pred:"hospital")
     faculty: String @dgraph(pred:"faculty")
-    medicalRegistrationNumber: String @search(by:[term]) @dgraph(pred:"medicalRegistrationNumber")
+    patientAge: String @dgraph(pred:"patientAge")
+    patientSex: String @dgraph(pred:"patientSex")
+    rotation: String @search(by:[term]) @dgraph(pred:"rotation")
     diseaseCategory: [String] @search(by:[term]) @dgraph(pred:"diseaseCategory")
     site: [String] @search(by:[term]) @dgraph(pred:"site")
     joint: [String] @search(by:[term]) @dgraph(pred:"joint")
     bones: [String] @search(by:[term]) @dgraph(pred:"bones")
-    outcome: String @search(by:[term]) @dgraph(pred:"outcome")
+    outcomes: [String] @search(by:[term]) @dgraph(pred:"outcomes")
     diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
+    caseType : String @dgraph(pred:"caseType")
 }
 
 type LogProfile{

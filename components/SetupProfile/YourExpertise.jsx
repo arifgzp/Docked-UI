@@ -20,6 +20,7 @@ import React, { useState, useEffect } from "react";
 import Loader from "../Loader";
 import appStoreInstance from "../../src/stores/AppStore";
 import { observer } from "mobx-react";
+import { OrthopaedicsCaseLogAggregateResultModel } from "../../src/models";
 
 const specialtyList = {
 	InternalMedicine: {
@@ -37,6 +38,24 @@ const specialtyList = {
 		],
 	},
 	Paediatrics: {
+		SuperSpeciality: [
+			{
+				label: "Neonatology",
+				value: "Neonatology",
+			},
+		],
+		SubSpeciality: [],
+	},
+	Orthodontics: {
+		SuperSpeciality: [
+			{
+				label: "Neonatology",
+				value: "Neonatology",
+			},
+		],
+		SubSpeciality: [],
+	},
+	Orthopaedics: {
 		SuperSpeciality: [
 			{
 				label: "Neonatology",

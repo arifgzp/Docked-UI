@@ -71,13 +71,13 @@ const LoginPage = ({ navigation }) => {
 		const response = await AppStore.SignIn({ userName: formData.email, password: formData.password });
 		if (response) {
 			if (response.userStatus === "REGISTERED") {
-				navigation.navigate("Main Page");
+				navigation.navigate("Main Page", { UserSpecialty: response.broadSpecilty });
 				AppStore.setBroadSpecialty(response.broadSpecialty);
 				AppStore.setUserId(response.id);
 				const broadSpecialty = AppStore.UserBroadSpecialty;
 				console.log("broadSpecialty", broadSpecialty);
 			} else if (response.userStatus === "WIZARD_PENDING") {
-				navigation.navigate("Setup ProfilePage");
+				navigation.navigate("Profile Setup Page");
 			} else {
 				navigation.navigate("Enter Email OTP Page");
 			}

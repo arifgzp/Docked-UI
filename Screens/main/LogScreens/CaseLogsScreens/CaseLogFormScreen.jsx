@@ -23,6 +23,14 @@ import {
 	CriticalCareCaseLogConfigTextAndSingleSelectOptions,
 	specialAnesthesiaCriticalCareCaseLogOptions,
 } from "../../../../config/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
+import {
+	OrthopaedicsCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthopaedicsCaseLogsOption,
+} from "../../../../config/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
+import {
+	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthodonticsClinicalCaseLog,
+} from "../../../../config/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 
 const handleSetCurrentCaseLogDropDownOptions = (key) => {
 	switch (key) {
@@ -32,6 +40,10 @@ const handleSetCurrentCaseLogDropDownOptions = (key) => {
 			return ChornicPainCaseLogConfigTextAndSingleSelectOptions;
 		case "CriticalCareCaseLog":
 			return CriticalCareCaseLogConfigTextAndSingleSelectOptions;
+		case "OrthopaedicsCaseLog":
+			return OrthopaedicsCaseLogConfigTextAndSingleSelectOptions;
+		case "OrthodonticsClinicalCaseLog":
+			return OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions;
 		default:
 			return [];
 	}
@@ -45,6 +57,10 @@ const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
 			return specialAnesthesiaChronicPainOptions;
 		case "CriticalCareCaseLog":
 			return specialAnesthesiaCriticalCareCaseLogOptions;
+		case "OrthopaedicsCaseLog":
+			return specialOrthopaedicsCaseLogsOption;
+		case "OrthodonticsClinicalCaseLog":
+			return specialOrthodonticsClinicalCaseLog;
 		default:
 			return [];
 	}
@@ -100,6 +116,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 
 	const handleSaveClick = async (formData) => {
 		console.log("FormData for Case Logs", formData);
+		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
 		formData.caseType = caseLogFormToGet;
@@ -108,20 +125,36 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 
 		switch (caseLogFormToGet) {
 			case "CaseLog":
+				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserAnaesthesiaCaseLog";
 				caseLogToUpdate = "anaesthesiaCaseLog";
 				break;
 			case "ChronicPain":
+				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserAnaesthesiaChronicPainLog";
 				caseLogToUpdate = "anaesthesiaChronicPainLog";
 				break;
 			case "CriticalCareCaseLog":
+				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserAnaesthesiaCritcalCareCaseLog";
 				caseLogToUpdate = "anaesthesiaCriticalCareCaseLog";
+				break;
+			case "OrthopaedicsCaseLog":
+				console.log("is this working for switch", caseLogFormToGet);
+				queryToRun = "updateUserOrthopaedicsCaseLog";
+				caseLogToUpdate = "orthopaedicsCaseLog";
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				console.log("is this working for switch", caseLogFormToGet);
+				queryToRun = "updateUserOrthodonticsClinicalCaseLog";
+				caseLogToUpdate = "orthodonticsClinicalCaseLog";
 				break;
 			default:
 				throw new Error("Invalid case log type");
 		}
+
+		console.log("queryToRun", queryToRun);
+		console.log("caseLogToUpdate", caseLogToUpdate);
 
 		try {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });

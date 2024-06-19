@@ -41,19 +41,37 @@ const CaseLogTab = ({ navigation }) => {
 				console.log("data for anesthesia case log", data.queryUser[0].anaesthesiaCaseLog);
 				const AnaesthesiaCaseLogData = data.queryUser[0].anaesthesiaCaseLog;
 
-				const fetchQuery2 = store.fetchAnaesthesiaChronicPainLogByUser();
+				const fetchQuery2 = store.fetchAnaesthesiaChronicPainLogByUser(AppStore.UserName);
 				setQuery(fetchQuery2);
 				const data2 = await fetchQuery2;
 				console.log("data for anesthesia case log", data2.queryUser[0].anaesthesiaChronicPainLog);
 				const AnaesthesiaChronicPainLogData = data2.queryUser[0].anaesthesiaChronicPainLog;
 
-				const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLogByUser();
+				const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLogByUser(AppStore.UserName);
 				setQuery(fetchQuery3);
 				const data3 = await fetchQuery3;
 				console.log("data for anesthesia case log", data3.queryUser[0].anaesthesiaCriticalCareCaseLog);
 				const AnaesthesiaCriticalCareCaseLogData = data3.queryUser[0].anaesthesiaCriticalCareCaseLog;
 
-				setCardDetails([...AnaesthesiaCaseLogData, ...AnaesthesiaChronicPainLogData, ...AnaesthesiaCriticalCareCaseLogData]);
+				const fetchQuery4 = store.fetchOrthopaedicsCaseLogByUser(AppStore.UserName);
+				setQuery(fetchQuery4);
+				const data4 = await fetchQuery4;
+				console.log("data for Orthopaedics case log", data4.queryUser[0].orthopaedicsCaseLog);
+				const OrthopaedicsCaseLogdata = data4.queryUser[0].orthopaedicsCaseLog;
+
+				const fetchQuery5 = store.fetchOrthodonticsClinicalCaseLogByUser(AppStore.UserName);
+				setQuery(fetchQuery5);
+				const data5 = await fetchQuery5;
+				console.log("data for Orthodontics Clinical Case Log", data5.queryUser[1].orthodonticsClinicalCaseLog);
+				const OrthodonticsClinicalCaseLog = data5.queryUser[1].orthodonticsClinicalCaseLog;
+
+				setCardDetails([
+					...AnaesthesiaCaseLogData,
+					...AnaesthesiaChronicPainLogData,
+					...AnaesthesiaCriticalCareCaseLogData,
+					...OrthopaedicsCaseLogdata,
+					...OrthodonticsClinicalCaseLog,
+				]);
 			} catch (error) {
 				console.log(error);
 			}
