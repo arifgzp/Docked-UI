@@ -1,36 +1,16 @@
-import {
-	CheckIcon,
-	CheckboxGroup,
-	CheckboxIndicator,
-	HStack,
-	KeyboardAvoidingView,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalHeader,
-	useToken,
-} from "@gluestack-ui/themed";
-import { Box, Text, VStack, Button, ButtonText, ButtonIcon } from "@gluestack-ui/themed";
-import { Icon } from "@gluestack-ui/themed";
+import { Button, ButtonIcon, ButtonText, HStack, Icon, Text, VStack, useToken } from "@gluestack-ui/themed";
 
-import { ChevronDown, ChevronRight, CircleX } from "lucide-react-native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Controller } from "react-hook-form";
-import { Modal } from "@gluestack-ui/themed";
-import React, { useState, useRef } from "react";
-import { Heading } from "@gluestack-ui/themed";
-import { ModalFooter } from "@gluestack-ui/themed";
-import { ModalBackdrop } from "@gluestack-ui/themed";
+import { Divider, Pressable } from "@gluestack-ui/themed";
+import { forEach, map } from "lodash";
+import { ChevronRight } from "lucide-react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import TreeView from "../../../../components/TreeView";
 import CaseLogAnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
 import ChronicPainAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/ChronicPainAnesthesiaCaseLogConfig";
-import TreeView from "../../../../components/TreeView";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { forEach } from "lodash";
 import CriticalCareLAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CriticalCareLAnesthesiaCaseLogConfig";
-import OrthopeadicsCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicsCaseLogConfig";
 import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsSpecialClinicalCaseLogConfig";
+import OrthopeadicsCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicsCaseLogConfig";
 
 const parserForConvertingIntoTreeFormData = (input, key) => {
 	const result = {};
@@ -89,62 +69,9 @@ function parserToConvertTreeFromIntoDataBaseForm(input, type) {
 	return { [type]: flattenObject(input) };
 }
 
-const input = {
-	typeOfAnaesthesia: ["MAC", "LA", "GA"],
-	"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE"],
-	"typeOfAnaesthesia/DRUGS/INTRAVENOUS": "Etomidate",
-	"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial"],
-};
-
-const transformInput = (input) => {
-	console.log("data to be transformed", input);
-	const result = {};
-
-	Object.keys(input).forEach((key) => {
-		const parts = key.split("/");
-
-		const value = input[key];
-		let current = result;
-		for (let i = 1; i < parts.length; i++) {
-			const part = parts[i];
-			if (i === parts.length - 1) {
-				// If it's the last part, set the value
-				if (Array.isArray(value)) {
-					if (!current[part]) {
-						current[part] = value;
-					}
-				} else {
-					current[part] = value;
-				}
-			} else {
-				// If it's not the last part, move deeper in the object
-				if (!current[part]) {
-					current[part] = {};
-				}
-				current = current[part];
-			}
-		}
-	});
-
-	// Ensure that all top-level keys are preserved
-	Object.keys(input).forEach((key) => {
-		if (!key.includes("/")) {
-			const value = input[key];
-			if (Array.isArray(value)) {
-				value.forEach((item) => {
-					result[item] = [item];
-				});
-			} else {
-				result[key] = value;
-			}
-		}
-	});
-	return result;
-};
-
 const getLabel = (key, configData) => {
-	//console.log("key", key);
-	//console.log("configData", configData);
+	console.log("key", key);
+	console.log("configData", configData);
 	let label = key;
 	forEach(configData, (config) => {
 		if (config.id == key) {
@@ -158,39 +85,53 @@ const getLabel = (key, configData) => {
 			}
 		}
 	});
-	//console.log("Finakl LAbel >>>>> ", label);
+	console.log("Finakl LAbel >>>>> ", label);
 	return label;
 };
 
-const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue, specialCaseLogsOption, refernceToGetSpecialOptions }) => {
+const SpecialCaseLogSelectOptions = ({
+	navigation,
+	control,
+	formState,
+	caseLogData,
+	setValue,
+	getValues,
+	specialCaseLogsOption,
+	refernceToGetSpecialOptions,
+}) => {
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
 	const [showTreeView, setShowTreeView] = useState(false);
 	const [activeTreeSelector, setActiveTreeSelector] = useState("");
+	const [activeTreeNode, setActiveTreeNode] = useState("");
 	const [activeTreeSelectorValue, setActiveTreeSelectorValue] = useState({});
 	const figmaRed = useToken("colors", "figmared");
 
 	const handleOnSave = (selectedNodes) => {
-		console.log("is this the data I am getting from the treeview component?", selectedNodes);
-		console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
+		//console.log("is this the data I am getting from the treeview component?", selectedNodes);
+		//console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 		setValue(activeTreeSelector, parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 		setShowTreeView(false);
-		console.log("\n\n");
-		console.log("!!!!! Tree Selector Predicate Key : ", activeTreeSelector);
-		console.log("!!!!! Tree Selector Predicate Value (Selected Nodes) : ", selectedNodes);
-		setActiveTreeSelectorValue({ ...activeTreeSelectorValue, [activeTreeSelector]: selectedNodes });
+		setActiveTreeNode("");
+		//setActiveTreeSelectorValue({ ...activeTreeSelectorValue, [activeTreeSelector]: selectedNodes });
+		setActiveTreeSelectorValue((prevState) => ({ ...prevState, [activeTreeSelector]: selectedNodes }));
 	};
 
 	const handleOnCancel = () => {
 		setShowTreeView(false);
+		setActiveTreeNode("");
 	};
 
-	const handleShowTreeSelector = (activeTreeSelectorId) => {
+	const handleShowTreeSelector = (activeTreeSelectorId, activeTreeNodeId) => {
 		setShowTreeView(true);
 		setActiveTreeSelector(activeTreeSelectorId);
+		if (activeTreeNodeId) {
+			setActiveTreeNode(activeTreeNodeId);
+		}
 	};
 
 	const getTreeConfigData = (key) => {
+		//console.log("getTreeConfigData key", key, " >> refernceToGetSpecialOptions ", refernceToGetSpecialOptions);
 		switch (refernceToGetSpecialOptions) {
 			case "CaseLog":
 				return CaseLogAnaesthesiaConfig[key];
@@ -207,105 +148,186 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 		}
 	};
 
-	const getArrowIcon = (level) => {
-		switch (level) {
+	const getArrowIcon = (dataValue) => {
+		let iconColor = "";
+		let iconSize = -1;
+		let iconName = "";
+		switch (dataValue.colorLevel) {
 			case 1:
-				return <MaterialCommunityIcons name='menu-right' size={28} color={figmaRed} />;
+				iconColor = "#a21515";
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
 
 			case 2:
-				return <MaterialCommunityIcons name='menu-right' size={28} color='#e96363' />;
+				iconColor = "#e37777";
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
 
 			case 3:
-				return <MaterialCommunityIcons name='menu-right' size={24} color='#fababa' />;
+				iconColor = "#a21515";
+				iconSize = 14;
+				iconName = "play-outline";
+				break;
 
 			default:
-				return <MaterialCommunityIcons name='menu-right' size={24} color='#ffe5e5' />;
+				iconColor = "#a21515";
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
 		}
+		return <Icon as={Ionicons} name={iconName} size={iconSize} color={iconColor} />;
 	};
 
-	const renderCard = (input, key, level, configData) => {
-		if (Array.isArray(input)) {
-			if (input.length == 1 && key == input[0] && level == 1) {
-				return null;
-			}
-			if (input.length == 1 && key == input[0]) {
-				console.log("level >> ", level);
-				const label = getLabel(input[0], configData);
-				return (
-					<Text flexShrink={1} bg='$red400'>
-						{label}
-					</Text>
-				);
+	const buildCompactView = (option) => {
+		const treeConfigData = getTreeConfigData(option.id);
+		console.log("buildCompactView treeConfigData", treeConfigData);
+		const data = activeTreeSelectorValue[option.id] || {};
+		return Object.keys(data).reduce((result, key) => {
+			const [rootNode, ...restTreeNodes] = key.split("/");
+			if (restTreeNodes.length > 0) {
+				//"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial", "Peripheral "],
+				//"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE", "Isoflurane"],
+
+				if (restTreeNodes.length === 1) {
+					//"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial", "Peripheral "],
+					const firstLevelTreeNode = restTreeNodes[0];
+					let firstLevelSelection = {};
+					let firstLevelSelectionData = data[key];
+					const isFirstLevelSelectionDataArray = Array.isArray(firstLevelSelectionData);
+
+					if (isFirstLevelSelectionDataArray) {
+						firstLevelSelection = {
+							key: firstLevelTreeNode,
+							label: getLabel(firstLevelTreeNode, treeConfigData),
+							value: firstLevelSelectionData.map((selection) => {
+								return {
+									key: selection,
+									label: getLabel(selection, treeConfigData),
+									colorLevel: 1,
+									isClickable: false,
+								};
+							}),
+						};
+					} else {
+						firstLevelSelection = {
+							key: firstLevelTreeNode,
+							label: getLabel(firstLevelTreeNode, treeConfigData),
+							value: [
+								{
+									key: firstLevelSelectionData,
+									label: getLabel(firstLevelSelectionData, treeConfigData),
+									colorLevel: 1,
+									isClickable: false,
+								},
+							],
+						};
+					}
+
+					const firstLevelDataFromResult = result[firstLevelTreeNode];
+					if (firstLevelDataFromResult) {
+						firstLevelDataFromResult.value.push(...firstLevelSelection.value);
+					} else {
+						result[firstLevelTreeNode] = firstLevelSelection;
+					}
+				} else {
+					//"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE", "Isoflurane"],
+					const [firstLevelTreeNode, ...otherLevelTreeNode] = restTreeNodes;
+					let subLevelSelection = [];
+					let subLevelSelectionLeaves = [];
+					let subLevelSelectionData = data[key];
+					const isSubLevelSelectionDataArray = Array.isArray(subLevelSelectionData);
+
+					const subLevelSelectionNodes = otherLevelTreeNode.map((selector, index) => {
+						return {
+							key: selector,
+							label: getLabel(selector, treeConfigData),
+							colorLevel: index + 1,
+							isClickable: true,
+							clickablePath: key,
+						};
+					});
+
+					if (isSubLevelSelectionDataArray) {
+						subLevelSelectionLeaves = subLevelSelectionData.map((selection) => {
+							return {
+								key: selection,
+								label: getLabel(selection, treeConfigData),
+								colorLevel: otherLevelTreeNode.length + 1,
+								isClickable: false,
+							};
+						});
+					} else {
+						subLevelSelectionLeaves = [
+							{
+								key: subLevelSelectionData,
+								label: getLabel(subLevelSelectionData, treeConfigData),
+								colorLevel: otherLevelTreeNode.length + 1,
+								isClickable: false,
+							},
+						];
+					}
+
+					subLevelSelection.push(...subLevelSelectionNodes, ...subLevelSelectionLeaves);
+
+					const firstLevelDataFromResult = result[firstLevelTreeNode];
+					if (firstLevelDataFromResult) {
+						firstLevelDataFromResult.value.push(...subLevelSelection);
+					} else {
+						result[firstLevelTreeNode] = {
+							key: firstLevelTreeNode,
+							label: getLabel(firstLevelTreeNode, treeConfigData),
+							value: subLevelSelection,
+						};
+					}
+				}
 			} else {
-				const label = getLabel(key, configData);
-				return (
-					<>
-						<Text flexShrink={1}>{level !== 1 && label}</Text>
-						{getArrowIcon(level)}
-						<>
-							{input.map((obj, index) => {
-								const length = input.length;
-								if (index == length - 1) {
-									const label = getLabel(obj, configData);
-									return (
-										<>
-											<Text flexShrink={1}>{label}</Text>
-										</>
-									);
-								} else {
-									const label = getLabel(obj, configData);
-									return (
-										<>
-											<Text flexShrink={1}>{label}</Text>
-											{getArrowIcon(level)}
-										</>
-									);
-								}
-							})}
-						</>
-					</>
-				);
+				// typeOfAnaesthesia: ["MAC", "General Anaesthesia"],
+				const leafSelectionData = data[key];
+				if (Array.isArray(leafSelectionData)) {
+					leafSelectionData.map((selection) => {
+						result[selection] = {
+							key: selection,
+							label: getLabel(selection, treeConfigData),
+							value: null,
+						};
+					});
+				} else {
+					result[leafSelectionData] = {
+						key: leafSelectionData,
+						label: getLabel(leafSelectionData, treeConfigData),
+						value: null,
+					};
+				}
 			}
-		} else {
-			const label = getLabel(key, configData);
-			return (
-				<>
-					<Text flexShrink={1}>{level !== 1 && label}</Text>
-					{Object.keys(input).map((keyChild) => {
-						return (
-							<>
-								{getArrowIcon(level)}
-								{renderCard(input[keyChild], keyChild, level + 1, configData)}
-							</>
-						);
-					})}
-				</>
-			);
-		}
+			return result;
+		}, {});
 	};
 
-	const getInputValue = (key) => {
-		const flattened = parserToConvertTreeFromIntoDataBaseForm(activeTreeSelectorValue[key], key);
-		console.log("flattened", flattened);
-		const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(flattened[key], key);
-		console.log("treeSelectorValue_Formatted", treeSelectorValue_Formatted);
-		return treeSelectorValue_Formatted;
-	};
-
-	const treeConfigData = getTreeConfigData(activeTreeSelector);
-	//console.log("DATA", treeConfigData);
-	console.log("activeTreeSelector", `is this empty ??? ${activeTreeSelector}`);
-	console.log("activeTreeSelectorValue", activeTreeSelectorValue);
+	useEffect(() => {
+		console.log("SpecialCaseLogSelectOptions useEffect");
+		specialCaseLogsOption.forEach((option) => {
+			const data = caseLogData[option.id];
+			//console.log("option", option.id);
+			//console.log("DB data", data);
+			const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(data, option.id);
+			//console.log("treeSelectorValue_Formatted", treeSelectorValue_Formatted);
+			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [option.id]: treeSelectorValue_Formatted }));
+		});
+	}, [caseLogData]);
 
 	return (
 		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20} px='$4'>
 			{specialCaseLogsOption.map((option) => {
+				const compactViewData = useMemo(() => buildCompactView(option), [option.id, activeTreeSelectorValue[option.id]]);
+				console.log("compactViewData", compactViewData);
 				return (
 					<VStack bg='$white' rounded='$lg' w={"$full"}>
 						<Button
 							w='$full'
 							key={option.id}
-							onPress={handleShowTreeSelector.bind(null, option.id)}
+							onPress={handleShowTreeSelector.bind(null, option.id, null)}
 							size='lg'
 							justifyContent='space-between'
 							variant='specialLogs'>
@@ -313,20 +335,45 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 							<ButtonIcon as={ChevronRight} size={20} name='arrow-forward-outline' color='#666666' />
 						</Button>
 						{activeTreeSelectorValue[option.id] && (
-							<VStack gap='$0' borderTopWidth={1} borderTopColor='$coolGray100' pl='$8' pb='$2' width={"$80%"}>
-								{Object.keys(transformInput(getInputValue(option.id))).map((key) => {
-									//console.log("key", key);
-									//console.log("configData", treeConfigData);
-									const configData = getTreeConfigData(option.id);
-									const x = renderCard(transformInput(getInputValue(option.id))[key], key, 1, configData);
-									console.log("x", x);
+							<VStack gap='$0' pl='$8' pb='$2' width={"$90%"}>
+								{map(compactViewData, (data, key) => {
 									return (
-										<HStack w={"$full"} gap='$1'>
-											<Text pt='$1'>{getLabel(key, configData)}</Text>
-											<HStack flexWrap='wrap' alignItems='center'>
-												{x}
+										<>
+											<Divider my='$1' bg='$coolGray200' />
+											<HStack w={"$full"} gap='$1' flexWrap='wrap'>
+												{data.value ? (
+													<Pressable onPress={handleShowTreeSelector.bind(null, option.id, key)}>
+														<Text fontWeight='$semibold' fontSize='$lg' underline={true}>
+															{data.label}
+														</Text>
+													</Pressable>
+												) : (
+													<Text fontWeight='$semibold' fontSize='$lg'>
+														{data.label}
+													</Text>
+												)}
+												{data.value && (
+													<HStack display='flex' alignItems='center' flexWrap='wrap'>
+														{map(data.value, (value) => {
+															return (
+																<HStack alignItems='center' gap='$0.5'>
+																	{getArrowIcon(value)}
+																	{value.isClickable ? (
+																		<Pressable onPress={handleShowTreeSelector.bind(null, option.id, value.clickablePath)}>
+																			<Text fontSize='$md' underline={true}>
+																				{value.label}
+																			</Text>
+																		</Pressable>
+																	) : (
+																		<Text fontSize='$md'>{value.label}</Text>
+																	)}
+																</HStack>
+															);
+														})}
+													</HStack>
+												)}
 											</HStack>
-										</HStack>
+										</>
 									);
 								})}
 							</VStack>
@@ -334,13 +381,15 @@ const SpecialCaseLogSelectOptions = ({ navigation, control, formState, setValue,
 					</VStack>
 				);
 			})}
-			{activeTreeSelector && (
+			{activeTreeSelector && showTreeView && (
 				<TreeView
-					data={treeConfigData}
+					data={getTreeConfigData(activeTreeSelector)}
 					showTreeView={showTreeView}
 					onSave={handleOnSave}
 					onCancel={handleOnCancel}
+					activeTreeSelector={activeTreeSelector}
 					initialData={activeTreeSelectorValue[activeTreeSelector]}
+					initialActiveNode={activeTreeNode}
 				/>
 			)}
 		</VStack>

@@ -71,7 +71,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const { caseLogFormToGet } = route.params;
-	const { control, formState, reset, watch, handleSubmit, setValue } = useForm({
+	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
 			date: new Date(),
 		},
@@ -193,7 +193,9 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 										<SpecialCaseLogSelectOptions
 											control={control}
 											setValue={setValue}
+											getValues={getValues}
 											formState={formState}
+											caseLogData={{}}
 											specialCaseLogsOption={specialCaseLogsOption}
 											refernceToGetSpecialOptions={caseLogFormToGet}
 										/>

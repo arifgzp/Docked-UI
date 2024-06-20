@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { remove, get } from "lodash";
+import { forEach, remove, get } from "lodash";
 import {
 	Box,
 	CheckboxGroup,
@@ -44,7 +44,9 @@ class TreeView extends React.Component {
 		showTreeView: PropTypes.bool.isRequired,
 		onSave: PropTypes.func.isRequired,
 		onCancel: PropTypes.func.isRequired,
+		activeTreeSelector: PropTypes.string,
 		initialData: PropTypes.object,
+		initialActiveNode: PropTypes.string,
 		renderNode: PropTypes.func,
 		initialExpanded: PropTypes.bool,
 		idKey: PropTypes.string,
@@ -73,11 +75,26 @@ class TreeView extends React.Component {
 		this.state = this.getInitialState();
 	}
 
-	getInitialState = () => ({
-		expandedNodeKeys: {},
-		selectedNodeKeys: this.props.initialData || {},
-		showModal: this.props.showTreeView,
-	});
+	getInitialState = (isReset = false) => {
+		let defaultExpandedNodeKeys = { [this.props.activeTreeSelector]: true };
+		console.log("getInitialState >>>>> initialActiveNode >> ", this.props.initialActiveNode);
+		if (!isReset && this.props.initialActiveNode) {
+			forEach(this.props.initialActiveNode.split("/"), (nodeId) => {
+				defaultExpandedNodeKeys[nodeId] = true;
+				console.log("getInitialState >>>>> for >> defaultExpandedNodeKeys >> ", defaultExpandedNodeKeys);
+			});
+		}
+		console.log("getInitialState >>>>> defaultExpandedNodeKeys >> ", defaultExpandedNodeKeys);
+		return {
+			expandedNodeKeys: defaultExpandedNodeKeys,
+			selectedNodeKeys: this.props.initialData || {},
+			showModal: this.props.showTreeView,
+		};
+	};
+
+	resetState = () => {
+		this.setState(this.getInitialState(true));
+	};
 
 	componentDidUpdate(prevProps) {
 		//console.log("componentDidUpdate >>> ", this.state);
@@ -157,7 +174,9 @@ class TreeView extends React.Component {
 
 	closeModal = () => {
 		//this.setState({ showModal: false });
+		//console.log("closeModal >>>>>>>>>>>>>>>>>", this.state.expandedNodeKeys);
 		this.props.onCancel();
+		this.resetState();
 	};
 
 	toggleModal = () => {
@@ -166,6 +185,7 @@ class TreeView extends React.Component {
 
 	saveModal = () => {
 		this.props.onSave(this.state.selectedNodeKeys);
+		this.resetState();
 	};
 
 	getNodeIndicator = (isExpanded, node) => {
@@ -272,6 +292,7 @@ class TreeView extends React.Component {
 		const nodeList = currentNodeChildList.map((node) => {
 			const nodeId = node[this.props.idKey];
 			const isExpanded = this.isExpanded(nodeId);
+			console.log("NodeComponent >>> nodeID : ", nodeId, " >> isExpanded ", isExpanded);
 			const hasChildrenNodes = this.hasChildrenNodes(node);
 			const shouldRenderLevel = hasChildrenNodes && isExpanded;
 			/*console.log(
@@ -368,6 +389,7 @@ class TreeView extends React.Component {
 	};
 
 	render() {
+		//console.log(this.props);
 		return (
 			<Modal isOpen={this.state.showModal} size='lg'>
 				<ModalBackdrop />

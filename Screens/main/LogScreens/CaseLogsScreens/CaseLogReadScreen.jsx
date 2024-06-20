@@ -104,7 +104,8 @@ const CaseLogReadScreen = ({ navigation }) => {
 	const { store, setQuery } = queryInfo;
 	const [loading, setLoading] = useState(false);
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
-	const { control, formState, reset, watch, handleSubmit, setValue } = useForm({
+	const [caseLogData, setCaseLogData] = useState({});
+	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
 			hospital: "",
 			faculty: "",
@@ -120,34 +121,32 @@ const CaseLogReadScreen = ({ navigation }) => {
 		setTimeout(() => {
 			setLoading(false);
 		}, 1000);
+
 		console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
+		let caseLogData = {};
 		switch (routes.params.caseType) {
 			case "CaseLog":
-				reset({
-					...store.getAnaesthesiaCaseLogById(routes.params.id)[0],
-				});
+				caseLogData = store.getAnaesthesiaCaseLogById(routes.params.id)[0];
 				break;
+
 			case "ChronicPain":
-				reset({
-					...store.getAnaesthesiaChronicPainLogById(routes.params.id)[0],
-				});
+				caseLogData = store.getAnaesthesiaChronicPainLogById(routes.params.id)[0];
 				break;
+
 			case "CriticalCareCaseLog":
-				reset({
-					...store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0],
-				});
+				caseLogData = store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0];
 				break;
+
 			case "OrthopaedicsCaseLog":
-				reset({
-					...store.getOrthopaedicsCaseLogById(routes.params.id)[0],
-				});
+				caseLogData = store.getOrthopaedicsCaseLogById(routes.params.id)[0];
 				break;
+
 			case "OrthodonticsClinicalCaseLog":
-				reset({
-					...store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0],
-				});
+				caseLogData = store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0];
 				break;
 		}
+		reset({ ...caseLogData });
+		setCaseLogData(caseLogData);
 	}, []);
 
 	useEffect(() => {
@@ -253,7 +252,9 @@ const CaseLogReadScreen = ({ navigation }) => {
 								<SpecialCaseLogSelectOptions
 									control={control}
 									setValue={setValue}
+									getValues={getValues}
 									formState={formState}
+									caseLogData={caseLogData}
 									specialCaseLogsOption={specialCaseLogsOption}
 									refernceToGetSpecialOptions={routes.params.caseType}
 								/>
