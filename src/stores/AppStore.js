@@ -92,6 +92,7 @@ const AppStore = types
 		_alert: types.maybeNull(types.boolean),
 		_silentNotification: types.maybeNull(types.boolean),
 		_isPasswordResetRequired: false,
+		_broadSpecialty: types.maybeNull(types.string),
 		_apiError: types.maybeNull(APIErrorType),
 	})
 	.views((self) => ({
@@ -192,12 +193,14 @@ const AppStore = types
 			self._specialty = specialtyValue;
 		},
 
-		markUserSignedIn(token, id, userName, role) {
+		markUserSignedIn(token, id, userName, role, broadSpecialty) {
 			self._isSignedIn = true;
 			self._userToken = token;
 			self._userName = userName;
 			self._userRole = role;
 			self._userId = id;
+			self._broadSpecialty = broadSpecialty;
+			SecureStore.setItemAsync(SecureStoreEnum.USER.description, JSON.stringify({ userRole: role, userName: userName, id, broadSpecialty }));
 		},
 
 		markUserSignedOut() {
@@ -206,11 +209,10 @@ const AppStore = types
 			self._selectionMode = null;
 			self._userName = null;
 			self._userRole = null;
-			self._pharmaID = null;
-			self._campAdminID = null;
 			self._alert = false;
 			self._silentNotification = false;
 			self._userId = null;
+			self._broadSpecialty = null;
 		},
 
 		validateUserToken: flow(function* validateUserToken() {
@@ -221,17 +223,7 @@ const AppStore = types
 					NetworkUtils.setTokenInHeader(userToken);
 					const userInfoString = yield SecureStore.getItemAsync(SecureStoreEnum.USER.description);
 					const userInfo = JSON.parse(userInfoString) || {};
-					self.markUserSignedIn(
-						userToken,
-						userInfo.id,
-						userInfo.name,
-						userInfo.userName,
-						userInfo.userRole,
-						userInfo.orgID,
-						userInfo.adminID,
-						userInfo.alert,
-						userInfo.silentNotification
-					);
+					self.markUserSignedIn(userToken, userInfo.id, userInfo.userName, userInfo.userRole, userInfo.broadSpecialty);
 				} else {
 					self.markUserSignedOut();
 				}
@@ -313,22 +305,25 @@ const AppStore = types
 			}
 		}),
 
-		SignIn: flow(function* SignIn(formData) {
+		SignIn: flow(function* SignIn(formData, skipPostLogin = false) {
 			try {
 				self._isLoading = true;
 				const response = yield execute("/login", formData);
 				//const userToken = yield Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.MD5, "betic.qms");
 				const userToken = response?.sessionKey;
 				console.log("userToken : ", userToken);
+				console.log("user response : ", response);
 				if (userToken) {
-					yield SecureStore.setItemAsync(SecureStoreEnum.TOKEN.description, userToken);
-
 					NetworkUtils.setTokenInHeader(userToken);
-					self._isPasswordResetRequired = response?.userStatus === UserStatus.RESET_PASSWORD_REQUIRED;
-					const userRole = response?.role;
-					const userName = response?.userName;
 
-					self.markUserSignedIn(userToken, response.id, userName, userRole);
+					if (!skipPostLogin) {
+						yield SecureStore.setItemAsync(SecureStoreEnum.TOKEN.description, userToken);
+						self._isPasswordResetRequired = response?.userStatus === UserStatus.RESET_PASSWORD_REQUIRED;
+						const userRole = response?.role;
+						const userName = response?.userName;
+						const broadSpecialty = response?.broadSpecialty;
+						self.markUserSignedIn(userToken, response.id, userName, userRole, broadSpecialty);
+					}
 
 					return response;
 				} else {

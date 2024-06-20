@@ -391,6 +391,14 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("********** fetchAnaesthesiaCriticalCareCaseLog Query ENDS **********");
 		return fetchAnaesthesiaCriticalCareCaseLogQuery;
 	},
+
+	resetAllData() {
+		self.anaesthesiaCaseLogs.clear();
+		self.anaesthesiaChronicPainLogs.clear();
+		self.anaesthesiaCriticalCareCaseLogs.clear();
+		self.orthopaedicsCaseLogs.clear();
+		self.orthodonticsClinicalCaseLogs.clear();
+	},
 })).views((self) => ({
 	get AnaesthesiaCaseLogList() {
 		return values(self.anaesthesiaCaseLogs);

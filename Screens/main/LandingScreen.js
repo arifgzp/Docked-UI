@@ -53,7 +53,7 @@ const OrthopaedicsCaseLogEntryOptions = [{ id: "OrthopaedicsCaseLog", name: "Cas
 
 const OrthodonticsCaseLogEntryOptions = [{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" }];
 
-const getLogEntries = (specialty) => {
+const getCreateLogOptions = (specialty) => {
 	console.log("UserBroadSpecialty: for the switch case.", specialty);
 	switch (specialty) {
 		case "Orthopaedics":
@@ -72,18 +72,15 @@ const getLogEntries = (specialty) => {
 };
 
 const LandingScreen = ({ navigation, route }) => {
-	const UserBroadSpecialty = AppStore.UserBroadSpecialty;
-	const [selected, setSelected] = useState(new Set([]));
-	const [logEntryToDisplay, setLogEntryToDisplay] = useState(getLogEntries(UserBroadSpecialty));
 	const [selectedLogButton, setSelectedLogButton] = useState("");
-
 	const [showActionsheet, setShowActionsheet] = useState(false);
+
 	const handleClose = () => {
 		setShowActionsheet(!showActionsheet);
 		setSelectedLogButton("");
 	};
 
-	const handleDisplayingLogForm = (selectedLogButton) => {
+	const handleDisplayingLogForm = () => {
 		switch (selectedLogButton) {
 			case "CaseLog":
 				handleClose();
@@ -178,13 +175,13 @@ const LandingScreen = ({ navigation, route }) => {
 										</Text>
 										<RadioGroup width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
 											<VStack alignItems='flex-start' space='lg' mb='$2'>
-												{logEntryToDisplay.map((logEntry) => {
+												{getCreateLogOptions(AppStore.UserBroadSpecialty).map((option) => {
 													return (
-														<Radio width={"$100%"} value={logEntry.id}>
+														<Radio width={"$100%"} value={option.id}>
 															<RadioIndicator mr='$2'>
 																<RadioIcon as={CircleIcon} />
 															</RadioIndicator>
-															<RadioLabel>{logEntry.name}</RadioLabel>
+															<RadioLabel>{option.name}</RadioLabel>
 														</Radio>
 													);
 												})}
@@ -192,7 +189,7 @@ const LandingScreen = ({ navigation, route }) => {
 										</RadioGroup>
 									</VStack>
 									<Box mt='$4' mb='$4' alignSelf='center'>
-										<Button onPress={() => handleDisplayingLogForm(selectedLogButton)} backgroundColor='#367B71' borderRadius={"$full"}>
+										<Button onPress={handleDisplayingLogForm} backgroundColor='#367B71' borderRadius={"$full"}>
 											<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
 												Proceed for log entry
 											</ButtonText>
@@ -236,34 +233,3 @@ const LandingScreen = ({ navigation, route }) => {
 };
 
 export default observer(LandingScreen);
-
-const styles = StyleSheet.create({
-	modalOverlay: {
-		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 0.5)",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	modalContent: {
-		width: "80%",
-		backgroundColor: "white",
-		padding: 20,
-		borderRadius: 10,
-		elevation: 5,
-	},
-	modalText: {
-		fontSize: 18,
-		textAlign: "center",
-		marginBottom: 20,
-	},
-	closeButton: {
-		backgroundColor: "#DE2E2E",
-		padding: 10,
-		borderRadius: 5,
-	},
-	closeButtonText: {
-		color: "white",
-		textAlign: "center",
-		fontSize: 16,
-	},
-});
