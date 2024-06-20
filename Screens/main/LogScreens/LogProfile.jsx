@@ -2,6 +2,7 @@ import {
 	CheckIcon,
 	CheckboxGroup,
 	CheckboxIndicator,
+	Divider,
 	KeyboardAvoidingView,
 	Select,
 	SelectInput,
@@ -52,8 +53,10 @@ import { useQuery } from "../../../src/models";
 import { observer } from "mobx-react";
 import { toJS } from "mobx";
 import Loader from "../../../components/Loader";
+import { ButtonIcon } from "@gluestack-ui/themed";
 
-const LogProfilePage = ({ navigation }) => {
+const LogProfilePage = ({ navigation, route }) => {
+	const { caseLogFormToGet } = route.params;
 	const { control, handleSubmit, formState, reset, watch, setValue } = useForm({
 		defaultValues: {
 			hospital: "",
@@ -86,7 +89,7 @@ const LogProfilePage = ({ navigation }) => {
 	};
 
 	const handleSetDate = (date, key) => {
-		if (!isNaN(new Date(date).getTime())) {
+		if (date instanceof Date && !isNaN(date)) {
 			setValue(key, date);
 		} else {
 			console.error("Invalid date value");
@@ -100,6 +103,15 @@ const LogProfilePage = ({ navigation }) => {
 			phoneNumber: watch("facultyPhoneNumber"),
 		};
 		setFacultyList([...facultyList, newFaculty]);
+		reset({
+			facultyName: null,
+			facultyDesignation: null,
+			facultyPhoneNumber: null,
+			from: new Date(),
+			to: new Date(),
+		});
+		setFromDate(new Date());
+		setToDate(new Date());
 	};
 
 	const handleSaveRotation = () => {
@@ -120,12 +132,17 @@ const LogProfilePage = ({ navigation }) => {
 
 	const handleOnSave = async () => {
 		const data = { faculties: facultyList, rotations: rotationList, hospital: watch("hospital") };
+		console.log("caseLogFormToGet", caseLogFormToGet);
 		try {
 			const query = store.updateUserLogProfile(AppStore.UserId, { set: { logProfile: data } });
 			setQuery(query);
 			const finishUpdatingLogProfile = await query;
 			if (finishUpdatingLogProfile) {
-				navigation.goBack();
+				if (caseLogFormToGet) {
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: caseLogFormToGet } });
+				} else {
+					navigation.goBack();
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -179,7 +196,6 @@ const LogProfilePage = ({ navigation }) => {
 											rules={{
 												required: true,
 											}}
-											key='hospital'
 											name='hospital'
 											render={({ field: { onChange, onBlur, value } }) => {
 												return (
@@ -193,6 +209,10 @@ const LogProfilePage = ({ navigation }) => {
 														<SelectPortal>
 															<SelectBackdrop />
 															<SelectContent>
+																<Text padding={10} size='xl'>
+																	Hospital
+																</Text>
+																<Divider borderWidth={0.1} />
 																<SelectItem label='JJ' value='JJ' />
 															</SelectContent>
 														</SelectPortal>
@@ -253,6 +273,10 @@ const LogProfilePage = ({ navigation }) => {
 														<SelectPortal>
 															<SelectBackdrop />
 															<SelectContent>
+																<Text padding={10} size='xl'>
+																	Designation
+																</Text>
+																<Divider borderWidth={0.1} />
 																<SelectItem label='Designation' value='Designation' />
 															</SelectContent>
 														</SelectPortal>
@@ -262,7 +286,7 @@ const LogProfilePage = ({ navigation }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$80%"}>{formState.errors.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
@@ -272,8 +296,8 @@ const LogProfilePage = ({ navigation }) => {
 											rules={{
 												required: true,
 											}}
-											key='phoneNumber'
-											name='phoneNumber'
+											key='facultyPhoneNumber'
+											name='facultyPhoneNumber'
 											render={({ field: { onChange, onBlur, value } }) => {
 												return (
 													<Input width={"$100%"} variant='underlined' size='md' isDisabled={false} isInvalid={false} isReadOnly={false}>
@@ -284,13 +308,13 @@ const LogProfilePage = ({ navigation }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.phoneNumber && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$80%"}>{formState.errors.facultyPhoneNumber && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
 									<Button onPress={handleSaveFaculty} alignSelf='flex-start' width={"$50%"} height={50} size='sm' variant='secondary'>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
-											Save to list
+											Save Faculty
 										</ButtonText>
 									</Button>
 								</Box>
@@ -341,9 +365,13 @@ const LogProfilePage = ({ navigation }) => {
 														<SelectPortal>
 															<SelectBackdrop />
 															<SelectContent>
+																<Text padding={10} size='xl'>
+																	Department
+																</Text>
+																<Divider borderWidth={0.1} />
 																<SelectItem label='Department' value='Department' />
 																<SelectItem label='Department-1' value='Department-1' />
-																<SelectItem label='Department-2' value='Department-3' />
+																<SelectItem label='Department-2' value='Department-2' />
 															</SelectContent>
 														</SelectPortal>
 													</Select>
@@ -355,28 +383,32 @@ const LogProfilePage = ({ navigation }) => {
 										<Box width={"$80%"}>{formState.errors.department && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
-								<HStack width={"$90%"} justifyContent='space-between'>
+								<VStack width={"$90%"} spcae='lg' justifyContent='space-between'>
 									<Button
-										width={"$50%"}
+										width={"$90%"}
 										justifyContent='flex-start'
-										alignItems='flex-start'
+										alignItems='center'
 										variant='link'
 										onPress={() => {
 											setCurrentKey("from");
 											setFromOpen(true);
 										}}>
-										<ButtonText fontFamily='Inter'>From - {format(new Date(fromDate), "do MMM yyyy")}</ButtonText>
+										<ButtonIcon pr='$2' as={Ionicons} size={20} name='calendar-outline' color='#1E1E1E' />
+
+										<ButtonText fontFamily='Inter'>From - {format(new Date(fromDate), "do/MMM/yyy")}</ButtonText>
 									</Button>
 									<Button
-										width={"$50%"}
+										width={"$90%"}
 										justifyContent='flex-start'
-										alignItems='flex-start'
+										alignItems='center'
 										variant='link'
 										onPress={() => {
 											setCurrentKey("to");
 											setToOpen(true);
 										}}>
-										<ButtonText fontFamily='Inter'>To - {format(new Date(toDate), "do MMM yyyy")}</ButtonText>
+										<ButtonIcon pr='$2' as={Ionicons} size={20} name='calendar-outline' color='#1E1E1E' />
+
+										<ButtonText fontFamily='Inter'>To - {format(new Date(toDate), "do/MMM/yyyy")}</ButtonText>
 									</Button>
 									<DatePicker
 										modal
@@ -416,11 +448,11 @@ const LogProfilePage = ({ navigation }) => {
 										}}
 										mode='date'
 									/>
-								</HStack>
+								</VStack>
 								<Box width={"$90%"}>
 									<Button onPress={handleSaveRotation} alignSelf='flex-start' width={"$50%"} height={50} size='sm' variant='secondary'>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
-											Save to list
+											Save Rotation
 										</ButtonText>
 									</Button>
 								</Box>

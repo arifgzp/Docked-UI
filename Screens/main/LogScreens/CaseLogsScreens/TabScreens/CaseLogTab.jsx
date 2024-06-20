@@ -62,8 +62,8 @@ const CaseLogTab = ({ navigation }) => {
 				const fetchQuery5 = store.fetchOrthodonticsClinicalCaseLogByUser(AppStore.UserName);
 				setQuery(fetchQuery5);
 				const data5 = await fetchQuery5;
-				console.log("data for Orthodontics Clinical Case Log", data5.queryUser[1].orthodonticsClinicalCaseLog);
-				const OrthodonticsClinicalCaseLog = data5.queryUser[1].orthodonticsClinicalCaseLog;
+				console.log("data for Orthodontics Clinical Case Log", data5.queryUser[0].orthodonticsClinicalCaseLog);
+				const OrthodonticsClinicalCaseLog = data5.queryUser[0].orthodonticsClinicalCaseLog;
 
 				setCardDetails([
 					...AnaesthesiaCaseLogData,

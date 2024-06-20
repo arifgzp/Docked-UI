@@ -78,29 +78,37 @@ const LandingScreen = ({ navigation, route }) => {
 	const [selectedLogButton, setSelectedLogButton] = useState("");
 
 	const [showActionsheet, setShowActionsheet] = useState(false);
-	const handleClose = () => setShowActionsheet(!showActionsheet);
+	const handleClose = () => {
+		setShowActionsheet(!showActionsheet);
+		setSelectedLogButton("");
+	};
 
 	const handleDisplayingLogForm = (selectedLogButton) => {
 		switch (selectedLogButton) {
 			case "CaseLog":
 				handleClose();
 				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+				setSelectedLogButton("");
 				break;
 			case "ChronicPainLog":
 				handleClose();
 				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+				setSelectedLogButton("");
 				break;
 			case "CriticalCareCaseLog":
 				handleClose();
 				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
+				setSelectedLogButton("");
 				break;
 			case "OrthopaedicsCaseLog":
 				handleClose();
 				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
+				setSelectedLogButton("");
 				break;
 			case "OrthodonticsClinicalCaseLog":
 				handleClose();
 				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
+				setSelectedLogButton("");
 				break;
 			default:
 				// Optional: handle cases where keys.currentKey does not match any of the specified cases
@@ -164,15 +172,15 @@ const LandingScreen = ({ navigation, route }) => {
 									<ActionsheetDragIndicatorWrapper>
 										<ActionsheetDragIndicator />
 									</ActionsheetDragIndicatorWrapper>
-									<VStack space='lg' mt='$2' ml='$2'>
+									<VStack width={"$100%"} space='lg' mt='$2' ml='$2'>
 										<Text color='#000000' size='lg' fontFamily='Inter_Bold'>
 											Choose type of log entry
 										</Text>
-										<RadioGroup value={selectedLogButton} onChange={setSelectedLogButton}>
+										<RadioGroup width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
 											<VStack alignItems='flex-start' space='lg' mb='$2'>
 												{logEntryToDisplay.map((logEntry) => {
 													return (
-														<Radio value={logEntry.id}>
+														<Radio width={"$100%"} value={logEntry.id}>
 															<RadioIndicator mr='$2'>
 																<RadioIcon as={CircleIcon} />
 															</RadioIndicator>

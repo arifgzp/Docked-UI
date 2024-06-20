@@ -241,7 +241,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 								<Text>Please create your log profile before filing a case</Text>
 								<Box width={"$100%"} alignItems='center'>
 									<Button
-										onPress={() => navigation.navigate("MainLogScreen", { screen: "LogProfilePage" })}
+										onPress={() => navigation.navigate("MainLogScreen", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } })}
 										width={"$85%"}
 										height={50}
 										size='lg'

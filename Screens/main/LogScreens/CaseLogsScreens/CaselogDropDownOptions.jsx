@@ -160,7 +160,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						key='faculty'
 						name='faculty'
 						rules={{
-							required: false,
+							required: true,
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
@@ -260,7 +260,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 			})}
 			<Button disabled={readOnly} justifyContent='flex-start' alignItems='flex-start' variant='link' width='$90%' onPress={() => setOpen(true)}>
 				<ButtonText paddingLeft={15} fontFamily='Inter'>
-					Date - {date.toDateString()}
+					Date - {format(new Date(date), "do/MMM/yyyy")}
 				</ButtonText>
 			</Button>
 			<DatePicker
@@ -269,6 +269,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 				theme='light'
 				date={date}
 				onConfirm={(date) => {
+					setDate(date);
 					setOpen(false);
 					handelSetDate(date);
 				}}

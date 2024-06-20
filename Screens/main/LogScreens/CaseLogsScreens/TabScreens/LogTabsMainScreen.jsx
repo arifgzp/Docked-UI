@@ -69,7 +69,7 @@ export default function LogTabsMainScreen({ navigation }) {
 						/>
 					</Box>
 					<Button
-						onPress={() => navigation.navigate("Plus", { screen: "LogProfilePage" })}
+						onPress={() => navigation.navigate("MainLogScreen", { screen: "LogProfilePage", params: { caseLogFormToGet: "" } })}
 						backgroundColor='#367B71'
 						borderRadius={"$full"}
 						size='xs'>

@@ -49,10 +49,16 @@ const RegisterPage = ({ navigation, route }) => {
 	const [passwordError, setPasswordError] = useState("");
 	const [nameError, setNameError] = useState("");
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const invalidStartingCharsRegex = /^[!#$%&'*+/=?^_`{|}~-]/;
+	const consecutiveSpecialCharsRegex = /[!#$%&'*+/=?^_`{|}~-]{2,}/;
 	const toast = useToast();
 
 	const handleJoining = async () => {
 		setJoinPressed(true);
+
+		if (formData.password.length < 6) {
+			setPasswordError("Atleast 6 characters must be present");
+		}
 
 		if (formData.password !== formData.reEnterPassword) {
 			setPasswordError("Entered password do not match");
@@ -66,6 +72,16 @@ const RegisterPage = ({ navigation, route }) => {
 
 		if (!formData.email) {
 			setEmailError("Email is required");
+			return;
+		}
+
+		if (invalidStartingCharsRegex.test(formData.email)) {
+			setEmailError("Email address cannot start with a special character");
+			return;
+		}
+
+		if (consecutiveSpecialCharsRegex.test(formData.email)) {
+			setEmailError("Email address cannot contain consecutive special characters");
 			return;
 		}
 

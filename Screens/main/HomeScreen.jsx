@@ -91,11 +91,7 @@ const HomeScreenPage = ({ navigation }) => {
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Box h='$full' backgroundColor='$primaryBackground'>
 				<ScrollView>
-					<VStack w='$full' h={200} justifyContent='flex-start' px='$4'>
-						<Image width='$full' h='$full' resizeMode='contain' source={ImageAssets.data} alt='graph' />
-					</VStack>
-
-					<Box py={10}>
+					<Box p={10}>
 						<ScrollView horizontal={true}>
 							<HStack gap='$4'>
 								<Box w='$32' h='$32' rounded='$2xl' alignItems='flex-end' bg='$figmalightred' p='$2'>
