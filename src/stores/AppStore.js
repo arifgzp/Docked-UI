@@ -2,10 +2,11 @@ import { flow, types } from "mobx-state-tree";
 import { UserRole, UserStatus, useQuery } from "../models";
 import NetworkUtils from "../utils/NetworkUtils";
 import rootStore from "./MobXRootStore";
+import * as SecureStore from "expo-secure-store";
 
-export const SelectionModeEnum = Object.freeze({
-	CAMP: Symbol("campMode"),
-	CLINIC: Symbol("clinicMode"),
+export const SecureStoreEnum = Object.freeze({
+	TOKEN: Symbol("token"),
+	USER: Symbol("user"),
 });
 
 const execute = async (url, data, token, notifyError = true) => {
@@ -212,6 +213,35 @@ const AppStore = types
 			self._userId = null;
 		},
 
+		validateUserToken: flow(function* validateUserToken() {
+			try {
+				const userToken = yield SecureStore.getItemAsync(SecureStoreEnum.TOKEN.description);
+				if (userToken) {
+					console.log("User Token Found !!!!!!!!");
+					NetworkUtils.setTokenInHeader(userToken);
+					const userInfoString = yield SecureStore.getItemAsync(SecureStoreEnum.USER.description);
+					const userInfo = JSON.parse(userInfoString) || {};
+					self.markUserSignedIn(
+						userToken,
+						userInfo.id,
+						userInfo.name,
+						userInfo.userName,
+						userInfo.userRole,
+						userInfo.orgID,
+						userInfo.adminID,
+						userInfo.alert,
+						userInfo.silentNotification
+					);
+				} else {
+					self.markUserSignedOut();
+				}
+			} catch (error) {
+				console.error("AppStore > validateUserToken ");
+				console.log(error.stack);
+				self.markUserSignedOut();
+			}
+		}),
+
 		register: flow(function* register(formData) {
 			let result = {};
 			try {
@@ -291,6 +321,8 @@ const AppStore = types
 				const userToken = response?.sessionKey;
 				console.log("userToken : ", userToken);
 				if (userToken) {
+					yield SecureStore.setItemAsync(SecureStoreEnum.TOKEN.description, userToken);
+
 					NetworkUtils.setTokenInHeader(userToken);
 					self._isPasswordResetRequired = response?.userStatus === UserStatus.RESET_PASSWORD_REQUIRED;
 					const userRole = response?.role;
@@ -341,6 +373,8 @@ const AppStore = types
 		SignOut: flow(function* SignOut() {
 			try {
 				self._isLoading = true;
+				yield SecureStore.deleteItemAsync(SecureStoreEnum.TOKEN.description);
+				yield SecureStore.deleteItemAsync(SecureStoreEnum.USER.description);
 				self.markUserSignedOut();
 				rootStore.resetAllData();
 			} catch (error) {

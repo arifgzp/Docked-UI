@@ -28,10 +28,15 @@ import ResetPasswordEmailSent from "./Screens/auth/ResetPasswordEmailSent";
 import ResetPasswordScreen from "./Screens/auth/ResetPasswordScreen";
 import PasswordResetSuccessfully from "./Screens/auth/PasswordResetSuccessfully";
 import { LogBox } from "react-native";
+import { useEffect } from "react";
+import appStoreInstance from "./src/stores/AppStore";
+import { observer } from "mobx-react";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs();
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+function App() {
 	const [fontsLoaded] = useFonts({
 		Inter: require("./assets/fonts/Inter.ttf"),
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),
@@ -39,171 +44,186 @@ export default function App() {
 		Inter_SemiBold: require("./assets/fonts/Inter-SemiBold.ttf"),
 	});
 
-	if (!fontsLoaded) {
-		SplashScreen.preventAutoHideAsync(); // Keep the splash screen visible while we fetch resources
-		return null; // Return null so that nothing is rendered until fonts are loaded
-	}
+	SplashScreen.preventAutoHideAsync().catch(() => {
+		/* reloading the app might trigger some race conditions, ignore them */
+	});
 
-	SplashScreen.hideAsync();
+	useEffect(() => {
+		const runPreChecks = async () => {
+			await appStoreInstance.validateUserToken();
+			SplashScreen.hideAsync();
+		};
 
-	const Stack = createNativeStackNavigator();
+		if (fontsLoaded) {
+			runPreChecks();
+		}
+	}, [fontsLoaded]);
+
+	const isUserSignedIn = appStoreInstance.isUserSignedIn;
+	console.log("isUserSignedIn >> ", isUserSignedIn);
 	return (
 		<StoreContext.Provider value={rootStore}>
 			<GluestackUIProvider config={config}>
 				<NavigationContainer>
-					<Stack.Navigator
-						initialRouteName='Login Page'
-						screenOptions={{
-							animation: "slide_from_right", // Define the animation type
-							gestureEnabled: false,
-						}}>
-						<Stack.Screen
-							name='Login Page'
-							component={LoginPage}
-							options={{
-								title: "Login",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Register Page'
-							component={RegisterPage}
-							options={{
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen name='Register Mobile Number Page' component={RegisterMobileNumberPage} options={{ title: "", headerShown: false }} />
-						<Stack.Screen
-							name='Register Mobile Number OTP Page'
-							component={RegisterMobileNumberOTPPage}
-							options={{
-								title: "",
-								headerStyle: { backgroundColor: "#E8EEF3" },
-							}}
-						/>
-						<Stack.Screen
-							name='Forgot Password Page'
-							component={ForgotPasswordPage}
-							options={{
-								title: "",
-								headerStyle: { backgroundColor: "#E8EEF3" },
-							}}
-						/>
-						<Stack.Screen
-							name='Privacy Policy Page'
-							component={PrivacyPolicyPage}
-							options={{
-								title: "",
-								headerStyle: { backgroundColor: "#E8EEF3" },
-							}}
-						/>
-						<Stack.Screen
-							name='Email Sent Page'
-							component={EmailSentPage}
-							options={{
-								headerShown: false,
+					{appStoreInstance.isUserSignedIn ? (
+						<MainPage />
+					) : (
+						<Stack.Navigator
+							initialRouteName={"Login Page"}
+							screenOptions={{
+								animation: "slide_from_right", // Define the animation type
 								gestureEnabled: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Email Not Verified Page'
-							component={EmailNotVerifiedPage}
-							options={{
-								headerShown: false,
-								headerLeft: null,
-							}}
-						/>
-						<Stack.Screen
-							name='Email Verified Page'
-							component={EmailVerifiedPage}
-							options={{
-								headerShown: false,
-								headerLeft: null,
-							}}
-						/>
-						<Stack.Screen
-							name='Welcome Page'
-							component={WelcomeScreenPage}
-							options={{
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Profile Picture Page'
-							component={ProfilePicturePage}
-							options={{
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Main Page'
-							component={MainPage}
-							options={{
-								title: "Main Page",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Enter Email OTP Page'
-							component={EnterOTPPage}
-							options={{
-								title: "",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='ResetPasswordEmailSentPage'
-							component={ResetPasswordEmailSent}
-							options={{
-								title: "",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='ResetPasswordScreen'
-							component={ResetPasswordScreen}
-							options={{
-								title: "",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='PasswordResetSuccessfully'
-							component={PasswordResetSuccessfully}
-							options={{
-								title: "",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Profile Setup Page'
-							component={DockedProfile}
-							options={{
-								title: "",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='Setup ProfilePage'
-							component={SetupProfile}
-							options={{
-								title: "",
-								headerShown: false,
-							}}
-						/>
-						<Stack.Screen
-							name='NotificationsScreen'
-							component={NotificationsScreen}
-							options={{
-								title: "Notifications",
-								headerStyle: { backgroundColor: "#E8EEF3" },
-								headerTitleAlign: "center",
-							}}
-						/>
-					</Stack.Navigator>
+							}}>
+							<Stack.Screen
+								name='Login Page'
+								component={LoginPage}
+								options={{
+									title: "Login",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Register Page'
+								component={RegisterPage}
+								options={{
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen name='Register Mobile Number Page' component={RegisterMobileNumberPage} options={{ title: "", headerShown: false }} />
+							<Stack.Screen
+								name='Register Mobile Number OTP Page'
+								component={RegisterMobileNumberOTPPage}
+								options={{
+									title: "",
+									headerStyle: { backgroundColor: "#E8EEF3" },
+								}}
+							/>
+							<Stack.Screen
+								name='Forgot Password Page'
+								component={ForgotPasswordPage}
+								options={{
+									title: "",
+									headerStyle: { backgroundColor: "#E8EEF3" },
+								}}
+							/>
+							<Stack.Screen
+								name='Privacy Policy Page'
+								component={PrivacyPolicyPage}
+								options={{
+									title: "",
+									headerStyle: { backgroundColor: "#E8EEF3" },
+								}}
+							/>
+							<Stack.Screen
+								name='Email Sent Page'
+								component={EmailSentPage}
+								options={{
+									headerShown: false,
+									gestureEnabled: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Email Not Verified Page'
+								component={EmailNotVerifiedPage}
+								options={{
+									headerShown: false,
+									headerLeft: null,
+								}}
+							/>
+							<Stack.Screen
+								name='Email Verified Page'
+								component={EmailVerifiedPage}
+								options={{
+									headerShown: false,
+									headerLeft: null,
+								}}
+							/>
+							<Stack.Screen
+								name='Welcome Page'
+								component={WelcomeScreenPage}
+								options={{
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Profile Picture Page'
+								component={ProfilePicturePage}
+								options={{
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Main Page'
+								component={MainPage}
+								options={{
+									title: "Main Page",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Enter Email OTP Page'
+								component={EnterOTPPage}
+								options={{
+									title: "",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='ResetPasswordEmailSentPage'
+								component={ResetPasswordEmailSent}
+								options={{
+									title: "",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='ResetPasswordScreen'
+								component={ResetPasswordScreen}
+								options={{
+									title: "",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='PasswordResetSuccessfully'
+								component={PasswordResetSuccessfully}
+								options={{
+									title: "",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Profile Setup Page'
+								component={DockedProfile}
+								options={{
+									title: "",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='Setup ProfilePage'
+								component={SetupProfile}
+								options={{
+									title: "",
+									headerShown: false,
+								}}
+							/>
+							<Stack.Screen
+								name='NotificationsScreen'
+								component={NotificationsScreen}
+								options={{
+									title: "Notifications",
+									headerStyle: { backgroundColor: "#E8EEF3" },
+									headerTitleAlign: "center",
+								}}
+							/>
+						</Stack.Navigator>
+					)}
 				</NavigationContainer>
 				<StatusBar barStyle='dark-content' backgroundColor='#E8EEF3' />
 			</GluestackUIProvider>
 		</StoreContext.Provider>
 	);
 }
+
+export default observer(App);

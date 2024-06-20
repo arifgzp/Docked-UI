@@ -5,14 +5,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { ImageAssets } from "../assets/Assets";
 import { Navigation } from "lucide-react-native";
 import AppStore from "../src/stores/AppStore";
+import appStoreInstance from "../src/stores/AppStore";
 
 const DrawerContent = (props) => {
 	const handleLogout = () => {
 		// Implement your logout logic here
 		console.log("User logged out");
 		// For example, you might want to navigate to a login screen or clear user data
-
-		props.navigation.navigate("Login Page"); // Assuming you have a LoginScreen in your navigator
+		//props.navigation.navigate("Login Page"); // Assuming you have a LoginScreen in your navigator
+		appStoreInstance.SignOut();
 	};
 	return (
 		<DrawerContentScrollView {...props}>
