@@ -123,10 +123,13 @@ const RegisterPage = ({ navigation, route }) => {
 				console.log("USER>ID", response.data.addUser.user[0].id);
 				AppStore.setUserId(response.data.addUser.user[0].id);
 				console.log("APPSTORE USER>ID", AppStore.UserId);
-				const signInResponse = await AppStore.SignIn({
-					userName: formData.email,
-					password: formData.password,
-				});
+				const signInResponse = await AppStore.SignIn(
+					{
+						userName: formData.email,
+						password: formData.password,
+					},
+					true
+				);
 				if (signInResponse) {
 					navigation.navigate("Email Sent Page", { enteredMail: formData.email, enteredNumber: enteredNumber });
 				}
