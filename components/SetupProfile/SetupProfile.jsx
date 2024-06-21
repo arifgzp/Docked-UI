@@ -41,8 +41,8 @@ const SetupProfile = ({ config, navigation }) => {
 				setQuery(query);
 				const finishWizardProcessData = await query;
 				if (finishWizardProcessData) {
-					navigation.navigate("Main Page");
-					onCancel();
+					appStoreInstance.SignOut();
+					navigation.navigate("Login Page");
 				}
 			} catch (error) {
 				console.log(error);
@@ -85,8 +85,8 @@ const SetupProfile = ({ config, navigation }) => {
 			setQuery(query);
 			const finishWizardProcessData = await query;
 			if (finishWizardProcessData) {
-				navigation.navigate("Main Page", { broadSpecialty: data.broadSpecialty });
-				onCancel();
+				appStoreInstance.SignOut();
+				navigation.navigate("Login Page");
 			}
 		} catch (error) {
 			console.log(error);

@@ -229,7 +229,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
-			<Loader apiLoadingInfo={loading} showSuccessMsg={false} navigation={navigation}>
+			<Loader queryInfo={queryInfo} apiLoadingInfo={loading} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$primaryBackground'>
 					<ScrollView>
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>

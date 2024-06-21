@@ -1,20 +1,16 @@
-import { Image, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import { Image, InputField, KeyboardAvoidingView } from "@gluestack-ui/themed";
 import {
 	Box,
 	Text,
 	Input,
 	VStack,
-	FormControlLabel,
 	FormControl,
-	FormControlLabelText,
-	InputField,
 	FormControlError,
 	AlertCircleIcon,
 	FormControlErrorIcon,
 	FormControlErrorText,
 	Button,
 	ButtonText,
-	LinearGradient,
 } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
 import { useState } from "react";
@@ -26,7 +22,9 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 	const [sendOTPPressed, setSendOTPPressed] = useState(false);
 
 	const handleChangeNumberInput = (text) => {
-		setNumberInput(text);
+		// Filter out non-numeric characters
+		const numericText = text.replace(/[^0-9]/g, "");
+		setNumberInput(numericText);
 	};
 
 	const handleSendOTP = () => {
@@ -44,6 +42,7 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 
 		navigation.navigate("Register Mobile Number OTP Page", { enteredNumber: numberInput });
 	};
+
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Box flex={1} backgroundColor='$primaryBackground'>
@@ -66,8 +65,14 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 						</Text>
 						<FormControl size='md' isDisabled={false} isInvalid={sendOTPPressed && errorMessage} isReadOnly={false} isRequired={false} gap={"$4"}>
 							<Box justifycontent='center' alignItems='center'>
-								<Input keyboardType='numeric' width={"$80%"} variant='underlined'>
-									<InputField onChangeText={handleChangeNumberInput} fontFamily='Inter' placeholder='Enter Your Phone Number' />
+								<Input width={"$80%"} variant='underlined'>
+									<InputField
+										inputMode='numeric'
+										onChangeText={handleChangeNumberInput}
+										value={numberInput} // Add this line to control the input value
+										fontFamily='Inter'
+										placeholder='Enter Your Phone Number'
+									/>
 								</Input>
 								{sendOTPPressed && errorMessage && (
 									<FormControlError width={"$80%"}>
