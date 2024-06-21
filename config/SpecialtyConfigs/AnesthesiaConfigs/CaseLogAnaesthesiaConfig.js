@@ -336,7 +336,7 @@ const airManagement = [
 					{
 						id: "SupraglotticAirwayDevice",
 						name: "Supra glottic Airway Device",
-						selectType: "none",
+						selectType: "multiple",
 						nodeType: "parent",
 						children: [
 							{

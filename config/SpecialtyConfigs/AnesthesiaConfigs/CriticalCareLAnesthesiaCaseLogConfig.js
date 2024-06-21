@@ -26,7 +26,7 @@ const procedures = [
 			{
 				id: "ArterialLine",
 				name: "Arterial Line",
-				selectType: "multiple",
+				selectType: "none",
 				nodeType: "parent",
 				children: [
 					{

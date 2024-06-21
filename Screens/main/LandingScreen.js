@@ -159,7 +159,7 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarIcon: ({ color, size }) => <Ionicons name='add-circle' size={65} color='#CC3F0C' />,
 					headerShown: false,
 					tabBarButton: (props) => (
-						<Box>
+						<Box pl='$4' pr='$4'>
 							<Button onPress={handleClose} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={45} height={45}>
 								<ButtonIcon as={Ionicons} size='xl' name='add-outline' />
 							</Button>

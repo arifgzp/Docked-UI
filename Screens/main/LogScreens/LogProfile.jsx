@@ -33,6 +33,10 @@ import {
 	FormControlErrorText,
 	Button,
 	ButtonText,
+	Toast,
+	useToast,
+	ToastTitle,
+	ToastDescription,
 } from "@gluestack-ui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
@@ -57,20 +61,52 @@ import { ButtonIcon } from "@gluestack-ui/themed";
 
 const LogProfilePage = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
-	const { control, handleSubmit, formState, reset, watch, setValue } = useForm({
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+		reset,
+		watch,
+		setValue,
+	} = useForm({
 		defaultValues: {
 			hospital: "",
 			faculties: [],
 			rotations: [],
-			facultyName: "",
-			facultyDesignation: "",
+		},
+	});
+
+	const {
+		control: controlForRotations,
+		handleSubmit: handleSubmitForRotations,
+		formState: { errors: errorsForRotations },
+		reset: resetForRotations,
+		watch: watchForRotations,
+		setValue: setValueForRotations,
+	} = useForm({
+		defaultValues: {
 			department: "",
-			facultyPhoneNumber: "",
 			from: new Date(),
 			to: new Date(),
 		},
 	});
 
+	const {
+		control: controlForFaculty,
+		handleSubmit: handleSubmitForFaculty,
+		formState: { errors: errorsForFaculty },
+		reset: resetForFaculty,
+		watch: watchForFaculty,
+		setValue: setValueForFaculty,
+	} = useForm({
+		defaultValues: {
+			facultyName: "",
+			facultyDesignation: "",
+			facultyPhoneNumber: "",
+		},
+	});
+
+	const toast = useToast();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [currentKey, setCurrentKey] = useState(null);
@@ -98,15 +134,19 @@ const LogProfilePage = ({ navigation, route }) => {
 
 	const handleSaveFaculty = () => {
 		const newFaculty = {
-			name: watch("facultyName"),
-			designation: watch("facultyDesignation"),
-			phoneNumber: watch("facultyPhoneNumber"),
+			name: watchForFaculty("facultyName"),
+			designation: watchForFaculty("facultyDesignation"),
+			phoneNumber: watchForFaculty("facultyPhoneNumber"),
 		};
 		setFacultyList([...facultyList, newFaculty]);
-		reset({
+		resetForFaculty({
 			facultyName: null,
 			facultyDesignation: null,
 			facultyPhoneNumber: null,
+			from: new Date(),
+			to: new Date(),
+		});
+		resetForRotations({
 			from: new Date(),
 			to: new Date(),
 		});
@@ -116,12 +156,12 @@ const LogProfilePage = ({ navigation, route }) => {
 
 	const handleSaveRotation = () => {
 		const newRotation = {
-			department: watch("department"),
-			from: watch("from"),
-			to: watch("to"),
+			department: watchForRotations("department"),
+			from: watchForRotations("from"),
+			to: watchForRotations("to"),
 		};
 		setRotationList([...rotationList, newRotation]);
-		reset({
+		resetForRotations({
 			department: null,
 			from: new Date(),
 			to: new Date(),
@@ -131,6 +171,26 @@ const LogProfilePage = ({ navigation, route }) => {
 	};
 
 	const handleOnSave = async () => {
+		// Check if rotationList or facultyList is empty
+		if (rotationList.length === 0 || facultyList.length === 0) {
+			// Raise an error indicating rotation or faculty cannot be empty
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = "toast-" + id;
+					return (
+						<Toast nativeID={toastId} action='warning' variant='accent'>
+							<VStack space='xs' mx='$4'>
+								<ToastTitle>Alert</ToastTitle>
+								<ToastDescription>Rotation or faculty cannot be empty.</ToastDescription>
+							</VStack>
+						</Toast>
+					);
+				},
+			});
+			return; // Exit function early
+		}
+
 		const data = { faculties: facultyList, rotations: rotationList, hospital: watch("hospital") };
 		console.log("caseLogFormToGet", caseLogFormToGet);
 		try {
@@ -191,11 +251,15 @@ const LogProfilePage = ({ navigation, route }) => {
 							<VStack space='lg' width={"$100%"} alignItems='center'>
 								<Box width={"$90%"}>
 									<Box alignItems='center' paddingBottom={10}>
+										<Text alignSelf='flex-start' fontFamily='Inter_Bold'>
+											Hospital <Text color='#DE2E2E'>*</Text>
+										</Text>
 										<Controller
 											control={control}
 											rules={{
 												required: true,
 											}}
+											key='hospital'
 											name='hospital'
 											render={({ field: { onChange, onBlur, value } }) => {
 												return (
@@ -222,18 +286,18 @@ const LogProfilePage = ({ navigation, route }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$100%"}>{errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
 									<Text alignSelf='flex-start' fontFamily='Inter_Bold'>
-										Faculty list
+										Faculty list <Text color='#DE2E2E'>*</Text>
 									</Text>
 								</Box>
 								<Box width={"$90%"}>
 									<Box alignItems='center' paddingBottom={10}>
 										<Controller
-											control={control}
+											control={controlForFaculty}
 											rules={{
 												required: true,
 											}}
@@ -249,13 +313,13 @@ const LogProfilePage = ({ navigation, route }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$100%"}>{errorsForFaculty.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
 									<Box alignItems='center' paddingBottom={10}>
 										<Controller
-											control={control}
+											control={controlForFaculty}
 											rules={{
 												required: true,
 											}}
@@ -286,13 +350,13 @@ const LogProfilePage = ({ navigation, route }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
 									<Box alignItems='center' paddingBottom={10}>
 										<Controller
-											control={control}
+											control={controlForFaculty}
 											rules={{
 												required: true,
 											}}
@@ -308,11 +372,17 @@ const LogProfilePage = ({ navigation, route }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.facultyPhoneNumber && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$100%"}>{errorsForFaculty.facultyPhoneNumber && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<Box width={"$90%"}>
-									<Button onPress={handleSaveFaculty} alignSelf='flex-start' width={"$50%"} height={50} size='sm' variant='secondary'>
+									<Button
+										onPress={handleSubmitForFaculty(handleSaveFaculty)}
+										alignSelf='flex-start'
+										width={"$50%"}
+										height={50}
+										size='sm'
+										variant='secondary'>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
 											Save Faculty
 										</ButtonText>
@@ -341,13 +411,13 @@ const LogProfilePage = ({ navigation, route }) => {
 								</Box>
 								<Box width={"$90%"}>
 									<Text alignSelf='flex-start' fontFamily='Inter_Bold'>
-										Rotation
+										Rotation<Text color='#DE2E2E'>*</Text>
 									</Text>
 								</Box>
 								<Box width={"$90%"}>
 									<Box alignItems='center' paddingBottom={10}>
 										<Controller
-											control={control}
+											control={controlForRotations}
 											rules={{
 												required: true,
 											}}
@@ -380,7 +450,7 @@ const LogProfilePage = ({ navigation, route }) => {
 										/>
 									</Box>
 									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors.department && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box width={"$100%"}>{errorsForRotations.department && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 									</Box>
 								</Box>
 								<VStack width={"$90%"} spcae='lg' justifyContent='space-between'>
@@ -450,7 +520,13 @@ const LogProfilePage = ({ navigation, route }) => {
 									/>
 								</VStack>
 								<Box width={"$90%"}>
-									<Button onPress={handleSaveRotation} alignSelf='flex-start' width={"$50%"} height={50} size='sm' variant='secondary'>
+									<Button
+										onPress={handleSubmitForRotations(handleSaveRotation)}
+										alignSelf='flex-start'
+										width={"$50%"}
+										height={50}
+										size='sm'
+										variant='secondary'>
 										<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
 											Save Rotation
 										</ButtonText>
@@ -472,7 +548,7 @@ const LogProfilePage = ({ navigation, route }) => {
 							</VStack>
 						</Box>
 						<Box flex={1 / 4} width={"$100%"} alignItems='center' paddingBottom={"$30%"}>
-							<Button onPress={handleOnSave} height={50} size='lg' variant='primary'>
+							<Button onPress={handleSubmit(handleOnSave)} height={50} size='lg' variant='primary'>
 								<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
 									Save
 								</ButtonText>
