@@ -87,9 +87,14 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} onBlur={onBlur} isReadOnly onValueChange={onChange} selectedValue={value}>
+								<Select
+									width={"$90%"}
+									onBlur={onBlur}
+									isReadOnly
+									onValueChange={onChange}
+									selectedValue={prefilledData?.rotations[0]?.department || value}>
 									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder={`Rotation ${prefilledData?.rotations[0].department}`} />
+										<SelectInput placeholder={`Rotation -- ${prefilledData?.rotations[0].department}`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
@@ -129,9 +134,9 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} onBlur={onBlur} isReadOnly onValueChange={onChange} selectedValue={value}>
+								<Select width={"$90%"} onBlur={onBlur} isReadOnly onValueChange={onChange} selectedValue={prefilledData?.hospital || value}>
 									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder={`Hospital ${prefilledData?.hospital}`} />
+										<SelectInput placeholder={`Hospital -- ${prefilledData?.hospital}`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
@@ -152,6 +157,11 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 				<Box alignItems='center'>
 					<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 				</Box>
+			</Box>
+			<Box pl='$5' width={"$80%"}>
+				<Text fontFamily='Inter_Bold'>
+					Faculty<Text color='#DE2E2E'>*</Text>
+				</Text>
 			</Box>
 			<Box width={"$100%"}>
 				<Box alignItems='center' paddingBottom={10}>

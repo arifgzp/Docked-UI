@@ -1,6 +1,6 @@
 const diseaseCategory = [
 	{
-		id: "DiseaseCategory",
+		id: "diseaseCategory",
 		name: "Disease Category",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -573,10 +573,10 @@ const bones = [
 	},
 ];
 
-const outcome = [
+const outcomes = [
 	{
-		id: "outcome",
-		name: "Outcome",
+		id: "outcomes",
+		name: "Outcomes",
 		selectType: "multiple",
 		nodeType: "parent",
 		children: [
@@ -604,4 +604,4 @@ const outcome = [
 	},
 ];
 
-export default { diseaseCategory, site, joint, bones, outcome };
+export default { diseaseCategory, site, joint, bones, outcomes };
