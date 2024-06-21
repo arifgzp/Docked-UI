@@ -1,11 +1,9 @@
-import { Button, ButtonIcon, ButtonText, HStack, Icon, Text, VStack, useToken } from "@gluestack-ui/themed";
+import { Button, ButtonIcon, ButtonText, VStack } from "@gluestack-ui/themed";
 
-import { Ionicons } from "@expo/vector-icons";
-import { Divider, Pressable } from "@gluestack-ui/themed";
-import { forEach, map } from "lodash";
 import { ChevronRight } from "lucide-react-native";
-import { useEffect, useMemo, useRef, useState } from "react";
-import TreeView from "../../../../components/TreeView";
+import { useEffect, useState } from "react";
+import TreeDataView from "../../../../components/Tree-DataView";
+import TreeView from "../../../../components/Tree-SelectorView";
 import CaseLogAnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
 import ChronicPainAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/ChronicPainAnesthesiaCaseLogConfig";
 import CriticalCareLAnesthesiaCaseLogConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CriticalCareLAnesthesiaCaseLogConfig";
@@ -43,8 +41,6 @@ const parserForConvertingIntoTreeFormData = (input, key) => {
 	return result;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function flattenObject(obj, prefix = "") {
 	let result = [];
 	for (const key in obj) {
@@ -69,26 +65,6 @@ function parserToConvertTreeFromIntoDataBaseForm(input, type) {
 	return { [type]: flattenObject(input) };
 }
 
-const getLabel = (key, configData) => {
-	console.log("key", key);
-	console.log("configData", configData);
-	let label = key;
-	forEach(configData, (config) => {
-		if (config.id == key) {
-			label = config.name;
-			//console.log("!!!!! Match Found ", label);
-			return false;
-		} else if (config.children) {
-			label = getLabel(key, config.children);
-			if (label != key) {
-				return false;
-			}
-		}
-	});
-	console.log("Finakl LAbel >>>>> ", label);
-	return label;
-};
-
 const SpecialCaseLogSelectOptions = ({
 	navigation,
 	control,
@@ -100,12 +76,10 @@ const SpecialCaseLogSelectOptions = ({
 	refernceToGetSpecialOptions,
 }) => {
 	const [showModal, setShowModal] = useState(false);
-	const ref = useRef(null);
 	const [showTreeView, setShowTreeView] = useState(false);
 	const [activeTreeSelector, setActiveTreeSelector] = useState("");
 	const [activeTreeNode, setActiveTreeNode] = useState("");
 	const [activeTreeSelectorValue, setActiveTreeSelectorValue] = useState({});
-	const figmaRed = useToken("colors", "figmared");
 
 	const handleOnSave = (selectedNodes) => {
 		//console.log("is this the data I am getting from the treeview component?", selectedNodes);
@@ -148,182 +122,22 @@ const SpecialCaseLogSelectOptions = ({
 		}
 	};
 
-	const getArrowIcon = (dataValue) => {
-		let iconColor = "";
-		let iconSize = -1;
-		let iconName = "";
-		switch (dataValue.colorLevel) {
-			case 1:
-				iconColor = "#a21515";
-				iconSize = 18;
-				iconName = "caret-forward";
-				break;
-
-			case 2:
-				iconColor = "#e37777";
-				iconSize = 18;
-				iconName = "caret-forward";
-				break;
-
-			case 3:
-				iconColor = "#a21515";
-				iconSize = 14;
-				iconName = "play-outline";
-				break;
-
-			default:
-				iconColor = "#a21515";
-				iconSize = 18;
-				iconName = "caret-forward";
-				break;
-		}
-		return <Icon as={Ionicons} name={iconName} size={iconSize} color={iconColor} />;
-	};
-
-	const buildCompactView = (option) => {
-		const treeConfigData = getTreeConfigData(option.id);
-		console.log("buildCompactView treeConfigData", treeConfigData);
-		const data = activeTreeSelectorValue[option.id] || {};
-		return Object.keys(data).reduce((result, key) => {
-			const [rootNode, ...restTreeNodes] = key.split("/");
-			if (restTreeNodes.length > 0) {
-				//"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial", "Peripheral "],
-				//"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE", "Isoflurane"],
-
-				if (restTreeNodes.length === 1) {
-					//"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial", "Peripheral "],
-					const firstLevelTreeNode = restTreeNodes[0];
-					let firstLevelSelection = {};
-					let firstLevelSelectionData = data[key];
-					const isFirstLevelSelectionDataArray = Array.isArray(firstLevelSelectionData);
-
-					if (isFirstLevelSelectionDataArray) {
-						firstLevelSelection = {
-							key: firstLevelTreeNode,
-							label: getLabel(firstLevelTreeNode, treeConfigData),
-							value: firstLevelSelectionData.map((selection) => {
-								return {
-									key: selection,
-									label: getLabel(selection, treeConfigData),
-									colorLevel: 1,
-									isClickable: false,
-								};
-							}),
-						};
-					} else {
-						firstLevelSelection = {
-							key: firstLevelTreeNode,
-							label: getLabel(firstLevelTreeNode, treeConfigData),
-							value: [
-								{
-									key: firstLevelSelectionData,
-									label: getLabel(firstLevelSelectionData, treeConfigData),
-									colorLevel: 1,
-									isClickable: false,
-								},
-							],
-						};
-					}
-
-					const firstLevelDataFromResult = result[firstLevelTreeNode];
-					if (firstLevelDataFromResult) {
-						firstLevelDataFromResult.value.push(...firstLevelSelection.value);
-					} else {
-						result[firstLevelTreeNode] = firstLevelSelection;
-					}
-				} else {
-					//"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE", "Isoflurane"],
-					const [firstLevelTreeNode, ...otherLevelTreeNode] = restTreeNodes;
-					let subLevelSelection = [];
-					let subLevelSelectionLeaves = [];
-					let subLevelSelectionData = data[key];
-					const isSubLevelSelectionDataArray = Array.isArray(subLevelSelectionData);
-
-					const subLevelSelectionNodes = otherLevelTreeNode.map((selector, index) => {
-						return {
-							key: selector,
-							label: getLabel(selector, treeConfigData),
-							colorLevel: index + 1,
-							isClickable: true,
-							clickablePath: key,
-						};
-					});
-
-					if (isSubLevelSelectionDataArray) {
-						subLevelSelectionLeaves = subLevelSelectionData.map((selection) => {
-							return {
-								key: selection,
-								label: getLabel(selection, treeConfigData),
-								colorLevel: otherLevelTreeNode.length + 1,
-								isClickable: false,
-							};
-						});
-					} else {
-						subLevelSelectionLeaves = [
-							{
-								key: subLevelSelectionData,
-								label: getLabel(subLevelSelectionData, treeConfigData),
-								colorLevel: otherLevelTreeNode.length + 1,
-								isClickable: false,
-							},
-						];
-					}
-
-					subLevelSelection.push(...subLevelSelectionNodes, ...subLevelSelectionLeaves);
-
-					const firstLevelDataFromResult = result[firstLevelTreeNode];
-					if (firstLevelDataFromResult) {
-						firstLevelDataFromResult.value.push(...subLevelSelection);
-					} else {
-						result[firstLevelTreeNode] = {
-							key: firstLevelTreeNode,
-							label: getLabel(firstLevelTreeNode, treeConfigData),
-							value: subLevelSelection,
-						};
-					}
-				}
-			} else {
-				// typeOfAnaesthesia: ["MAC", "General Anaesthesia"],
-				const leafSelectionData = data[key];
-				if (Array.isArray(leafSelectionData)) {
-					leafSelectionData.map((selection) => {
-						result[selection] = {
-							key: selection,
-							label: getLabel(selection, treeConfigData),
-							value: null,
-						};
-					});
-				} else {
-					result[leafSelectionData] = {
-						key: leafSelectionData,
-						label: getLabel(leafSelectionData, treeConfigData),
-						value: null,
-					};
-				}
-			}
-			return result;
-		}, {});
-	};
-
 	useEffect(() => {
 		console.log("SpecialCaseLogSelectOptions useEffect");
 		specialCaseLogsOption.forEach((option) => {
 			const data = caseLogData[option.id];
-			//console.log("option", option.id);
-			//console.log("DB data", data);
 			const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(data, option.id);
-			//console.log("treeSelectorValue_Formatted", treeSelectorValue_Formatted);
 			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [option.id]: treeSelectorValue_Formatted }));
 		});
-	}, [caseLogData]);
+	}, [caseLogData, specialCaseLogsOption]);
+
+	console.log("SpecialCaseLogSelectOptions >> specialCaseLogsOption", specialCaseLogsOption);
 
 	return (
 		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20} px='$4'>
 			{specialCaseLogsOption.map((option) => {
-				const compactViewData = useMemo(() => buildCompactView(option), [option.id, activeTreeSelectorValue[option.id]]);
-				console.log("compactViewData", compactViewData);
 				return (
-					<VStack bg='$white' rounded='$lg' w={"$full"}>
+					<VStack key={option.id} bg='$white' rounded='$lg' w={"$full"}>
 						<Button
 							w='$full'
 							key={option.id}
@@ -335,48 +149,12 @@ const SpecialCaseLogSelectOptions = ({
 							<ButtonIcon as={ChevronRight} size={20} name='arrow-forward-outline' color='#666666' />
 						</Button>
 						{activeTreeSelectorValue[option.id] && (
-							<VStack gap='$0' pl='$8' pb='$2' width={"$90%"}>
-								{map(compactViewData, (data, key) => {
-									return (
-										<>
-											<Divider my='$1' bg='$coolGray200' />
-											<HStack w={"$full"} gap='$1' flexWrap='wrap'>
-												{data.value ? (
-													<Pressable onPress={handleShowTreeSelector.bind(null, option.id, key)}>
-														<Text fontWeight='$semibold' fontSize='$lg' underline={true}>
-															{data.label}
-														</Text>
-													</Pressable>
-												) : (
-													<Text fontWeight='$semibold' fontSize='$lg'>
-														{data.label}
-													</Text>
-												)}
-												{data.value && (
-													<HStack display='flex' alignItems='center' flexWrap='wrap'>
-														{map(data.value, (value) => {
-															return (
-																<HStack alignItems='center' gap='$0.5'>
-																	{getArrowIcon(value)}
-																	{value.isClickable ? (
-																		<Pressable onPress={handleShowTreeSelector.bind(null, option.id, value.clickablePath)}>
-																			<Text fontSize='$md' underline={true}>
-																				{value.label}
-																			</Text>
-																		</Pressable>
-																	) : (
-																		<Text fontSize='$md'>{value.label}</Text>
-																	)}
-																</HStack>
-															);
-														})}
-													</HStack>
-												)}
-											</HStack>
-										</>
-									);
-								})}
-							</VStack>
+							<TreeDataView
+								predicate={option.id}
+								data={activeTreeSelectorValue[option.id]}
+								treeConfigData={getTreeConfigData(option.id)}
+								onShowTreeSelector={handleShowTreeSelector}
+							/>
 						)}
 					</VStack>
 				);

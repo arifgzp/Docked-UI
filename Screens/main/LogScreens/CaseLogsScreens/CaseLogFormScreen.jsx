@@ -1,16 +1,12 @@
-import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider, Text, ScrollView } from "@gluestack-ui/themed";
-import { Platform } from "react-native";
-import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import CaselogDropDownOptions from "./CaselogDropDownOptions";
-import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
-import { useQuery } from "../../../../src/models";
-import { formatRFC3339 } from "date-fns";
-import Loader from "../../../../components/Loader";
-import { observer } from "mobx-react";
-import AppStore from "../../../../src/stores/AppStore";
-import { toJS } from "mobx";
+import { Box, Button, ButtonText, Divider, HStack, KeyboardAvoidingView, ScrollView, Text, VStack } from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
+import { formatRFC3339 } from "date-fns";
+import { toJS } from "mobx";
+import { observer } from "mobx-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Platform } from "react-native";
+import Loader from "../../../../components/Loader";
 import {
 	caseLogConfigTextAndSingleSelectOptions,
 	specialAnesthesiaCaseLogsOption,
@@ -24,15 +20,19 @@ import {
 	specialAnesthesiaCriticalCareCaseLogOptions,
 } from "../../../../config/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
 import {
-	OrthopaedicsCaseLogConfigTextAndSingleSelectOptions,
-	specialOrthopaedicsCaseLogsOption,
-} from "../../../../config/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
-import {
 	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
 	specialOrthodonticsClinicalCaseLog,
 } from "../../../../config/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
+import {
+	OrthopaedicsCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthopaedicsCaseLogsOption,
+} from "../../../../config/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
+import { useQuery } from "../../../../src/models";
+import AppStore from "../../../../src/stores/AppStore";
+import CaselogDropDownOptions from "./CaselogDropDownOptions";
+import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
 
-const handleSetCurrentCaseLogDropDownOptions = (key) => {
+const getCaseLogFields = (key) => {
 	switch (key) {
 		case "CaseLog":
 			return caseLogConfigTextAndSingleSelectOptions;
@@ -49,7 +49,7 @@ const handleSetCurrentCaseLogDropDownOptions = (key) => {
 	}
 };
 
-const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
+const getSpecialCaseLogOptions = (key) => {
 	switch (key) {
 		case "CaseLog":
 			return specialAnesthesiaCaseLogsOption;
@@ -78,41 +78,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	});
 
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
-	const [currentCaseLogDropDownOptions, setCurrentCaseLogDropDownOptions] = useState(handleSetCurrentCaseLogDropDownOptions(caseLogFormToGet));
-	const [specialCaseLogsOption, setSpecialCaseLogsOption] = useState(handleSetCurrentSpecialCaseLogDropDownOptions(caseLogFormToGet));
-
-	useEffect(() => {
-		if (isFocused) {
-			const fetchLogProfilePrefilledData = async () => {
-				try {
-					const query = store.fetchUserLogProfile(AppStore.UserName);
-					setQuery(query);
-					const finishFetchingLogProfile = await query;
-					if (finishFetchingLogProfile) {
-						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-						const facultiesList = userData.logProfile.faculties;
-						const rotationsList = userData.logProfile.rotations;
-						const hospitalData = userData.logProfile.hospital;
-						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-						setValue("hospital", hospitalData);
-						setValue("faculty", facultiesList);
-						setValue("rotation", rotationsList[0].department);
-					}
-				} catch (error) {
-					console.log(error);
-				}
-			};
-			fetchLogProfilePrefilledData();
-			reset({
-				date: new Date("2024-07-30T15:01:00.000Z"),
-			});
-		}
-	}, [isFocused, caseLogFormToGet]);
-
-	useEffect(() => {
-		setCurrentCaseLogDropDownOptions(handleSetCurrentCaseLogDropDownOptions(caseLogFormToGet));
-		setSpecialCaseLogsOption(handleSetCurrentSpecialCaseLogDropDownOptions(caseLogFormToGet));
-	}, [caseLogFormToGet]);
 
 	const handleSaveClick = async (formData) => {
 		console.log("FormData for Case Logs", formData);
@@ -170,6 +135,36 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		}
 	};
 
+	useEffect(() => {
+		if (isFocused) {
+			const fetchLogProfilePrefilledData = async () => {
+				try {
+					const query = store.fetchUserLogProfile(AppStore.UserName);
+					setQuery(query);
+					const finishFetchingLogProfile = await query;
+					if (finishFetchingLogProfile) {
+						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+						const facultiesList = userData.logProfile.faculties;
+						const rotationsList = userData.logProfile.rotations;
+						const hospitalData = userData.logProfile.hospital;
+						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+						setValue("hospital", hospitalData);
+						setValue("faculty", facultiesList);
+						setValue("rotation", rotationsList[0].department);
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			fetchLogProfilePrefilledData();
+			reset({
+				date: new Date("2024-07-30T15:01:00.000Z"),
+			});
+		}
+	}, [isFocused]);
+
+	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
+
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
@@ -179,7 +174,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 							<Box paddingTop={10} justifyContent='center' alignItems='center'>
 								<Box width={"$100%"}>
 									<CaselogDropDownOptions
-										formFields={currentCaseLogDropDownOptions}
+										formFields={getCaseLogFields(caseLogFormToGet)}
 										prefilledData={caseLogPrefilledData}
 										control={control}
 										setValue={setValue}
@@ -196,7 +191,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 											getValues={getValues}
 											formState={formState}
 											caseLogData={{}}
-											specialCaseLogsOption={specialCaseLogsOption}
+											specialCaseLogsOption={getSpecialCaseLogOptions(caseLogFormToGet)}
 											refernceToGetSpecialOptions={caseLogFormToGet}
 										/>
 									</Box>
