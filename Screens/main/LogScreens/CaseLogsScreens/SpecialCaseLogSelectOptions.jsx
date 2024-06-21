@@ -1,7 +1,7 @@
 import { Button, ButtonIcon, ButtonText, VStack } from "@gluestack-ui/themed";
 
 import { ChevronRight } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TreeDataView from "../../../../components/Tree-DataView";
 import TreeView from "../../../../components/Tree-SelectorView";
 import CaseLogAnaesthesiaConfig from "../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
@@ -81,20 +81,23 @@ const SpecialCaseLogSelectOptions = ({
 	const [activeTreeNode, setActiveTreeNode] = useState("");
 	const [activeTreeSelectorValue, setActiveTreeSelectorValue] = useState({});
 
-	const handleOnSave = (selectedNodes) => {
-		//console.log("is this the data I am getting from the treeview component?", selectedNodes);
-		//console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
-		setValue(activeTreeSelector, parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
-		setShowTreeView(false);
-		setActiveTreeNode("");
-		//setActiveTreeSelectorValue({ ...activeTreeSelectorValue, [activeTreeSelector]: selectedNodes });
-		setActiveTreeSelectorValue((prevState) => ({ ...prevState, [activeTreeSelector]: selectedNodes }));
-	};
+	const handleOnSave = useCallback(
+		(selectedNodes) => {
+			console.log("is this the data I am getting from the treeview component?", selectedNodes);
+			//console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
+			setValue(activeTreeSelector, parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
+			setShowTreeView(false);
+			setActiveTreeNode("");
+			//setActiveTreeSelectorValue({ ...activeTreeSelectorValue, [activeTreeSelector]: selectedNodes });
+			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [activeTreeSelector]: selectedNodes }));
+		},
+		[activeTreeSelector]
+	);
 
-	const handleOnCancel = () => {
+	const handleOnCancel = useCallback(() => {
 		setShowTreeView(false);
 		setActiveTreeNode("");
-	};
+	});
 
 	const handleShowTreeSelector = (activeTreeSelectorId, activeTreeNodeId) => {
 		setShowTreeView(true);
