@@ -48,47 +48,6 @@ export default function RootLogScreens() {
 					headerTitleAlign: "center",
 				}}
 			/>
-
-			<Stack.Screen
-				name='ViewLogs'
-				component={ViewLogsPage}
-				options={{
-					title: "View Logs",
-					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
-				}}
-			/>
-			<Stack.Screen
-				name='AcademicLog'
-				component={AcademicLogPage}
-				options={{
-					title: "Academic Logs",
-					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
-				}}
-			/>
-			<Stack.Screen
-				name='ThesisLogs'
-				component={ThesisLogsPage}
-				options={{
-					title: "Thesis Logs",
-					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
-				}}
-			/>
-			<Stack.Screen
-				name='SpecialCaseLogs'
-				component={SpecialCaseDetails}
-				options={{
-					title: "Special Case Logs",
-					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
-				}}
-			/>
 			<Stack.Screen
 				name='LogProfilePage'
 				component={LogProfilePage}

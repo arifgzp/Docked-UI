@@ -15,7 +15,7 @@ import { CloseIcon, GlobeIcon, PlusIcon } from "@gluestack-ui/themed";
 import { Menu } from "@gluestack-ui/themed";
 import { MenuItemLabel } from "@gluestack-ui/themed";
 import { ButtonIcon, Text } from "@gluestack-ui/themed";
-import { useNavigationState } from "@react-navigation/native";
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { Radio } from "@gluestack-ui/themed";
 import { RadioIndicator } from "@gluestack-ui/themed";
 import { RadioIcon } from "@gluestack-ui/themed";
@@ -39,81 +39,124 @@ import LogTabsMainScreen from "./LogScreens/CaseLogsScreens/TabScreens/LogTabsMa
 import ResourcesMainPage from "./Resources/ResourcesMainPage";
 import RootLogScreens from "./LogScreens/RootLogScreens";
 import CommunityMainPage from "./Community/CommunityMainPage";
+
 const Tab = createBottomTabNavigator();
 
 const anaesthesiaCaseLogEntryOptions = [
 	{ id: "CaseLog", name: "Case Log" },
 	{ id: "ChronicPainLog", name: "Chronic Pain Log" },
 	{ id: "CriticalCareCaseLog", name: "Critical Care Case Log" },
-	{ id: "ThesisLogs", name: "Thesis Logs" },
-	{ id: "SpecialCaseLogs", name: "Special Case Logs" },
 ];
 
-const OrthopaedicsCaseLogEntryOptions = [{ id: "OrthopaedicsCaseLog", name: "Case Log" }];
+const orthopaedicsCaseLogEntryOptions = [{ id: "OrthopaedicsCaseLog", name: "Case Log" }];
 
-const OrthodonticsCaseLogEntryOptions = [{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" }];
+const orthodonticsCaseLogEntryOptions = [{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" }];
 
-const getCreateLogOptions = (specialty) => {
-	console.log("UserBroadSpecialty: for the switch case.", specialty);
+const getCreateMenuOptions = (specialty) => {
+	//console.log("UserBroadSpecialty: for the switch case.", specialty);
 	switch (specialty) {
 		case "Orthopaedics":
-			return OrthopaedicsCaseLogEntryOptions;
-			break;
+			return orthopaedicsCaseLogEntryOptions;
+
 		case "Orthodontics":
-			return OrthodonticsCaseLogEntryOptions;
-			break;
+			return orthodonticsCaseLogEntryOptions;
+
 		case "Anaesthesia":
 			return anaesthesiaCaseLogEntryOptions;
-			break;
+
 		default:
 			return anaesthesiaCaseLogEntryOptions;
-			break;
 	}
 };
 
-const LandingScreen = ({ navigation, route }) => {
+const CreateMenuList = (props) => {
 	const [selectedLogButton, setSelectedLogButton] = useState("");
 	const [showActionsheet, setShowActionsheet] = useState(false);
+	const navigation = useNavigation();
 
-	const handleClose = () => {
+	const toggleCreateMenu = () => {
 		setShowActionsheet(!showActionsheet);
 		setSelectedLogButton("");
 	};
 
-	const handleDisplayingLogForm = () => {
-		switch (selectedLogButton) {
-			case "CaseLog":
-				handleClose();
-				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
-				setSelectedLogButton("");
-				break;
-			case "ChronicPainLog":
-				handleClose();
-				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
-				setSelectedLogButton("");
-				break;
-			case "CriticalCareCaseLog":
-				handleClose();
-				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
-				setSelectedLogButton("");
-				break;
-			case "OrthopaedicsCaseLog":
-				handleClose();
-				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
-				setSelectedLogButton("");
-				break;
-			case "OrthodonticsClinicalCaseLog":
-				handleClose();
-				navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
-				setSelectedLogButton("");
-				break;
-			default:
-				// Optional: handle cases where keys.currentKey does not match any of the specified cases
-				console.log("Key not recognized");
-				break;
-		}
+	const handleOnProceedClick = () => {
+		const currentLogButton = selectedLogButton;
+		toggleCreateMenu();
+		setTimeout(() => {
+			switch (currentLogButton) {
+				case "CaseLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+					break;
+
+				case "ChronicPainLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+					setSelectedLogButton("");
+					break;
+
+				case "CriticalCareCaseLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
+					break;
+
+				case "OrthopaedicsCaseLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
+					break;
+
+				case "OrthodonticsClinicalCaseLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
+					break;
+
+				default:
+					// Optional: handle cases where keys.currentKey does not match any of the specified cases
+					console.log("Key not recognized");
+					break;
+			}
+		}, 500);
 	};
 
+	return (
+		<Box pl='$4' pr='$4'>
+			<Button onPress={toggleCreateMenu} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={45} height={45}>
+				<ButtonIcon as={Ionicons} size='xl' name='add-outline' />
+			</Button>
+			<Actionsheet isOpen={showActionsheet} onClose={toggleCreateMenu} zIndex={999}>
+				<ActionsheetBackdrop />
+				<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
+					<ActionsheetDragIndicatorWrapper>
+						<ActionsheetDragIndicator />
+					</ActionsheetDragIndicatorWrapper>
+					<VStack width={"$100%"} space='lg' mt='$2' ml='$2'>
+						<Text color='#000000' size='lg' fontFamily='Inter_Bold'>
+							Choose type of log entry
+						</Text>
+						<RadioGroup width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
+							<VStack w='$full' alignItems='flex-start' space='lg' mb='$2'>
+								{getCreateMenuOptions(AppStore.UserBroadSpecialty).map((option) => {
+									return (
+										<Radio key={option.id} width={"$100%"} value={option.id}>
+											<RadioIndicator mr='$2'>
+												<RadioIcon as={CircleIcon} />
+											</RadioIndicator>
+											<RadioLabel>{option.name}</RadioLabel>
+										</Radio>
+									);
+								})}
+							</VStack>
+						</RadioGroup>
+					</VStack>
+					<Box mt='$4' mb='$4' alignSelf='center'>
+						<Button onPress={handleOnProceedClick} backgroundColor='#367B71' borderRadius={"$full"}>
+							<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
+								Proceed for log entry
+							</ButtonText>
+						</Button>
+					</Box>
+				</ActionsheetContent>
+			</Actionsheet>
+		</Box>
+	);
+};
+
+const LandingScreen = ({ navigation, route }) => {
 	return (
 		<Tab.Navigator
 			screenOptions={{
@@ -152,53 +195,13 @@ const LandingScreen = ({ navigation, route }) => {
 					headerShown: false,
 				}}
 				name='RootLogBook'
-				component={LogTabsMainScreen}
+				component={RootLogScreens}
 			/>
 			<Tab.Screen
 				options={{
 					tabBarIcon: ({ color, size }) => <Ionicons name='add-circle' size={65} color='#CC3F0C' />,
 					headerShown: false,
-					tabBarButton: (props) => (
-						<Box pl='$4' pr='$4'>
-							<Button onPress={handleClose} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={45} height={45}>
-								<ButtonIcon as={Ionicons} size='xl' name='add-outline' />
-							</Button>
-							<Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
-								<ActionsheetBackdrop />
-								<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
-									<ActionsheetDragIndicatorWrapper>
-										<ActionsheetDragIndicator />
-									</ActionsheetDragIndicatorWrapper>
-									<VStack width={"$100%"} space='lg' mt='$2' ml='$2'>
-										<Text color='#000000' size='lg' fontFamily='Inter_Bold'>
-											Choose type of log entry
-										</Text>
-										<RadioGroup width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
-											<VStack alignItems='flex-start' space='lg' mb='$2'>
-												{getCreateLogOptions(AppStore.UserBroadSpecialty).map((option) => {
-													return (
-														<Radio width={"$100%"} value={option.id}>
-															<RadioIndicator mr='$2'>
-																<RadioIcon as={CircleIcon} />
-															</RadioIndicator>
-															<RadioLabel>{option.name}</RadioLabel>
-														</Radio>
-													);
-												})}
-											</VStack>
-										</RadioGroup>
-									</VStack>
-									<Box mt='$4' mb='$4' alignSelf='center'>
-										<Button onPress={handleDisplayingLogForm} backgroundColor='#367B71' borderRadius={"$full"}>
-											<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
-												Proceed for log entry
-											</ButtonText>
-										</Button>
-									</Box>
-								</ActionsheetContent>
-							</Actionsheet>
-						</Box>
-					),
+					tabBarButton: (props) => <CreateMenuList {...props} />,
 				}}
 				name='Plus'
 				component={RootLogScreens} // dummy component, since it's not used
@@ -218,15 +221,6 @@ const LandingScreen = ({ navigation, route }) => {
 				}}
 				name='Community'
 				component={CommunityMainPage}
-			/>
-			<Tab.Screen
-				options={{
-					tabBarIcon: ({ color, size }) => <Ionicons name='people-outline' size={size} color={color} />,
-					headerShown: false,
-					tabBarButton: () => null,
-				}}
-				name='MainLogScreen'
-				component={RootLogScreens}
 			/>
 		</Tab.Navigator>
 	);

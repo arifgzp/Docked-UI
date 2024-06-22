@@ -31,6 +31,8 @@ import { useQuery } from "../../../../src/models";
 import AppStore from "../../../../src/stores/AppStore";
 import CaselogDropDownOptions from "./CaselogDropDownOptions";
 import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
+import useIsReady from "../../../../src/hooks/useIsReady";
+import IsReadyLoader from "../../../../components/IsReadyLoader";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -67,6 +69,7 @@ const getSpecialCaseLogOptions = (key) => {
 };
 
 const CaseLogFormScreen = ({ navigation, route }) => {
+	const isReady = useIsReady();
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -164,6 +167,10 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	}, [isFocused]);
 
 	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
+
+	if (!isReady) {
+		return <IsReadyLoader />;
+	}
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>

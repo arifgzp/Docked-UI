@@ -33,8 +33,10 @@ import {
 	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
 	specialOrthodonticsClinicalCaseLog,
 } from "../../../../config/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
+import useIsReady from "../../../../src/hooks/useIsReady";
+import IsReadyLoader from "../../../../components/IsReadyLoader";
 
-const handleSetCurrentCaseLogDropDownOptions = (key) => {
+const getCaseLogFields = (key) => {
 	switch (key) {
 		case "CaseLog":
 			return caseLogConfigTextAndSingleSelectOptions;
@@ -51,7 +53,7 @@ const handleSetCurrentCaseLogDropDownOptions = (key) => {
 	}
 };
 
-const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
+const getSpecialCaseLogOptions = (key) => {
 	switch (key) {
 		case "CaseLog":
 			return specialAnesthesiaCaseLogsOption;
@@ -68,36 +70,8 @@ const handleSetCurrentSpecialCaseLogDropDownOptions = (key) => {
 	}
 };
 
-const parserForConvertingIntoTreeFormData = (input, key) => {
-	const result = {};
-
-	input?.forEach((item) => {
-		const parts = item.split("/");
-		const mainKey = parts.slice(0, -1).join("/");
-		const value = parts[parts.length - 1];
-
-		if (mainKey in result) {
-			if (Array.isArray(result[mainKey])) {
-				result[mainKey].push(value);
-			} else {
-				result[mainKey] = [result[mainKey], value];
-			}
-		} else {
-			result[mainKey] = value;
-		}
-	});
-
-	// Convert single values to arrays where needed
-	for (const key in result) {
-		if (key.includes(key) && !Array.isArray(result[key])) {
-			result[key] = [result[key]];
-		}
-	}
-
-	return result;
-};
-
 const CaseLogReadScreen = ({ navigation }) => {
+	const isReady = useIsReady();
 	const routes = useRoute();
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
@@ -112,78 +86,71 @@ const CaseLogReadScreen = ({ navigation }) => {
 			date: new Date(),
 		},
 	});
-	const typeOfAnaesthesia = parserForConvertingIntoTreeFormData(watch("typeOfAnaesthesia"), "typeOfAnaesthesia");
-	const [currentCaseLogDropDownOptions, setCurrentCaseLogDropDownOptions] = useState(handleSetCurrentCaseLogDropDownOptions(routes.params.caseType));
-	const [specialCaseLogsOption, setSpecialCaseLogsOption] = useState(handleSetCurrentSpecialCaseLogDropDownOptions(routes.params.caseType));
 
 	useEffect(() => {
-		setLoading(true);
-		setTimeout(() => {
-			setLoading(false);
-		}, 1000);
+		const fetchData = () => {
+			console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
+			let caseLogData = {};
 
-		console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
-		let caseLogData = {};
-		switch (routes.params.caseType) {
-			case "CaseLog":
-				caseLogData = store.getAnaesthesiaCaseLogById(routes.params.id)[0];
-				break;
+			switch (routes.params.caseType) {
+				case "CaseLog":
+					caseLogData = store.getAnaesthesiaCaseLogById(routes.params.id)[0];
+					break;
 
-			case "ChronicPain":
-				caseLogData = store.getAnaesthesiaChronicPainLogById(routes.params.id)[0];
-				break;
+				case "ChronicPain":
+					caseLogData = store.getAnaesthesiaChronicPainLogById(routes.params.id)[0];
+					break;
 
-			case "CriticalCareCaseLog":
-				caseLogData = store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0];
-				break;
+				case "CriticalCareCaseLog":
+					caseLogData = store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0];
+					break;
 
-			case "OrthopaedicsCaseLog":
-				caseLogData = store.getOrthopaedicsCaseLogById(routes.params.id)[0];
-				break;
+				case "OrthopaedicsCaseLog":
+					caseLogData = store.getOrthopaedicsCaseLogById(routes.params.id)[0];
+					break;
 
-			case "OrthodonticsClinicalCaseLog":
-				caseLogData = store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0];
-				break;
-		}
-		reset({ ...caseLogData });
-		setCaseLogData(caseLogData);
+				case "OrthodonticsClinicalCaseLog":
+					caseLogData = store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0];
+					break;
+			}
+			reset({ ...caseLogData });
+			setCaseLogData(caseLogData);
+		};
+
+		fetchData();
 	}, []);
 
 	useEffect(() => {
-		setCurrentCaseLogDropDownOptions(handleSetCurrentCaseLogDropDownOptions(routes.params.caseType));
-		setSpecialCaseLogsOption(handleSetCurrentSpecialCaseLogDropDownOptions(routes.params.caseType));
-	}, [routes.params.caseType]);
-
-	useEffect(() => {
-		if (isFocused) {
-			const fetchLogProfilePrefilledData = async () => {
-				try {
-					const query = store.fetchUserLogProfile(AppStore.UserName);
-					setQuery(query);
-					const finishFetchingLogProfile = await query;
-					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-					if (finishFetchingLogProfile) {
-						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
-						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-						const facultiesList = userData.logProfile.faculties;
-						const rotationsList = userData.logProfile.rotations;
-						const hospitalData = userData.logProfile.hospital;
-						console.log("facultiesList", facultiesList);
-						console.log("rotationsList", rotationsList);
-						console.log("hospitalData", hospitalData);
-						console.log("rotations[0].department", rotationsList[0].department);
-						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-						setValue("hospital", hospitalData);
-						setValue("faculty", facultiesList);
-						setValue("rotation", rotationsList[0].department);
-					}
-				} catch (error) {
-					console.log(error);
+		const fetchLogProfilePrefilledData = async () => {
+			try {
+				const query = store.fetchUserLogProfile(AppStore.UserName);
+				setQuery(query);
+				const finishFetchingLogProfile = await query;
+				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+				if (finishFetchingLogProfile) {
+					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
+					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					const facultiesList = userData.logProfile.faculties;
+					const rotationsList = userData.logProfile.rotations;
+					const hospitalData = userData.logProfile.hospital;
+					console.log("facultiesList", facultiesList);
+					console.log("rotationsList", rotationsList);
+					console.log("hospitalData", hospitalData);
+					console.log("rotations[0].department", rotationsList[0].department);
+					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+					setValue("hospital", hospitalData);
+					setValue("faculty", facultiesList);
+					setValue("rotation", rotationsList[0].department);
 				}
-			};
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		if (isFocused) {
 			fetchLogProfilePrefilledData();
 		}
-	}, [routes.params.caseType]);
+	}, [isFocused, routes.params.caseType]);
 
 	const handleOnUpdateClick = async (formData) => {
 		console.log("this is the update query");
@@ -227,6 +194,10 @@ const CaseLogReadScreen = ({ navigation }) => {
 		}
 	};
 
+	if (!isReady) {
+		return <IsReadyLoader />;
+	}
+
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader queryInfo={queryInfo} apiLoadingInfo={loading} showSuccessMsg={false} navigation={navigation}>
@@ -235,7 +206,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>
 							<Box width={"$100%"}>
 								<CaselogDropDownOptions
-									formFields={currentCaseLogDropDownOptions}
+									formFields={getCaseLogFields(routes.params.caseType)}
 									prefilledData={caseLogPrefilledData}
 									control={control}
 									readOnly={false}
@@ -255,7 +226,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 									getValues={getValues}
 									formState={formState}
 									caseLogData={caseLogData}
-									specialCaseLogsOption={specialCaseLogsOption}
+									specialCaseLogsOption={getSpecialCaseLogOptions(routes.params.caseType)}
 									refernceToGetSpecialOptions={routes.params.caseType}
 								/>
 							</Box>

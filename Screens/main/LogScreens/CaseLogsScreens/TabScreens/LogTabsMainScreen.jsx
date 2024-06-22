@@ -7,7 +7,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { ButtonText } from "@gluestack-ui/themed";
 import { SearchBar } from "react-native-elements";
 
-const FirstRoute = require("./CaseLogMainTab").default;
+const FirstRoute = require("./CaseLogTab").default;
 const SecondRoute = require("./AcademicLogTab").default;
 const ThirdRoute = require("./ThesisLogTab").default;
 const FourthRoute = require("./SpecialCaseLogTab").default;
