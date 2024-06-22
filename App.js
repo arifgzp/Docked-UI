@@ -31,8 +31,11 @@ import { LogBox } from "react-native";
 import { useEffect } from "react";
 import appStoreInstance from "./src/stores/AppStore";
 import { observer } from "mobx-react";
+import { enableFreeze, enableScreens } from "react-native-screens";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs();
+
+enableScreens(true);
 
 const Stack = createNativeStackNavigator();
 
