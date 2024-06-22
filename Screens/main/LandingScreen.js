@@ -46,6 +46,8 @@ const anaesthesiaCaseLogEntryOptions = [
 	{ id: "CaseLog", name: "Case Log" },
 	{ id: "ChronicPainLog", name: "Chronic Pain Log" },
 	{ id: "CriticalCareCaseLog", name: "Critical Care Case Log" },
+	// { id: "ThesisLogs", name: "Thesis Logs" },
+	// { id: "SpecialCaseLogs", name: "Special Case Logs" },
 ];
 
 const orthopaedicsCaseLogEntryOptions = [{ id: "OrthopaedicsCaseLog", name: "Case Log" }];

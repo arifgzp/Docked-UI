@@ -1,6 +1,6 @@
 const treatmentPlan = [
 	{
-		id: "TreatmentPlan",
+		id: "treatmentPlan",
 		name: "Treatment Plan",
 		selectType: "multiple",
 		nodeType: "parent",

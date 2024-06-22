@@ -1,4 +1,18 @@
-import { Box, Button, ButtonText, Divider, HStack, KeyboardAvoidingView, ScrollView, Text, VStack } from "@gluestack-ui/themed";
+import {
+	Box,
+	Button,
+	ButtonText,
+	Divider,
+	HStack,
+	KeyboardAvoidingView,
+	ScrollView,
+	Text,
+	VStack,
+	Toast,
+	useToast,
+	ToastTitle,
+	ToastDescription,
+} from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import { formatRFC3339 } from "date-fns";
 import { toJS } from "mobx";
@@ -76,13 +90,32 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
+			faculty: "",
 			date: new Date(),
 		},
 	});
-
+	const toast = useToast();
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 
 	const handleSaveClick = async (formData) => {
+		if (typeof formData.faculty !== "string" || formData.faculty.trim() === "") {
+			// Raise an error indicating rotation or faculty cannot be empty
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = "toast-" + id;
+					return (
+						<Toast nativeID={toastId} action='warning' variant='accent'>
+							<VStack space='xs' mx='$4'>
+								<ToastTitle>Alert</ToastTitle>
+								<ToastDescription>Please Select A Faculty!</ToastDescription>
+							</VStack>
+						</Toast>
+					);
+				},
+			});
+			return; // Exit function early
+		}
 		console.log("FormData for Case Logs", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());

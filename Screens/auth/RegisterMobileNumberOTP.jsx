@@ -81,12 +81,14 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 								</ButtonText>
 							</Button>
 						</Box>
-						<Button
-							onPress={() => {
-								navigation.navigate("Register Mobile Number Page");
-							}}
-							variant='link'>
-							<ButtonText underline>Change Mobile Number</ButtonText>
+						<Button variant='link'>
+							<ButtonText
+								onPress={() => {
+									navigation.navigate("Register Mobile Number Page");
+								}}
+								underline>
+								Change Mobile Number
+							</ButtonText>
 						</Button>
 					</VStack>
 				</Box>

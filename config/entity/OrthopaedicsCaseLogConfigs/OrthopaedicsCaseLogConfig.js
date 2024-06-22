@@ -9,7 +9,7 @@ const specialOrthopaedicsCaseLogsOption = [
 	{ id: "site", name: "Site" },
 	{ id: "joint", name: "Joint" },
 	{ id: "bones", name: "Bones" },
-	{ id: "outcome", name: "Outcome" },
+	{ id: "outcomes", name: "Outcomes" },
 ];
 
 export { OrthopaedicsCaseLogConfigTextAndSingleSelectOptions, specialOrthopaedicsCaseLogsOption };
