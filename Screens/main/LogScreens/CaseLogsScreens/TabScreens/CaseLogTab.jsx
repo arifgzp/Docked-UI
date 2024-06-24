@@ -108,12 +108,12 @@ const CaseLogTab = () => {
 													</Text>
 												</HStack>
 												<HStack space='sm' alignItems='center'>
-													<Button width={15} height={30} borderRadius={"$full"} size='xs'>
+													<Button width={30} height={30} borderRadius={"$full"} size='xs'>
 														<ButtonIcon as={Ionicons} name='share-social-outline' color='#FFFFFF' />
 													</Button>
 													<Button
 														onPress={handleButtonPress.bind(null, "CaseLogReadScreen", card?.id, card?.caseType)}
-														width={20}
+														width={30}
 														height={30}
 														borderRadius={"$full"}
 														size='xs'>
