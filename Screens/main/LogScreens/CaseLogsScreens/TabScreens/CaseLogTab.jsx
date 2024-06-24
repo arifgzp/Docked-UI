@@ -11,6 +11,8 @@ import useIsReady from "../../../../../src/hooks/useIsReady";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
+import { forEach, map, compact } from "lodash";
+import CaseLogAnaesthesiaConfig from "../../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
@@ -32,6 +34,42 @@ const CaseLogTab = () => {
 
 			default:
 				console.log("Navigating to Case Log7");
+		}
+	};
+
+	const getTreeNodeLabel = (key, configData) => {
+		//console.log("key", key);
+		//console.log("configData", configData);
+		let label = key;
+		forEach(configData, (config) => {
+			if (config.id == key) {
+				label = config.name;
+				//console.log("!!!!! Match Found ", label);
+				return false;
+			} else if (config.children) {
+				label = getTreeNodeLabel(key, config.children);
+				if (label != key) {
+					return false;
+				}
+			}
+		});
+		//console.log("Finakl LAbel >>>>> ", label);
+		return label;
+	};
+
+	const getTypeOfAnesthesia = (caseData) => {
+		//console.log("caseData.typeOfAnaesthesia", caseData.typeOfAnaesthesia);
+		const typeOfAnaesthesiaConfig = CaseLogAnaesthesiaConfig["typeOfAnaesthesia"];
+		if (caseData.typeOfAnaesthesia && caseData.typeOfAnaesthesia.length > 0) {
+			const selectedNodes = compact(
+				map(caseData.typeOfAnaesthesia, (toaSelector) => {
+					const treeLevels = toaSelector.split("/");
+					if (treeLevels.length === 2) {
+						return getTreeNodeLabel(treeLevels[1], typeOfAnaesthesiaConfig);
+					}
+				})
+			);
+			return selectedNodes.join(", ");
 		}
 	};
 
@@ -93,6 +131,8 @@ const CaseLogTab = () => {
 		return <IsReadyLoader />;
 	}
 
+	//console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", AppStore.UserBroadSpecialty);
+
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 			<Box flex={1} backgroundColor='$primaryBackground' alignItems='center'>
@@ -100,10 +140,10 @@ const CaseLogTab = () => {
 					<VStack width={"$100%"} alignItems='center' paddingTop={10} paddingBottom={"$15%"} p='$2'>
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
-								console.log("cardDetails", card);
+								//console.log("cardDetails", card);
 								return (
 									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
-										<VStack width={"$100%"} space='xs'>
+										<VStack width={"$100%"} space='xs' pb='$3'>
 											<HStack pt='$3' pl='$5' pr='$3' justifyContent='space-between' alignItems='center'>
 												<HStack space='sm'>
 													<Text size='sm'>Date of procedure:</Text>
@@ -145,30 +185,34 @@ const CaseLogTab = () => {
 													{card.diagnosis}
 												</Text>
 											</HStack>
-											<HStack pr='$3' pl='$5' space='sm'>
-												<Text size='sm'>Surgery Name:</Text>
-												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.surgicalProcedure}
-												</Text>
-											</HStack>
-											<HStack pr='$3' pl='$5' space='sm'>
-												<Text size='sm'>Case Type:</Text>
-												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.caseType}
-												</Text>
-											</HStack>
-											<HStack pr='$3' pl='$5' space='sm'>
-												<Text size='sm'>ASA Grade:</Text>
-												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.asaGrade}
-												</Text>
-											</HStack>
-											<HStack pb='$3' pr='$3' pl='$5' space='sm'>
-												<Text size='sm'>Type of Anesthesia:</Text>
-												<Text size='sm' fontFamily='Inter_Bold'>
-													Regional/Local
-												</Text>
-											</HStack>
+											{AppStore.UserBroadSpecialty === "Anaesthesiology" && (
+												<>
+													<HStack pr='$3' pl='$5' space='sm'>
+														<Text size='sm'>Surgery Name:</Text>
+														<Text size='sm' fontFamily='Inter_Bold'>
+															{card.surgicalProcedure}
+														</Text>
+													</HStack>
+													<HStack pr='$3' pl='$5' space='sm'>
+														<Text size='sm'>Case Type:</Text>
+														<Text size='sm' fontFamily='Inter_Bold'>
+															{card.caseType}
+														</Text>
+													</HStack>
+													<HStack pr='$3' pl='$5' space='sm'>
+														<Text size='sm'>ASA Grade:</Text>
+														<Text size='sm' fontFamily='Inter_Bold'>
+															{card.asaGrade}
+														</Text>
+													</HStack>
+													<HStack pr='$3' pl='$5' space='sm'>
+														<Text size='sm'>Type of Anesthesia:</Text>
+														<Text flex={1} size='sm' fontFamily='Inter_Bold'>
+															{getTypeOfAnesthesia(card)}
+														</Text>
+													</HStack>
+												</>
+											)}
 										</VStack>
 									</Card>
 								);
