@@ -190,7 +190,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 					setValue("hospital", hospitalData);
 					setValue("faculty", facultiesList);
-					setValue("rotation", rotationsList[0].department);
+					setValue("rotation", rotationsList[0]?.department);
 				} else {
 					const query = store.fetchUserLogProfile(AppStore.UserName);
 					setQuery(query);
@@ -207,11 +207,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 						console.log("facultiesList", facultiesList);
 						console.log("rotationsList", rotationsList);
 						console.log("hospitalData", hospitalData);
-						console.log("rotations[0].department", rotationsList[0].department);
+						console.log("rotations[0].department", rotationsList[0]?.department);
 						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 						setValue("hospital", hospitalData);
 						setValue("faculty", facultiesList);
-						setValue("rotation", rotationsList[0].department);
+						setValue("rotation", rotationsList[0]?.department);
 					}
 				}
 			} catch (error) {
