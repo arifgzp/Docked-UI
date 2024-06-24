@@ -138,7 +138,7 @@ const SetupProfile = ({ config, navigation }) => {
 						<Text size='xl'>{currentStepLabel}</Text>
 					</VStack>
 				</Box>
-				<Box width={"$100%"} justifyContent='center' flex={2.3 / 4}>
+				<Box pt={"$12"} width={"$100%"} justifyContent='center' flex={2.3 / 4}>
 					{CurrentStepComponent && (
 						<ScrollView>
 							<CurrentStepComponent reset={reset} control={control} formState={formState} formFields={formFields} />

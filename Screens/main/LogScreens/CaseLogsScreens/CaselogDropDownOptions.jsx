@@ -64,7 +64,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const { store, setQuery } = queryInfo;
 	const [open, setOpen] = useState(false);
 	const [showActionSheet, setShowActionsheet] = useState(false);
-	const [date, setDate] = useState(new Date());
+	const [date, setDate] = useState(caseLogData?.date ? new Date(caseLogData.date) : new Date());
 	const handleCloseDateModal = () => {
 		setShowActionsheet(false);
 	};
@@ -81,7 +81,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 		}
 	}, []);
 
-	//console.log("data for edit", caseLogData);
+	console.log("data for edit", caseLogData);
 	//console.log("prefilledData Mudit test", prefilledData);
 	const rotations = prefilledData?.rotations;
 	const hospital = prefilledData?.hospital ?? caseLogData?.hospital;
