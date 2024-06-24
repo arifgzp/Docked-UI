@@ -73,6 +73,14 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 		setValue("date", date);
 	};
 
+	useEffect(() => {
+		//TODO: This is a hack to set the default value of faculty in the form
+		if (!caseLogData) {
+			const defaultFaculty = prefilledData?.faculty?.[0]?.name;
+			setValue("faculty", defaultFaculty);
+		}
+	}, []);
+
 	//console.log("data for edit", caseLogData);
 	//console.log("prefilledData Mudit test", prefilledData);
 	const rotations = prefilledData?.rotations;
