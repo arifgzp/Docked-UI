@@ -90,7 +90,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
-			faculty: "",
+			faculty: null,
 			date: new Date(),
 		},
 	});
@@ -98,6 +98,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 
 	const handleSaveClick = async (formData) => {
+		console.log("errors for the form", formState.errors);
 		if (typeof formData.faculty !== "string" || formData.faculty.trim() === "") {
 			// Raise an error indicating rotation or faculty cannot be empty
 			toast.show({
@@ -172,36 +173,58 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
-		if (isFocused) {
-			const fetchLogProfilePrefilledData = async () => {
-				try {
+		const fetchLogProfilePrefilledData = async () => {
+			try {
+				const caseLogData = caseLogData;
+				console.log("caseLogData", caseLogData);
+				const logProfileData = toJS(AppStore.UserLogProfile);
+				console.log("logProfileData", logProfileData);
+				if (logProfileData) {
+					const facultiesList = logProfileData.faculties;
+					const rotationsList = logProfileData.rotations;
+					const hospitalData = logProfileData.hospital;
+					console.log("facultiesListfromAPPSTORE", facultiesList);
+					console.log("rotationsListfromAPPSTORE", rotationsList);
+					console.log("hospitalDatafromAPPSTORE", hospitalData);
+					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0]?.department);
+					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+					setValue("hospital", hospitalData);
+					setValue("faculty", facultiesList);
+					setValue("rotation", rotationsList[0].department);
+				} else {
 					const query = store.fetchUserLogProfile(AppStore.UserName);
 					setQuery(query);
 					const finishFetchingLogProfile = await query;
+					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
 					if (finishFetchingLogProfile) {
+						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
 						const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
 						AppStore.setLogProfile(userDataForLogProfile);
 						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 						const facultiesList = userData.logProfile.faculties;
 						const rotationsList = userData.logProfile.rotations;
 						const hospitalData = userData.logProfile.hospital;
+						console.log("facultiesList", facultiesList);
+						console.log("rotationsList", rotationsList);
+						console.log("hospitalData", hospitalData);
+						console.log("rotations[0].department", rotationsList[0].department);
 						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 						setValue("hospital", hospitalData);
 						setValue("faculty", facultiesList);
 						setValue("rotation", rotationsList[0].department);
 					}
-				} catch (error) {
-					console.log(error);
 				}
-			};
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		if (isFocused) {
 			fetchLogProfilePrefilledData();
-			reset({
-				date: new Date("2024-07-30T15:01:00.000Z"),
-			});
 		}
 	}, [isFocused]);
 
 	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
+	console.log("caseLogPrefilledData for test", caseLogPrefilledData);
 
 	if (!isReady) {
 		return <IsReadyLoader />;

@@ -76,7 +76,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	//console.log("data for edit", caseLogData);
 	//console.log("prefilledData Mudit test", prefilledData);
 	const rotations = prefilledData?.rotations;
-	const hospital = prefilledData?.hospital;
+	const hospital = prefilledData?.hospital ?? caseLogData?.hospital;
 	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
 	const activeRotationFrom = activeRotation ? format(parseISO(activeRotation?.from), "dd MMM yyyy") : null;
 	const activeRotationTo = activeRotation ? format(parseISO(activeRotation?.to), "dd MMM yyyy") : null;

@@ -221,44 +221,46 @@ const CaseLogReadScreen = ({ navigation }) => {
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$primaryBackground'>
-					<ScrollView>
-						<Box paddingTop={10} justifyContent='center' alignItems='center'>
-							<Box width={"$100%"}>
-								<CaselogDropDownOptions
-									formFields={getCaseLogFields(routes.params.caseType)}
-									prefilledData={caseLogPrefilledData}
-									control={control}
-									readOnly={false}
-									caseLogData={caseLogData}
-									setValue={setValue}
-									formState={formState}
-									readOnlyFaculty={true}
-								/>
-								<Divider />
+					<>
+						<ScrollView>
+							<Box paddingTop={10} justifyContent='center' alignItems='center'>
+								<Box width={"$100%"}>
+									<CaselogDropDownOptions
+										formFields={getCaseLogFields(routes.params.caseType)}
+										prefilledData={caseLogPrefilledData}
+										control={control}
+										readOnly={false}
+										caseLogData={caseLogData}
+										setValue={setValue}
+										formState={formState}
+										readOnlyFaculty={true}
+									/>
+									<Divider />
+								</Box>
 							</Box>
-						</Box>
 
-						<Box justifyContent='center' alignItems='center'>
-							<Box width={"$100%"}>
-								<SpecialCaseLogSelectOptions
-									control={control}
-									setValue={setValue}
-									getValues={getValues}
-									formState={formState}
-									caseLogData={caseLogData}
-									specialCaseLogsOption={getSpecialCaseLogOptions(routes.params.caseType)}
-									refernceToGetSpecialOptions={routes.params.caseType}
-								/>
+							<Box justifyContent='center' alignItems='center'>
+								<Box width={"$100%"}>
+									<SpecialCaseLogSelectOptions
+										control={control}
+										setValue={setValue}
+										getValues={getValues}
+										formState={formState}
+										caseLogData={caseLogData}
+										specialCaseLogsOption={getSpecialCaseLogOptions(routes.params.caseType)}
+										refernceToGetSpecialOptions={routes.params.caseType}
+									/>
+								</Box>
 							</Box>
-						</Box>
-						<Box mt='$5' mb={"$20%"} width={"$100%"} justifyContent='center' alignItems='center'>
+						</ScrollView>
+						<Box mt='$3' paddingBottom={"$22%"} width={"$100%"} justifyContent='center' alignItems='center'>
 							<Button width={"$50%"} height={50} onPress={handleSubmit(handleOnUpdateClick)} size='lg' variant='secondary' borderRadius={10}>
 								<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
 									Update Log
 								</ButtonText>
 							</Button>
 						</Box>
-					</ScrollView>
+					</>
 				</Box>
 			</Loader>
 		</KeyboardAvoidingView>
