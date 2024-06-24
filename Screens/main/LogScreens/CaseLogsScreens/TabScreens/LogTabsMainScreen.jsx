@@ -58,7 +58,7 @@ export default function LogTabsMainScreen({ navigation }) {
 					Logbook
 				</Text>
 				<HStack space='sm' alignItems='center'>
-					<Box>
+					{/* <Box>
 						<SearchBar
 							inputContainerStyle={styles.inputContainer}
 							containerStyle={styles.container}
@@ -67,9 +67,9 @@ export default function LogTabsMainScreen({ navigation }) {
 							onChangeText={updateSearch}
 							value={search}
 						/>
-					</Box>
+					</Box> */}
 					<Button
-						onPress={() => navigation.navigate("MainLogScreen", { screen: "LogProfilePage", params: { caseLogFormToGet: "" } })}
+						onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: "" })}
 						backgroundColor='#367B71'
 						borderRadius={"$full"}
 						size='xs'>

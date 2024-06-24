@@ -35,6 +35,7 @@ import {
 } from "../../../../config/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 import useIsReady from "../../../../src/hooks/useIsReady";
 import IsReadyLoader from "../../../../components/IsReadyLoader";
+import { toJS } from "mobx";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -76,7 +77,6 @@ const CaseLogReadScreen = ({ navigation }) => {
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
-	const [loading, setLoading] = useState(false);
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const [caseLogData, setCaseLogData] = useState({});
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
@@ -118,45 +118,64 @@ const CaseLogReadScreen = ({ navigation }) => {
 		};
 
 		fetchData();
-	}, []);
+	}, [routes.params.caseType]);
 
 	useEffect(() => {
 		const fetchLogProfilePrefilledData = async () => {
 			try {
-				const query = store.fetchUserLogProfile(AppStore.UserName);
-				setQuery(query);
-				const finishFetchingLogProfile = await query;
-				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-				if (finishFetchingLogProfile) {
-					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
-					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-					const facultiesList = userData.logProfile.faculties;
-					const rotationsList = userData.logProfile.rotations;
-					const hospitalData = userData.logProfile.hospital;
-					console.log("facultiesList", facultiesList);
-					console.log("rotationsList", rotationsList);
-					console.log("hospitalData", hospitalData);
-					console.log("rotations[0].department", rotationsList[0].department);
+				const caseLogData = caseLogData;
+				console.log("caseLogData", caseLogData);
+				const logProfileData = toJS(AppStore.UserLogProfile);
+				console.log("logProfileData", logProfileData);
+				if (logProfileData) {
+					const facultiesList = logProfileData.faculties;
+					const rotationsList = logProfileData.rotations;
+					const hospitalData = logProfileData.hospital;
+					console.log("facultiesListfromAPPSTORE", facultiesList);
+					console.log("rotationsListfromAPPSTORE", rotationsList);
+					console.log("hospitalDatafromAPPSTORE", hospitalData);
+					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0].department);
 					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 					setValue("hospital", hospitalData);
 					setValue("faculty", facultiesList);
 					setValue("rotation", rotationsList[0].department);
+				} else {
+					const query = store.fetchUserLogProfile(AppStore.UserName);
+					setQuery(query);
+					const finishFetchingLogProfile = await query;
+					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+					if (finishFetchingLogProfile) {
+						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
+						const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
+						AppStore.setLogProfile(userDataForLogProfile);
+						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+						const facultiesList = userData.logProfile.faculties;
+						const rotationsList = userData.logProfile.rotations;
+						const hospitalData = userData.logProfile.hospital;
+						console.log("facultiesList", facultiesList);
+						console.log("rotationsList", rotationsList);
+						console.log("hospitalData", hospitalData);
+						console.log("rotations[0].department", rotationsList[0].department);
+						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+						setValue("hospital", hospitalData);
+						setValue("rotation", rotationsList[0].department);
+					}
 				}
 			} catch (error) {
 				console.log(error);
 			}
 		};
-
 		if (isFocused) {
 			fetchLogProfilePrefilledData();
 		}
-	}, [isFocused, routes.params.caseType]);
+	}, [isFocused]);
 
 	const handleOnUpdateClick = async (formData) => {
 		console.log("this is the update query");
 		delete formData.id;
 		delete formData.__typename;
 		formData.updatedOn = formatRFC3339(new Date());
+		formData.faculty = caseLogData.faculty;
 
 		let queryToRun;
 
@@ -179,7 +198,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 			default:
 				throw new Error("Invalid case log type");
 		}
-
+		console.log("form Data For Update", formData);
 		try {
 			const query = store[queryToRun](routes.params.id, { set: formData });
 			setQuery(query);
@@ -200,7 +219,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
-			<Loader queryInfo={queryInfo} apiLoadingInfo={loading} showSuccessMsg={false} navigation={navigation}>
+			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$primaryBackground'>
 					<ScrollView>
 						<Box paddingTop={10} justifyContent='center' alignItems='center'>
@@ -210,6 +229,7 @@ const CaseLogReadScreen = ({ navigation }) => {
 									prefilledData={caseLogPrefilledData}
 									control={control}
 									readOnly={false}
+									caseLogData={caseLogData}
 									setValue={setValue}
 									formState={formState}
 									readOnlyFaculty={true}

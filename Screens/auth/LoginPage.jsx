@@ -54,40 +54,63 @@ const LoginPage = ({ navigation }) => {
 			return !showState;
 		});
 	};
+
 	const handleLogin = async () => {
 		setLoginPressed(true);
+
 		if (!formData.email) {
 			setEmailError("Email is required");
 			return;
 		} else {
 			setEmailError("");
 		}
+
 		if (!formData.password) {
 			setPasswordError("Password is required");
 			return;
 		} else {
 			setPasswordError("");
 		}
-		const response = await AppStore.SignIn({ userName: formData.email, password: formData.password });
-		if (response) {
-			if (response.userStatus === "REGISTERED") {
-				navigation.navigate("Main Page", { UserSpecialty: response.broadSpecilty });
-				AppStore.setBroadSpecialty(response.broadSpecialty);
-				AppStore.setUserId(response.id);
-				const broadSpecialty = AppStore.UserBroadSpecialty;
-				console.log("broadSpecialty", broadSpecialty);
-			} else if (response.userStatus === "WIZARD_PENDING") {
-				navigation.navigate("Profile Setup Page");
+
+		try {
+			const response = await AppStore.SignIn({ userName: formData.email, password: formData.password });
+
+			if (response) {
+				if (response.userStatus === "REGISTERED") {
+					navigation.navigate("Main Page", { UserSpecialty: response.broadSpecialty });
+					AppStore.setBroadSpecialty(response.broadSpecialty);
+					AppStore.setUserId(response.id);
+
+					const query = store.fetchUserLogProfile(response.userName);
+					setQuery(query);
+
+					const finishFetchingLogProfile = await query;
+					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+
+					if (finishFetchingLogProfile) {
+						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0].logProfile);
+						const userLogProfileData = finishFetchingLogProfile.queryUser[0].logProfile;
+						console.log("userLogProfileData", userLogProfileData);
+						AppStore.setLogProfile(userLogProfileData);
+					}
+				} else if (response.userStatus === "WIZARD_PENDING") {
+					navigation.navigate("Profile Setup Page");
+				} else if (response.userStatus === "VERIFICATION_REQUIRED") {
+					navigation.navigate("Enter Email OTP Page");
+				}
 			} else {
-				navigation.navigate("Enter Email OTP Page");
+				// If credentials don't match, display error message
+				setEmailError("Please enter valid credentials");
+				setPasswordError("Please enter valid credentials");
 			}
-		} else {
-			// If credentials don't match, display error message
-			setEmailError("Please enter valid credentials");
-			setPasswordError("Please enter valid credentials");
+		} catch (error) {
+			console.error("Login error:", error);
+			setEmailError("An error occurred during login. Please try again.");
+			setPasswordError("An error occurred during login. Please try again.");
 		}
-		//bypassing the login for development purposes
-		//navigation.navigate("Main Page");
+
+		// Bypassing the login for development purposes
+		// navigation.navigate("Main Page");
 	};
 
 	return (

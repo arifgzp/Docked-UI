@@ -9,16 +9,21 @@ import { useQuery } from "../../../../../src/models";
 import AppStore from "../../../../../src/stores/AppStore";
 import useIsReady from "../../../../../src/hooks/useIsReady";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
+import { useNavigation } from "@react-navigation/native";
 
-const CaseLogTab = ({ navigation }) => {
+const CaseLogTab = () => {
 	const isReady = useIsReady();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [cardDetails, setCardDetails] = useState([]);
+	const navigation = useNavigation();
 
 	const handleButtonPress = (button, id, caseType) => {
 		switch (button) {
 			case "CaseLogReadScreen":
+				console.log(button, "this is button");
+				console.log("this is id", id, "this is caseType", caseType);
+				console.log("Navigating to Case Log!!!!!!!!!!");
 				navigation.navigate("CaseLogReadScreen", { id: id, caseType: caseType });
 				console.log("Navigating to Case Log");
 				break;
@@ -90,77 +95,80 @@ const CaseLogTab = ({ navigation }) => {
 				<ScrollView width={"$100%"}>
 					<VStack width={"$100%"} alignItems='center' paddingTop={10} paddingBottom={"$15%"} p='$2'>
 						{cardDetails.length > 0 ? (
-							cardDetails.map((card, index) => (
-								<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
-									<VStack width={"$100%"} space='xs'>
-										<HStack pt='$3' pl='$5' pr='$3' justifyContent='space-between' alignItems='center'>
-											<HStack space='sm'>
-												<Text size='sm'>Date of procedure:</Text>
+							cardDetails.map((card, index) => {
+								console.log("cardDetails", card);
+								return (
+									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
+										<VStack width={"$100%"} space='xs'>
+											<HStack pt='$3' pl='$5' pr='$3' justifyContent='space-between' alignItems='center'>
+												<HStack space='sm'>
+													<Text size='sm'>Date of procedure:</Text>
+													<Text size='sm' fontFamily='Inter_Bold'>
+														{format(new Date(card?.date), "do MMM yyyy")}
+													</Text>
+												</HStack>
+												<HStack space='sm' alignItems='center'>
+													<Button width={15} height={30} borderRadius={"$full"} size='xs'>
+														<ButtonIcon as={Ionicons} name='share-social-outline' color='#FFFFFF' />
+													</Button>
+													<Button
+														onPress={handleButtonPress.bind(null, "CaseLogReadScreen", card?.id, card?.caseType)}
+														width={20}
+														height={30}
+														borderRadius={"$full"}
+														size='xs'>
+														<ButtonIcon as={Ionicons} name='create-outline' color='#FFFFFF' />
+													</Button>
+												</HStack>
+											</HStack>
+											<HStack pt='$2' pb='$2' space='3xl' backgroundColor='#DDDDDD'>
+												<HStack pl='$5' space='sm'>
+													<Text size='sm'>Patient Age:</Text>
+													<Text size='sm' fontFamily='Inter_Bold'>
+														{card.patientAge}
+													</Text>
+												</HStack>
+												<HStack space='sm'>
+													<Text size='sm'>Sex:</Text>
+													<Text size='sm' fontFamily='Inter_Bold'>
+														{card.patientSex}
+													</Text>
+												</HStack>
+											</HStack>
+											<HStack pr='$3' pl='$5' space='sm'>
+												<Text size='sm'>Diagnosis:</Text>
 												<Text size='sm' fontFamily='Inter_Bold'>
-													{format(new Date(card?.date), "do MMM yyyy")}
+													{card.diagnosis}
 												</Text>
 											</HStack>
-											<HStack space='sm' alignItems='center'>
-												<Button width={15} height={30} borderRadius={"$full"} size='xs'>
-													<ButtonIcon as={Ionicons} name='share-social-outline' color='#FFFFFF' />
-												</Button>
-												<Button
-													onPress={handleButtonPress.bind(null, "CaseLogReadScreen", card?.id, card?.caseType)}
-													width={20}
-													height={30}
-													borderRadius={"$full"}
-													size='xs'>
-													<ButtonIcon as={Ionicons} name='create-outline' color='#FFFFFF' />
-												</Button>
-											</HStack>
-										</HStack>
-										<HStack pt='$2' pb='$2' space='3xl' backgroundColor='#DDDDDD'>
-											<HStack pl='$5' space='sm'>
-												<Text size='sm'>Patient Age:</Text>
+											<HStack pr='$3' pl='$5' space='sm'>
+												<Text size='sm'>Surgery Name:</Text>
 												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.patientAge}
+													{card.surgicalProcedure}
 												</Text>
 											</HStack>
-											<HStack space='sm'>
-												<Text size='sm'>Sex:</Text>
+											<HStack pr='$3' pl='$5' space='sm'>
+												<Text size='sm'>Case Type:</Text>
 												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.patientSex}
+													{card.caseType}
 												</Text>
 											</HStack>
-										</HStack>
-										<HStack pr='$3' pl='$5' space='sm'>
-											<Text size='sm'>Diagnosis:</Text>
-											<Text size='sm' fontFamily='Inter_Bold'>
-												{card.diagnosis}
-											</Text>
-										</HStack>
-										<HStack pr='$3' pl='$5' space='sm'>
-											<Text size='sm'>Surgery Name:</Text>
-											<Text size='sm' fontFamily='Inter_Bold'>
-												{card.surgicalProcedure}
-											</Text>
-										</HStack>
-										<HStack pr='$3' pl='$5' space='sm'>
-											<Text size='sm'>Case Type:</Text>
-											<Text size='sm' fontFamily='Inter_Bold'>
-												{card.caseType}
-											</Text>
-										</HStack>
-										<HStack pr='$3' pl='$5' space='sm'>
-											<Text size='sm'>ASA Grade:</Text>
-											<Text size='sm' fontFamily='Inter_Bold'>
-												{card.asaGrade}
-											</Text>
-										</HStack>
-										<HStack pb='$3' pr='$3' pl='$5' space='sm'>
-											<Text size='sm'>Type of Anesthesia:</Text>
-											<Text size='sm' fontFamily='Inter_Bold'>
-												Regional/Local
-											</Text>
-										</HStack>
-									</VStack>
-								</Card>
-							))
+											<HStack pr='$3' pl='$5' space='sm'>
+												<Text size='sm'>ASA Grade:</Text>
+												<Text size='sm' fontFamily='Inter_Bold'>
+													{card.asaGrade}
+												</Text>
+											</HStack>
+											<HStack pb='$3' pr='$3' pl='$5' space='sm'>
+												<Text size='sm'>Type of Anesthesia:</Text>
+												<Text size='sm' fontFamily='Inter_Bold'>
+													Regional/Local
+												</Text>
+											</HStack>
+										</VStack>
+									</Card>
+								);
+							})
 						) : (
 							<Box justifyContent='center' alignItems='center'>
 								<Text>No Cases found</Text>

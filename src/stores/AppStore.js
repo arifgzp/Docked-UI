@@ -104,6 +104,10 @@ const AppStore = types
 			return self._broadSpecialty;
 		},
 
+		get UserLogProfile() {
+			return self._logProfile;
+		},
+
 		get isUserSignedIn() {
 			return self._isSignedIn && self._userToken != null;
 		},
@@ -191,6 +195,10 @@ const AppStore = types
 
 		setSpecialty(specialtyValue) {
 			self._specialty = specialtyValue;
+		},
+
+		setLogProfile(logProfile) {
+			self._logProfile = logProfile;
 		},
 
 		markUserSignedIn(token, id, userName, role, broadSpecialty) {

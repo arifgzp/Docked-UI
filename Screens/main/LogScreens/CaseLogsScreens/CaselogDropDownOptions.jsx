@@ -59,7 +59,7 @@ import { observer } from "mobx-react";
 import { useQuery } from "../../../../src/models";
 import AppStore from "../../../../src/stores/AppStore";
 
-const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly, prefilledData, formFields, readOnlyFaculty }) => {
+const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly, prefilledData, formFields, readOnlyFaculty, caseLogData }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [open, setOpen] = useState(false);
@@ -72,6 +72,8 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const handelSetDate = (date) => {
 		setValue("date", date);
 	};
+
+	console.log("data for edit", caseLogData);
 
 	console.log("prefilledData Mudit test", prefilledData);
 	return (
@@ -92,7 +94,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 									onBlur={onBlur}
 									isReadOnly
 									onValueChange={onChange}
-									selectedValue={prefilledData?.rotations[0]?.department || value}>
+									selectedValue={prefilledData?.rotations?.[0]?.department || value}>
 									<SelectTrigger variant='underlined' size='md'>
 										<SelectInput placeholder={`Rotation -- ${prefilledData?.rotations[0].department}`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
@@ -134,7 +136,12 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} onBlur={onBlur} isReadOnly onValueChange={onChange} selectedValue={prefilledData?.hospital || value}>
+								<Select
+									width={"$90%"}
+									onBlur={onBlur}
+									isReadOnly
+									onValueChange={onChange}
+									selectedValue={caseLogData?.hospital || prefilledData?.hospital || value}>
 									<SelectTrigger variant='underlined' size='md'>
 										<SelectInput placeholder={`Hospital -- ${prefilledData?.hospital}`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
@@ -174,7 +181,12 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select width={"$90%"} onBlur={onBlur} isReadOnly={readOnlyFaculty} onValueChange={onChange} selectedValue={value}>
+								<Select
+									width={"$90%"}
+									onBlur={onBlur}
+									isReadOnly={readOnlyFaculty}
+									onValueChange={onChange}
+									selectedValue={caseLogData?.faculty || value}>
 									<SelectTrigger variant='underlined' size='md'>
 										<SelectInput placeholder={`Faculty`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>

@@ -179,6 +179,8 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 					setQuery(query);
 					const finishFetchingLogProfile = await query;
 					if (finishFetchingLogProfile) {
+						const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
+						AppStore.setLogProfile(userDataForLogProfile);
 						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 						const facultiesList = userData.logProfile.faculties;
 						const rotationsList = userData.logProfile.rotations;
@@ -278,7 +280,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 								<Text>Please create your log profile before filing a case</Text>
 								<Box width={"$100%"} alignItems='center'>
 									<Button
-										onPress={() => navigation.navigate("MainLogScreen", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } })}
+										onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: caseLogFormToGet })}
 										width={"$85%"}
 										height={50}
 										size='lg'
