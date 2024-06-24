@@ -74,7 +74,7 @@ const YourWorkplace = ({ control, formState, formFields }) => {
 								</React.Fragment>
 							);
 						})}
-						<Button size='lg' variant='secondary'>
+						<Button isDisabled={true} size='lg' variant='secondary'>
 							<ButtonText fontFamily='Inter_Regular' textAlign='center'>
 								+ Workspace
 							</ButtonText>

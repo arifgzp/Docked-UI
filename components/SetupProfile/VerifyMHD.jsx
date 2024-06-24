@@ -17,6 +17,7 @@ import {
 	Button,
 	ButtonText,
 	Divider,
+	InputField,
 } from "@gluestack-ui/themed";
 import { ChevronDown } from "lucide-react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -24,6 +25,7 @@ import React from "react";
 import Loader from "../Loader";
 import appStoreInstance from "../../src/stores/AppStore";
 import { observer } from "mobx-react";
+import { Input } from "@gluestack-ui/themed";
 
 const VerifyMHD = ({ control, formState, formFields }) => {
 	return (
@@ -43,26 +45,29 @@ const VerifyMHD = ({ control, formState, formFields }) => {
 													required: false,
 												}}
 												render={({ field: { onChange, onBlur, value } }) => (
-													<Select width={"$80%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-														<SelectTrigger variant='underlined' size='md'>
-															<SelectInput placeholder={field.name} />
-															<SelectIcon mr='$3'>
-																<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-															</SelectIcon>
-														</SelectTrigger>
-														<SelectPortal>
-															<SelectBackdrop />
-															<SelectContent>
-																<Text padding={10} size='xl'>
-																	{field.name}
-																</Text>
-																<Divider borderWidth={0.1} />
-																{field.options.map((option, index) => {
-																	return <SelectItem key={index} label={option.label} value={option.value} />;
-																})}
-															</SelectContent>
-														</SelectPortal>
-													</Select>
+													// <Select width={"$80%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+													// 	<SelectTrigger variant='underlined' size='md'>
+													// 		<SelectInput placeholder={field.name} />
+													// 		<SelectIcon mr='$3'>
+													// 			<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+													// 		</SelectIcon>
+													// 	</SelectTrigger>
+													// 	<SelectPortal>
+													// 		<SelectBackdrop />
+													// 		<SelectContent>
+													// 			<Text padding={10} size='xl'>
+													// 				{field.name}
+													// 			</Text>
+													// 			<Divider borderWidth={0.1} />
+													// 			{field.options.map((option, index) => {
+													// 				return <SelectItem key={index} label={option.label} value={option.value} />;
+													// 			})}
+													// 		</SelectContent>
+													// 	</SelectPortal>
+													// </Select>
+													<Input width={"$90%"} variant='underlined'>
+														<InputField onChangeText={onChange} value={value} placeholder={field.name} />
+													</Input>
 												)}
 												name={field.uid}
 											/>
@@ -76,7 +81,7 @@ const VerifyMHD = ({ control, formState, formFields }) => {
 						})}
 						<VStack width={"$80%"} space='xs'>
 							<Box justifyContent='flex-start'>
-								<Button size='lg' variant='secondary'>
+								<Button isDisabled={true} size='lg' variant='secondary'>
 									<ButtonText fontFamily='Inter_Regular' textAlign='center'>
 										Verify Reg.No.
 									</ButtonText>

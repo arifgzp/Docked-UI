@@ -63,7 +63,7 @@ const getCreateMenuOptions = (specialty) => {
 		case "Orthodontics":
 			return orthodonticsCaseLogEntryOptions;
 
-		case "Anaesthesia":
+		case "Anaesthesiology":
 			return anaesthesiaCaseLogEntryOptions;
 
 		default:
