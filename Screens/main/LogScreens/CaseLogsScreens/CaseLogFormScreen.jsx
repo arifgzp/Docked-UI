@@ -212,68 +212,45 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} w='$100%' backgroundColor='$primaryBackground'>
 					{caseLogPrefilledData ? (
-						<ScrollView>
-							<Box paddingTop={10} justifyContent='center' alignItems='center'>
-								<Box width={"$100%"}>
-									<CaselogDropDownOptions
-										formFields={getCaseLogFields(caseLogFormToGet)}
-										prefilledData={caseLogPrefilledData}
-										control={control}
-										setValue={setValue}
-										formState={formState}
-										readOnlyFaculty={false}
-									/>
-									<Divider />
-								</Box>
-								<Box justifyContent='center' alignItems='center'>
+						<>
+							<ScrollView>
+								<Box paddingTop={10} justifyContent='center' alignItems='center'>
 									<Box width={"$100%"}>
-										<SpecialCaseLogSelectOptions
+										<CaselogDropDownOptions
+											formFields={getCaseLogFields(caseLogFormToGet)}
+											prefilledData={caseLogPrefilledData}
 											control={control}
 											setValue={setValue}
-											getValues={getValues}
 											formState={formState}
-											caseLogData={{}}
-											specialCaseLogsOption={getSpecialCaseLogOptions(caseLogFormToGet)}
-											refernceToGetSpecialOptions={caseLogFormToGet}
+											readOnlyFaculty={false}
 										/>
+										<Divider />
+									</Box>
+									<Box justifyContent='center' alignItems='center'>
+										<Box width={"$100%"}>
+											<SpecialCaseLogSelectOptions
+												control={control}
+												setValue={setValue}
+												getValues={getValues}
+												formState={formState}
+												caseLogData={{}}
+												specialCaseLogsOption={getSpecialCaseLogOptions(caseLogFormToGet)}
+												refernceToGetSpecialOptions={caseLogFormToGet}
+											/>
+										</Box>
 									</Box>
 								</Box>
-								<Box paddingBottom={"$30%"} paddingTop={10} width={"$100%"}>
-									<VStack space='lg'>
-										<Box paddingLeft={15} width={"$100%"}>
-											<Button size='sm' variant='secondary' borderRadius={10}>
-												<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
-													Add to spl. log
-												</ButtonText>
-											</Button>
-										</Box>
-										<HStack>
-											<Box width={"$50%"} alignItems='center'>
-												<Button width={"$85%"} height={50} onPress={handleSubmit(handleSaveClick)} size='lg' variant='secondary' borderRadius={10}>
-													<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
-														Save
-													</ButtonText>
-												</Button>
-											</Box>
-											<Box width={"$50%"} alignItems='center'>
-												<Button width={"$85%"} height={50} size='lg' variant='secondary' borderRadius={10}>
-													<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
-														View Logs
-													</ButtonText>
-												</Button>
-											</Box>
-										</HStack>
-										<Box alignItems='center' width={"$100%"}>
-											<Button width={"$90%"} borderRadius={10} height={50} size='lg' variant='primary'>
-												<ButtonText color='#1E1E1E' fontFamily='Inter_Bold' textAlign='center'>
-													Submit for approval
-												</ButtonText>
-											</Button>
-										</Box>
-									</VStack>
-								</Box>
+							</ScrollView>
+							<Box paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
+								<HStack justifyContent='center'>
+									<Button width={"$50%"} height={40} onPress={handleSubmit(handleSaveClick)} size='lg' variant='secondary' borderRadius={10}>
+										<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
+											Save
+										</ButtonText>
+									</Button>
+								</HStack>
 							</Box>
-						</ScrollView>
+						</>
 					) : (
 						<Box flex={1 / 1} height={"$100%"} justifyContent='center' alignItems='center'>
 							<VStack width={"$100%"} alignItems='center' space='lg' mb='$20'>

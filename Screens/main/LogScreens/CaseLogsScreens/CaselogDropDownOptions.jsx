@@ -53,7 +53,7 @@ import { ActionsheetDragIndicator } from "@gluestack-ui/themed";
 import { CalendarDaysIcon } from "@gluestack-ui/themed";
 import { InputSlot } from "@gluestack-ui/themed";
 import { InputIcon } from "@gluestack-ui/themed";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import caseLogConfigTextAndSingleSelectOptions from "../../../../config/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
 import { observer } from "mobx-react";
 import { useQuery } from "../../../../src/models";
@@ -73,97 +73,27 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 		setValue("date", date);
 	};
 
-	console.log("data for edit", caseLogData);
-
-	console.log("prefilledData Mudit test", prefilledData);
+	//console.log("data for edit", caseLogData);
+	//console.log("prefilledData Mudit test", prefilledData);
+	const rotations = prefilledData?.rotations;
+	const hospital = prefilledData?.hospital;
+	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
+	const activeRotationFrom = activeRotation ? format(parseISO(activeRotation?.from), "dd MMM yyyy") : null;
+	const activeRotationTo = activeRotation ? format(parseISO(activeRotation?.to), "dd MMM yyyy") : null;
+	const activeRotationText = activeRotation ? `${activeRotation.department}   (  ${activeRotationFrom}  -  ${activeRotationTo}  )` : "No Rotation";
 	return (
 		<VStack space='lg'>
-			<Box width={"$100%"}>
-				<Box alignItems='center' paddingBottom={10}>
-					<Controller
-						control={control}
-						key='rotation'
-						name='rotation'
-						rules={{
-							required: false,
-						}}
-						render={({ field: { onChange, onBlur, value } }) => {
-							return (
-								<Select
-									width={"$90%"}
-									onBlur={onBlur}
-									isReadOnly
-									onValueChange={onChange}
-									selectedValue={prefilledData?.rotations?.[0]?.department || value}>
-									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder={`Rotation -- ${prefilledData?.rotations[0].department}`} />
-										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-									</SelectTrigger>
-									<SelectPortal>
-										<SelectBackdrop />
-										<SelectContent>
-											<Text padding={10} size='xl'>
-												Department
-											</Text>
-											<Divider borderWidth={0.1} />
-											<SelectItem
-												key={prefilledData?.rotations[0].department}
-												label={prefilledData?.rotations[0].department}
-												value={prefilledData?.rotations[0].department}
-											/>
-											{/* {prefilledData?.rotations.map((item) => {
-												return <SelectItem key={item?.department} label={item?.department} value={item?.department} />;
-											})} */}
-										</SelectContent>
-									</SelectPortal>
-								</Select>
-							);
-						}}
-					/>
-				</Box>
-				<Box alignItems='center'>
-					<Box width={"$80%"}>{formState.errors.rotations && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-				</Box>
+			<Box pl='$5' width={"$80%"}>
+				<Text fontFamily='Inter_Bold'>Rotation</Text>
 			</Box>
-			<Box width={"$100%"}>
-				<Box alignItems='center' paddingBottom={10}>
-					<Controller
-						control={control}
-						key='hospital'
-						name='hospital'
-						rules={{
-							required: false,
-						}}
-						render={({ field: { onChange, onBlur, value } }) => {
-							return (
-								<Select
-									width={"$90%"}
-									onBlur={onBlur}
-									isReadOnly
-									onValueChange={onChange}
-									selectedValue={caseLogData?.hospital || prefilledData?.hospital || value}>
-									<SelectTrigger variant='underlined' size='md'>
-										<SelectInput placeholder={`Hospital -- ${prefilledData?.hospital}`} />
-										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-									</SelectTrigger>
-									<SelectPortal>
-										<SelectBackdrop />
-										<SelectContent>
-											<Text padding={10} size='xl'>
-												Hospital
-											</Text>
-											<Divider borderWidth={0.1} />
-											<SelectItem key={prefilledData?.hospital} label={prefilledData?.hospital} value={value} />
-										</SelectContent>
-									</SelectPortal>
-								</Select>
-							);
-						}}
-					/>
-				</Box>
-				<Box alignItems='center'>
-					<Box width={"$80%"}>{formState.errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-				</Box>
+			<Box pl='$5' width={"$80%"}>
+				<Text>{activeRotationText}</Text>
+			</Box>
+			<Box pl='$5' width={"$80%"}>
+				<Text fontFamily='Inter_Bold'>Hospital</Text>
+			</Box>
+			<Box pl='$5' width={"$80%"}>
+				<Text>{hospital}</Text>
 			</Box>
 			<Box pl='$5' width={"$80%"}>
 				<Text fontFamily='Inter_Bold'>
