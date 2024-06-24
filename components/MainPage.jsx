@@ -25,7 +25,7 @@ import { CloseIcon, GlobeIcon, PlusIcon } from "@gluestack-ui/themed";
 import { Menu } from "@gluestack-ui/themed";
 import { MenuItemLabel } from "@gluestack-ui/themed";
 import { ButtonIcon, Text } from "@gluestack-ui/themed";
-import { useNavigationState } from "@react-navigation/native";
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { Radio } from "@gluestack-ui/themed";
 import { RadioIndicator } from "@gluestack-ui/themed";
 import { RadioIcon } from "@gluestack-ui/themed";
@@ -57,7 +57,8 @@ const NotificationButton = ({ onPress }) => {
 	);
 };
 
-const MainPage = ({ navigation }) => {
+const MainPage = () => {
+	const navigation = useNavigation();
 	return (
 		<Drawer.Navigator
 			drawerContent={(props) => <DrawerContent {...props} />}
