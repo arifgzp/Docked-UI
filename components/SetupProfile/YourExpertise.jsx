@@ -23,25 +23,39 @@ import { observer } from "mobx-react";
 import { OrthopaedicsCaseLogAggregateResultModel } from "../../src/models";
 
 const specialtyList = {
-	InternalMedicine: {
+	Anaesthesiology: {
 		SuperSpeciality: [
 			{
-				label: "Cardiology",
-				value: "Cardiology",
+				label: "Critical Care Anesthesiology",
+				value: "CriticalCareAnesthesiology",
 			},
-		],
-		SubSpeciality: [
 			{
-				label: "Hepatology, Endoscopy",
-				value: "Hepatology,Endoscopy",
+				label: "Pediatric Anesthesiology",
+				value: "PediatricAnesthesiology",
 			},
-		],
-	},
-	Paediatrics: {
-		SuperSpeciality: [
 			{
-				label: "Neonatology",
-				value: "Neonatology",
+				label: "Cardiac Anaesthesiology",
+				value: "CardiacAnaesthesiology",
+			},
+			{
+				label: "Neuro-anaesthesiology",
+				value: "Neuro-anaesthesiology",
+			},
+			{
+				label: "Transplant Anaesthesia",
+				value: "TransplantAnaesthesia",
+			},
+			{
+				label: "Obstetric Anaesthesiology",
+				value: "ObstetricAnaesthesiology",
+			},
+			{
+				label: "Pain Medicine",
+				value: "PainMedicine",
+			},
+			{
+				label: "Regional Anaesthesia",
+				value: "RegionalAnaesthesia",
 			},
 		],
 		SubSpeciality: [],
@@ -49,8 +63,28 @@ const specialtyList = {
 	Orthodontics: {
 		SuperSpeciality: [
 			{
-				label: "Neonatology",
-				value: "Neonatology",
+				label: "Craniofacial Orthodontics",
+				value: "CraniofacialOrthodontics",
+			},
+			{
+				label: "Surgical Orthodontics",
+				value: "SurgicalOrthodontics",
+			},
+			{
+				label: "Adult Orthodontics",
+				value: "AdultOrthodontics",
+			},
+			{
+				label: "Pediatric Orthodontics",
+				value: "PediatricOrthodontics",
+			},
+			{
+				label: "Lingual Orthodontics",
+				value: "LingualOrthodontics",
+			},
+			{
+				label: "Clear Aligner Therapy",
+				value: "ClearAlignerTherapy",
 			},
 		],
 		SubSpeciality: [],
@@ -58,8 +92,32 @@ const specialtyList = {
 	Orthopaedics: {
 		SuperSpeciality: [
 			{
-				label: "Neonatology",
-				value: "Neonatology",
+				label: "Joint Replacement Surgery",
+				value: "JointReplacementSurgery",
+			},
+			{
+				label: "Sports Medicine",
+				value: "SportsMedicine",
+			},
+			{
+				label: "Spine Surgery",
+				value: "SpineSurgery",
+			},
+			{
+				label: "Pediatric Orthopaedics",
+				value: "PediatricOrthopaedics",
+			},
+			{
+				label: "Orthopaedic Oncology",
+				value: "OrthopaedicOncology",
+			},
+			{
+				label: "Trauma Surgery",
+				value: "TraumaSurgery",
+			},
+			{
+				label: "Hand Surgery",
+				value: "HandSurgery",
 			},
 		],
 		SubSpeciality: [],

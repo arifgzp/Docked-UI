@@ -10,9 +10,11 @@ import AppStore from "../../../../../src/stores/AppStore";
 import useIsReady from "../../../../../src/hooks/useIsReady";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
+	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [cardDetails, setCardDetails] = useState([]);
@@ -82,8 +84,10 @@ const CaseLogTab = () => {
 				console.log(error);
 			}
 		};
-		fetchData();
-	}, [AppStore.UserBroadSpecialty]);
+		if (isFocused) {
+			fetchData();
+		}
+	}, [AppStore.UserBroadSpecialty, isFocused]);
 
 	if (!isReady) {
 		return <IsReadyLoader />;

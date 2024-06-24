@@ -1469,8 +1469,8 @@ const monitoring = [
 				nodeType: "leaf",
 			},
 			{
-				id: "Intake/OutputChart",
-				name: "Intake/Output Chart",
+				id: "Intake|OutputChart",
+				name: "Intake|Output Chart",
 				nodeType: "leaf",
 			},
 		],

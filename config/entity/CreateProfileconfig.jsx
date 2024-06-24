@@ -1,7 +1,6 @@
 const Options = {
 	broadSpecialty: [
-		{ label: "Internal Medicine", value: "InternalMedicine" },
-		{ label: "Paediatrics", value: "Paediatrics" },
+		{ label: "Anaesthesiology", value: "Anaesthesiology" },
 		{ label: "Orthodontics", value: "Orthodontics" },
 		{ label: "Orthopaedics", value: "Orthopaedics" },
 	],

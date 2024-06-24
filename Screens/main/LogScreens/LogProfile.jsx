@@ -67,6 +67,8 @@ import { ModalCloseButton } from "@gluestack-ui/themed";
 import { CloseIcon } from "@gluestack-ui/themed";
 import { ModalBody } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
+import useIsReady from "../../../src/hooks/useIsReady";
+import IsReadyLoader from "../../../components/IsReadyLoader";
 
 const LogProfilePage = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
@@ -84,6 +86,7 @@ const LogProfilePage = ({ navigation, route }) => {
 			rotations: [],
 		},
 	});
+	const isReady = useIsReady();
 
 	const [showModal, setShowModal] = useState(false);
 	const [modalView, setModalView] = useState("");
@@ -132,7 +135,7 @@ const LogProfilePage = ({ navigation, route }) => {
 
 	const handleSetDate = (date, key) => {
 		if (date instanceof Date && !isNaN(date)) {
-			setValue(key, date);
+			setValueForRotations(key, date);
 		} else {
 			console.error("Invalid date value");
 		}
@@ -148,7 +151,6 @@ const LogProfilePage = ({ navigation, route }) => {
 		setShowModal(true);
 	};
 	const handleSaveFaculty = () => {
-		setShowModal(false);
 		const newFaculty = {
 			name: watchForFaculty("facultyName"),
 			designation: watchForFaculty("facultyDesignation"),
@@ -168,10 +170,10 @@ const LogProfilePage = ({ navigation, route }) => {
 		});
 		setFromDate(new Date());
 		setToDate(new Date());
+		setShowModal(false);
 	};
 
 	const handleSaveRotation = () => {
-		setShowModal(false);
 		const newRotation = {
 			department: watchForRotations("department"),
 			from: watchForRotations("from"),
@@ -185,6 +187,7 @@ const LogProfilePage = ({ navigation, route }) => {
 		});
 		setFromDate(new Date());
 		setToDate(new Date());
+		setShowModal(false);
 	};
 
 	const handleOnSave = async () => {
@@ -267,6 +270,10 @@ const LogProfilePage = ({ navigation, route }) => {
 		};
 		fetchLogProfile();
 	}, []);
+
+	if (!isReady) {
+		return <IsReadyLoader />;
+	}
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>

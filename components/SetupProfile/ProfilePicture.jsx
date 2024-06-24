@@ -15,14 +15,14 @@ const ProfilePicture = () => {
 							<Ionicons name='person' size={120} color='#DDE1E6' />
 						</Box>
 						<Box justifycontent='center' alignItems='center'>
-							<Button size='lg' variant='secondary'>
+							<Button isDisabled={true} size='lg' variant='secondary'>
 								<ButtonText fontFamily='Inter_Regular' textAlign='center'>
 									Take A Photo
 								</ButtonText>
 							</Button>
 						</Box>
 						<Box justifycontent='center' alignItems='center'>
-							<Button size='lg' variant='secondary'>
+							<Button isDisabled={true} size='lg' variant='secondary'>
 								<ButtonText fontFamily='Inter_Regular' textAlign='center'>
 									Browse Gallery
 								</ButtonText>
