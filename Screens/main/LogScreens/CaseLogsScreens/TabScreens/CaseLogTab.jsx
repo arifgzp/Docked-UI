@@ -13,13 +13,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import { forEach, map, compact } from "lodash";
 import CaseLogAnaesthesiaConfig from "../../../../../config/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
+import { toJS } from "mobx";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
-	const [cardDetails, setCardDetails] = useState([]);
+	//const [cardDetails, setCardDetails] = useState([]);
 	const navigation = useNavigation();
 
 	const handleButtonPress = (button, id, caseType) => {
@@ -76,48 +77,36 @@ const CaseLogTab = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				let cardData = [];
 				const fetchAnaesthesiaData = async () => {
 					const fetchQuery1 = store.fetchAnaesthesiaCaseLogByUser(AppStore.UserName);
 					setQuery(fetchQuery1);
-					const data1 = await fetchQuery1;
-					const AnaesthesiaCaseLogData = data1.queryUser[0].anaesthesiaCaseLog;
+					await fetchQuery1;
 
 					const fetchQuery2 = store.fetchAnaesthesiaChronicPainLogByUser(AppStore.UserName);
 					setQuery(fetchQuery2);
-					const data2 = await fetchQuery2;
-					const AnaesthesiaChronicPainLogData = data2.queryUser[0].anaesthesiaChronicPainLog;
+					await fetchQuery2;
 
 					const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLogByUser(AppStore.UserName);
 					setQuery(fetchQuery3);
-					const data3 = await fetchQuery3;
-					const AnaesthesiaCriticalCareCaseLogData = data3.queryUser[0].anaesthesiaCriticalCareCaseLog;
-
-					cardData = [...AnaesthesiaCaseLogData, ...AnaesthesiaChronicPainLogData, ...AnaesthesiaCriticalCareCaseLogData];
+					await fetchQuery3;
 				};
 
 				switch (AppStore.UserBroadSpecialty) {
 					case "Orthodontics":
 						const fetchQuery5 = store.fetchOrthodonticsClinicalCaseLogByUser(AppStore.UserName);
 						setQuery(fetchQuery5);
-						const data5 = await fetchQuery5;
-						console.log("data for Orthodontics Clinical Case Log", data5.queryUser[0].orthodonticsClinicalCaseLog);
-						cardData = data5.queryUser[0].orthodonticsClinicalCaseLog;
+						await fetchQuery5;
 						break;
 
 					case "Orthopaedics":
 						const fetchQuery4 = store.fetchOrthopaedicsCaseLogByUser(AppStore.UserName);
 						setQuery(fetchQuery4);
-						const data4 = await fetchQuery4;
-						console.log("data for Orthopaedics case log", data4.queryUser[0].orthopaedicsCaseLog);
-						cardData = data4.queryUser[0].orthopaedicsCaseLog;
+						await fetchQuery4;
 						break;
 
 					default:
 						await fetchAnaesthesiaData();
 				}
-
-				setCardDetails(cardData);
 			} catch (error) {
 				console.log(error);
 			}
@@ -132,6 +121,22 @@ const CaseLogTab = () => {
 	}
 
 	//console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", AppStore.UserBroadSpecialty);
+	let cardDetails = [];
+	//const cardDetails = [...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList];
+	switch (AppStore.UserBroadSpecialty) {
+		case "Orthodontics":
+			cardDetails.push(...store.OrthodonticsClinicalCaseLogList);
+			break;
+
+		case "Orthopaedics":
+			cardDetails.push(...store.OrthopaedicsCaseLogList);
+			break;
+
+		default:
+			cardDetails.push(...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList);
+			break;
+	}
+	console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", cardDetails.length);
 
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>

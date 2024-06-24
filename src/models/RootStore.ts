@@ -393,6 +393,10 @@ export const RootStore = RootStoreBase.actions((self) => ({
 	},
 
 	resetAllData() {
+		self.users.clear();
+		self.faculties.clear();
+		self.rotations.clear();
+		self.logProfiles.clear();
 		self.anaesthesiaCaseLogs.clear();
 		self.anaesthesiaChronicPainLogs.clear();
 		self.anaesthesiaCriticalCareCaseLogs.clear();
