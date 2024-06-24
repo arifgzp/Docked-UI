@@ -224,6 +224,9 @@ const LogProfilePage = ({ navigation, route }) => {
 			setQuery(query);
 			const finishUpdatingLogProfile = await query;
 			if (finishUpdatingLogProfile) {
+				console.log("finishUpdatingLogProfile for logprofile", finishUpdatingLogProfile);
+				console.log("finishUpdatingLogProfile.updateUser.user[0].logProfile", finishUpdatingLogProfile.updateUser.user[0].logProfile);
+				AppStore.setLogProfile(finishUpdatingLogProfile.updateUser.user[0].logProfile);
 				if (caseLogFormToGet) {
 					navigation.navigate("Plus", {
 						screen: "CaseLogFormScreen",
