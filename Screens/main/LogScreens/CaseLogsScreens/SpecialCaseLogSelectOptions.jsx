@@ -1,5 +1,5 @@
 import { Button, ButtonIcon, ButtonText, VStack } from "@gluestack-ui/themed";
-
+import { forEach } from "lodash";
 import { ChevronRight } from "lucide-react-native";
 import { useCallback, useEffect, useState } from "react";
 import TreeDataView from "../../../../components/Tree-DataView";
@@ -10,34 +10,51 @@ import CriticalCareLAnesthesiaCaseLogConfig from "../../../../config/SpecialtyCo
 import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsSpecialClinicalCaseLogConfig";
 import OrthopeadicsCaseLogConfig from "../../../../config/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicsCaseLogConfig";
 
-const parserForConvertingIntoTreeFormData = (input, key) => {
-	const result = {};
-
-	if (input) {
-		input?.forEach((item) => {
-			const parts = item.split("/");
-			const mainKey = parts.slice(0, -1).join("/");
-			const value = parts[parts.length - 1];
-
-			if (mainKey in result) {
-				if (Array.isArray(result[mainKey])) {
-					result[mainKey].push(value);
-				} else {
-					result[mainKey] = [result[mainKey], value];
-				}
-			} else {
-				result[mainKey] = value;
-			}
-		});
-
-		// Convert single values to arrays where needed
-		for (const key in result) {
-			if (key.includes(key) && !Array.isArray(result[key])) {
-				result[key] = [result[key]];
+const getSelectType = (key, configData) => {
+	//console.log("key", key);
+	//console.log("configData", configData);
+	let selectType = "unknown";
+	forEach(configData, (config) => {
+		if (config.id == key) {
+			selectType = config.selectType;
+			//console.log("!!!!! Match Found ", label);
+			return false;
+		} else if (config.children) {
+			selectType = getSelectType(key, config.children);
+			if (selectType != "unknown") {
+				return false;
 			}
 		}
-	}
+	});
+	//console.log("Finakl LAbel >>>>> ", label);
+	return selectType;
+};
 
+const parserForConvertingIntoTreeFormData = (input, treeConfig) => {
+	let result = {};
+	if (input) {
+		result = input.reduce((result, key) => {
+			const treeLevels = key.split("/");
+			const leafNode = treeLevels.pop();
+
+			const leafNodeSelector = treeLevels.join("/");
+
+			if (result[leafNodeSelector]) {
+				result[leafNodeSelector].push(leafNode);
+			} else {
+				const leafNodeOwner = treeLevels.pop();
+				const selectType = getSelectType(leafNodeOwner, treeConfig);
+				console.log("selectType", selectType);
+				console.log("leafNodeOwner", leafNodeOwner);
+				if (selectType === "single") {
+					result[leafNodeSelector] = leafNode;
+				} else {
+					result[leafNodeSelector] = [leafNode];
+				}
+			}
+			return result;
+		}, {});
+	}
 	return result;
 };
 
@@ -129,13 +146,14 @@ const SpecialCaseLogSelectOptions = ({
 		console.log("SpecialCaseLogSelectOptions useEffect");
 		specialCaseLogsOption.forEach((option) => {
 			const data = caseLogData[option.id];
-			const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(data, option.id);
+			const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(data, getTreeConfigData(option.id));
+			console.log("SpecialCaseLogSelectOptions >> treeSelectorValue_Formatted", treeSelectorValue_Formatted);
 			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [option.id]: treeSelectorValue_Formatted }));
 		});
 	}, [caseLogData, specialCaseLogsOption]);
 
-	console.log("SpecialCaseLogSelectOptions >> specialCaseLogsOption", specialCaseLogsOption);
-
+	//console.log("SpecialCaseLogSelectOptions >> specialCaseLogsOption", specialCaseLogsOption);
+	console.log("SpecialCaseLogSelectOptions >> caseLogData", caseLogData);
 	return (
 		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20} px='$4'>
 			{specialCaseLogsOption.map((option) => {
