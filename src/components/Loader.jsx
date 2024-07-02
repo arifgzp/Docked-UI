@@ -263,7 +263,7 @@ function Loader(props) {
 					zIndex={2}
 					style={{ backgroundColor: bgColorRGBA }}>
 					<LoaderBox>
-						<Box key={"ParentBoxStack"} p={8} bg='$white' shadow={5} rounded='$lg' justifyContent='center' alignItems='center'>
+						<Box key={"ParentBoxStack"} p={8} bg='$white' rounded='$lg' justifyContent='center' alignItems='center'>
 							{showSuccessMsg && success ? (
 								<ChildBox>
 									<VStack space={4} justifyContent='center' alignItems='center' px={2}>
@@ -274,9 +274,9 @@ function Loader(props) {
 									</VStack>
 								</ChildBox>
 							) : (
-								<VStack space={4} p={8}>
-									<Spinner size='$lg' color='$figmared' />
-									<Text fontSize='$xl' color='$figmared'>
+								<VStack space='lg' p={8}>
+									<Spinner size='large' color='$figmaaqua' />
+									<Text fontFamily='Inter_Bold' fontSize='$xl' color='$figmaaqua'>
 										Loading ...
 									</Text>
 								</VStack>

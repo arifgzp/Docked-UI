@@ -14,6 +14,8 @@ const customColors = {
 	figmacardyellow: "#ebdb96",
 	figmayellow: "#aa8500",
 	figmalightyellow: "#edcf5e",
+	primaryBackground: "#E6E3DB",
+	secondaryBackground: "#FFFFFF",
 };
 
 import { createStyle } from "@gluestack-style/react";
@@ -538,11 +540,10 @@ const customButton = createStyle({
 				},
 			},
 			primary: {
-				bg: "#40E0D0",
-				borderColor: "#40E0D0",
-				borderRadius: 10,
-				width: "$70%",
-				size: "lg",
+				bg: "#367B71",
+				borderColor: "#367B71",
+				borderRadius: 100,
+				size: "md",
 
 				":hover": {
 					bg: "#357A71",
@@ -555,13 +556,13 @@ const customButton = createStyle({
 				},
 
 				_text: {
-					color: "#1E1E1E",
-					fontFamily: "Inter_Bold",
+					color: "#FFFFFF",
+					fontFamily: "Inter",
 					":hover": {
-						color: "#1E1E1E",
+						color: "#FFFFFF",
 					},
 					":active": {
-						color: "#1E1E1E",
+						color: "#FFFFFF",
 					},
 				},
 

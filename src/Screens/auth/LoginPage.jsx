@@ -57,7 +57,10 @@ const LoginPage = ({ navigation }) => {
 
 	const handleLogin = async () => {
 		setLoginPressed(true);
-
+		if (!formData.email && !formData.password) {
+			setEmailError("Email is required");
+			setPasswordError("Password is required");
+		}
 		if (!formData.email) {
 			setEmailError("Email is required");
 			return;
@@ -118,89 +121,85 @@ const LoginPage = ({ navigation }) => {
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, zIndex: 999 }}>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<Box flex={1} backgroundColor='$primaryBackground'>
-						<Box flex={1 / 4} justifyContent='flex-end' alignItems='center'>
-							<Image width={200} height={75} source={ImageAssets.logo} alt='Docked-Logo' />
+						<Image w='$100%' h='$100%' position='absolute' top={0} source={ImageAssets.loginBG} alt='Docked-Logo' />
+						<Box height='$35%'>
+							<Image width={140} height={100} source={ImageAssets.logo} alt='Docked-Logo' />
 						</Box>
-						<Box flex={2 / 4}>
-							<VStack space='4xl'>
-								<Box>
-									<FormControl size='md' isDisabled={false} isInvalid={loginPressed && !!emailError} isReadOnly={false} isRequired={false} gap={"$2"}>
-										<Box justifycontent='center' alignItems='center'>
-											<Input width={"$80%"} variant='underlined'>
-												<InputField type='text' onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' />
-											</Input>
+						<Box height='$65%'>
+							<Box p='$5'>
+								<VStack space='2xl'>
+									<Box>
+										<Text fontFamily='Inter_Bold' fontSize='$2xl' color='#FFFFFC'>
+											Welcome Back
+										</Text>
+									</Box>
+									<VStack space='sm'>
+										<Box>
+											<FormControl size='sm' isDisabled={false} isInvalid={loginPressed && !!emailError} isReadOnly={false} isRequired={false}>
+												<Text pb='$1' color='#515151' fontSize='$xs'>
+													Email Address
+												</Text>
+												<Input bg='#FFFFFC' variant='outline'>
+													<InputField type='text' onChangeText={handleChangeEmail} value={formData.email} placeholder='Email Address' />
+												</Input>
+												{loginPressed && emailError && (
+													<FormControlError>
+														<FormControlErrorIcon as={AlertCircleIcon} />
+														<FormControlErrorText>{emailError}</FormControlErrorText>
+													</FormControlError>
+												)}
+											</FormControl>
+										</Box>
+										<Box>
+											<FormControl size='sm' isDisabled={false} isInvalid={loginPressed && !!passwordError} isReadOnly={false} isRequired={false}>
+												<Text pb='$1' color='#515151' fontSize='$xs'>
+													Password
+												</Text>
+												<Input bg='#FFFFFC' variant='outline'>
+													<InputField
+														onChangeText={handleChangePassword}
+														value={formData.password}
+														type={passwordVisible ? "text" : "password"}
+														placeholder='Password'
+													/>
+													<InputSlot pr='$3' onPress={handleShowPasswordState}>
+														<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
+													</InputSlot>
+												</Input>
 
-											{loginPressed && emailError && (
-												<FormControlError width={"$80%"}>
-													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{emailError}</FormControlErrorText>
-												</FormControlError>
-											)}
-										</Box>
-									</FormControl>
-								</Box>
-								<Box>
-									<FormControl
-										size='md'
-										isDisabled={false}
-										isInvalid={loginPressed && !!passwordError}
-										isReadOnly={false}
-										isRequired={false}
-										gap={"$4"}>
-										<Box justifycontent='center' alignItems='center'>
-											<Input width={"$80%"} variant='underlined'>
-												<InputField
-													onChangeText={handleChangePassword}
-													value={formData.password}
-													type={passwordVisible ? "text" : "password"}
-													placeholder='Password'
-												/>
-												<InputSlot pr='$3' onPress={handleShowPasswordState}>
-													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
-												</InputSlot>
-											</Input>
-
-											{loginPressed && passwordError && (
-												<FormControlError width={"$80%"}>
-													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{passwordError}</FormControlErrorText>
-												</FormControlError>
-											)}
-										</Box>
-									</FormControl>
-								</Box>
-								<Box>
-									<VStack space='lg'>
-										<Box justifycontent='center' alignItems='center'>
-											<Button onPress={handleLogin} borderRadius={10} variant='primary' size='lg'>
-												<HStack justifyContent='center' alignItems='center' space='sm'>
-													<ButtonText>Member Login</ButtonText>
-													<ButtonIcon as={Ionicons} size={25} name='arrow-forward-outline' color='#1E1E1E' />
-												</HStack>
-											</Button>
-										</Box>
-										<Box justifycontent='center' alignItems='center'>
-											<Button variant='link' size='sm' onPress={() => navigation.navigate("Forgot Password Page")}>
-												<ButtonText underline>Reset Password</ButtonText>
-											</Button>
+												{loginPressed && passwordError && (
+													<FormControlError>
+														<FormControlErrorIcon as={AlertCircleIcon} />
+														<FormControlErrorText>{passwordError}</FormControlErrorText>
+													</FormControlError>
+												)}
+											</FormControl>
+											<Box justifycontent='flex-end' alignItems='flex-end'>
+												<Button variant='link' size='sm' onPress={() => navigation.navigate("Forgot Password Page")}>
+													<ButtonText color='#367B71'>Forgot Password?</ButtonText>
+												</Button>
+											</Box>
 										</Box>
 									</VStack>
-								</Box>
-							</VStack>
-						</Box>
-						<Box flex={1 / 4} justifyContent='center'>
-							<VStack space='sm'>
-								<Text textAlign='center' bold fontFamily='Inter'>
-									Create Member Account
-								</Text>
-								<Box justifycontent='center' alignItems='center'>
-									<Button onPress={() => navigation.navigate("Register Mobile Number Page")} size='lg' variant='secondary'>
-										<ButtonText fontFamily='Inter_Bold' textAlign='center'>
-											Join
-										</ButtonText>
-									</Button>
-								</Box>
-							</VStack>
+								</VStack>
+							</Box>
+							<Box w='$100%' p='$5'>
+								<VStack w='$100%' space='sm'>
+									<Box>
+										<Button onPress={handleLogin} variant='primary'>
+											<ButtonText>Member Login</ButtonText>
+										</Button>
+									</Box>
+									<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
+										<Text>New to Docked?</Text>
+										<Box>
+											<Button variant='link' size='sm' onPress={() => navigation.navigate("Profile Setup Page")}>
+												<ButtonText color='#367B71'>Sign Up</ButtonText>
+											</Button>
+										</Box>
+									</HStack>
+								</VStack>
+							</Box>
 						</Box>
 					</Box>
 				</ScrollView>

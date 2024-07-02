@@ -186,14 +186,14 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 													if (field.uid === "broadSpecialty") {
 														return (
 															<Select
-																width={"$80%"}
+																width={"$90%"}
 																onBlur={onBlur}
 																onValueChange={(val) => {
 																	onChange(val);
 																	handleOnBroadSpecialtyChange(val);
 																}}
 																selectedValue={value}>
-																<SelectTrigger variant='underlined' size='md'>
+																<SelectTrigger variant='outline' size='md'>
 																	<SelectInput placeholder={field.name} />
 																	<SelectIcon mr='$3'>
 																		<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
@@ -217,12 +217,12 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 													return (
 														<Select
 															isDisabled={field.uid === "superSpecialty" ? isSuperOptionDisable : isSubOptionDisable}
-															width={"$80%"}
+															width={"$90%"}
 															onBlur={onBlur}
 															onValueChange={onChange}
 															selectedValue={value}
 															placeholder={field.uid === "superSpecialty" ? superSpecialtyPlaceholder : subSpecialtyPlaceholder}>
-															<SelectTrigger variant='underlined' size='md'>
+															<SelectTrigger variant='outline' size='md'>
 																<SelectInput placeholder={field.name} />
 																<SelectIcon mr='$3'>
 																	<Icon as={ChevronDown} m='$2' w='$4' h='$4' />

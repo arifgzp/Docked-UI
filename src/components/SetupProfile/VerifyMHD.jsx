@@ -32,8 +32,8 @@ import appStoreInstance from "../../stores/AppStore";
 const VerifyMHD = ({ control, formState, formFields }) => {
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ zIndex: 999 }}>
+				<ScrollView>
 					<Box alignItems='center'>
 						<VStack space='4xl' width={"$100%"} alignItems='center'>
 							{formFields.map((field, index) => {

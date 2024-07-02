@@ -32,13 +32,16 @@ import {
 	ToastTitle,
 	ToastDescription,
 } from "@gluestack-ui/themed";
-import { Platform } from "react-native";
+import { Platform, Linking } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 import appStoreInstance from "../../stores/AppStore";
 import AppStore from "../../stores/AppStore";
 import Loader from "../../components/Loader";
 import { observer } from "mobx-react";
+import { ImageAssets } from "../../../assets/Assets";
+import { Image } from "@gluestack-ui/themed";
+import { Link } from "@react-navigation/native";
 
 const RegisterPage = ({ navigation, route }) => {
 	const { enteredNumber } = route.params;
@@ -52,6 +55,7 @@ const RegisterPage = ({ navigation, route }) => {
 	const [joinPressed, setJoinPressed] = useState(false);
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
+	const [resestPasswordError, setResetPasswordError] = useState("");
 	const [nameError, setNameError] = useState("");
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	const invalidStartingCharsRegex = /^[!#$%&'*+/=?^_`{|}~-]/;
@@ -62,16 +66,6 @@ const RegisterPage = ({ navigation, route }) => {
 		setJoinPressed(true);
 
 		try {
-			if (formData.password.length < 6) {
-				setPasswordError("At least 6 characters must be present");
-				return;
-			}
-
-			if (formData.password !== formData.reEnterPassword) {
-				setPasswordError("Entered password do not match");
-				return;
-			}
-
 			if (!formData.name) {
 				setNameError("Name is required");
 				return;
@@ -106,21 +100,36 @@ const RegisterPage = ({ navigation, route }) => {
 				setEmailError("");
 			}
 
+			if (!formData.reEnterPassword && !formData.password) {
+				setResetPasswordError("Password confirmation is required");
+				setPasswordError("Password is required");
+				return;
+			} else {
+				setResetPasswordError("");
+				setPasswordError("");
+			}
+
 			if (!formData.password) {
 				setPasswordError("Password is required");
 				return;
-			} else if (formData.password.length < 8) {
-				setPasswordError("Password must be at least 8 characters");
+			} else if (formData.password.length < 6) {
+				setPasswordError("Password must be at least 6 characters");
 				return;
 			} else {
 				setPasswordError("");
 			}
 
 			if (!formData.reEnterPassword) {
-				setPasswordError("Password confirmation is required");
+				setResetPasswordError("Password confirmation is required");
 				return;
 			} else {
-				setPasswordError("");
+				setResetPasswordError("");
+			}
+
+			if (formData.password !== formData.reEnterPassword) {
+				setPasswordError("Entered password do not match");
+				setResetPasswordError("Entered password do not match");
+				return;
 			}
 
 			const response = await AppStore.register({
@@ -220,121 +229,140 @@ const RegisterPage = ({ navigation, route }) => {
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<Box flex={1} backgroundColor='$primaryBackground'>
-						<Box flex={3 / 4}>
-							<VStack space='3xl'>
-								<Text bold size='xl' paddingTop={20} paddingLeft={20}>
-									Member Onboarding
+						<Image w='$100%' h='$100%' position='absolute' top={0} source={ImageAssets.registerBG} alt='Docked-Logo' />
+						<Box height='$10%'>
+							<Image width={140} height={100} source={ImageAssets.logo} alt='Docked-Logo' />
+						</Box>
+						<Box h='$90%' p='$5'>
+							<VStack space='xl'>
+								<Text bold size='xl' color='#FFFFFC'>
+									Create an Account
 								</Text>
 								<Box>
 									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && nameError} isReadOnly={false} isRequired={false}>
-										<Box justifycontent='center' alignItems='center'>
-											<Input width={"$80%"} variant='underlined'>
-												<InputField onChangeText={handleChangeName} value={formData.name} placeholder='Name' />
-											</Input>
-											{joinPressed && nameError && (
-												<FormControlError width={"$80%"}>
-													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{nameError}</FormControlErrorText>
-												</FormControlError>
-											)}
-										</Box>
+										<Text pb='$1' color='#515151' fontSize='$xs'>
+											Name
+										</Text>
+										<Input bg='#FFFFFC' variant='outline'>
+											<InputField onChangeText={handleChangeName} value={formData.name} placeholder='Name' autoCapitalize='words' />
+										</Input>
+										{joinPressed && nameError && (
+											<FormControlError>
+												<FormControlErrorIcon as={AlertCircleIcon} />
+												<FormControlErrorText>{nameError}</FormControlErrorText>
+											</FormControlError>
+										)}
 									</FormControl>
 								</Box>
 								<Box>
 									<FormControl isInvalid={joinPressed && emailError} size='md' isDisabled={false} isReadOnly={false} isRequired={false}>
-										<Box justifycontent='center' alignItems='center'>
-											<Input width={"$80%"} variant='underlined'>
-												<InputField onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' />
-											</Input>
-											{joinPressed && emailError && (
-												<FormControlError width={"$80%"}>
-													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{emailError}</FormControlErrorText>
-												</FormControlError>
-											)}
-										</Box>
+										<Text pb='$1' color='#515151' fontSize='$xs'>
+											Email Address
+										</Text>
+										<Input bg='#FFFFFC' variant='outline'>
+											<InputField onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' autoCapitalize='none' />
+										</Input>
+										{joinPressed && emailError && (
+											<FormControlError>
+												<FormControlErrorIcon as={AlertCircleIcon} />
+												<FormControlErrorText>{emailError}</FormControlErrorText>
+											</FormControlError>
+										)}
 									</FormControl>
 								</Box>
 								<Box>
 									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
-										<Box justifycontent='center' alignItems='center'>
-											<Input width={"$80%"} variant='underlined'>
-												<InputField
-													onChangeText={handleChangePassword}
-													value={formData.password}
-													type={passwordVisible ? "text" : "password"}
-													placeholder='Password'
-												/>
-												<InputSlot pr='$3' onPress={handleShowPasswordState}>
-													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
-												</InputSlot>
-											</Input>
-											{joinPressed && passwordError && (
-												<FormControlError width={"$80%"}>
-													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{passwordError}</FormControlErrorText>
-												</FormControlError>
-											)}
-										</Box>
+										<Text pb='$1' color='#515151' fontSize='$xs'>
+											Password
+										</Text>
+										<Input bg='#FFFFFC' variant='outline'>
+											<InputField
+												onChangeText={handleChangePassword}
+												value={formData.password}
+												type={passwordVisible ? "text" : "password"}
+												placeholder='Password'
+											/>
+											<InputSlot pr='$3' onPress={handleShowPasswordState}>
+												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
+											</InputSlot>
+										</Input>
+										{joinPressed && passwordError && (
+											<FormControlError>
+												<FormControlErrorIcon as={AlertCircleIcon} />
+												<FormControlErrorText>{passwordError}</FormControlErrorText>
+											</FormControlError>
+										)}
 									</FormControl>
 								</Box>
 								<Box>
-									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
-										<Box justifycontent='center' alignItems='center'>
-											<Input width={"$80%"} variant='underlined'>
-												<InputField
-													onChangeText={handleChangeReEnterPassword}
-													value={formData.reEnterPassword}
-													type={passwordVisible ? "text" : "password"}
-													placeholder='Re-enter Password'
-												/>
-												<InputSlot pr='$3' onPress={handleShowPasswordState}>
-													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
-												</InputSlot>
-											</Input>
-											{joinPressed && passwordError && (
-												<FormControlError width={"$80%"}>
-													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{passwordError}</FormControlErrorText>
-												</FormControlError>
-											)}
-										</Box>
+									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && resestPasswordError} isReadOnly={false} isRequired={false}>
+										<Text pb='$1' color='#515151' fontSize='$xs'>
+											Re-enter Password
+										</Text>
+										<Input bg='#FFFFFC' variant='outline'>
+											<InputField
+												onChangeText={handleChangeReEnterPassword}
+												value={formData.reEnterPassword}
+												type={passwordVisible ? "text" : "password"}
+												placeholder='Re-enter Password'
+											/>
+											<InputSlot pr='$3' onPress={handleShowPasswordState}>
+												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
+											</InputSlot>
+										</Input>
+										{joinPressed && resestPasswordError && (
+											<FormControlError>
+												<FormControlErrorIcon as={AlertCircleIcon} />
+												<FormControlErrorText>{resestPasswordError}</FormControlErrorText>
+											</FormControlError>
+										)}
 									</FormControl>
 								</Box>
-								<Box justifycontent='center' alignItems='center'>
-									<Button onPress={handleJoining} variant='primary' size='lg'>
-										<ButtonText>Join As Member</ButtonText>
-									</Button>
-								</Box>
 								<Box>
-									<VStack justifycontent='center' alignItems='center'>
-										<Text width={"$80%"} size='xs' textAlign='center'>
-											By joining as a member, you agree to Docked's
+									<VStack space='xs' justifycontent='center' alignItems='center'>
+										<HStack>
+											<Checkbox size='md' isInvalid={false} isDisabled={false}>
+												<CheckboxIndicator mr='$2'>
+													<CheckboxIcon as={CheckIcon} />
+												</CheckboxIndicator>
+											</Checkbox>
+											<Text size='xs'>
+												To join as a member, you agree to docked's{" "}
+												<Link to={{ screen: "Privacy Policy Page" }}>
+													<Text size='xs' underline>
+														Terms & Conditions of Use
+													</Text>
+												</Link>
+											</Text>
+										</HStack>
+										<Text size='xs'>
+											To learn more about how docked collects, uses, share and protects your personal data, please see{" "}
+											<Link to={{ screen: "Privacy Policy Page" }}>
+												<Text size='xs' underline>
+													docked's Privacy Policy.
+												</Text>
+											</Link>
 										</Text>
-										<Button variant='link' size='sm' onPress={() => navigation.navigate("Privacy Policy Page")}>
-											<ButtonText underline>Terms & Conditions of Use.</ButtonText>
-										</Button>
-										<Text width={"$80%"} size='xs' textAlign='center'>
-											To learn more about how Docked collects, uses, share and protects your personal data, please see
-										</Text>
-										<Button variant='link' size='sm' onPress={() => navigation.navigate("Privacy Policy Page")}>
-											<ButtonText underline>Docked's Privacy Policy.</ButtonText>
-										</Button>
 									</VStack>
 								</Box>
 							</VStack>
-						</Box>
-						<Box flex={1 / 4} paddingBottom={20} justifyContent='center'>
-							<VStack space='sm'>
-								<Text textAlign='center' bold fontFamily='Inter'>
-									Already A Member?
-								</Text>
-								<Box justifycontent='center' alignItems='center'>
-									<Button onPress={() => navigation.navigate("Login Page")} variant='secondary' size='lg'>
-										<ButtonText textAlign='center'>Member Login</ButtonText>
-									</Button>
-								</Box>
-							</VStack>
+							<Box w='$100%' p='$5'>
+								<VStack w='$100%' space='sm'>
+									<Box>
+										<Button onPress={handleJoining} variant='primary'>
+											<ButtonText>Let’s get you Docked</ButtonText>
+										</Button>
+									</Box>
+									<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
+										<Text>Already a member?</Text>
+										<Box>
+											<Button variant='link' size='sm' onPress={() => navigation.navigate("Login Page")}>
+												<ButtonText color='#367B71'>Member Login</ButtonText>
+											</Button>
+										</Box>
+									</HStack>
+								</VStack>
+							</Box>
 						</Box>
 					</Box>
 				</ScrollView>

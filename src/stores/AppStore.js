@@ -36,7 +36,60 @@ const execute = async (url, data, token, notifyError = true) => {
 		if (notifyError) appStoreInstance.setAPIError(error);
 	}
 };
+function removeBeforeLastSlash(str) {
+	// Find the position of the last slash
+	const lastSlashIndex = str.lastIndexOf("/");
 
+	// If there is no slash in the string, return the original string
+	if (lastSlashIndex === -1) {
+		return str;
+	}
+
+	// Return the substring after the last slash
+	return str.substring(lastSlashIndex + 1);
+}
+const uploadImage = async (imageInput, UserId, token) => {
+	const serverURL = NetworkUtils.getServerURL();
+	const file = imageInput[0];
+	console.log("user id hai", UserId);
+	console.log("user token hai", token);
+	const fileExtenstion = removeBeforeLastSlash(file.mimeType);
+	const requestURL = `${serverURL}/upload/profilePhoto:${UserId}/${UserId}.${fileExtenstion}/upload`;
+	console.log("Rest URL : ", requestURL);
+	const formdata = new FormData();
+
+	formdata.append("uploaded_file", {
+		uri: file.uri,
+		name: `${UserId}.${fileExtenstion}`,
+		type: file.mimeType,
+	});
+
+	console.log("fileInput", imageInput, "formData", formdata);
+	const requestHeader = {
+		Accept: "/",
+		"Content-Type": "multipart/form-data",
+	};
+
+	if (token) {
+		requestHeader["sessionKey"] = token;
+	}
+
+	console.log("header", requestHeader);
+	try {
+		const response = await fetch(requestURL, {
+			method: "POST",
+			headers: requestHeader,
+			body: formdata,
+		});
+
+		const responseData = await response.json();
+
+		return responseData;
+	} catch (error) {
+		console.log(error);
+		this.setAPIError(error);
+	}
+};
 const executeUpload = async (url, formData, token) => {
 	const serverURL = NetworkUtils.getServerURL();
 	const requestURL = `${serverURL}/${url}`;
@@ -320,6 +373,8 @@ const AppStore = types
 				//const userToken = yield Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.MD5, "betic.qms");
 				const userToken = response?.sessionKey;
 				console.log("userToken : ", userToken);
+				self._userToken = userToken;
+				console.log("self._userToken", self._userToken);
 				console.log("user response : ", response);
 				if (userToken) {
 					NetworkUtils.setTokenInHeader(userToken);
@@ -339,6 +394,28 @@ const AppStore = types
 				}
 			} catch (error) {
 				console.error("AppStore > SignIn ", error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
+
+		UploadImage: flow(function* UploadImage(imageInput) {
+			try {
+				self._isLoading = true;
+				const userId = self._userId;
+				const response = yield uploadImage(imageInput, userId, self._userToken);
+				//const userToken = yield Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.MD5, "betic.qms");
+				const userToken = self._userToken;
+				console.log("userToken : ", self._userToken);
+				console.log("user response : ", response);
+				if (self._userToken) {
+					NetworkUtils.setTokenInHeader(self._userToken);
+					return response;
+				} else {
+					return false;
+				}
+			} catch (error) {
+				console.error("AppStore > Upload Image Error ", error);
 			} finally {
 				self._isLoading = false;
 			}

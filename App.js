@@ -1,5 +1,6 @@
 import { config } from "./config/gluestack-ui.config";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,12 +12,14 @@ import { observer } from "mobx-react";
 import { enableFreeze, enableScreens } from "react-native-screens";
 import AppWrapper from "./app/AppWrapper";
 import appStoreInstance from "./src/stores/AppStore";
+import { fonts } from "react-native-elements/dist/config";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs();
 
 enableScreens(true);
 
 function App() {
+	console.log("font aoding");
 	const [fontsLoaded] = useFonts({
 		Inter: require("./assets/fonts/Inter.ttf"),
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),
@@ -33,7 +36,6 @@ function App() {
 			await appStoreInstance.validateUserToken();
 			SplashScreen.hideAsync();
 		};
-
 		if (fontsLoaded) {
 			runPreChecks();
 		}
@@ -41,12 +43,19 @@ function App() {
 
 	const isUserSignedIn = appStoreInstance.isUserSignedIn;
 	console.log("isUserSignedIn >> ", isUserSignedIn);
+	if (!fontsLoaded) {
+		return null;
+	}
 	return (
-		<StoreContext.Provider value={rootStore}>
-			<GluestackUIProvider config={config}>
-				<AppWrapper/>
-			</GluestackUIProvider>
-		</StoreContext.Provider>
+		<SafeAreaProvider>
+			<SafeAreaView style={{ flex: 1 }}>
+				<StoreContext.Provider value={rootStore}>
+					<GluestackUIProvider config={config}>
+						<AppWrapper />
+					</GluestackUIProvider>
+				</StoreContext.Provider>
+			</SafeAreaView>
+		</SafeAreaProvider>
 	);
 }
 

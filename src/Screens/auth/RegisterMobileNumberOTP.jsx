@@ -1,8 +1,7 @@
-import { HStack, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import { ButtonIcon, HStack, KeyboardAvoidingView } from "@gluestack-ui/themed";
 import {
 	Box,
 	Text,
-	Input,
 	VStack,
 	FormControl,
 	FormControlError,
@@ -13,8 +12,9 @@ import {
 	ButtonText,
 } from "@gluestack-ui/themed";
 import { useState } from "react";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
+import { Ionicons } from "@expo/vector-icons";
 
 const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 	const { enteredNumber } = route.params;
@@ -36,30 +36,41 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, zIndex: 999 }}>
-			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box paddingLeft={20} paddingRight={20} paddingTop={30} paddingBottom={80}>
-					<VStack space='xl'>
-						<Box>
+			<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
+				<Box height='$90%' p='$5' width='$full'>
+					<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>
+						<Box width='$full' alignSelf='flex-start'>
 							<VStack space='md'>
 								<Text fontFamily='Inter_Bold' size='2xl'>
-									Enter OTP
+									Verify Your Phone Number
 								</Text>
 								<Text size='sm'>
 									OTP sent successfully to <Text bold>{enteredNumber}</Text>
 								</Text>
 							</VStack>
 						</Box>
-						<Box>
-							<FormControl size='md' isDisabled={false} isInvalid={verifyPressed && OTPError} isReadOnly={false} isRequired={false}>
+						<Box alignSelf='flex-start' width='$80%'>
+							<FormControl
+								width='$full'
+								size='md'
+								isDisabled={false}
+								isInvalid={verifyPressed && OTPError}
+								isReadOnly={false}
+								isRequired={false}
+								gap='$4'>
 								<OtpInput
-									width={"$80%"}
+									bg='$yellow'
+									width={"$60%"}
 									numberOfDigits={4}
-									focusColor='#40E0D0'
+									focusColor={OTPError ? "#CC3F0C" : "#BFBDB9"}
 									focusStickBlinkingDuration={500}
 									onTextChange={(text) => setOTPInput(text)}
-									onFilled={(text) => console.log(`OTP is ${text}`)}
 									textInputProps={{
 										accessibilityLabel: "One-Time Password",
+									}}
+									theme={{
+										pinCodeContainerStyle: [styles.pinCodeContainer, OTPError && styles.pinCodeContainerError],
+										pinCodeTextStyle: styles.pinCodeText,
 									}}
 								/>
 								{verifyPressed && OTPError && (
@@ -70,31 +81,46 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 								)}
 							</FormControl>
 						</Box>
+						<HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
+							<Text size='sm'>Didn’t Receive OTP?</Text>
+							<Box>
+								<Button variant='link' size='sm'>
+									<ButtonText color='#367B71'>Resend OTP</ButtonText>
+								</Button>
+							</Box>
+						</HStack>
 					</VStack>
 				</Box>
-				<Box>
-					<VStack>
+				<Box justifyContent='center' height='$10%' p='$5'>
+					<HStack width='$full' justifyContent='space-between'>
+						<Button onPress={() => navigation.goBack()} height={50} justifyContent='flex-start' alignItems='flex-start' variant='link'>
+							<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
+						</Button>
 						<Box justifyContent='center' alignItems='center'>
 							<Button onPress={handleVerify} variant='primary' size='lg'>
-								<ButtonText textAlign='center' fontFamily='Inter_Bold'>
-									Verify
-								</ButtonText>
+								<ButtonText textAlign='center'>Verify</ButtonText>
 							</Button>
 						</Box>
-						<Button variant='link'>
-							<ButtonText
-								onPress={() => {
-									navigation.navigate("Register Mobile Number Page");
-								}}
-								underline>
-								Change Mobile Number
-							</ButtonText>
-						</Button>
-					</VStack>
+					</HStack>
 				</Box>
 			</Box>
 		</KeyboardAvoidingView>
 	);
 };
+
+const styles = StyleSheet.create({
+	pinCodeContainer: {
+		borderColor: "#BFBDB9", // Default border color
+		borderWidth: 1,
+		borderRadius: 10,
+	},
+	pinCodeContainerError: {
+		borderColor: "#CC3F0C", // Error border color
+	},
+	pinCodeText: {
+		fontSize: 18,
+		color: "#000", // Adjust the text color if needed
+	},
+});
 
 export default RegisterMobileNumberOTPPage;

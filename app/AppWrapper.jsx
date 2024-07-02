@@ -22,13 +22,12 @@ import SetupProfile from "../src/components/SetupProfile/SetupProfile";
 import MainPage from "../src/components/MainPage";
 import appStoreInstance from "../src/stores/AppStore";
 
-
 const Stack = createNativeStackNavigator();
 
 const AppWrapper = () => {
 	return (
 		<>
-			<StatusBar barStyle='dark-content' backgroundColor='#E8EEF3' />
+			<StatusBar barStyle='dark-content' backgroundColor='$primaryBackground' />
 			<NavigationContainer>
 				{appStoreInstance.isUserSignedIn ? (
 					<MainPage />
@@ -59,8 +58,7 @@ const AppWrapper = () => {
 							name='Register Mobile Number OTP Page'
 							component={RegisterMobileNumberOTPPage}
 							options={{
-								title: "",
-								headerStyle: { backgroundColor: "#E8EEF3" },
+								headerShown: false,
 							}}
 						/>
 						<Stack.Screen

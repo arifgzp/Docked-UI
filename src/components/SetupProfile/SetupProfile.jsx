@@ -1,13 +1,15 @@
-import { Box, Text, VStack, Button, ButtonText, HStack, ScrollView } from "@gluestack-ui/themed";
+import { Box, Text, VStack, Button, ButtonText, HStack, ScrollView, ButtonIcon, KeyboardAvoidingView } from "@gluestack-ui/themed";
 import React, { lazy, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { BackHandler } from "react-native";
+import { BackHandler, Platform } from "react-native";
 import { UserStatus, useQuery } from "../../models";
 import Loader from "../Loader";
 import { observer } from "mobx-react";
+import { Ionicons } from "@expo/vector-icons";
 import appStoreInstance from "../../stores/AppStore";
 import AppStore from "../../stores/AppStore";
 const SetupProfile = ({ config, navigation }) => {
+	const [image, setImage] = useState(null);
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [currentStep, setCurrentStep] = useState(1);
@@ -71,6 +73,8 @@ const SetupProfile = ({ config, navigation }) => {
 			console.log("Current Data 4", data);
 			console.log("Finished");
 		}
+		// appStoreInstance.UploadImage(image);
+		// console.log("image", image, typeof image);
 	};
 	const onSubmitData = async (data) => {
 		console.log(data);
@@ -113,15 +117,31 @@ const SetupProfile = ({ config, navigation }) => {
 
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box flex={1 / 4} alignItems='center'>
-					<VStack paddingTop={35} alignItems='center' space='2xl'>
-						<HStack>
-							<Text bold size='xl'>
-								Docked Profile
-							</Text>
-						</HStack>
-						<HStack space='2xl'>
+			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+				<Box flex={1} h='$full' backgroundColor='$primaryBackground'>
+					<VStack flex={1} h='$full' space='lg' justifyContent='space-between'>
+						<Box p='$5'>
+							<VStack paddingTop={35} space='md'>
+								<HStack alignItems='center' justifyContent='space-between'>
+									<Text bold italic color='#CC3F0C'>
+										Before you start...
+									</Text>
+									{startingStep > 1 ? (
+										<Box justifycontent='center' alignItems='center'>
+											<Button width={"$40%"} onPress={handleSubmit(handleSkip)} size='sm' variant='link'>
+												<ButtonText underline fontFamily='Inter_Bold' textAlign='center'>
+													Skip
+												</ButtonText>
+											</Button>
+										</Box>
+									) : null}
+								</HStack>
+								<HStack>
+									<Text color='#000' bold size='2xl'>
+										Let’s customise your dashboard
+									</Text>
+								</HStack>
+								{/* <HStack space='2xl'>
 							{config.map((step, index) => {
 								const isDisabled = index < startingStep ? false : true;
 								return (
@@ -134,38 +154,46 @@ const SetupProfile = ({ config, navigation }) => {
 										variant={isDisabled ? "disable" : "primary"}></Button>
 								);
 							})}
-						</HStack>
-						<Text size='xl'>{currentStepLabel}</Text>
-					</VStack>
-				</Box>
-				<Box pt={"$12"} width={"$100%"} justifyContent='center' flex={2.3 / 4}>
-					{CurrentStepComponent && (
-						<ScrollView>
-							<CurrentStepComponent reset={reset} control={control} formState={formState} formFields={formFields} />
-						</ScrollView>
-					)}
-				</Box>
-				<Box flex={0.7 / 4} justifyContent='center'>
-					<VStack space='lg'>
-						<Box justifycontent='center' alignItems='center'>
-							<Button onPress={handleSubmit(handleOnClick)} size='lg' variant='primary'>
-								<ButtonText fontFamily='Inter_Bold' textAlign='center'>
-									{currentStep === config.length ? "Finish" : "Next"}
-								</ButtonText>
-							</Button>
+						</HStack> */}
+								<Text size='xl'>{currentStepLabel}</Text>
+							</VStack>
 						</Box>
-						{startingStep > 1 ? (
-							<Box justifycontent='center' alignItems='center'>
-								<Button width={"$40%"} onPress={handleSubmit(handleSkip)} size='sm' variant='link'>
-									<ButtonText underline fontFamily='Inter_Bold' textAlign='center'>
-										Skip
-									</ButtonText>
-								</Button>
-							</Box>
-						) : null}
+						<Box width={"$100%"} justifyContent='center'>
+							{CurrentStepComponent && (
+								<ScrollView>
+									<CurrentStepComponent
+										image={image}
+										setImage={setImage}
+										reset={reset}
+										control={control}
+										formState={formState}
+										formFields={formFields}
+									/>
+								</ScrollView>
+							)}
+						</Box>
+						<Box pb='$5' pr='$5' pl='$5'>
+							<HStack width='$full' justifyContent={currentStepLabel !== "Your Expertise" ? "space-between" : "flex-end"} alignItems='center'>
+								{currentStepLabel !== "Your Expertise" && (
+									<Button
+										onPress={() => setCurrentStep(currentStep - 1)}
+										height={50}
+										justifyContent='flex-start'
+										alignItems='flex-start'
+										variant='link'>
+										<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
+									</Button>
+								)}
+								<Box justifycontent='center' alignItems='center'>
+									<Button onPress={handleSubmit(handleOnClick)} size='lg' variant='primary'>
+										<ButtonText textAlign='center'>{currentStep === config.length ? "Finish" : "Next"}</ButtonText>
+									</Button>
+								</Box>
+							</HStack>
+						</Box>
 					</VStack>
 				</Box>
-			</Box>
+			</KeyboardAvoidingView>
 		</Loader>
 	);
 };

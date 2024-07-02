@@ -46,20 +46,20 @@ const EmailVerifiedPage = ({ navigation }) => {
 					<VStack space='lg'>
 						<Box>
 							<VStack space='md' alignItems='center' justifyContent='center'>
-								<Ionicons name='checkmark-circle' size={70} color='#40E0D0' />
+								<Ionicons name='checkmark-circle' size={70} color='#367B71' />
 								<Text bold textAlign='center' size='lg'>
 									Email Verified
 								</Text>
 								<Text width={"$80%"} textAlign='center' size='sm'>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt{" "}
+									Your email address has been successfully verified. Please press "Continue" to choose your Broad Specialty.
 								</Text>
 							</VStack>
 						</Box>
 					</VStack>
 				</Box>
-				<Box flex={1 / 4} justifyContent='center'>
-					<Box justifycontent='center' alignItems='center'>
-						<Button onPress={() => navigation.navigate("Welcome Page")} variant='primary' size='lg'>
+				<Box width='$full' flex={1 / 4} justifyContent='center'>
+					<Box width='$full' justifycontent='center' alignItems='center'>
+						<Button w='$90%' onPress={() => navigation.navigate("Welcome Page")} variant='primary' size='lg'>
 							<ButtonText textAlign='center'>Continue</ButtonText>
 						</Button>
 					</Box>

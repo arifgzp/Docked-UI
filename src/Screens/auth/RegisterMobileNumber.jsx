@@ -13,13 +13,16 @@ import {
 	ButtonText,
 } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import PhoneInput from "react-native-phone-number-input";
+import { StyleSheet, View } from "react-native";
 import { ImageAssets } from "../../../assets/Assets";
 
 const RegisterMobileNumberPage = ({ navigation }) => {
 	const [numberInput, setNumberInput] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [sendOTPPressed, setSendOTPPressed] = useState(false);
+	const phoneInput = useRef(null);
 
 	const handleChangeNumberInput = (text) => {
 		// Filter out non-numeric characters
@@ -33,8 +36,11 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 		if (!numberInput) {
 			setErrorMessage("Number is required");
 			return;
-		} else if (numberInput.length !== 10) {
-			setErrorMessage("Please enter a valid 10-digit number");
+		} else if (numberInput.length < 10) {
+			setErrorMessage("Entered cannot be LESS than 10-digit");
+			return;
+		} else if (numberInput.length > 10) {
+			setErrorMessage("Entered cannot be MORE than 10-digit");
 			return;
 		} else {
 			setErrorMessage("");
@@ -46,50 +52,73 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box justifyContent='flex-end' flex={1 / 4} paddingLeft={20} paddingRight={20} paddingTop={30}>
-					<VStack space='lg'>
+				<Box width='$100%' height='$80%' p='$5' pt=''>
+					<VStack width='$100%' space='lg'>
 						<Box>
-							<VStack alignItems='center' space='sm'>
-								<Text fontFamily='Inter' size='2xl'>
-									Let's get you
+							<VStack space='sm'>
+								<Text fontFamily='Inter_Bold' size='2xl'>
+									Enter Your Phone Number
 								</Text>
-								<Image width={200} height={75} source={ImageAssets.logo} alt='Docked-Logo' />
+								<Text fontFamily='Inter' size='sm'>
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+								</Text>
 							</VStack>
 						</Box>
-					</VStack>
-				</Box>
-				<Box flex={2 / 4} justifyContent='center'>
-					<VStack space='4xl'>
-						<Text textAlign='center' fontFamily='Inter' size='sm'>
-							Please Provide Your Mobile Number
-						</Text>
-						<FormControl size='md' isDisabled={false} isInvalid={sendOTPPressed && errorMessage} isReadOnly={false} isRequired={false} gap={"$4"}>
-							<Box justifycontent='center' alignItems='center'>
-								<Input width={"$80%"} variant='underlined'>
+						<FormControl
+							width='$100%'
+							size='md'
+							isDisabled={false}
+							isInvalid={sendOTPPressed && errorMessage}
+							isReadOnly={false}
+							isRequired={false}
+							gap={"$4"}>
+							<Box width='$100%'>
+								<PhoneInput
+									ref={phoneInput}
+									defaultValue={numberInput}
+									defaultCode='IN'
+									layout='second'
+									onChangeText={handleChangeNumberInput}
+									value={numberInput}
+									withDarkTheme
+									withShadow
+									autoFocus
+									style={styles.phoneInput}
+									textContainerStyle={styles.textContainer}
+									textInputStyle={styles.textInput}
+									flagButtonStyle={styles.flag}
+									codeTextStyle={styles.codeText}
+								/>
+								{/* <Input variant='outline'>
 									<InputField
 										inputMode='numeric'
 										onChangeText={handleChangeNumberInput}
 										value={numberInput} // Add this line to control the input value
 										fontFamily='Inter'
-										placeholder='Enter Your Phone Number'
+										placeholder='Phone Number'
 									/>
-								</Input>
+								</Input> */}
+
 								{sendOTPPressed && errorMessage && (
-									<FormControlError width={"$80%"}>
+									<FormControlError>
 										<FormControlErrorIcon as={AlertCircleIcon} />
 										<FormControlErrorText>{errorMessage}</FormControlErrorText>
 									</FormControlError>
 								)}
 							</Box>
 						</FormControl>
-						<Box justifycontent='center' alignItems='center'>
+					</VStack>
+				</Box>
+				<Box justifyContent='center' p='$5'>
+					<VStack space='4xl'>
+						<Box>
 							<Button onPress={handleSendOTP} variant='primary' size='lg'>
-								<ButtonText>Send OTP</ButtonText>
+								<ButtonText>Next</ButtonText>
 							</Button>
 						</Box>
 					</VStack>
 				</Box>
-				<Box flex={1 / 4} justifyContent='center'>
+				{/* <Box justifyContent='center'>
 					<VStack space='sm'>
 						<Text textAlign='center' bold fontFamily='Inter'>
 							Already A Member?
@@ -100,10 +129,42 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 							</Button>
 						</Box>
 					</VStack>
-				</Box>
+				</Box> */}
 			</Box>
 		</KeyboardAvoidingView>
 	);
 };
 
 export default RegisterMobileNumberPage;
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		padding: 16,
+		backgroundColor: "#000000",
+	},
+	phoneInput: {
+		width: "100%",
+		height: 50,
+		borderWidth: 1,
+		borderColor: "#ccc",
+		borderRadius: 8,
+		paddingHorizontal: 10,
+		backgroundColor: "#fff",
+	},
+	textContainer: {
+		backgroundColor: "#eee",
+	},
+	textInput: {
+		fontSize: 16,
+		color: "#000000",
+	},
+	flag: {
+		marginLeft: 10,
+	},
+	codeText: {
+		fontSize: 16,
+		color: "#000000",
+	},
+});

@@ -52,15 +52,16 @@ const EmailSentPage = ({ navigation, route }) => {
 									Email Sent!
 								</Text>
 								<Text width={"$80%"} textAlign='center' size='sm'>
-									An Email has been to your registered mail. Please verify your email now.
+									An OTP has been sent to your registered mail. Please verify your email on the next page.
 								</Text>
 							</VStack>
 						</Box>
 					</VStack>
 				</Box>
-				<Box flex={1 / 4} justifyContent='center'>
-					<Box justifycontent='center' alignItems='center'>
+				<Box width='$full' flex={1 / 4} justifyContent='center'>
+					<Box width='$full' justifycontent='center' alignItems='center'>
 						<Button
+							w='$90%'
 							onPress={() => navigation.navigate("Enter Email OTP Page", { enteredMail: enteredMail, enteredNumber: enteredNumber })}
 							variant='primary'
 							size='lg'>

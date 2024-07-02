@@ -59,7 +59,7 @@ const applianceUsed = [
 			{
 				id: "Hawleys",
 				name: "Hawleys",
-				selectType: "multiple",
+				selectType: "none",
 				nodeType: "parent",
 				children: [
 					{
