@@ -1,4 +1,4 @@
-import { CheckIcon, CheckboxGroup, CheckboxIndicator } from "@gluestack-ui/themed";
+import { Actionsheet, CheckIcon, CheckboxGroup, CheckboxIndicator } from "@gluestack-ui/themed";
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { KeyboardAvoidingView } from "@gluestack-ui/themed";
 import { ScrollView } from "@gluestack-ui/themed";
@@ -32,7 +32,7 @@ import {
 	ToastTitle,
 	ToastDescription,
 } from "@gluestack-ui/themed";
-import { Platform, Linking } from "react-native";
+import { Platform, Linking, TouchableOpacity } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 import appStoreInstance from "../../stores/AppStore";
@@ -42,8 +42,12 @@ import { observer } from "mobx-react";
 import { ImageAssets } from "../../../assets/Assets";
 import { Image } from "@gluestack-ui/themed";
 import { Link } from "@react-navigation/native";
+import { ActionsheetBackdrop } from "@gluestack-ui/themed";
+import { ActionsheetContent } from "@gluestack-ui/themed";
+import { Divider } from "@gluestack-ui/themed";
 
 const RegisterPage = ({ navigation, route }) => {
+	const [showActionsheet, setShowActionsheet] = useState(false);
 	const { enteredNumber } = route.params;
 	const [formData, setFormData] = useState({
 		name: "",
@@ -52,6 +56,7 @@ const RegisterPage = ({ navigation, route }) => {
 		reEnterPassword: "",
 	});
 	const [passwordVisible, setPasswordVisible] = useState(false);
+	const [resetPasswordVisible, setResetPasswordVisible] = useState(false);
 	const [joinPressed, setJoinPressed] = useState(false);
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
@@ -154,7 +159,7 @@ const RegisterPage = ({ navigation, route }) => {
 						true
 					);
 					if (signInResponse) {
-						navigation.navigate("Email Sent Page", { enteredMail: formData.email, enteredNumber: enteredNumber });
+						navigation.navigate("Email Sent Page", { enteredMail: formData.email, enteredNumber: enteredNumber, enteredPassword: formData.password });
 					}
 					break;
 
@@ -224,10 +229,21 @@ const RegisterPage = ({ navigation, route }) => {
 			return !showState;
 		});
 	};
+
+	const handleShowResetPasswordState = () => {
+		setResetPasswordVisible((showState) => {
+			return !showState;
+		});
+	};
+
+	const privacyPolicySheet = () => {
+		setShowActionsheet(!showActionsheet);
+	};
+
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='handled'>
 					<Box flex={1} backgroundColor='$primaryBackground'>
 						<Image w='$100%' h='$100%' position='absolute' top={0} source={ImageAssets.registerBG} alt='Docked-Logo' />
 						<Box height='$10%'>
@@ -303,11 +319,11 @@ const RegisterPage = ({ navigation, route }) => {
 											<InputField
 												onChangeText={handleChangeReEnterPassword}
 												value={formData.reEnterPassword}
-												type={passwordVisible ? "text" : "password"}
+												type={resetPasswordVisible ? "text" : "password"}
 												placeholder='Re-enter Password'
 											/>
-											<InputSlot pr='$3' onPress={handleShowPasswordState}>
-												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
+											<InputSlot pr='$3' onPress={handleShowResetPasswordState}>
+												<InputIcon as={resetPasswordVisible ? Eye : EyeOff} color='#E6E3DB' />
 											</InputSlot>
 										</Input>
 										{joinPressed && resestPasswordError && (
@@ -328,7 +344,7 @@ const RegisterPage = ({ navigation, route }) => {
 											</Checkbox>
 											<Text size='xs'>
 												To join as a member, you agree to docked's{" "}
-												<Link to={{ screen: "Privacy Policy Page" }}>
+												<Link to='/#' onPress={privacyPolicySheet}>
 													<Text size='xs' underline>
 														Terms & Conditions of Use
 													</Text>
@@ -337,7 +353,7 @@ const RegisterPage = ({ navigation, route }) => {
 										</HStack>
 										<Text size='xs'>
 											To learn more about how docked collects, uses, share and protects your personal data, please see{" "}
-											<Link to={{ screen: "Privacy Policy Page" }}>
+											<Link to='/#' onPress={privacyPolicySheet}>
 												<Text size='xs' underline>
 													docked's Privacy Policy.
 												</Text>
@@ -365,6 +381,34 @@ const RegisterPage = ({ navigation, route }) => {
 							</Box>
 						</Box>
 					</Box>
+					<Actionsheet px='$2' isOpen={showActionsheet} onClose={privacyPolicySheet} zIndex={999}>
+						<ActionsheetBackdrop />
+						<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
+							<VStack>
+								<Text size='xs' bold></Text>
+								<VStack space='lg' padding={10}>
+									<Text color='#21272A' size='md' bold>
+										Privacy Policy
+									</Text>
+									<Text size='xs'>
+										Our app respects your privacy and is committed to protecting your personal information. We collect minimal data necessary for app
+										functionality and do not share it with third parties. Any information collected is used solely for improving the user experience
+										within the app. We do not store any personally identifiable information unless explicitly provided by you. By using our app, you
+										consent to the collection and use of information as described in this policy.
+									</Text>
+									<Text color='#21272A' size='md' bold>
+										Terms & Conditions
+									</Text>
+									<Text size='xs'>
+										Our app respects your privacy and is committed to protecting your personal information. We collect minimal data necessary for app
+										functionality and do not share it with third parties. Any information collected is used solely for improving the user experience
+										within the app. We do not store any personally identifiable information unless explicitly provided by you. By using our app, you
+										consent to the collection and use of information as described in this policy.
+									</Text>
+								</VStack>
+							</VStack>
+						</ActionsheetContent>
+					</Actionsheet>
 				</ScrollView>
 			</KeyboardAvoidingView>
 		</Loader>

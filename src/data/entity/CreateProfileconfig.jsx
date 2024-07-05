@@ -104,7 +104,7 @@ const createProfileConfig = [
 			config: {
 				fields: [
 					{ name: "Designation", uid: "designation", type: "select-single", options: Options.designation, isRequire: true },
-					{ name: "Work Place", uid: "workPlace", type: "select-single", options: Options.workPlace, isRequire: true },
+					{ name: "Work Place", uid: "workPlace", type: "text", isRequire: true },
 					{ name: "City", uid: "city", type: "select-single", options: Options.city, isRequire: true },
 				],
 			},
@@ -118,12 +118,12 @@ const createProfileConfig = [
 			component: require("../../components/SetupProfile/VerifyMHD").default,
 			config: {
 				fields: [
-					{ name: "Medical Council Name", uid: "medicalCouncilName", type: "select-single", options: Options.medicalCouncilName, isRequire: true },
-					{ name: "Year of Registration", uid: "yearOfRegistration", type: "select-single", options: Options.yearOfRegistration, isRequire: true },
+					{ name: "Medical Council Name", uid: "medicalCouncilName", type: "text", options: Options.medicalCouncilName, isRequire: true },
+					{ name: "Year of Registration", uid: "yearOfRegistration", type: "date", options: Options.yearOfRegistration, isRequire: true },
 					{
 						name: "Medical Registration Number",
 						uid: "medicalRegistrationNumber",
-						type: "select-single",
+						type: "text",
 						options: Options.medicalRegistrationNumber,
 						isRequire: true,
 					},

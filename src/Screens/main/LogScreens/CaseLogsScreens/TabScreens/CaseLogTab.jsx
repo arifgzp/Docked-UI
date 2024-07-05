@@ -141,79 +141,84 @@ const CaseLogTab = () => {
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 			<Box flex={1} backgroundColor='$primaryBackground' alignItems='center'>
-				<ScrollView width={"$100%"}>
-					<VStack width={"$100%"} alignItems='center' paddingTop={10} paddingBottom={"$15%"} p='$2'>
+				<ScrollView width={"$100%"} keyboardShouldPersistTaps='handled'>
+					<HStack p='$2' pt='$5' palignItems='center' justifyContent='space-between'>
+						<Text color='#979797' bold>
+							Summary
+						</Text>
+					</HStack>
+					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
 								//console.log("cardDetails", card);
 								return (
 									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
 										<VStack width={"$100%"} space='xs' pb='$3'>
-											<HStack pt='$3' pl='$5' pr='$3' justifyContent='space-between' alignItems='center'>
+											<HStack width={"$100%"} pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
 												<HStack space='sm'>
-													<Text size='sm'>Date of procedure:</Text>
-													<Text size='sm' fontFamily='Inter_Bold'>
-														{format(new Date(card?.date), "do MMM yyyy")}
+													<Text size='xs'>Date of procedure:</Text>
+													<Text size='xs' fontFamily='Inter_Bold'>
+														{card.date ? format(new Date(card?.date), "d/MM/yyyy") : "--"}
 													</Text>
 												</HStack>
-												<HStack space='sm' alignItems='center'>
-													<Button width={30} height={30} borderRadius={"$full"} size='xs'>
-														<ButtonIcon as={Ionicons} name='share-social-outline' color='#FFFFFF' />
+												<HStack alignItems='center'>
+													<Button bg='#transparent' height={30} borderRadius={"$full"} size='xs'>
+														<ButtonIcon as={Ionicons} size={20} name='share-social' color='#367B71' />
 													</Button>
 													<Button
+														bg='#transparent'
 														onPress={handleButtonPress.bind(null, "CaseLogEditScreen", card?.id, card?.caseType)}
-														width={30}
 														height={30}
 														borderRadius={"$full"}
 														size='xs'>
-														<ButtonIcon as={Ionicons} name='create-outline' color='#FFFFFF' />
+														<ButtonIcon as={Ionicons} size={20} name='create' color='#367B71' />
 													</Button>
 												</HStack>
 											</HStack>
 											<HStack pt='$2' pb='$2' space='3xl' backgroundColor='#DDDDDD'>
 												<HStack pl='$5' space='sm'>
-													<Text size='sm'>Patient Age:</Text>
-													<Text size='sm' fontFamily='Inter_Bold'>
-														{card.patientAge}
+													<Text size='xs'>Patient Age:</Text>
+													<Text size='xs' fontFamily='Inter_Bold'>
+														{card.patientAge ? card.patientAge : "--"}
 													</Text>
 												</HStack>
 												<HStack space='sm'>
-													<Text size='sm'>Sex:</Text>
-													<Text size='sm' fontFamily='Inter_Bold'>
-														{card.patientSex}
+													<Text size='xs'>Sex:</Text>
+													<Text size='xs' fontFamily='Inter_Bold'>
+														{card.patientSex ? card.patientSex : "--"}
 													</Text>
 												</HStack>
 											</HStack>
 											<HStack pr='$3' pl='$5' space='sm'>
-												<Text size='sm'>Diagnosis:</Text>
-												<Text size='sm' fontFamily='Inter_Bold'>
-													{card.diagnosis}
+												<Text size='xs'>Diagnosis:</Text>
+												<Text size='xs' fontFamily='Inter_Bold'>
+													{card.diagnosis ? card.diagnosis : "--"}
 												</Text>
 											</HStack>
 											{AppStore.UserBroadSpecialty === "Anaesthesiology" && (
 												<>
 													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='sm'>Surgery Name:</Text>
-														<Text size='sm' fontFamily='Inter_Bold'>
-															{card.surgicalProcedure}
+														<Text size='xs'>Surgery Name:</Text>
+														<Text size='xs' fontFamily='Inter_Bold'>
+															{card.surgicalProcedure ? card.surgicalProcedure : "--"}
 														</Text>
 													</HStack>
 													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='sm'>Case Type:</Text>
-														<Text size='sm' fontFamily='Inter_Bold'>
-															{card.caseType}
+														<Text size='xs'>Case Type:</Text>
+														<Text size='xs' fontFamily='Inter_Bold'>
+															{card.caseType ? card.caseType : "--"}
 														</Text>
 													</HStack>
 													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='sm'>ASA Grade:</Text>
-														<Text size='sm' fontFamily='Inter_Bold'>
-															{card.asaGrade}
+														<Text size='xs'>ASA Grade:</Text>
+														<Text size='xs' fontFamily='Inter_Bold'>
+															{card.asaGrade ? card.asaGrade : "--"}
 														</Text>
 													</HStack>
 													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='sm'>Type of Anesthesia:</Text>
-														<Text flex={1} size='sm' fontFamily='Inter_Bold'>
-															{getTypeOfAnesthesia(card)}
+														<Text size='xs'>Type of Anesthesia:</Text>
+														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+															{getTypeOfAnesthesia(card) ? getTypeOfAnesthesia(card) : "--"}
 														</Text>
 													</HStack>
 												</>

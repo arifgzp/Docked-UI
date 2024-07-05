@@ -58,13 +58,13 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return updateUserQuery;
 	},
 
-	fetchUserById(id: string) {
+	fetchUserById(userName: string) {
 		const variables = {
-			id: id,
+			filter: { userName: { eq: userName } },
 		};
 
 		const fetchUserResultSelector = userModelPrimitives.toString();
-		const fetchUserQuery: Query = self.queryGetUser(variables, fetchUserResultSelector);
+		const fetchUserQuery: Query = self.queryQueryUser(variables, fetchUserResultSelector);
 		console.log("********** fetchuUserById Query STARTS **********");
 		console.log({ query: fetchUserQuery.query });
 		console.log(fetchUserQuery.variables);

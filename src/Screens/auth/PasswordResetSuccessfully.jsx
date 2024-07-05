@@ -35,7 +35,7 @@ const PasswordResetSuccessfully = ({ navigation }) => {
 	}, []);
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<Box flex={3 / 4} justifyContent='center'>
 					<VStack space='lg'>

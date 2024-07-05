@@ -173,7 +173,7 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 							return (
 								<React.Fragment key={index}>
 									<Box width={"$100%"}>
-										<Box alignItems='center' paddingBottom={10}>
+										<Box px='$5' paddingBottom={10}>
 											<Controller
 												control={control}
 												key={field.uid}
@@ -185,14 +185,52 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 													console.log("ID : ", field.uid, " | val : ", value);
 													if (field.uid === "broadSpecialty") {
 														return (
+															<VStack>
+																<Text size='xs'>{field.name}</Text>
+																<Select
+																	borderWidth={0.5}
+																	borderRadius={5}
+																	borderColor='rgba(77, 83, 86, 0.4)'
+																	onBlur={onBlur}
+																	onValueChange={(val) => {
+																		onChange(val);
+																		handleOnBroadSpecialtyChange(val);
+																	}}
+																	selectedValue={value}>
+																	<SelectTrigger variant='outline' size='md'>
+																		<SelectInput placeholder={field.name} />
+																		<SelectIcon mr='$3'>
+																			<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																		</SelectIcon>
+																	</SelectTrigger>
+																	<SelectPortal>
+																		<SelectBackdrop />
+																		<SelectContent>
+																			<Text padding={10} size='xl'>
+																				{field.name}
+																			</Text>
+																			<Divider borderWidth={0.1} />
+																			{field.options.map((option, index) => {
+																				return <SelectItem key={option.value} label={option.label} value={option.value} />;
+																			})}
+																		</SelectContent>
+																	</SelectPortal>
+																</Select>
+															</VStack>
+														);
+													}
+													return (
+														<VStack>
+															<Text size='xs'>{field.name}</Text>
 															<Select
-																width={"$90%"}
+																borderWidth={0.5}
+																borderRadius={5}
+																borderColor='rgba(77, 83, 86, 0.4)'
+																isDisabled={field.uid === "superSpecialty" ? isSuperOptionDisable : isSubOptionDisable}
 																onBlur={onBlur}
-																onValueChange={(val) => {
-																	onChange(val);
-																	handleOnBroadSpecialtyChange(val);
-																}}
-																selectedValue={value}>
+																onValueChange={onChange}
+																selectedValue={value}
+																placeholder={field.uid === "superSpecialty" ? superSpecialtyPlaceholder : subSpecialtyPlaceholder}>
 																<SelectTrigger variant='outline' size='md'>
 																	<SelectInput placeholder={field.name} />
 																	<SelectIcon mr='$3'>
@@ -206,41 +244,13 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 																			{field.name}
 																		</Text>
 																		<Divider borderWidth={0.1} />
-																		{field.options.map((option, index) => {
-																			return <SelectItem key={option.value} label={option.label} value={option.value} />;
+																		{options.map((option, index) => {
+																			return <SelectItem key={index} label={option.label} value={option.value} />;
 																		})}
 																	</SelectContent>
 																</SelectPortal>
 															</Select>
-														);
-													}
-													return (
-														<Select
-															isDisabled={field.uid === "superSpecialty" ? isSuperOptionDisable : isSubOptionDisable}
-															width={"$90%"}
-															onBlur={onBlur}
-															onValueChange={onChange}
-															selectedValue={value}
-															placeholder={field.uid === "superSpecialty" ? superSpecialtyPlaceholder : subSpecialtyPlaceholder}>
-															<SelectTrigger variant='outline' size='md'>
-																<SelectInput placeholder={field.name} />
-																<SelectIcon mr='$3'>
-																	<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-																</SelectIcon>
-															</SelectTrigger>
-															<SelectPortal>
-																<SelectBackdrop />
-																<SelectContent>
-																	<Text padding={10} size='xl'>
-																		{field.name}
-																	</Text>
-																	<Divider borderWidth={0.1} />
-																	{options.map((option, index) => {
-																		return <SelectItem key={index} label={option.label} value={option.value} />;
-																	})}
-																</SelectContent>
-															</SelectPortal>
-														</Select>
+														</VStack>
 													);
 												}}
 											/>

@@ -16,11 +16,26 @@ import { useIsFocused } from "@react-navigation/native";
 import useIsReady from "../../../../hooks/useIsReady";
 import { toJS } from "mobx";
 import IsReadyLoader from "../../../../components/IsReadyLoader";
-import { caseLogConfigTextAndSingleSelectOptions, specialAnesthesiaCaseLogsOption } from "../../../../data/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
-import { ChornicPainCaseLogConfigTextAndSingleSelectOptions, specialAnesthesiaChronicPainOptions } from "../../../../data/entity/AnesthesiaCaseLogConfigs/ChronicPainLogConfig";
-import { CriticalCareCaseLogConfigTextAndSingleSelectOptions, specialAnesthesiaCriticalCareCaseLogOptions } from "../../../../data/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
-import { OrthopaedicsCaseLogConfigTextAndSingleSelectOptions, specialOrthopaedicsCaseLogsOption } from "../../../../data/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
-import { OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions, specialOrthodonticsClinicalCaseLog } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
+import {
+	caseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCaseLogsOption,
+} from "../../../../data/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
+import {
+	ChornicPainCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaChronicPainOptions,
+} from "../../../../data/entity/AnesthesiaCaseLogConfigs/ChronicPainLogConfig";
+import {
+	CriticalCareCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCriticalCareCaseLogOptions,
+} from "../../../../data/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
+import {
+	OrthopaedicsCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthopaedicsCaseLogsOption,
+} from "../../../../data/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
+import {
+	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthodonticsClinicalCaseLog,
+} from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -228,9 +243,9 @@ const CaseLogEditScreen = ({ navigation }) => {
 	}
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
-				<Box flex={1} backgroundColor='$primaryBackground'>
+				<Box flex={1} backgroundColor='$secondaryBackground'>
 					<>
 						<ScrollView>
 							<Box paddingTop={10} justifyContent='center' alignItems='center'>
@@ -263,11 +278,16 @@ const CaseLogEditScreen = ({ navigation }) => {
 								</Box>
 							</Box>
 						</ScrollView>
-						<Box mt='$3' paddingBottom={"$22%"} width={"$100%"} justifyContent='center' alignItems='center'>
+						{/* <Box mt='$3' paddingBottom={"$22%"} width={"$100%"} justifyContent='center' alignItems='center'>
 							<Button width={"$50%"} height={50} onPress={handleSubmit(handleOnUpdateClick)} size='lg' variant='secondary' borderRadius={10}>
 								<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
 									Update Log
 								</ButtonText>
+							</Button>
+						</Box> */}
+						<Box p={20} paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
+							<Button onPress={handleSubmit(handleOnUpdateClick)} variant='primary'>
+								<ButtonText>Update Log</ButtonText>
 							</Button>
 						</Box>
 					</>

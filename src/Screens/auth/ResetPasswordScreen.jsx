@@ -88,7 +88,7 @@ const ResetPasswordScreen = ({ navigation }) => {
 		});
 	};
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<Box flex={1} backgroundColor='$primaryBackground'>
 					<Box paddingLeft={20} justifyContent='center' flex={1 / 4}>

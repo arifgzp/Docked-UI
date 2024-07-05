@@ -4,8 +4,21 @@ import { Tabs, TabsList, TabsTrigger, TabsText, TabsContents, TabsContent, Text 
 import LogTabsMainScreen from "./CaseLogsScreens/TabScreens/LogTabsMainScreen";
 import CaseLogFormScreen from "./CaseLogsScreens/CaseLogFormScreen";
 import CaseLogEditScreen from "./CaseLogsScreens/CaseLogEditScreen";
+import LogProfileReadPage from "./LogProfileReadPage";
+import { Button } from "@gluestack-ui/themed";
+import { ButtonText } from "@gluestack-ui/themed";
 
-export default function RootLogScreens() {
+const EditProfileButon = ({ navigation }) => {
+	return (
+		<Button onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: "" })} size='sm' variant='primary'>
+			<ButtonText pr={2} pl={2}>
+				Edit
+			</ButtonText>
+		</Button>
+	);
+};
+
+export default function RootLogScreens({ navigation }) {
 	const Stack = createNativeStackNavigator();
 	return (
 		<Stack.Navigator
@@ -26,20 +39,26 @@ export default function RootLogScreens() {
 				name='CaseLogFormScreen'
 				component={CaseLogFormScreen}
 				options={{
-					title: "Case Log",
+					title: "Case Log Entry",
 					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
 				}}
 			/>
 			<Stack.Screen
 				name='CaseLogEditScreen'
 				component={CaseLogEditScreen}
 				options={{
-					title: "Case Log",
+					title: "Case Log Entry",
 					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
 				}}
 			/>
 			<Stack.Screen
@@ -48,8 +67,25 @@ export default function RootLogScreens() {
 				options={{
 					title: "Log Profile",
 					headerShown: true,
-					headerStyle: { backgroundColor: "#E8EEF3" },
-					headerTitleAlign: "center",
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='LogProfileReadPage'
+				component={LogProfileReadPage}
+				options={{
+					title: "Log Profile",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+					headerRight: () => <EditProfileButon navigation={navigation} />,
 				}}
 			/>
 		</Stack.Navigator>

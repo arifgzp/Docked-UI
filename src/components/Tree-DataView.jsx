@@ -30,25 +30,25 @@ const getArrowIcon = (dataValue) => {
 	let iconName = "";
 	switch (dataValue.colorLevel) {
 		case 1:
-			iconColor = "#a21515";
+			iconColor = "#367B71";
 			iconSize = 18;
 			iconName = "caret-forward";
 			break;
 
 		case 2:
-			iconColor = "#e37777";
+			iconColor = "#96C9C2";
 			iconSize = 18;
 			iconName = "caret-forward";
 			break;
 
 		case 3:
-			iconColor = "#a21515";
+			iconColor = "#367B71";
 			iconSize = 14;
 			iconName = "play-outline";
 			break;
 
 		default:
-			iconColor = "#a21515";
+			iconColor = "#367B71";
 			iconSize = 18;
 			iconName = "caret-forward";
 			break;
@@ -188,16 +188,16 @@ function TreeDataView(props) {
 			{map(compactViewData, (data, key) => {
 				return (
 					<>
-						<Divider my='$1' bg='$coolGray200' />
+						<Divider my='$1' bg='$secondaryBackground' />
 						<HStack w={"$full"} gap='$1' flexWrap='wrap'>
 							{data.value ? (
 								<Pressable onPress={onShowTreeSelector.bind(null, predicate, key)}>
-									<Text fontWeight='$semibold' fontSize='$lg' underline={true}>
+									<Text fontWeight='$semibold' fontSize='$xs' underline={true}>
 										{data.label}
 									</Text>
 								</Pressable>
 							) : (
-								<Text fontWeight='$semibold' fontSize='$lg'>
+								<Text fontWeight='$semibold' fontSize='$xs'>
 									{data.label}
 								</Text>
 							)}
@@ -209,12 +209,12 @@ function TreeDataView(props) {
 												{getArrowIcon(value)}
 												{value.isClickable ? (
 													<Pressable onPress={onShowTreeSelector.bind(null, predicate, value.clickablePath)}>
-														<Text fontSize='$md' underline={true}>
+														<Text fontSize='$xs' underline={true}>
 															{value.label}
 														</Text>
 													</Pressable>
 												) : (
-													<Text fontSize='$md'>{value.label}</Text>
+													<Text fontSize='$xs'>{value.label}</Text>
 												)}
 											</HStack>
 										);

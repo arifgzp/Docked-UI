@@ -27,7 +27,7 @@ import { Ionicons } from "@expo/vector-icons";
 import appStoreInstance from "../../stores/AppStore";
 
 const EnterOTPPage = ({ navigation, route }) => {
-	const { enteredMail, enteredNumber } = route.params;
+	const { enteredMail, enteredNumber, enteredPassword } = route.params;
 	const [verifyPressed, setVerifyPressed] = useState(false);
 	const [OTPError, setOTPError] = useState("");
 	const [otpInput, setOTPInput] = useState("");
@@ -52,7 +52,7 @@ const EnterOTPPage = ({ navigation, route }) => {
 				break;
 
 			case "SUCCESS":
-				navigation.navigate("Email Verified Page");
+				navigation.navigate("Email Verified Page", { enteredPassword: enteredPassword, enteredMail: enteredMail });
 				break;
 
 			case "ERROR":
@@ -77,7 +77,10 @@ const EnterOTPPage = ({ navigation, route }) => {
 		}
 	};
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={{ flex: 1, zIndex: 999 }}
+			keyboardShouldPersistTaps='handled'>
 			<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
 				<Box height='$90%' p='$5' width='$full'>
 					<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>

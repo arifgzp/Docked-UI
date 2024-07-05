@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import { Ionicons } from "@expo/vector-icons";
 import appStoreInstance from "../../stores/AppStore";
 import AppStore from "../../stores/AppStore";
-const SetupProfile = ({ config, navigation }) => {
+const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	const [image, setImage] = useState(null);
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -19,7 +19,7 @@ const SetupProfile = ({ config, navigation }) => {
 	const formFields = currentConfig?.content?.config?.fields || [];
 	const currentStepLabel = currentConfig?.label || "";
 
-	const { control, handleSubmit, formState, reset, watch } = useForm({
+	const { control, handleSubmit, formState, reset, watch, setValue } = useForm({
 		defaultValues: {
 			broadSpecialty: "",
 			superSpecialty: "",
@@ -29,6 +29,7 @@ const SetupProfile = ({ config, navigation }) => {
 			city: "",
 			medicalCouncilName: "",
 			medicalRegistrationNumber: "",
+			yearOfRegistration: new Date(),
 		},
 	});
 	const CurrentStepComponent = currentConfig ? currentConfig.content.component : null;
@@ -43,8 +44,52 @@ const SetupProfile = ({ config, navigation }) => {
 				setQuery(query);
 				const finishWizardProcessData = await query;
 				if (finishWizardProcessData) {
-					appStoreInstance.SignOut();
-					navigation.navigate("Login Page");
+					const response = await AppStore.SignIn({ userName: enteredMail, password: enteredPassword });
+
+					if (response) {
+						console.log("login response", response);
+						if (response.userStatus === "REGISTERED") {
+							navigation.navigate("Main Landing Page", { UserSpecialty: response.broadSpecialty });
+							AppStore.setBroadSpecialty(response.broadSpecialty);
+							AppStore.setUserId(response.id);
+
+							const userQuery = store.fetchUserById(appStoreInstance.UserName);
+							setQuery(userQuery);
+							const finishFetchingUserProfile = await userQuery;
+							if (finishFetchingUserProfile) {
+								console.log("finishFetchingUserProfile", finishFetchingUserProfile);
+								const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+								console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
+								AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
+								AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
+								AppStore.setDesignation(fetchProfileData.designation);
+								AppStore.setWorkPlace(fetchProfileData.workPlace);
+								AppStore.setCity(fetchProfileData.city);
+								AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
+								AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
+								AppStore.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+							}
+
+							const query = store.fetchUserLogProfile(response.userName);
+							setQuery(query);
+
+							const finishFetchingLogProfile = await query;
+							console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+
+							if (finishFetchingLogProfile) {
+								console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0].logProfile);
+								const userLogProfileData = finishFetchingLogProfile.queryUser[0].logProfile;
+								console.log("userLogProfileData", userLogProfileData);
+								AppStore.setLogProfile(userLogProfileData);
+							}
+						} else if (response.userStatus === "WIZARD_PENDING") {
+							navigation.navigate("Profile Setup Page");
+						} else if (response.userStatus === "VERIFICATION_REQUIRED") {
+							navigation.navigate("Enter Email OTP Page");
+						}
+					}
+					// appStoreInstance.SignOut();
+					// navigation.navigate("Login Page");
 				}
 			} catch (error) {
 				console.log(error);
@@ -89,8 +134,52 @@ const SetupProfile = ({ config, navigation }) => {
 			setQuery(query);
 			const finishWizardProcessData = await query;
 			if (finishWizardProcessData) {
-				appStoreInstance.SignOut();
-				navigation.navigate("Login Page");
+				const response = await AppStore.SignIn({ userName: enteredMail, password: enteredPassword });
+
+				if (response) {
+					console.log("login response", response);
+					if (response.userStatus === "REGISTERED") {
+						navigation.navigate("Main Landing Page", { UserSpecialty: response.broadSpecialty });
+						AppStore.setBroadSpecialty(response.broadSpecialty);
+						AppStore.setUserId(response.id);
+
+						const userQuery = store.fetchUserById(appStoreInstance.UserName);
+						setQuery(userQuery);
+						const finishFetchingUserProfile = await userQuery;
+						if (finishFetchingUserProfile) {
+							console.log("finishFetchingUserProfile", finishFetchingUserProfile);
+							const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+							console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
+							AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
+							AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
+							AppStore.setDesignation(fetchProfileData.designation);
+							AppStore.setWorkPlace(fetchProfileData.workPlace);
+							AppStore.setCity(fetchProfileData.city);
+							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
+							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
+							AppStore.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+						}
+
+						const query = store.fetchUserLogProfile(response.userName);
+						setQuery(query);
+
+						const finishFetchingLogProfile = await query;
+						console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+
+						if (finishFetchingLogProfile) {
+							console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0].logProfile);
+							const userLogProfileData = finishFetchingLogProfile.queryUser[0].logProfile;
+							console.log("userLogProfileData", userLogProfileData);
+							AppStore.setLogProfile(userLogProfileData);
+						}
+					} else if (response.userStatus === "WIZARD_PENDING") {
+						navigation.navigate("Profile Setup Page");
+					} else if (response.userStatus === "VERIFICATION_REQUIRED") {
+						navigation.navigate("Enter Email OTP Page");
+					}
+				}
+				// appStoreInstance.SignOut();
+				// navigation.navigate("Login Page");
 			}
 		} catch (error) {
 			console.log(error);
@@ -116,32 +205,36 @@ const SetupProfile = ({ config, navigation }) => {
 	}, [currentStep]);
 
 	return (
-		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<Loader queryInfo={queryInfo} apiLoadingInfo={appStoreInstance.isLoading}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "height" : "height"}
+				style={{ flex: 1, zIndex: 999 }}
+				keyboardShouldPersistTaps='handled'>
 				<Box flex={1} h='$full' backgroundColor='$primaryBackground'>
 					<VStack flex={1} h='$full' space='lg' justifyContent='space-between'>
-						<Box p='$5'>
-							<VStack paddingTop={35} space='md'>
-								<HStack alignItems='center' justifyContent='space-between'>
-									<Text bold italic color='#CC3F0C'>
-										Before you start...
-									</Text>
-									{startingStep > 1 ? (
-										<Box justifycontent='center' alignItems='center'>
-											<Button width={"$40%"} onPress={handleSubmit(handleSkip)} size='sm' variant='link'>
-												<ButtonText underline fontFamily='Inter_Bold' textAlign='center'>
-													Skip
-												</ButtonText>
-											</Button>
-										</Box>
-									) : null}
-								</HStack>
-								<HStack>
-									<Text color='#000' bold size='2xl'>
-										Let’s customise your dashboard
-									</Text>
-								</HStack>
-								{/* <HStack space='2xl'>
+						<ScrollView>
+							<Box p='$5'>
+								<VStack paddingTop={35} space='md'>
+									<HStack alignItems='center' justifyContent='space-between'>
+										<Text bold italic color='#CC3F0C'>
+											Before you start...
+										</Text>
+										{startingStep > 1 ? (
+											<Box justifycontent='center' alignItems='center'>
+												<Button width={"$40%"} onPress={handleSubmit(handleSkip)} size='sm' variant='link'>
+													<ButtonText underline fontFamily='Inter_Bold' textAlign='center'>
+														Skip
+													</ButtonText>
+												</Button>
+											</Box>
+										) : null}
+									</HStack>
+									<HStack>
+										<Text color='#000' bold size='2xl'>
+											Let’s customise your dashboard
+										</Text>
+									</HStack>
+									{/* <HStack space='2xl'>
 							{config.map((step, index) => {
 								const isDisabled = index < startingStep ? false : true;
 								return (
@@ -155,24 +248,26 @@ const SetupProfile = ({ config, navigation }) => {
 								);
 							})}
 						</HStack> */}
-								<Text size='xl'>{currentStepLabel}</Text>
-							</VStack>
-						</Box>
-						<Box width={"$100%"} justifyContent='center'>
-							{CurrentStepComponent && (
-								<ScrollView>
-									<CurrentStepComponent
-										image={image}
-										setImage={setImage}
-										reset={reset}
-										control={control}
-										formState={formState}
-										formFields={formFields}
-									/>
-								</ScrollView>
-							)}
-						</Box>
-						<Box pb='$5' pr='$5' pl='$5'>
+									<Text size='xl'>{currentStepLabel}</Text>
+								</VStack>
+							</Box>
+							<Box width={"$100%"} justifyContent='center'>
+								{CurrentStepComponent && (
+									<ScrollView>
+										<CurrentStepComponent
+											image={image}
+											setImage={setImage}
+											reset={reset}
+											control={control}
+											formState={formState}
+											formFields={formFields}
+											setValue={setValue}
+										/>
+									</ScrollView>
+								)}
+							</Box>
+						</ScrollView>
+						<Box pb='$10' pr='$5' pl='$5'>
 							<HStack width='$full' justifyContent={currentStepLabel !== "Your Expertise" ? "space-between" : "flex-end"} alignItems='center'>
 								{currentStepLabel !== "Your Expertise" && (
 									<Button

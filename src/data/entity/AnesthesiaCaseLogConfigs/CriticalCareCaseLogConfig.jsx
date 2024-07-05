@@ -16,6 +16,10 @@ const Options = {
 		{ label: "ICU", value: "ICU" },
 		{ label: "Death", value: "DEATH" },
 	],
+	Gender: [
+		{ label: "Male", value: "Male" },
+		{ label: "Female", value: "Female" },
+	],
 	subSpecialty: [{ label: "PMS", value: "PMS" }],
 	designation: [{ label: "Doctor", value: "Doctor" }],
 	workPlace: [{ label: "Malad", value: "Malad" }],
@@ -30,7 +34,7 @@ const Options = {
 
 const CriticalCareCaseLogConfigTextAndSingleSelectOptions = [
 	{ name: "Patient Age", uid: "patientAge", type: "text", isRequire: true },
-	{ name: "Patient Sex", uid: "patientSex", type: "text", isRequire: true },
+	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
 	{ name: "Comorbidites", uid: "comorbidites", type: "text", isRequire: true },
 	{ name: "Surgical procedure", uid: "surgicalprocedure", type: "text", isRequire: true },

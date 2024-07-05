@@ -26,8 +26,8 @@ const renderTabBar = (props) => (
 		{...props}
 		activeColor='#1E1E1E'
 		inactiveColor='#71717A'
-		indicatorStyle={{ backgroundColor: "#DE2E23" }}
-		style={{ backgroundColor: "#E8EEF3", elevation: 1 }}
+		indicatorStyle={{ backgroundColor: "#367B71" }}
+		style={{ backgroundColor: "#E6E3DB", elevation: 1 }}
 		tabStyle={{ width: "auto" }}
 		scrollEnabled={true}
 		labelStyle={{ textTransform: "capitalize" }}
@@ -69,7 +69,7 @@ export default function LogTabsMainScreen({ navigation }) {
 						/>
 					</Box> */}
 					<Button
-						onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: "" })}
+						onPress={() => navigation.navigate("LogProfileReadPage", { caseLogFormToGet: "" })}
 						backgroundColor='#367B71'
 						borderRadius={"$full"}
 						size='xs'>

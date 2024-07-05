@@ -5,4 +5,5 @@ export const ImageAssets = {
 	data: require("./Images/data.png"),
 	loginBG: require("./LoginBG.png"),
 	registerBG: require("./RegisterBG.png"),
+	profileIcon: require("./Icons/profileIcon.png"),
 };

@@ -38,6 +38,7 @@ import HomeScreenPage from "./HomeScreen";
 import RootLogScreens from "./LogScreens/RootLogScreens";
 import ResourcesMainPage from "./Resources/ResourcesMainPage";
 import CommunityMainPage from "./Community/CommunityMainPage";
+import LandingScreenPages from "./LandingScreenPages";
 
 const Tab = createBottomTabNavigator();
 
@@ -116,20 +117,18 @@ const CreateMenuList = (props) => {
 
 	return (
 		<Box pl='$4' pr='$4'>
-			<Button onPress={toggleCreateMenu} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={45} height={45}>
+			<Button onPress={toggleCreateMenu} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={40} height={40}>
 				<ButtonIcon as={Ionicons} size='xl' name='add-outline' />
 			</Button>
 			<Actionsheet isOpen={showActionsheet} onClose={toggleCreateMenu} zIndex={999}>
 				<ActionsheetBackdrop />
 				<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
-					<ActionsheetDragIndicatorWrapper>
-						<ActionsheetDragIndicator />
-					</ActionsheetDragIndicatorWrapper>
-					<VStack width={"$100%"} space='lg' mt='$2' ml='$2'>
-						<Text color='#000000' size='lg' fontFamily='Inter_Bold'>
+					<VStack width={"$100%"} space='lg' mt='$2'>
+						<Text pl='$3' color='#000000' size='lg' fontFamily='Inter_Bold'>
 							Choose type of log entry
 						</Text>
-						<RadioGroup width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
+						<Divider />
+						<RadioGroup pl='$3' width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
 							<VStack w='$full' alignItems='flex-start' space='lg' mb='$2'>
 								{getCreateMenuOptions(AppStore.UserBroadSpecialty).map((option) => {
 									return (
@@ -144,7 +143,11 @@ const CreateMenuList = (props) => {
 							</VStack>
 						</RadioGroup>
 					</VStack>
-					<Box mt='$4' mb='$4' alignSelf='center'>
+					<Box mt='$4'>
+						<Divider />
+					</Box>
+					<Divider />
+					<Box w='$90%' mt='$4' mb='$4' alignSelf='center'>
 						<Button onPress={handleOnProceedClick} backgroundColor='#367B71' borderRadius={"$full"}>
 							<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
 								Proceed for log entry
@@ -162,15 +165,15 @@ const LandingScreen = ({ navigation, route }) => {
 		<Tab.Navigator
 			screenOptions={{
 				animation: "slide_from_right",
-				tabBarShowLabel: false,
+				tabBarShowLabel: true,
 				tabBarStyle: {
 					position: "absolute",
 					elevation: 0,
 					backgroundColor: "#FFFFFF",
-					height: 70,
+					height: 55,
 				},
-				tabBarActiveTintColor: "#DE2E2E",
-				tabBarInactiveTintColor: "#1E1E1E",
+				tabBarActiveTintColor: "#0F0F10",
+				tabBarInactiveTintColor: "#979797",
 				headerStyle: {
 					backgroundColor: "#E8EEF3",
 					borderBottomWidth: 1,
@@ -187,15 +190,15 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarIcon: ({ color, size }) => <Ionicons name='home' size={size} color={color} />,
 					headerShown: false,
 				}}
-				name='Dashboard'
-				component={HomeScreenPage}
+				name='Home'
+				component={LandingScreenPages}
 			/>
 			<Tab.Screen
 				options={{
 					tabBarIcon: ({ color, size }) => <Ionicons name='document-text' size={size} color={color} />,
 					headerShown: false,
 				}}
-				name='RootLogBook'
+				name='Log Book'
 				component={RootLogScreens}
 			/>
 			<Tab.Screen

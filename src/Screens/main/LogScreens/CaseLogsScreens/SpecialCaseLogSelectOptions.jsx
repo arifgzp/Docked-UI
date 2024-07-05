@@ -1,6 +1,7 @@
 import { Button, ButtonIcon, ButtonText, VStack } from "@gluestack-ui/themed";
 import { forEach } from "lodash";
 import { ChevronRight } from "lucide-react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
 import TreeDataView from "../../../../components/Tree-DataView";
 import TreeView from "../../../../components/Tree-SelectorView_old";
@@ -158,7 +159,7 @@ const SpecialCaseLogSelectOptions = ({
 		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20} px='$4'>
 			{specialCaseLogsOption.map((option) => {
 				return (
-					<VStack key={option.id} bg='$white' rounded='$lg' w={"$full"}>
+					<VStack key={option.id} bg='#E6E3DB' borderRadius={25} w={"$full"}>
 						<Button
 							w='$full'
 							key={option.id}
@@ -167,7 +168,7 @@ const SpecialCaseLogSelectOptions = ({
 							justifyContent='space-between'
 							variant='specialLogs'>
 							<ButtonText>{option.name}</ButtonText>
-							<ButtonIcon as={ChevronRight} size={20} name='arrow-forward-outline' color='#666666' />
+							<ButtonIcon as={Ionicons} size={20} name='add-sharp' color='#367B71' />
 						</Button>
 						{activeTreeSelectorValue[option.id] && (
 							<TreeDataView

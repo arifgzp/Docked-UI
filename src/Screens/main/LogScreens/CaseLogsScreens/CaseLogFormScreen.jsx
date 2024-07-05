@@ -26,11 +26,26 @@ import AppStore from "../../../../stores/AppStore";
 import CaselogDropDownOptions from "./CaselogDropDownOptions";
 import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
 import useIsReady from "../../../../hooks/useIsReady";
-import { caseLogConfigTextAndSingleSelectOptions, specialAnesthesiaCaseLogsOption } from "../../../../data/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
-import { ChornicPainCaseLogConfigTextAndSingleSelectOptions, specialAnesthesiaChronicPainOptions } from "../../../../data/entity/AnesthesiaCaseLogConfigs/ChronicPainLogConfig";
-import { CriticalCareCaseLogConfigTextAndSingleSelectOptions, specialAnesthesiaCriticalCareCaseLogOptions } from "../../../../data/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
-import { OrthopaedicsCaseLogConfigTextAndSingleSelectOptions, specialOrthopaedicsCaseLogsOption } from "../../../../data/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
-import { OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions, specialOrthodonticsClinicalCaseLog } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
+import {
+	caseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCaseLogsOption,
+} from "../../../../data/entity/AnesthesiaCaseLogConfigs/CaseLogFormConfig";
+import {
+	ChornicPainCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaChronicPainOptions,
+} from "../../../../data/entity/AnesthesiaCaseLogConfigs/ChronicPainLogConfig";
+import {
+	CriticalCareCaseLogConfigTextAndSingleSelectOptions,
+	specialAnesthesiaCriticalCareCaseLogOptions,
+} from "../../../../data/entity/AnesthesiaCaseLogConfigs/CriticalCareCaseLogConfig";
+import {
+	OrthopaedicsCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthopaedicsCaseLogsOption,
+} from "../../../../data/entity/OrthopaedicsCaseLogConfigs/OrthopaedicsCaseLogConfig";
+import {
+	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
+	specialOrthodonticsClinicalCaseLog,
+} from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 import IsReadyLoader from "../../../../components/IsReadyLoader";
 
 const getCaseLogFields = (key) => {
@@ -216,9 +231,9 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	}
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
-				<Box flex={1} w='$100%' backgroundColor='$primaryBackground'>
+				<Box flex={1} w='$100%' backgroundColor='$secondaryBackground'>
 					{caseLogPrefilledData ? (
 						<>
 							<ScrollView>
@@ -249,31 +264,21 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 									</Box>
 								</Box>
 							</ScrollView>
-							<Box paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
-								<HStack justifyContent='center'>
-									<Button width={"$50%"} height={40} onPress={handleSubmit(handleSaveClick)} size='lg' variant='secondary' borderRadius={10}>
-										<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
-											Save
-										</ButtonText>
-									</Button>
-								</HStack>
+							<Box p={20} paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
+								<Button onPress={handleSubmit(handleSaveClick)} variant='primary'>
+									<ButtonText>Save</ButtonText>
+								</Button>
 							</Box>
 						</>
 					) : (
-						<Box flex={1 / 1} height={"$100%"} justifyContent='center' alignItems='center'>
-							<VStack width={"$100%"} alignItems='center' space='lg' mb='$20'>
-								<Text>Please create your log profile before filing a case</Text>
-								<Box width={"$100%"} alignItems='center'>
-									<Button
-										onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: caseLogFormToGet })}
-										width={"$85%"}
-										height={50}
-										size='lg'
-										variant='secondary'
-										borderRadius={10}>
-										<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
-											Create Log Profile
-										</ButtonText>
+						<Box p='$10' flex={1 / 1} height={"$100%"} justifyContent='center' alignItems='center'>
+							<VStack width={"$100%"} space='lg' mb='$20'>
+								<Text textAlign='center' bold>
+									Please create your log profile before filing a case
+								</Text>
+								<Box>
+									<Button onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: caseLogFormToGet })} variant='primary'>
+										<ButtonText>Create Log Profile</ButtonText>
 									</Button>
 								</Box>
 							</VStack>

@@ -1,4 +1,18 @@
-import { Image, InputField, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import {
+	Divider,
+	HStack,
+	Image,
+	InputField,
+	KeyboardAvoidingView,
+	Select,
+	SelectBackdrop,
+	SelectContent,
+	SelectIcon,
+	SelectInput,
+	SelectItem,
+	SelectPortal,
+	SelectTrigger,
+} from "@gluestack-ui/themed";
 import {
 	Box,
 	Text,
@@ -11,11 +25,13 @@ import {
 	FormControlErrorText,
 	Button,
 	ButtonText,
+	Icon,
 } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
 import { useState, useRef } from "react";
 import PhoneInput from "react-native-phone-number-input";
 import { StyleSheet, View } from "react-native";
+import { ChevronDown } from "lucide-react-native";
 import { ImageAssets } from "../../../assets/Assets";
 
 const RegisterMobileNumberPage = ({ navigation }) => {
@@ -37,10 +53,10 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 			setErrorMessage("Number is required");
 			return;
 		} else if (numberInput.length < 10) {
-			setErrorMessage("Entered cannot be LESS than 10-digit");
+			setErrorMessage("Entered number cannot be LESS than 10-digit");
 			return;
 		} else if (numberInput.length > 10) {
-			setErrorMessage("Entered cannot be MORE than 10-digit");
+			setErrorMessage("Entered number cannot be MORE than 10-digit");
 			return;
 		} else {
 			setErrorMessage("");
@@ -50,7 +66,7 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<Box width='$100%' height='$80%' p='$5' pt=''>
 					<VStack width='$100%' space='lg'>
@@ -72,8 +88,8 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 							isReadOnly={false}
 							isRequired={false}
 							gap={"$4"}>
-							<Box width='$100%'>
-								<PhoneInput
+							<Box width='$100%' alignItems='center'>
+								{/* <PhoneInput
 									ref={phoneInput}
 									defaultValue={numberInput}
 									defaultCode='IN'
@@ -88,21 +104,43 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 									textInputStyle={styles.textInput}
 									flagButtonStyle={styles.flag}
 									codeTextStyle={styles.codeText}
-								/>
-								{/* <Input variant='outline'>
-									<InputField
-										inputMode='numeric'
-										onChangeText={handleChangeNumberInput}
-										value={numberInput} // Add this line to control the input value
-										fontFamily='Inter'
-										placeholder='Phone Number'
-									/>
-								</Input> */}
-
+								/> */}
+								<Text pb='$1' size='sm' alignSelf='flex-start'>
+									Phone Number
+								</Text>
+								<HStack justifyContent='space-between' w='$full'>
+									<Select w='$25%' isReadOnly selectedValue='+91'>
+										<SelectTrigger variant='outline'>
+											<SelectInput placeholder={`+91`} />
+											<SelectIcon mr='$3'>
+												<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+											</SelectIcon>
+										</SelectTrigger>
+										<SelectPortal>
+											<SelectBackdrop />
+											<SelectContent>
+												<Text padding={10} size='xl'>
+													Phone Number
+												</Text>
+												<Divider borderWidth={0.1} />
+												<SelectItem key='+91' label='+91' value='+91' />;
+											</SelectContent>
+										</SelectPortal>
+									</Select>
+									<Input w='$70%' variant='outline'>
+										<InputField
+											inputMode='numeric'
+											onChangeText={handleChangeNumberInput}
+											value={numberInput} // Add this line to control the input value
+											fontFamily='Inter'
+											placeholder='Phone Number'
+										/>
+									</Input>
+								</HStack>
 								{sendOTPPressed && errorMessage && (
-									<FormControlError>
-										<FormControlErrorIcon as={AlertCircleIcon} />
-										<FormControlErrorText>{errorMessage}</FormControlErrorText>
+									<FormControlError alignSelf='flex-start'>
+										<FormControlErrorIcon size='xs' as={AlertCircleIcon} />
+										<FormControlErrorText size='xs'>{errorMessage}</FormControlErrorText>
 									</FormControlError>
 								)}
 							</Box>
@@ -139,13 +177,9 @@ export default RegisterMobileNumberPage;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		padding: 16,
 		backgroundColor: "#000000",
 	},
 	phoneInput: {
-		width: "100%",
 		height: 50,
 		borderWidth: 1,
 		borderColor: "#ccc",

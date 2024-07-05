@@ -35,7 +35,10 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={{ flex: 1, zIndex: 999 }}
+			keyboardShouldPersistTaps='handled'>
 			<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
 				<Box height='$90%' p='$5' width='$full'>
 					<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>

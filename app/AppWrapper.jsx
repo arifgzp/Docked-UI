@@ -21,6 +21,7 @@ import NotificationsScreen from "../src/Screens/main/NotificationsScreen";
 import SetupProfile from "../src/components/SetupProfile/SetupProfile";
 import MainPage from "../src/components/MainPage";
 import appStoreInstance from "../src/stores/AppStore";
+import LandingScreen from "../src/Screens/main/LandingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,7 @@ const AppWrapper = () => {
 			<StatusBar barStyle='dark-content' backgroundColor='$primaryBackground' />
 			<NavigationContainer>
 				{appStoreInstance.isUserSignedIn ? (
-					<MainPage />
+					<LandingScreen />
 				) : (
 					<Stack.Navigator
 						initialRouteName={"Login Page"}
@@ -66,7 +67,7 @@ const AppWrapper = () => {
 							component={ForgotPasswordPage}
 							options={{
 								title: "",
-								headerStyle: { backgroundColor: "#E8EEF3" },
+								headerStyle: { backgroundColor: "#E6E3DB" },
 							}}
 						/>
 						<Stack.Screen
@@ -74,7 +75,7 @@ const AppWrapper = () => {
 							component={PrivacyPolicyPage}
 							options={{
 								title: "",
-								headerStyle: { backgroundColor: "#E8EEF3" },
+								headerStyle: { backgroundColor: "#E6E3DB" },
 							}}
 						/>
 						<Stack.Screen
@@ -116,10 +117,10 @@ const AppWrapper = () => {
 							}}
 						/>
 						<Stack.Screen
-							name='Main Page'
-							component={MainPage}
+							name='Main Landing Page'
+							component={LandingScreen}
 							options={{
-								title: "Main Page",
+								title: "Main Landing Page",
 								headerShown: false,
 							}}
 						/>

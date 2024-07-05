@@ -20,7 +20,7 @@ const EmailNotVerifiedPage = ({ navigation }) => {
 		return () => backHandler.remove();
 	}, []);
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$white'>
 				<Box flex={3 / 4} paddingLeft={20} paddingRight={20} paddingTop={30} justifyContent='center'>
 					<VStack space='lg'>

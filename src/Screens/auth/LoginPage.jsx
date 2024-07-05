@@ -79,10 +79,28 @@ const LoginPage = ({ navigation }) => {
 			const response = await AppStore.SignIn({ userName: formData.email, password: formData.password });
 
 			if (response) {
+				console.log("login response", response);
 				if (response.userStatus === "REGISTERED") {
-					navigation.navigate("Main Page", { UserSpecialty: response.broadSpecialty });
+					navigation.navigate("Main Landing Page", { UserSpecialty: response.broadSpecialty });
 					AppStore.setBroadSpecialty(response.broadSpecialty);
 					AppStore.setUserId(response.id);
+
+					const userQuery = store.fetchUserById(appStoreInstance.UserName);
+					setQuery(userQuery);
+					const finishFetchingUserProfile = await userQuery;
+					if (finishFetchingUserProfile) {
+						console.log("finishFetchingUserProfile", finishFetchingUserProfile);
+						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+						console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
+						AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
+						AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
+						AppStore.setDesignation(fetchProfileData.designation);
+						AppStore.setWorkPlace(fetchProfileData.workPlace);
+						AppStore.setCity(fetchProfileData.city);
+						AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
+						AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
+						AppStore.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+					}
 
 					const query = store.fetchUserLogProfile(response.userName);
 					setQuery(query);
@@ -119,7 +137,7 @@ const LoginPage = ({ navigation }) => {
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, zIndex: 999 }}>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='handled'>
 					<Box flex={1} backgroundColor='$primaryBackground'>
 						<Image w='$100%' h='$100%' position='absolute' top={0} source={ImageAssets.loginBG} alt='Docked-Logo' />
 						<Box height='$35%'>
@@ -193,7 +211,7 @@ const LoginPage = ({ navigation }) => {
 									<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
 										<Text>New to Docked?</Text>
 										<Box>
-											<Button variant='link' size='sm' onPress={() => navigation.navigate("Profile Setup Page")}>
+											<Button variant='link' size='sm' onPress={() => navigation.navigate("Register Mobile Number Page")}>
 												<ButtonText color='#367B71'>Sign Up</ButtonText>
 											</Button>
 										</Box>

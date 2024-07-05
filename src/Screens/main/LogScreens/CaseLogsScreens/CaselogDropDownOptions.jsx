@@ -90,26 +90,41 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const activeRotationTo = activeRotation ? format(parseISO(activeRotation?.to), "dd MMM yyyy") : null;
 	const activeRotationText = activeRotation ? `${activeRotation.department}   (  ${activeRotationFrom}  -  ${activeRotationTo}  )` : "No Rotation";
 	return (
-		<VStack space='lg'>
-			<Box pl='$5' width={"$80%"}>
-				<Text fontFamily='Inter_Bold'>Rotation</Text>
-			</Box>
-			<Box pl='$5' width={"$80%"}>
-				<Text>{activeRotationText}</Text>
-			</Box>
-			<Box pl='$5' width={"$80%"}>
-				<Text fontFamily='Inter_Bold'>Hospital</Text>
-			</Box>
-			<Box pl='$5' width={"$80%"}>
-				<Text>{hospital}</Text>
-			</Box>
-			<Box pl='$5' width={"$80%"}>
-				<Text fontFamily='Inter_Bold'>
-					Faculty<Text color='#DE2E2E'>*</Text>
+		<VStack space='sm'>
+			<VStack>
+				<Box pl='$5' width={"$80%"}>
+					<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
+						Rotation
+					</Text>
+				</Box>
+				<Box pl='$5' width={"$80%"}>
+					<Text size='sm'>{activeRotationText}</Text>
+				</Box>
+			</VStack>
+			<VStack>
+				<Box pl='$5' width={"$80%"}>
+					<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
+						Hospital
+					</Text>
+				</Box>
+				<Box pl='$5' width={"$80%"}>
+					<Text size='sm'>{hospital}</Text>
+				</Box>
+			</VStack>
+			<Box width={"$100%"} pl='$5' pr='$5'>
+				<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
+					Date
 				</Text>
+				<Button onPress={() => setOpen(true)} justifyContent='space-between' variant='date'>
+					<ButtonText>Date - {format(new Date(date), "d/MM/yyyy")}</ButtonText>
+					<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
+				</Button>
 			</Box>
-			<Box width={"$100%"}>
-				<Box alignItems='center' paddingBottom={10}>
+			<Box width={"$100%"} pl='$5' pr='$5'>
+				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+					Faculty <Text color='#DE2E2E'>*</Text>
+				</Text>
+				<Box paddingBottom={10}>
 					<Controller
 						control={control}
 						key='faculty'
@@ -119,13 +134,8 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select
-									width={"$90%"}
-									onBlur={onBlur}
-									isReadOnly={readOnlyFaculty}
-									onValueChange={onChange}
-									selectedValue={caseLogData?.faculty || value}>
-									<SelectTrigger variant='underlined' size='md'>
+								<Select onBlur={onBlur} isReadOnly={readOnlyFaculty} onValueChange={onChange} selectedValue={caseLogData?.faculty || value}>
+									<SelectTrigger variant='outline' size='sm'>
 										<SelectInput placeholder={`Faculty`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
@@ -147,14 +157,17 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 					/>
 				</Box>
 				<Box alignItems='center'>
-					<Box width={"$80%"}>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+					<Box>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 				</Box>
 			</Box>
 			{formFields.map((field, index) => {
 				if (field.type === "select-single") {
 					return (
-						<Box width={"$100%"}>
-							<Box alignItems='center' paddingBottom={10}>
+						<Box width={"$100%"} pl='$5' pr='$5'>
+							<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+								{field.name}
+							</Text>
+							<Box paddingBottom={10}>
 								<Controller
 									control={control}
 									key={field.uid}
@@ -164,8 +177,8 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 									}}
 									render={({ field: { onChange, onBlur, value } }) => {
 										return (
-											<Select width={"$90%"} onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
-												<SelectTrigger variant='underlined' size='md'>
+											<Select onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
+												<SelectTrigger variant='outline' size='sm'>
 													<SelectInput placeholder={field.name} />
 													<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 												</SelectTrigger>
@@ -187,13 +200,16 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 								/>
 							</Box>
 							<Box alignItems='center'>
-								<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+								<Box>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 							</Box>
 						</Box>
 					);
 				} else if (field.type === "text") {
 					return (
-						<Box width={"$100%"}>
+						<Box pl='$5' pr='$5' width={"$100%"}>
+							<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+								{field.name}
+							</Text>
 							<Box alignItems='center' paddingBottom={10}>
 								<Controller
 									control={control}
@@ -204,7 +220,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 									}}
 									render={({ field: { onChange, onBlur, value } }) => {
 										return (
-											<Input width={"$90%"} variant='underlined'>
+											<Input variant='outline' size='sm'>
 												<InputField onChangeText={onChange} value={value} placeholder={field.name} />
 											</Input>
 										);
@@ -212,18 +228,12 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 								/>
 							</Box>
 							<Box alignItems='center'>
-								<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+								<Box>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 							</Box>
 						</Box>
 					);
 				}
 			})}
-			<Button disabled={readOnly} justifyContent='flex-start' alignItems='flex-start' variant='link' width='$90%' onPress={() => setOpen(true)}>
-				<ButtonIcon pl='$4' as={Ionicons} size={20} name='calendar-outline' color='#1E1E1E' />
-				<ButtonText paddingLeft={15} fontFamily='Inter'>
-					Date - {format(new Date(date), "do/MMM/yyyy")}
-				</ButtonText>
-			</Button>
 			<DatePicker
 				modal
 				open={open}

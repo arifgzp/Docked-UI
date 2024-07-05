@@ -16,6 +16,10 @@ const Options = {
 		{ label: "ICU", value: "ICU" },
 		{ label: "Death", value: "DEATH" },
 	],
+	Gender: [
+		{ label: "Male", value: "Male" },
+		{ label: "Female", value: "Female" },
+	],
 	subSpecialty: [{ label: "PMS", value: "PMS" }],
 	designation: [{ label: "Doctor", value: "Doctor" }],
 	workPlace: [{ label: "Malad", value: "Malad" }],
@@ -30,11 +34,16 @@ const Options = {
 
 const ChornicPainCaseLogConfigTextAndSingleSelectOptions = [
 	{ name: "Patient Age", uid: "patientAge", type: "text", isRequire: true },
-	{ name: "Patient Sex", uid: "patientSex", type: "text", isRequire: true },
+	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
 	{ name: "Indication", uid: "indication", type: "text", isRequire: true },
 ];
 
-const specialAnesthesiaChronicPainOptions = [{ id: "technique", name: "Technique" }, { id: "method", name: "Method" }, { id: "drugsUsed", name: "Drugs Used" }, { id: "intervention", name: "Intervention" },];
+const specialAnesthesiaChronicPainOptions = [
+	{ id: "technique", name: "Technique" },
+	{ id: "method", name: "Method" },
+	{ id: "drugsUsed", name: "Drugs Used" },
+	{ id: "intervention", name: "Intervention" },
+];
 
 export { ChornicPainCaseLogConfigTextAndSingleSelectOptions, specialAnesthesiaChronicPainOptions };

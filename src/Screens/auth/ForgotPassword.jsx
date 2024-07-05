@@ -20,6 +20,7 @@ import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { useState } from "react";
+import { HStack } from "@gluestack-ui/themed";
 
 const ForgotPasswordPage = ({ navigation }) => {
 	const [sendOTPPressed, setsendOTPPressed] = useState(false);
@@ -49,7 +50,7 @@ const ForgotPasswordPage = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<Box flex={3 / 4}>
 					<VStack space='4xl'>
@@ -58,17 +59,27 @@ const ForgotPasswordPage = ({ navigation }) => {
 								<Text bold size='2xl'>
 									Reset Password
 								</Text>
-								<Text size='sm'>To be docked as member, provide your email id to receive an OTP.</Text>
+								<Text size='sm'>To reset your password, please provide your email id to receive an OTP.</Text>
 							</VStack>
 						</Box>
 						<Box>
-							<FormControl size='md' isDisabled={false} isInvalid={sendOTPPressed && !!emailError} isReadOnly={false} isRequired={false} gap={"$2"}>
+							<FormControl
+								px='$5'
+								size='md'
+								isDisabled={false}
+								isInvalid={sendOTPPressed && !!emailError}
+								isReadOnly={false}
+								isRequired={false}
+								gap={"$2"}>
 								<Box justifycontent='center' alignItems='center'>
-									<Input width={"$80%"} variant='underlined'>
+									<Text alignSelf='flex-start' pb='$1' color='#515151' fontSize='$xs'>
+										Email Address
+									</Text>
+									<Input bg='#FFFFFC' variant='outline'>
 										<InputField type='text' onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' />
 									</Input>
 									{sendOTPPressed && emailError && (
-										<FormControlError width={"$80%"}>
+										<FormControlError alignSelf='flex-start'>
 											<FormControlErrorIcon as={AlertCircleIcon} />
 											<FormControlErrorText>{emailError}</FormControlErrorText>
 										</FormControlError>
@@ -76,7 +87,7 @@ const ForgotPasswordPage = ({ navigation }) => {
 								</Box>
 							</FormControl>
 						</Box>
-						<Box justifycontent='center' alignItems='center'>
+						<Box px='$5'>
 							<Button onPress={handleSendOTP} size='lg' variant='primary'>
 								<ButtonText>Send OTP</ButtonText>
 							</Button>
@@ -84,16 +95,14 @@ const ForgotPasswordPage = ({ navigation }) => {
 					</VStack>
 				</Box>
 				<Box flex={1 / 4} justifyContent='center'>
-					<VStack space='sm'>
-						<Text textAlign='center' bold fontFamily='Inter'>
-							Already A Member?
-						</Text>
-						<Box justifycontent='center' alignItems='center'>
-							<Button onPress={() => navigation.navigate("Login Page")} variant='secondary' size='lg'>
-								<ButtonText textAlign='center'>Member Login</ButtonText>
+					<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
+						<Text>Already a member?</Text>
+						<Box>
+							<Button variant='link' size='sm' onPress={() => navigation.navigate("Login Page")}>
+								<ButtonText color='#367B71'>Member Login</ButtonText>
 							</Button>
 						</Box>
-					</VStack>
+					</HStack>
 				</Box>
 			</Box>
 		</KeyboardAvoidingView>

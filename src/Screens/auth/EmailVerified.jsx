@@ -20,7 +20,8 @@ import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
 
-const EmailVerifiedPage = ({ navigation }) => {
+const EmailVerifiedPage = ({ navigation, route }) => {
+	const { enteredMail, enteredPassword } = route.params;
 	useEffect(() => {
 		const backAction = () => {
 			// Prevent default behavior (navigating back)
@@ -35,7 +36,7 @@ const EmailVerifiedPage = ({ navigation }) => {
 	}, []);
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<Box flex={1 / 4}>
 					<Text bold size='xl' paddingTop={20} paddingLeft={20}>
@@ -59,7 +60,11 @@ const EmailVerifiedPage = ({ navigation }) => {
 				</Box>
 				<Box width='$full' flex={1 / 4} justifyContent='center'>
 					<Box width='$full' justifycontent='center' alignItems='center'>
-						<Button w='$90%' onPress={() => navigation.navigate("Welcome Page")} variant='primary' size='lg'>
+						<Button
+							w='$90%'
+							onPress={() => navigation.navigate("Profile Setup Page", { enteredPassword: enteredPassword, enteredMail: enteredMail })}
+							variant='primary'
+							size='lg'>
 							<ButtonText textAlign='center'>Continue</ButtonText>
 						</Button>
 					</Box>

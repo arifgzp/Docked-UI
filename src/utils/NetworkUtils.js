@@ -2,7 +2,7 @@ import { createHttpClient } from "mst-gql";
 import Constants from "expo-constants";
 
 //const DEV_SERVER_URL = "localhost:6062";
-const DEV_SERVER_URL = "164.52.218.115:6062";
+const DEV_SERVER_URL = "192.168.1.8:6062";
 const PROD_SERVER_URL = "164.52.218.115:6062";
 //const PROD_SERVER_URL = "164.52.218.115:6062";
 

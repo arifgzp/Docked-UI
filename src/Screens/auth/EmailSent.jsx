@@ -21,7 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
 
 const EmailSentPage = ({ navigation, route }) => {
-	const { enteredMail, enteredNumber } = route.params;
+	const { enteredMail, enteredNumber, enteredPassword } = route.params;
 	useEffect(() => {
 		const backAction = () => {
 			// Prevent default behavior (navigating back)
@@ -36,7 +36,7 @@ const EmailSentPage = ({ navigation, route }) => {
 	}, []);
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$primaryBackground'>
 				<Box flex={1 / 4}>
 					<Text bold size='xl' paddingTop={20} paddingLeft={20}>
@@ -62,7 +62,13 @@ const EmailSentPage = ({ navigation, route }) => {
 					<Box width='$full' justifycontent='center' alignItems='center'>
 						<Button
 							w='$90%'
-							onPress={() => navigation.navigate("Enter Email OTP Page", { enteredMail: enteredMail, enteredNumber: enteredNumber })}
+							onPress={() =>
+								navigation.navigate("Enter Email OTP Page", {
+									enteredMail: enteredMail,
+									enteredNumber: enteredNumber,
+									enteredPassword: enteredPassword,
+								})
+							}
 							variant='primary'
 							size='lg'>
 							<ButtonText textAlign='center'>Continue</ButtonText>

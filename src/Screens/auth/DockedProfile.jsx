@@ -8,14 +8,18 @@ import appStoreInstance from "../../stores/AppStore";
 import createProfileConfig from "../../data/entity/CreateProfileconfig";
 import { Box } from "@gluestack-ui/themed";
 
-const DockedProfile = () => {
+const DockedProfile = ({ route }) => {
+	const { enteredMail, enteredPassword } = route.params;
 	const navigation = useNavigation();
 
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "height" : "height"}
+				style={{ flex: 1, zIndex: 999 }}
+				keyboardShouldPersistTaps='handled'>
 				<Box h='$full'>
-					<SetupProfile config={createProfileConfig} navigation={navigation} />
+					<SetupProfile enteredMail={enteredMail} enteredPassword={enteredPassword} config={createProfileConfig} navigation={navigation} />
 				</Box>
 			</KeyboardAvoidingView>
 		</Loader>

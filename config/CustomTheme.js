@@ -739,16 +739,16 @@ const customButton = createStyle({
 				},
 			},
 			secondary: {
-				bg: "rgba(64, 224, 208, 0.1)",
-				borderColor: "#357A71",
-				borderRadius: 10,
+				bg: "",
+				borderColor: "#367B71",
+				borderRadius: "$full",
 				borderWidth: 1,
-				width: "$70%",
+				width: "",
 				size: "lg",
 
 				":hover": {
-					bg: "#40E0D0",
-					borderColor: "#40E0D0",
+					bg: "#",
+					borderColor: "#367B71",
 				},
 
 				":active": {
@@ -757,13 +757,13 @@ const customButton = createStyle({
 				},
 
 				_text: {
-					color: "#357A71",
+					color: "#367B71",
 					textAlign: "center",
 					":hover": {
-						color: "#357A71",
+						color: "#367B71",
 					},
 					":active": {
-						color: "#357A71",
+						color: "#367B71",
 					},
 				},
 				_icon: {
@@ -1025,9 +1025,9 @@ const customButton = createStyle({
 				},
 			},
 			specialLogs: {
-				bg: "#FFFFFF",
+				bg: "rgba(230, 227, 219, 0.5)",
 				borderColor: "#40E0D0",
-				borderRadius: 10,
+				borderRadius: 100,
 				width: "$95%",
 				size: "lg",
 
@@ -1044,7 +1044,8 @@ const customButton = createStyle({
 				_text: {
 					color: "#1E1E1E",
 					textAlign: "left",
-					fontFamily: "Inter",
+					fontFamily: "Inter_Bold",
+					fontSize: 12,
 					":hover": {
 						color: "#1E1E1E",
 					},
@@ -1157,6 +1158,108 @@ const customButton = createStyle({
 
 				_icon: {
 					color: "$primary600",
+					":hover": {
+						color: "$primary600",
+					},
+					":active": {
+						color: "$primary700",
+					},
+				},
+
+				_spinner: {
+					props: {
+						color: "$primary600",
+					},
+					":hover": {
+						props: {
+							color: "$primary600",
+						},
+					},
+					":active": {
+						props: {
+							color: "$primary700",
+						},
+					},
+				},
+
+				_dark: {
+					bg: "$primary400",
+					borderColor: "$primary700",
+					":hover": {
+						bg: "$primary500",
+						borderColor: "$primary400",
+					},
+					":active": {
+						bg: "$primary600",
+						borderColor: "$primary300",
+					},
+					_text: {
+						color: "$primary300",
+						":hover": {
+							color: "$primary300",
+						},
+						":active": {
+							color: "$primary200",
+						},
+					},
+					_icon: {
+						color: "$primary300",
+						":hover": {
+							color: "$primary300",
+						},
+						":active": {
+							color: "$primary200",
+						},
+					},
+					_spinner: {
+						props: { color: "$primary300" },
+						":hover": {
+							props: { color: "$primary300" },
+						},
+						":active": {
+							props: { color: "$primary200" },
+						},
+					},
+
+					":focusVisible": {
+						_web: {
+							boxShadow: "offset 0 0 0 2px $info400",
+						},
+					},
+				},
+			},
+			date: {
+				bg: "#FFF",
+				borderRadius: 5,
+				width: "$100%",
+				borderWidth: 1,
+				borderColor: "#E6E3DB",
+
+				":hover": {
+					bg: "#A3A3A3",
+					borderColor: "",
+				},
+
+				":active": {
+					bg: "",
+					borderColor: "",
+				},
+
+				_text: {
+					color: "#4D5356",
+					textAlign: "left",
+					fontSize: 14,
+					fontFamily: "Inter",
+					":hover": {
+						color: "#1E1E1E",
+					},
+					":active": {
+						color: "#1E1E1E",
+					},
+				},
+
+				_icon: {
+					color: "#367B71",
 					":hover": {
 						color: "$primary600",
 					},

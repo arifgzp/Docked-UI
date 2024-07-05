@@ -139,6 +139,16 @@ const AppStore = types
 		_selectionMode: types.maybeNull(types.string),
 		_selectedCampImage: types.maybeNull(types.string),
 		_userName: types.maybeNull(types.string),
+		_name: types.maybeNull(types.string),
+		_superSpecialty: types.maybeNull(types.string),
+		_subSpecialty: types.maybeNull(types.string),
+		_designation: types.maybeNull(types.string),
+		_workPlace: types.maybeNull(types.string),
+		_city: types.maybeNull(types.string),
+		_medicalCouncilName: types.maybeNull(types.string),
+		_yearOfRegistration: types.maybeNull(types.string),
+		_medicalRegistrationNumber: types.maybeNull(types.string),
+		_verifiedMedicalRegistrationNumber: types.maybeNull(types.string),
 		_userRole: types.maybeNull(types.string),
 		_pharmaID: types.maybeNull(types.string),
 		_campAdminID: types.maybeNull(types.string),
@@ -183,6 +193,46 @@ const AppStore = types
 
 		get UserName() {
 			return self._userName;
+		},
+
+		get Name() {
+			return self._name;
+		},
+
+		get SuperSpecialty() {
+			return self._superSpecialty;
+		},
+
+		get SubSpecialty() {
+			return self._subSpecialty;
+		},
+
+		get Designation() {
+			return self._designation;
+		},
+
+		get Workplace() {
+			return self._workPlace;
+		},
+
+		get City() {
+			return self._city;
+		},
+
+		get MedicalCouncilName() {
+			return self._medicalCouncilName;
+		},
+
+		get YearOfRegistration() {
+			return self._yearOfRegistration;
+		},
+
+		get MedicalRegistrationNumber() {
+			return self._medicalRegistrationNumber;
+		},
+
+		get VerifiedMedicalRegistrationNumber() {
+			return self._verifiedMedicalRegistrationNumber;
 		},
 
 		get UserRole() {
@@ -242,8 +292,44 @@ const AppStore = types
 			self._userId = userId;
 		},
 
+		setName(name) {
+			self._name = name;
+		},
+
 		setBroadSpecialty(broadSpecialty) {
 			self._broadSpecialty = broadSpecialty;
+		},
+
+		setSuperSpecialty(superSpecialty) {
+			self._superSpecialty = superSpecialty;
+		},
+
+		setSubSpecialty(subSpecialty) {
+			self._subSpecialty = subSpecialty;
+		},
+
+		setDesignation(designation) {
+			self._designation = designation;
+		},
+
+		setWorkPlace(workPlace) {
+			self._workPlace = workPlace;
+		},
+
+		setCity(city) {
+			self._city = city;
+		},
+
+		setMedicalCouncilName(medicalCouncilName) {
+			self._medicalCouncilName = medicalCouncilName;
+		},
+
+		setYearOfRegistration(yearOfRegistration) {
+			self._yearOfRegistration = yearOfRegistration;
+		},
+
+		setmedicalRegistrationNumber(medicalRegistrationNumber) {
+			self._medicalRegistrationNumber = medicalRegistrationNumber;
 		},
 
 		setSpecialty(specialtyValue) {
@@ -254,14 +340,55 @@ const AppStore = types
 			self._logProfile = logProfile;
 		},
 
-		markUserSignedIn(token, id, userName, role, broadSpecialty) {
+		markUserSignedIn(
+			token,
+			id,
+			userName,
+			name,
+			role,
+			broadSpecialty,
+			superSpecialty,
+			subSpecialty,
+			designation,
+			workPlace,
+			city,
+			medicalCouncilName,
+			yearOfRegistration,
+			medicalRegistrationNumber
+		) {
 			self._isSignedIn = true;
 			self._userToken = token;
 			self._userName = userName;
-			self._userRole = role;
+			(self._name = name), (self._userRole = role);
 			self._userId = id;
 			self._broadSpecialty = broadSpecialty;
-			SecureStore.setItemAsync(SecureStoreEnum.USER.description, JSON.stringify({ userRole: role, userName: userName, id, broadSpecialty }));
+			self._superSpecialty = superSpecialty;
+			self._subSpecialty = subSpecialty;
+			self._designation = designation;
+			self._workPlace = workPlace;
+			self._city = city;
+			self._medicalCouncilName = medicalCouncilName;
+			self._yearOfRegistration = yearOfRegistration;
+			self._medicalRegistrationNumber = medicalRegistrationNumber;
+
+			SecureStore.setItemAsync(
+				SecureStoreEnum.USER.description,
+				JSON.stringify({
+					userRole: role,
+					userName: userName,
+					name: name,
+					id,
+					broadSpecialty,
+					superSpecialty: superSpecialty,
+					subSpecialty: subSpecialty,
+					designation: designation,
+					workPlace: workPlace,
+					city: city,
+					medicalCouncilName: medicalCouncilName,
+					yearOfRegistration: yearOfRegistration,
+					medicalRegistrationNumber: medicalRegistrationNumber,
+				})
+			);
 		},
 
 		markUserSignedOut() {
@@ -269,11 +396,21 @@ const AppStore = types
 			self._userToken = null;
 			self._selectionMode = null;
 			self._userName = null;
+			self._name = null;
 			self._userRole = null;
 			self._alert = false;
 			self._silentNotification = false;
 			self._userId = null;
 			self._broadSpecialty = null;
+			self._superSpecialty = null;
+			self._subSpecialty = null;
+			self._designation = null;
+			self._workPlace = null;
+			self._city = null;
+			self._medicalCouncilName = null;
+			self._yearOfRegistration = null;
+			self._medicalRegistrationNumber = null;
+			self._verifiedMedicalRegistrationNumber = null;
 		},
 
 		validateUserToken: flow(function* validateUserToken() {
@@ -284,7 +421,23 @@ const AppStore = types
 					NetworkUtils.setTokenInHeader(userToken);
 					const userInfoString = yield SecureStore.getItemAsync(SecureStoreEnum.USER.description);
 					const userInfo = JSON.parse(userInfoString) || {};
-					self.markUserSignedIn(userToken, userInfo.id, userInfo.userName, userInfo.userRole, userInfo.broadSpecialty);
+					self.markUserSignedIn(
+						userToken,
+						userInfo.id,
+						userInfo.userName,
+						userInfo.name,
+						userInfo.userRole,
+						userInfo.broadSpecialty,
+						userInfo.superSpecialty,
+						userInfo.subSpecialty,
+						userInfo.designation,
+						userInfo.workPlace,
+						userInfo.city,
+						userInfo.medicalCouncilName,
+						userInfo.yearOfRegistration,
+						userInfo.medicalRegistrationNumber,
+						userInfo.verifiedMedicalRegistrationNumber
+					);
 				} else {
 					self.markUserSignedOut();
 				}
@@ -370,6 +523,7 @@ const AppStore = types
 			try {
 				self._isLoading = true;
 				const response = yield execute("/login", formData);
+				console.log("SIGN in", response);
 				//const userToken = yield Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.MD5, "betic.qms");
 				const userToken = response?.sessionKey;
 				console.log("userToken : ", userToken);
@@ -384,8 +538,33 @@ const AppStore = types
 						self._isPasswordResetRequired = response?.userStatus === UserStatus.RESET_PASSWORD_REQUIRED;
 						const userRole = response?.role;
 						const userName = response?.userName;
+						const name = response?.name;
 						const broadSpecialty = response?.broadSpecialty;
-						self.markUserSignedIn(userToken, response.id, userName, userRole, broadSpecialty);
+						const superSpecialty = response?.superSpecialty;
+						const subSpecialty = response?.subSpecialty;
+						const designation = response?.designation;
+						const workPlace = response?.workPlace;
+						const city = response?.city;
+						const medicalCouncilName = response?.medicalCouncilName;
+						const yearOfRegistration = response?.yearOfRegistration;
+						const medicalRegistrationNumber = response?.medicalRegistrationNumber;
+
+						self.markUserSignedIn(
+							userToken,
+							response.id,
+							userName,
+							name,
+							userRole,
+							broadSpecialty,
+							superSpecialty,
+							subSpecialty,
+							designation,
+							workPlace,
+							city,
+							medicalCouncilName,
+							yearOfRegistration,
+							medicalRegistrationNumber
+						);
 					}
 
 					return response;
