@@ -78,6 +78,7 @@ type AnaesthesiaCaseLog  {
     laboratoryFindings : [String] @dgraph(pred:"laboratoryFindings")
     medicalRegistrationNumber: String @search(by:[term])@dgraph(pred:"medicalRegistrationNumber")
     typeOfAnaesthesia: [String] @search(by:[term]) @dgraph(pred:"typeOfAnaesthesia")
+    drugsUsed: [String] @search(by:[term]) @dgraph(pred:"drugsUsed")
     airManagement: [String] @search(by:[term]) @dgraph(pred:"airManagement")
     regionalTechniques: [String] @search(by:[term]) @dgraph(pred:"regionalTechniques")
     interventionalProcedures: [String] @search(by:[term]) @dgraph(pred:"interventionalProcedures")

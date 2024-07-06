@@ -165,6 +165,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			if (data) {
 				setTimeout(() => {
 					navigation.navigate("RootLogBook");
+					reset();
 				}, 1000);
 			}
 		} catch (error) {
@@ -173,6 +174,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
+		reset();
 		const fetchLogProfilePrefilledData = async () => {
 			try {
 				const caseLogData = caseLogData;

@@ -74,6 +74,88 @@ const complications = [
 	},
 ];
 
+const drugsUsed = [
+	{
+		id: "DRUGS",
+		name: "Drugs",
+		selectType: "none",
+		nodeType: "parent",
+		children: [
+			{
+				id: "INHALATIONAL",
+				name: "Inhalational",
+				nodeType: "parent",
+				selectType: "multiple",
+				children: [
+					{
+						id: "NO2",
+						name: "Nitrous oxide",
+						nodeType: "leaf",
+					},
+					{
+						id: "SEVOFLURANE",
+						name: "Sevoflurane",
+						nodeType: "leaf",
+					},
+					{
+						id: "Isoflurane",
+						name: "Isoflurane",
+						nodeType: "leaf",
+					},
+					{
+						id: "Desflurane",
+						name: "Desflurane",
+						nodeType: "leaf",
+					},
+				],
+			},
+			{
+				id: "INTRAVENOUS",
+				name: "Intravenous",
+				nodeType: "parent",
+				selectType: "single",
+				children: [
+					{
+						id: "PROPOFOL",
+						name: "Propofol",
+						nodeType: "leaf",
+					},
+					{
+						id: "KETAMINE",
+						name: "Ketamine",
+						nodeType: "leaf",
+					},
+					{
+						id: "Thiopentone",
+						name: "Thiopentone",
+						nodeType: "leaf",
+					},
+					{
+						id: "Etomidate",
+						name: "Etomidate",
+						nodeType: "leaf",
+					},
+					{
+						id: "Midazolam",
+						name: "Midazolam",
+						nodeType: "leaf",
+					},
+					{
+						id: "Fentanyl",
+						name: "Fentanyl",
+						nodeType: "leaf",
+					},
+					{
+						id: "Dexmedetomidine",
+						name: "Dexmedetomidine",
+						nodeType: "leaf",
+					},
+				],
+			},
+		],
+	},
+];
+
 const typeOfAnaesthesia = [
 	{
 		id: "typeOfAnaesthesia",
@@ -101,85 +183,6 @@ const typeOfAnaesthesia = [
 						id: "Peripheral ",
 						name: "Peripheral",
 						nodeType: "leaf",
-					},
-				],
-			},
-			{
-				id: "DRUGS",
-				name: "Drugs",
-				selectType: "none",
-				nodeType: "parent",
-				children: [
-					{
-						id: "INHALATIONAL",
-						name: "Inhalational",
-						nodeType: "parent",
-						selectType: "multiple",
-						children: [
-							{
-								id: "NO2",
-								name: "Nitrous oxide",
-								nodeType: "leaf",
-							},
-							{
-								id: "SEVOFLURANE",
-								name: "Sevoflurane",
-								nodeType: "leaf",
-							},
-							{
-								id: "Isoflurane",
-								name: "Isoflurane",
-								nodeType: "leaf",
-							},
-							{
-								id: "Desflurane",
-								name: "Desflurane",
-								nodeType: "leaf",
-							},
-						],
-					},
-					{
-						id: "INTRAVENOUS",
-						name: "Intravenous",
-						nodeType: "parent",
-						selectType: "single",
-						children: [
-							{
-								id: "PROPOFOL",
-								name: "Propofol",
-								nodeType: "leaf",
-							},
-							{
-								id: "KETAMINE",
-								name: "Ketamine",
-								nodeType: "leaf",
-							},
-							{
-								id: "Thiopentone",
-								name: "Thiopentone",
-								nodeType: "leaf",
-							},
-							{
-								id: "Etomidate",
-								name: "Etomidate",
-								nodeType: "leaf",
-							},
-							{
-								id: "Midazolam",
-								name: "Midazolam",
-								nodeType: "leaf",
-							},
-							{
-								id: "Fentanyl",
-								name: "Fentanyl",
-								nodeType: "leaf",
-							},
-							{
-								id: "Dexmedetomidine",
-								name: "Dexmedetomidine",
-								nodeType: "leaf",
-							},
-						],
 					},
 				],
 			},
@@ -1768,4 +1771,5 @@ export default {
 	comorbidity,
 	complications,
 	examination,
+	drugsUsed,
 };

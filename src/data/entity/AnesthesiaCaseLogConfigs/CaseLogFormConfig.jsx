@@ -38,7 +38,9 @@ const caseLogConfigTextAndSingleSelectOptions = [
 
 const specialAnesthesiaCaseLogsOption = [
 	{ id: "comorbidity", name: "Comorbidity" },
+	{ id: "examination", name: "Examination" },
 	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
+	{ id: "drugsUsed", name: "Drugs Used" },
 	{ id: "airManagement", name: "Airway Management" },
 	{ id: "regionalTechniques", name: "Regional Techniques" },
 	{ id: "interventionalProcedures", name: "Interventional Procedures" },
