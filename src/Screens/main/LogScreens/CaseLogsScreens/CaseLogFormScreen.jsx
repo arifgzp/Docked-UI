@@ -99,24 +99,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 
 	const handleSaveClick = async (formData) => {
 		console.log("errors for the form", formState.errors);
-		if (typeof formData.faculty !== "string" || formData.faculty.trim() === "") {
-			// Raise an error indicating rotation or faculty cannot be empty
-			toast.show({
-				placement: "top",
-				render: ({ id }) => {
-					const toastId = "toast-" + id;
-					return (
-						<Toast nativeID={toastId} action='warning' variant='accent'>
-							<VStack space='xs' mx='$4'>
-								<ToastTitle>Alert</ToastTitle>
-								<ToastDescription>Please Select A Faculty!</ToastDescription>
-							</VStack>
-						</Toast>
-					);
-				},
-			});
-			return; // Exit function early
-		}
 		console.log("FormData for Case Logs", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
@@ -127,27 +109,22 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 
 		switch (caseLogFormToGet) {
 			case "CaseLog":
-				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserAnaesthesiaCaseLog";
 				caseLogToUpdate = "anaesthesiaCaseLog";
 				break;
 			case "ChronicPain":
-				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserAnaesthesiaChronicPainLog";
 				caseLogToUpdate = "anaesthesiaChronicPainLog";
 				break;
 			case "CriticalCareCaseLog":
-				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserAnaesthesiaCritcalCareCaseLog";
 				caseLogToUpdate = "anaesthesiaCriticalCareCaseLog";
 				break;
 			case "OrthopaedicsCaseLog":
-				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserOrthopaedicsCaseLog";
 				caseLogToUpdate = "orthopaedicsCaseLog";
 				break;
 			case "OrthodonticsClinicalCaseLog":
-				console.log("is this working for switch", caseLogFormToGet);
 				queryToRun = "updateUserOrthodonticsClinicalCaseLog";
 				caseLogToUpdate = "orthodonticsClinicalCaseLog";
 				break;
@@ -174,11 +151,12 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
-		reset();
+		reset({
+			faculty: null,
+			date: new Date(),
+		});
 		const fetchLogProfilePrefilledData = async () => {
 			try {
-				const caseLogData = caseLogData;
-				console.log("caseLogData", caseLogData);
 				const logProfileData = toJS(AppStore.UserLogProfile);
 				console.log("logProfileData", logProfileData);
 				if (logProfileData) {
@@ -191,7 +169,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0]?.department);
 					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 					setValue("hospital", hospitalData);
-					setValue("faculty", facultiesList);
 					setValue("rotation", rotationsList[0]?.department);
 				} else {
 					const query = store.fetchUserLogProfile(AppStore.UserName);
@@ -212,7 +189,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 						console.log("rotations[0].department", rotationsList[0]?.department);
 						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 						setValue("hospital", hospitalData);
-						setValue("faculty", facultiesList);
 						setValue("rotation", rotationsList[0]?.department);
 					}
 				}
@@ -239,7 +215,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 					{caseLogPrefilledData ? (
 						<>
 							<ScrollView>
-								<Box paddingTop={10} justifyContent='center' alignItems='center'>
+								<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 									<Box width={"$100%"}>
 										<CaselogDropDownOptions
 											formFields={getCaseLogFields(caseLogFormToGet)}
@@ -249,20 +225,18 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 											formState={formState}
 											readOnlyFaculty={false}
 										/>
-										<Divider />
 									</Box>
-									<Box justifyContent='center' alignItems='center'>
-										<Box width={"$100%"}>
-											<SpecialCaseLogSelectOptions
-												control={control}
-												setValue={setValue}
-												getValues={getValues}
-												formState={formState}
-												caseLogData={{}}
-												specialCaseLogsOption={getSpecialCaseLogOptions(caseLogFormToGet)}
-												refernceToGetSpecialOptions={caseLogFormToGet}
-											/>
-										</Box>
+									<Divider />
+									<Box width={"$100%"}>
+										<SpecialCaseLogSelectOptions
+											control={control}
+											setValue={setValue}
+											getValues={getValues}
+											formState={formState}
+											caseLogData={{}}
+											specialCaseLogsOption={getSpecialCaseLogOptions(caseLogFormToGet)}
+											refernceToGetSpecialOptions={caseLogFormToGet}
+										/>
 									</Box>
 								</Box>
 							</ScrollView>

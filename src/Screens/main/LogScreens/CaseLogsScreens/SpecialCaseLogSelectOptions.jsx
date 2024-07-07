@@ -1,15 +1,16 @@
-import { Button, ButtonIcon, ButtonText, VStack } from "@gluestack-ui/themed";
-import { forEach } from "lodash";
+import { Button, ButtonIcon, ButtonText, Divider, VStack } from "@gluestack-ui/themed";
+import { forEach, isEmpty } from "lodash";
 import { ChevronRight } from "lucide-react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
 import TreeDataView from "../../../../components/Tree-DataView";
-import TreeView from "../../../../components/Tree-SelectorView_old";
+import TreeView from "../../../../components/Tree-SelectorView";
 import CaseLogAnaesthesiaConfig from "../../../../data/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
 import ChronicPainAnesthesiaCaseLogConfig from "../../../../data/SpecialtyConfigs/AnesthesiaConfigs/ChronicPainAnesthesiaCaseLogConfig";
 import CriticalCareLAnesthesiaCaseLogConfig from "../../../../data/SpecialtyConfigs/AnesthesiaConfigs/CriticalCareLAnesthesiaCaseLogConfig";
 import OrthopeadicsCaseLogConfig from "../../../../data/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicsCaseLogConfig";
 import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsSpecialClinicalCaseLogConfig";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 const getSelectType = (key, configData) => {
 	//console.log("key", key);
@@ -156,30 +157,47 @@ const SpecialCaseLogSelectOptions = ({
 	//console.log("SpecialCaseLogSelectOptions >> specialCaseLogsOption", specialCaseLogsOption);
 	console.log("SpecialCaseLogSelectOptions >> caseLogData", caseLogData);
 	return (
-		<VStack alignItems='center' space='lg' paddingBottom={10} paddingTop={20} px='$4'>
+		<VStack alignItems='center' gap='$4' pb='$4' px='$4'>
 			{specialCaseLogsOption.map((option) => {
-				return (
-					<VStack key={option.id} bg='#E6E3DB' borderRadius={25} w={"$full"}>
-						<Button
-							w='$full'
-							key={option.id}
-							onPress={handleShowTreeSelector.bind(null, option.id, null)}
-							size='lg'
-							justifyContent='space-between'
-							variant='specialLogs'>
-							<ButtonText>{option.name}</ButtonText>
-							<ButtonIcon as={Ionicons} size={20} name='add-sharp' color='#367B71' />
-						</Button>
-						{activeTreeSelectorValue[option.id] && (
+				console.log(activeTreeSelectorValue[option.id]);
+				if (!isEmpty(activeTreeSelectorValue[option.id])) {
+					return (
+						<VStack key={option.id} bg='#E6E3DB' borderRadius={25} w={"$full"}>
+							<Button
+								w='$full'
+								key={option.id}
+								onPress={handleShowTreeSelector.bind(null, option.id, null)}
+								size='xl'
+								justifyContent='space-between'
+								variant='specialLogs'>
+								<ButtonText fontSize='$sm'>{option.name}</ButtonText>
+								<ButtonIcon as={FontAwesome6} name='edit' size={16} color='#367B71' />
+							</Button>
+							<Divider bgColor='$textColor100' />
 							<TreeDataView
 								predicate={option.id}
 								data={activeTreeSelectorValue[option.id]}
 								treeConfigData={getTreeConfigData(option.id)}
 								onShowTreeSelector={handleShowTreeSelector}
 							/>
-						)}
-					</VStack>
-				);
+						</VStack>
+					);
+				} else {
+					return (
+						<VStack key={option.id} bg='#E6E3DB' borderRadius={25} w={"$full"}>
+							<Button
+								w='$full'
+								key={option.id}
+								onPress={handleShowTreeSelector.bind(null, option.id, null)}
+								size='xl'
+								justifyContent='space-between'
+								variant='specialLogs'>
+								<ButtonText fontSize='$sm'>{option.name}</ButtonText>
+								<ButtonIcon as={FontAwesome6} name='add' size={16} color='#367B71' />
+							</Button>
+						</VStack>
+					);
+				}
 			})}
 			{activeTreeSelector && showTreeView && (
 				<TreeView

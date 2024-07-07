@@ -65,6 +65,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const [open, setOpen] = useState(false);
 	const [showActionSheet, setShowActionsheet] = useState(false);
 	const [date, setDate] = useState(caseLogData?.date ? new Date(caseLogData.date) : new Date());
+
 	const handleCloseDateModal = () => {
 		setShowActionsheet(false);
 	};
@@ -73,13 +74,13 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 		setValue("date", date);
 	};
 
-	useEffect(() => {
+	/*useEffect(() => {
 		//TODO: This is a hack to set the default value of faculty in the form
 		if (!caseLogData) {
 			const defaultFaculty = prefilledData?.faculty?.[0]?.name;
 			setValue("faculty", defaultFaculty);
 		}
-	}, []);
+	}, []);*/
 
 	console.log("data for edit", caseLogData);
 	//console.log("prefilledData Mudit test", prefilledData);
@@ -88,51 +89,45 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
 	const activeRotationFrom = activeRotation ? format(parseISO(activeRotation?.from), "dd MMM yyyy") : null;
 	const activeRotationTo = activeRotation ? format(parseISO(activeRotation?.to), "dd MMM yyyy") : null;
-	const activeRotationText = activeRotation ? `${activeRotation.department}   (  ${activeRotationFrom}  -  ${activeRotationTo}  )` : "No Rotation";
+	const activeRotationText = activeRotation ? `${activeRotation.department}` : "No Rotation";
 	return (
-		<VStack space='sm'>
-			<VStack>
-				<Box pl='$5' width={"$80%"}>
-					<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
-						Rotation
-					</Text>
-				</Box>
-				<Box pl='$5' width={"$80%"}>
-					<Text size='sm'>{activeRotationText}</Text>
-				</Box>
+		<VStack gap='$2'>
+			<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
+				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+					Rotation
+				</Text>
+				<Input variant='outline' size='sm' isDisabled={true}>
+					<InputField value={activeRotationText} />
+				</Input>
 			</VStack>
-			<VStack>
-				<Box pl='$5' width={"$80%"}>
-					<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
-						Hospital
-					</Text>
-				</Box>
-				<Box pl='$5' width={"$80%"}>
-					<Text size='sm'>{hospital}</Text>
-				</Box>
+			<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
+				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+					Hospital
+				</Text>
+				<Input variant='outline' size='sm' isDisabled={true}>
+					<InputField value={hospital} />
+				</Input>
 			</VStack>
-			<Box width={"$100%"} pl='$5' pr='$5'>
+			<VStack width={"$100%"} pl='$5' pr='$5' gap='$2'>
 				<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
 					Date
 				</Text>
 				<Button onPress={() => setOpen(true)} justifyContent='space-between' variant='date'>
-					<ButtonText>Date - {format(new Date(date), "d/MM/yyyy")}</ButtonText>
+					<ButtonText>{format(new Date(date), "dd / MM / yyyy")}</ButtonText>
 					<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
 				</Button>
-			</Box>
-			<Box width={"$100%"} pl='$5' pr='$5'>
+			</VStack>
+			<VStack width={"$100%"} pl='$5' pr='$5' gap='$2'>
 				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
-					Faculty <Text color='#DE2E2E'>*</Text>
+					Faculty
 				</Text>
-				<Box paddingBottom={10}>
+				<Box>
 					<Controller
 						control={control}
 						key='faculty'
 						name='faculty'
-						rules={{
-							required: true,
-						}}
 						render={({ field: { onChange, onBlur, value } }) => {
+							console.log("Faculty >> Select value >> ", value);
 							return (
 								<Select onBlur={onBlur} isReadOnly={readOnlyFaculty} onValueChange={onChange} selectedValue={caseLogData?.faculty || value}>
 									<SelectTrigger variant='outline' size='sm'>
@@ -147,7 +142,8 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 											</Text>
 											<Divider borderWidth={0.1} />
 											{prefilledData?.faculty.map((item) => {
-												return <SelectItem key={item?.name} label={item?.name} value={item?.name} />;
+												console.log("Faculty >> SelectItem >> ", item);
+												return <SelectItem key={item?.id} label={item?.name} value={item?.id} />;
 											})}
 										</SelectContent>
 									</SelectPortal>
@@ -156,84 +152,82 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						}}
 					/>
 				</Box>
-				<Box alignItems='center'>
-					<Box>{formState.errors.faculty && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-				</Box>
-			</Box>
-			{formFields.map((field, index) => {
-				if (field.type === "select-single") {
-					return (
-						<Box width={"$100%"} pl='$5' pr='$5'>
-							<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
-								{field.name}
-							</Text>
-							<Box paddingBottom={10}>
-								<Controller
-									control={control}
-									key={field.uid}
-									name={field.uid}
-									rules={{
-										required: false,
-									}}
-									render={({ field: { onChange, onBlur, value } }) => {
-										return (
-											<Select onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
-												<SelectTrigger variant='outline' size='sm'>
-													<SelectInput placeholder={field.name} />
-													<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-												</SelectTrigger>
-												<SelectPortal>
-													<SelectBackdrop />
-													<SelectContent>
-														<Text padding={10} size='xl'>
-															{field.name}
-														</Text>
-														<Divider borderWidth={0.1} />
-														{field.options.map((option, index) => {
-															return <SelectItem key={option.value} label={option.label} value={option.value} />;
-														})}
-													</SelectContent>
-												</SelectPortal>
-											</Select>
-										);
-									}}
-								/>
-							</Box>
-							<Box alignItems='center'>
-								<Box>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-							</Box>
-						</Box>
-					);
-				} else if (field.type === "text") {
-					return (
-						<Box pl='$5' pr='$5' width={"$100%"}>
-							<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
-								{field.name}
-							</Text>
-							<Box alignItems='center' paddingBottom={10}>
-								<Controller
-									control={control}
-									key={field.uid}
-									name={field.uid}
-									rules={{
-										required: false,
-									}}
-									render={({ field: { onChange, onBlur, value } }) => {
-										return (
-											<Input variant='outline' size='sm'>
-												<InputField onChangeText={onChange} value={value} placeholder={field.name} />
-											</Input>
-										);
-									}}
-								/>
-							</Box>
-							<Box alignItems='center'>
-								<Box>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-							</Box>
-						</Box>
-					);
-				}
-			})}
+			</VStack>
+			<HStack width={"$100%"} pl='$5' pr='$5' gap='$2' flexWrap='wrap' justifyContent='space-between'>
+				{formFields.map((field, index) => {
+					if (field.type === "select-single") {
+						return (
+							<VStack width={field.width ?? "$100%"} gap='$2'>
+								<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+									{field.name}
+								</Text>
+								<Box>
+									<Controller
+										control={control}
+										key={field.uid}
+										name={field.uid}
+										rules={{
+											required: false,
+										}}
+										render={({ field: { onChange, onBlur, value } }) => {
+											return (
+												<Select onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
+													<SelectTrigger variant='outline' size='sm'>
+														<SelectInput placeholder={field.name} />
+														<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+													</SelectTrigger>
+													<SelectPortal>
+														<SelectBackdrop />
+														<SelectContent>
+															<Text padding={10} size='xl'>
+																{field.name}
+															</Text>
+															<Divider borderWidth={0.1} />
+															{field.options.map((option, index) => {
+																return <SelectItem key={option.value} label={option.label} value={option.value} />;
+															})}
+														</SelectContent>
+													</SelectPortal>
+												</Select>
+											);
+										}}
+									/>
+								</Box>
+							</VStack>
+						);
+					} else if (field.type === "text" || field.type === "number") {
+						return (
+							<VStack width={field.width ?? "$100%"} gap='$2'>
+								<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+									{field.name}
+								</Text>
+								<Box alignItems='center'>
+									<Controller
+										control={control}
+										key={field.uid}
+										name={field.uid}
+										rules={{
+											required: false,
+										}}
+										render={({ field: { onChange, onBlur, value } }) => {
+											return (
+												<Input variant='outline' size='sm'>
+													<InputField
+														keyboardType={field.type === "number" ? "number-pad" : "default"}
+														onChangeText={onChange}
+														value={value}
+														placeholder={field.name}
+													/>
+												</Input>
+											);
+										}}
+									/>
+								</Box>
+							</VStack>
+						);
+					}
+				})}
+			</HStack>
 			<DatePicker
 				modal
 				open={open}
@@ -248,6 +242,8 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 					setOpen(false);
 				}}
 				mode='date'
+				title='Select Date'
+				dividerColor='#367B71'
 			/>
 		</VStack>
 	);

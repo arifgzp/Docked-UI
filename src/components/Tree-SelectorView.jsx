@@ -37,34 +37,13 @@ import { ButtonGroup } from "@gluestack-ui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import { makeObservable, observable, action } from "mobx";
 import { observer } from "mobx-react";
+import { FontAwesome } from "@expo/vector-icons";
 
 function noop() {}
 
 const BranchNode = observer((props) => {
-	const { nodeId, nodeName, level, expandedNodeKeys } = props;
-	console.log("BranchNode Render .............. | ", nodeName);
-	const isExpanded = expandedNodeKeys[nodeId];
-	return (
-		<HStack
-			key={nodeId}
-			gap='$2'
-			style={
-				level != 0
-					? {
-							marginLeft: 25 * level,
-							paddingBottom: isExpanded ? 4 : 0,
-					  }
-					: { paddingBottom: isExpanded ? 4 : 0 }
-			}>
-			{isExpanded ? <Ionicons name='remove-circle-outline' size={20} color='#000' /> : <Ionicons name='add-circle-outline' size={20} color='#000' />}
-			<Text>{nodeName}</Text>
-		</HStack>
-	);
-});
-
-const BranchNodeWrapper = observer((props) => {
 	const { node, level, selectionBreadcrumbKey, expandedNodeKeys, onNodePress } = props;
-	console.log("BranchNodeWrapper Render .............. | ", node.name);
+	console.log("BranchNode Render .............. | ", node.name);
 
 	const nodeId = node["id"];
 	const isExpanded = expandedNodeKeys[nodeId];
@@ -72,9 +51,25 @@ const BranchNodeWrapper = observer((props) => {
 	const shouldRenderLevel = hasChildrenNodes && isExpanded;
 
 	return (
-		<View key={nodeId}>
+		<View
+			key={nodeId}
+			style={
+				level != 1
+					? {
+							marginLeft: 32,
+							paddingBottom: isExpanded ? 4 : 0,
+					  }
+					: { paddingBottom: isExpanded ? 4 : 0 }
+			}>
 			<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
-				<BranchNode nodeId={nodeId} nodeName={node.name} level={level} expandedNodeKeys={expandedNodeKeys} />
+				<HStack alignItems='center' key={nodeId} gap='$2'>
+					{isExpanded ? (
+						<Ionicons name='remove-circle-outline' size={26} color='#000' />
+					) : (
+						<Ionicons name='add-circle-outline' size={26} color='#000' />
+					)}
+					<Text fontSize='$lg'>{node.name}</Text>
+				</HStack>
 			</TouchableOpacity>
 			<VStack gap='$2'>
 				{shouldRenderLevel && (
@@ -94,39 +89,51 @@ const BranchNodeWrapper = observer((props) => {
 });
 
 const LeafNode = observer((props) => {
-	const { nodeId, nodeName, selectType, level } = props;
-	console.log("LeafNode Render .............. | ", nodeName);
+	const { node, selectType, level, onNodePress } = props;
+	console.log("LeafNode Render .............. | ", node.name);
 
 	switch (selectType) {
 		case "multiple":
 			return (
-				<Checkbox
-					style={{
-						marginLeft: 25 * level,
-					}}
-					key={nodeId}
-					value={nodeId}
-					aria-label={nodeName}>
-					<CheckboxIndicator mr='$2'>
-						<CheckboxIcon as={CheckIcon} />
-					</CheckboxIndicator>
-					<CheckboxLabel>{nodeName}</CheckboxLabel>
-				</Checkbox>
+				<View
+					key={node.id}
+					style={
+						level != 1
+							? {
+									marginLeft: 32,
+							  }
+							: {}
+					}>
+					<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
+						<Checkbox key={node.id} size='lg' value={node.id} aria-label={node.name}>
+							<CheckboxIndicator mr='$2'>
+								<CheckboxIcon as={FontAwesome} name='check' size={14} />
+							</CheckboxIndicator>
+							<CheckboxLabel>{node.name}</CheckboxLabel>
+						</Checkbox>
+					</TouchableOpacity>
+				</View>
 			);
 		case "single":
 			return (
-				<Radio
-					style={{
-						marginLeft: 25 * level,
-					}}
-					key={nodeId}
-					value={nodeId}
-					aria-label={nodeName}>
-					<RadioIndicator mr='$2'>
-						<RadioIcon as={CircleIcon} />
-					</RadioIndicator>
-					<RadioLabel>{nodeName}</RadioLabel>
-				</Radio>
+				<View
+					key={node.id}
+					style={
+						level != 1
+							? {
+									marginLeft: 32,
+							  }
+							: {}
+					}>
+					<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
+						<Radio key={node.id} value={node.id} aria-label={node.name}>
+							<RadioIndicator mr='$2'>
+								<RadioIcon as={CircleIcon} />
+							</RadioIndicator>
+							<RadioLabel>{node.name}</RadioLabel>
+						</Radio>
+					</TouchableOpacity>
+				</View>
 			);
 
 		default:
@@ -134,14 +141,14 @@ const LeafNode = observer((props) => {
 	}
 });
 
-const LeafNodeWrapper = observer((props) => {
-	const { selectedNodeKeys, selectionBreadcrumbKey, selectType, leafChildrenList, level, onSelectNode, onNodePress } = props;
+const ChildrenWrapper = observer((props) => {
+	const { selectedNodeKeys, selectionBreadcrumbKey, selectType, children, level, onSelectNode, onNodePress } = props;
 
-	if (!leafChildrenList || leafChildrenList.length === 0) {
+	if (!children || children.length === 0) {
 		return null;
 	}
 
-	console.log("LeafNodeWrapper Render ..............");
+	console.log("ChildrenWrapper Render ..............");
 
 	switch (selectType) {
 		case "multiple":
@@ -149,17 +156,7 @@ const LeafNodeWrapper = observer((props) => {
 			return (
 				<CheckboxGroup key={selectionBreadcrumbKey} value={checkBoxValues} onChange={onSelectNode.bind(null, selectionBreadcrumbKey)}>
 					<HStack space='lg'>
-						<VStack gap='$2'>
-							{leafChildrenList.map((node) => {
-								return (
-									<View key={node["id"]}>
-										<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
-											<LeafNode nodeId={node.id} nodeName={node.name} selectType={selectType} level={level} />
-										</TouchableOpacity>
-									</View>
-								);
-							})}
-						</VStack>
+						<VStack gap='$2'>{children}</VStack>
 					</HStack>
 				</CheckboxGroup>
 			);
@@ -168,22 +165,12 @@ const LeafNodeWrapper = observer((props) => {
 			return (
 				<RadioGroup key={selectionBreadcrumbKey} value={radioValues} onChange={onSelectNode.bind(null, selectionBreadcrumbKey)}>
 					<HStack space='lg'>
-						<VStack gap='$2'>
-							{leafChildrenList.map((node) => {
-								return (
-									<View key={node["id"]}>
-										<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
-											<LeafNode nodeId={node.id} nodeName={node.name} selectType={selectType} level={level} />
-										</TouchableOpacity>
-									</View>
-								);
-							})}
-						</VStack>
+						<VStack gap='$2'>{children}</VStack>
 					</HStack>
 				</RadioGroup>
 			);
 		default:
-			return null;
+			return children;
 	}
 });
 
@@ -203,61 +190,26 @@ const TreeNode = observer((props) => {
 		onNodePress,
 		onSelectNode,
 	} = props;
-	const currentNodeChildList = [...nodes];
-	const leafChildrenList = remove(currentNodeChildList, (node) => node.nodeType === "leaf");
 
-	const nodeList = currentNodeChildList.map((node) => {
-		return <BranchNodeWrapper key={node.id} {...props} node={node} />;
+	const currentNodeChildList = nodes.map((node) => {
+		if (node.nodeType === "leaf") {
+			return <LeafNode key={node.id} {...props} node={node} />;
+		} else {
+			return <BranchNode key={node.id} {...props} node={node} />;
+		}
 	});
 
-	//let selectWrapper = this.renderSelectWrapper({ selectionBreadcrumbKey, selectType, leafChildList, level });
-	let selectLeafNodeWrapper = null;
-	let leafActionButtonGroup = null;
-
-	if (leafChildrenList && leafChildrenList.length > 0) {
-		selectLeafNodeWrapper = (
-			<LeafNodeWrapper
-				selectionBreadcrumbKey={selectionBreadcrumbKey}
-				selectType={selectType}
-				leafChildrenList={leafChildrenList}
-				level={level}
-				selectedNodeKeys={selectedNodeKeys}
-				onSelectNode={onSelectNode}
-				onNodePress={onNodePress}
-			/>
-		);
-
-		if (selectType === "multiple" || selectType === "single") {
-			leafActionButtonGroup = (
-				<ButtonGroup
-					key={`${parentId}-action-button`}
-					style={{
-						marginLeft: 25 * level,
-						marginTop: 10,
-					}}
-					space='md'>
-					<Button
-						bg='rgba(64, 224, 208, 0.1)'
-						size='xs'
-						borderWidth={1}
-						borderColor='#357A71'
-						borderRadius={10}
-						onPress={onClear.bind(null, selectionBreadcrumbKey)}>
-						<ButtonText color='#1e1e1e' size='xs' fontSize='$sm' fontWeight='$medium'>
-							Clear
-						</ButtonText>
-					</Button>
-					<Button size='xs' bg='#40E0D0' borderColor='#357A71' borderRadius={10} borderWidth={1} onPress={onDone.bind(null, parentId)}>
-						<ButtonText color='#1e1e1e' size='xs' fontSize='$sm' fontWeight='$medium'>
-							Done
-						</ButtonText>
-					</Button>
-				</ButtonGroup>
-			);
-		}
-	}
-
-	return [nodeList, selectLeafNodeWrapper, leafActionButtonGroup];
+	return (
+		<ChildrenWrapper
+			selectionBreadcrumbKey={selectionBreadcrumbKey}
+			selectType={selectType}
+			children={currentNodeChildList}
+			level={level}
+			selectedNodeKeys={selectedNodeKeys}
+			onSelectNode={onSelectNode}
+			onNodePress={onNodePress}
+		/>
+	);
 });
 
 class TreeView extends React.Component {
@@ -382,6 +334,8 @@ class TreeView extends React.Component {
 	render() {
 		//console.log(this.props);
 		console.log("Tree View Render ..............");
+		const rootNode = this.props.data[0];
+
 		return (
 			<Modal isOpen={this.showModal} size='lg'>
 				<ModalBackdrop />
@@ -394,10 +348,14 @@ class TreeView extends React.Component {
 					</ModalHeader>
 					<Divider />
 					<ModalBody p='$0'>
-						<HStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start'>
+						<VStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start' gap='$2'>
 							<TreeNode
-								nodes={this.props.data}
-								level={0}
+								key={`${rootNode.id}-children`}
+								nodes={rootNode.children}
+								level={1}
+								selectType={rootNode.selectType}
+								parentId={rootNode.id}
+								selectionBreadcrumbKey={rootNode.id}
 								expandedNodeKeys={this.expandedNodeKeys}
 								selectedNodeKeys={this.selectedNodeKeys}
 								onNodePress={this.handleNodePressed}
@@ -405,15 +363,12 @@ class TreeView extends React.Component {
 								onClear={this.clearNodeSelection}
 								onDone={this.toggleCollapse}
 							/>
-						</HStack>
+						</VStack>
 					</ModalBody>
 					<Divider />
-					<ModalFooter>
-						<Button bg='rgba(64, 224, 208, 0.1)' borderWidth={1} borderColor='#357A71' borderRadius={10} mr='$3' onPress={this.closeModal}>
-							<ButtonText color='#1e1e1e'>Cancel</ButtonText>
-						</Button>
-						<Button bg='#40E0D0' borderColor='#357A71' borderRadius={10} borderWidth={1} onPress={this.saveModal}>
-							<ButtonText color='#1e1e1e'>Done</ButtonText>
+					<ModalFooter justifyContent='center'>
+						<Button w='$90%' variant='primary' onPress={this.saveModal}>
+							<ButtonText>Confirm</ButtonText>
 						</Button>
 					</ModalFooter>
 				</ModalContent>

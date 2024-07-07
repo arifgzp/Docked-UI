@@ -23,16 +23,16 @@ const Options = {
 };
 
 const caseLogConfigTextAndSingleSelectOptions = [
-	{ name: "Patient Age", uid: "patientAge", type: "text", isRequire: true },
-	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true },
-	{ name: "Weight", uid: "weight", type: "text", isRequire: true },
-	{ name: "Height", uid: "height", type: "text", isRequire: true },
+	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%" },
+	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true, width: "$48%" },
+	{ name: "Weight", uid: "weight", type: "number", isRequire: true, width: "$48%" },
+	{ name: "Height", uid: "height", type: "number", isRequire: true, width: "$48%" },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
 	{ name: "Surgical Procedure", uid: "surgicalProcedure", type: "text", isRequire: true },
 	{ name: "Speciality", uid: "speciality", type: "text", isRequire: true },
 	{ name: "ASA Grade", uid: "asaGrade", type: "select-single", options: Options.ASAGrade, isRequire: true },
 	{ name: "Type of Surgery", uid: "typeOfSurgery", type: "select-single", options: Options.TypeofSurgery, isRequire: true },
-	{ name: "NPO - hours", uid: "npo", type: "text", isRequire: true },
+	{ name: "NPO - hours", uid: "npo", type: "number", isRequire: true },
 	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true },
 ];
 

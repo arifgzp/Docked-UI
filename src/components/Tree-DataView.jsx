@@ -1,6 +1,6 @@
-import { Divider, HStack, Pressable, Text, VStack } from "@gluestack-ui/themed";
+import { Divider, HStack, Pressable, Text, useToken, VStack } from "@gluestack-ui/themed";
 import React, { useMemo } from "react";
-import { map, forEach } from "lodash";
+import { map, forEach, isEmpty } from "lodash";
 import { Icon } from "@gluestack-ui/themed";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -24,205 +24,199 @@ const getLabel = (key, configData) => {
 	return label;
 };
 
-const getArrowIcon = (dataValue) => {
-	let iconColor = "";
-	let iconSize = -1;
-	let iconName = "";
-	switch (dataValue.colorLevel) {
-		case 1:
-			iconColor = "#367B71";
-			iconSize = 18;
-			iconName = "caret-forward";
-			break;
-
-		case 2:
-			iconColor = "#96C9C2";
-			iconSize = 18;
-			iconName = "caret-forward";
-			break;
-
-		case 3:
-			iconColor = "#367B71";
-			iconSize = 14;
-			iconName = "play-outline";
-			break;
-
-		default:
-			iconColor = "#367B71";
-			iconSize = 18;
-			iconName = "caret-forward";
-			break;
-	}
-	return <Icon as={Ionicons} name={iconName} size={iconSize} color={iconColor} />;
-};
-
 function TreeDataView(props) {
 	const { predicate, data = {}, treeConfigData, onShowTreeSelector } = props;
+	const color_Level1 = useToken("colors", "primary600");
+	const color_Level2 = useToken("colors", "primary300");
+	const color_Level3 = useToken("colors", "primary100");
+
+	const getArrowIcon = (colorLevel) => {
+		let iconColor = "";
+		let iconSize = -1;
+		let iconName = "";
+		switch (colorLevel) {
+			case 1:
+				iconColor = color_Level1;
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
+
+			case 2:
+				iconColor = color_Level2;
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
+
+			case 3:
+				iconColor = color_Level3;
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
+
+			case 4:
+				iconColor = color_Level3;
+				iconSize = 14;
+				iconName = "play-outline";
+				break;
+
+			default:
+				iconColor = "#367B71";
+				iconSize = 18;
+				iconName = "caret-forward";
+				break;
+		}
+		return <Icon as={Ionicons} name={iconName} size={iconSize} color={iconColor} />;
+	};
 
 	const buildCompactViewData = () => {
-		return Object.keys(data).reduce((result, key) => {
-			const [rootNode, ...restTreeNodes] = key.split("/");
-			if (restTreeNodes.length > 0) {
-				//"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial", "Peripheral "],
-				//"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE", "Isoflurane"],
-
-				if (restTreeNodes.length === 1) {
-					//"typeOfAnaesthesia/REGIONAL": ["PB", "Neuraxial", "Peripheral "],
-					const firstLevelTreeNode = restTreeNodes[0];
-					let firstLevelSelection = {};
-					let firstLevelSelectionData = data[key];
-					const isFirstLevelSelectionDataArray = Array.isArray(firstLevelSelectionData);
-
-					if (isFirstLevelSelectionDataArray) {
-						firstLevelSelection = {
-							key: firstLevelTreeNode,
-							label: getLabel(firstLevelTreeNode, treeConfigData),
-							value: firstLevelSelectionData.map((selection) => {
+		return Object.keys(data).reduce(
+			(result, key) => {
+				const [rootNode, ...restTreeNodes] = key.split("/");
+				if (restTreeNodes.length === 0) {
+					const leafNodeSelection = data[key];
+					const isLeafNodeSelectionArray = Array.isArray(leafNodeSelection);
+					if (isLeafNodeSelectionArray) {
+						result.selectionList.push(
+							...leafNodeSelection.map((selection) => {
 								return {
 									key: selection,
 									label: getLabel(selection, treeConfigData),
-									colorLevel: 1,
-									isClickable: false,
+									children: null,
 								};
-							}),
-						};
+							})
+						);
 					} else {
-						firstLevelSelection = {
-							key: firstLevelTreeNode,
-							label: getLabel(firstLevelTreeNode, treeConfigData),
-							value: [
-								{
-									key: firstLevelSelectionData,
-									label: getLabel(firstLevelSelectionData, treeConfigData),
-									colorLevel: 1,
-									isClickable: false,
-								},
-							],
-						};
-					}
-
-					const firstLevelDataFromResult = result[firstLevelTreeNode];
-					if (firstLevelDataFromResult) {
-						firstLevelDataFromResult.value.push(...firstLevelSelection.value);
-					} else {
-						result[firstLevelTreeNode] = firstLevelSelection;
-					}
-				} else {
-					//"typeOfAnaesthesia/DRUGS/INHALATIONAL": ["NO2", "SEVOFLURANE", "Isoflurane"],
-					const [firstLevelTreeNode, ...otherLevelTreeNode] = restTreeNodes;
-					let subLevelSelection = [];
-					let subLevelSelectionLeaves = [];
-					let subLevelSelectionData = data[key];
-					const isSubLevelSelectionDataArray = Array.isArray(subLevelSelectionData);
-
-					const subLevelSelectionNodes = otherLevelTreeNode.map((selector, index) => {
-						return {
-							key: selector,
-							label: getLabel(selector, treeConfigData),
-							colorLevel: index + 1,
-							isClickable: true,
-							clickablePath: key,
-						};
-					});
-
-					if (isSubLevelSelectionDataArray) {
-						subLevelSelectionLeaves = subLevelSelectionData.map((selection) => {
-							return {
-								key: selection,
-								label: getLabel(selection, treeConfigData),
-								colorLevel: otherLevelTreeNode.length + 1,
-								isClickable: false,
-							};
+						result.selectionList.push({
+							key: leafNodeSelection,
+							label: getLabel(leafNodeSelection, treeConfigData),
+							children: null,
 						});
-					} else {
-						subLevelSelectionLeaves = [
-							{
-								key: subLevelSelectionData,
-								label: getLabel(subLevelSelectionData, treeConfigData),
-								colorLevel: otherLevelTreeNode.length + 1,
-								isClickable: false,
-							},
-						];
 					}
 
-					subLevelSelection.push(...subLevelSelectionNodes, ...subLevelSelectionLeaves);
+					return result;
+				}
 
-					const firstLevelDataFromResult = result[firstLevelTreeNode];
-					if (firstLevelDataFromResult) {
-						firstLevelDataFromResult.value.push(...subLevelSelection);
+				// Start from the end of the parts array and build the object structure
+				let node = {};
+				for (let i = restTreeNodes.length - 1; i >= 0; i--) {
+					const currentNodeKey = restTreeNodes[i];
+					if (i === restTreeNodes.length - 1) {
+						// The last part of the path becomes the deepest nested object
+						const leafNodeSelection = data[key];
+						const isLeafNodeSelectionArray = Array.isArray(leafNodeSelection);
+						let leafNodeList = [];
+						if (isLeafNodeSelectionArray) {
+							leafNodeList = leafNodeSelection.map((selection) => {
+								return {
+									key: selection,
+									label: getLabel(selection, treeConfigData),
+									children: null,
+								};
+							});
+						} else {
+							leafNodeList = [
+								{
+									key: leafNodeSelection,
+									label: getLabel(leafNodeSelection, treeConfigData),
+									children: null,
+								},
+							];
+						}
+						const isNodeFound = result.lookup[currentNodeKey];
+						if (!isNodeFound) {
+							node = { key: currentNodeKey, label: getLabel(currentNodeKey, treeConfigData), children: leafNodeList, clickablePath: key };
+							result.lookup[currentNodeKey] = node;
+							if (i === 0) {
+								result.selectionList.push(node);
+							}
+						} else {
+							isNodeFound.children.push(...leafNodeList);
+						}
+					} else if (i === 0) {
+						// The first part of the path becomes the root object
+						const isNodeFound = result.lookup[currentNodeKey];
+						if (!isNodeFound) {
+							node = { key: currentNodeKey, label: getLabel(currentNodeKey, treeConfigData), children: [node], clickablePath: key };
+							result.lookup[currentNodeKey] = node;
+							result.selectionList.push(node);
+						} else if (!isEmpty(node)) {
+							isNodeFound.children.push(node);
+						}
 					} else {
-						result[firstLevelTreeNode] = {
-							key: firstLevelTreeNode,
-							label: getLabel(firstLevelTreeNode, treeConfigData),
-							value: subLevelSelection,
-						};
+						// Wrap the current result within the next level
+						const isNodeFound = result.lookup[currentNodeKey];
+						if (!isNodeFound) {
+							node = { key: currentNodeKey, label: getLabel(currentNodeKey, treeConfigData), children: [node], clickablePath: key };
+							result.lookup[currentNodeKey] = node;
+						} else if (!isEmpty(node)) {
+							isNodeFound.children.push(node);
+							break;
+						}
 					}
 				}
-			} else {
-				// typeOfAnaesthesia: ["MAC", "General Anaesthesia"],
-				const leafSelectionData = data[key];
-				if (Array.isArray(leafSelectionData)) {
-					leafSelectionData.map((selection) => {
-						result[selection] = {
-							key: selection,
-							label: getLabel(selection, treeConfigData),
-							value: null,
-						};
-					});
-				} else {
-					result[leafSelectionData] = {
-						key: leafSelectionData,
-						label: getLabel(leafSelectionData, treeConfigData),
-						value: null,
-					};
-				}
+
+				return result;
+			},
+			{
+				selectionList: [],
+				lookup: {},
 			}
-			return result;
-		}, {});
+		);
 	};
 
-	const compactViewData = useMemo(buildCompactViewData, [predicate, data]);
+	const renderNodeLevel = (node, level = 0) => {
+		return (
+			<HStack key={node.key} justifyContent='flex-start' alignItems='flex-start' gap='$0.5' flexWrap='wrap'>
+				{node.children ? (
+					<>
+						<HStack gap='$0.5' justifyContent='center'>
+							{getArrowIcon(level)}
+							<Pressable onPress={onShowTreeSelector.bind(null, predicate, node.clickablePath)}>
+								<Text fontSize='$xs' underline={true} color='$textColor400' mt='$0.5'>
+									{node.label}
+								</Text>
+							</Pressable>
+						</HStack>
+						<VStack>
+							{map(node.children, (child) => {
+								return renderNodeLevel(child, level + 1);
+							})}
+						</VStack>
+					</>
+				) : (
+					<HStack gap='$0.5' justifyContent='center'>
+						{getArrowIcon(level)}
+						<Text fontSize='$xs' color='$textColor400' mt='$0.5'>
+							{node.label}
+						</Text>
+					</HStack>
+				)}
+			</HStack>
+		);
+	};
+
+	const compactViewData = buildCompactViewData();
+	//console.log("data", JSON.stringify(data));
+	//console.log("compactViewData", JSON.stringify(compactViewData));
 
 	return (
-		<VStack gap='$0' pl='$8' pb='$2' width={"$90%"}>
-			{map(compactViewData, (data, key) => {
+		<VStack gap='$2' pl='$8' py='$2' width={"$90%"}>
+			{map(compactViewData.selectionList, (selection) => {
 				return (
-					<>
-						<Divider my='$1' bg='$secondaryBackground' />
-						<HStack w={"$full"} gap='$1' flexWrap='wrap'>
-							{data.value ? (
-								<Pressable onPress={onShowTreeSelector.bind(null, predicate, key)}>
-									<Text fontWeight='$semibold' fontSize='$xs' underline={true}>
-										{data.label}
-									</Text>
-								</Pressable>
-							) : (
-								<Text fontWeight='$semibold' fontSize='$xs'>
-									{data.label}
-								</Text>
-							)}
-							{data.value && (
-								<HStack display='flex' alignItems='center' flexWrap='wrap'>
-									{map(data.value, (value) => {
-										return (
-											<HStack alignItems='center' gap='$0.5'>
-												{getArrowIcon(value)}
-												{value.isClickable ? (
-													<Pressable onPress={onShowTreeSelector.bind(null, predicate, value.clickablePath)}>
-														<Text fontSize='$xs' underline={true}>
-															{value.label}
-														</Text>
-													</Pressable>
-												) : (
-													<Text fontSize='$xs'>{value.label}</Text>
-												)}
-											</HStack>
-										);
-									})}
-								</HStack>
-							)}
-						</HStack>
-					</>
+					<HStack key={selection.key} w={"$full"} gap='$1' flexWrap='wrap'>
+						<Pressable onPress={onShowTreeSelector.bind(null, predicate, selection.key)}>
+							<Text fontWeight='$semibold' fontSize='$xs' underline={true} color='$textDark950'>
+								{selection.label}
+							</Text>
+						</Pressable>
+						{selection.children && (
+							<VStack>
+								{map(selection.children, (child) => {
+									return renderNodeLevel(child, 1);
+								})}
+							</VStack>
+						)}
+					</HStack>
 				);
 			})}
 		</VStack>
