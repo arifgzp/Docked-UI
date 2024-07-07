@@ -29,7 +29,6 @@ import {
 } from "@gluestack-ui/themed";
 import { Platform } from "react-native";
 import { useState, useRef } from "react";
-import PhoneInput from "react-native-phone-number-input";
 import { StyleSheet, View } from "react-native";
 import { ChevronDown } from "lucide-react-native";
 import { ImageAssets } from "../../../assets/Assets";
