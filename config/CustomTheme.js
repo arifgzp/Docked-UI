@@ -8,6 +8,8 @@ const customColors = {
 	figmacardred: "#e3898b",
 	figmaaqua: "#357a71",
 	font: "#495e5d",
+	textColor100: "#97979733",
+	textColor400: "#5E6366",
 	figmacardgray: "#c6cdd3",
 	figmalightblue: "#96c8f2",
 	figmablue: "#0676d6",
@@ -16,6 +18,16 @@ const customColors = {
 	figmalightyellow: "#edcf5e",
 	primaryBackground: "#E6E3DB",
 	secondaryBackground: "#FFFFFF",
+	primary50: "#76d9ca",
+	primary100: "#5ecaba",
+	primary200: "#48b9a8",
+	primary300: "#42978b",
+	primary400: "#367b71",
+	primary500: "#346760",
+	primary600: "#30544f",
+	primary700: "#2b423f",
+	primary800: "#243230",
+	primary900: "#1c2221",
 };
 
 import { createStyle } from "@gluestack-style/react";
@@ -1860,4 +1872,137 @@ const customButton = createStyle({
 	},
 });
 
-export { customButton, customColors };
+const customCheckboxIcon = createStyle({
+	":checked": {
+		color: "$primary600",
+	},
+	":disabled": {
+		opacity: 0.4,
+	},
+	_dark: {
+		":checked": {
+			color: "$backgroundDark0",
+		},
+		":disabled": {
+			opacity: 0.4,
+		},
+	},
+});
+
+const customCheckboxIndicator = createStyle({
+	justifyContent: "center",
+	alignItems: "center",
+	borderColor: "$borderLight300",
+	bg: "$transparent",
+	borderRadius: 6,
+
+	_web: {
+		":focusVisible": {
+			outlineWidth: "2px",
+			outlineColor: "$primary700",
+			outlineStyle: "solid",
+			_dark: {
+				outlineColor: "$primary300",
+			},
+		},
+	},
+
+	/*':checked': {
+    borderColor: '$primary600',
+    bg: '$primary600',
+  },*/
+
+	":checked": {
+		bg: "#E6E3DB",
+		borderColor: "#E6E3DB",
+	},
+
+	":hover": {
+		borderColor: "$borderLight500",
+		bg: "transparent",
+		":invalid": {
+			borderColor: "$error700",
+		},
+		":checked": {
+			bg: "$primary700",
+			borderColor: "$primary700",
+			":disabled": {
+				borderColor: "$primary600",
+				bg: "$primary600",
+				opacity: 0.4,
+				":invalid": {
+					borderColor: "$error700",
+				},
+			},
+		},
+		":disabled": {
+			borderColor: "$borderLight400",
+			":invalid": {
+				borderColor: "$error700",
+			},
+		},
+	},
+
+	":active": {
+		":checked": {
+			bg: "#E6E3DB",
+			borderColor: "#E6E3DB",
+		},
+	},
+	":invalid": {
+		borderColor: "$error700",
+	},
+	":disabled": {
+		opacity: 0.4,
+	},
+
+	_dark: {
+		borderColor: "$borderDark500",
+		bg: "$transparent",
+
+		":checked": {
+			borderColor: "$primary500",
+			bg: "$primary500",
+		},
+		":hover": {
+			borderColor: "$borderDark400",
+			bg: "transparent",
+			":invalid": {
+				borderColor: "$error400",
+			},
+			":checked": {
+				bg: "$primary400",
+				borderColor: "$primary400",
+				":disabled": {
+					borderColor: "$primary500",
+					bg: "$primary500",
+					opacity: 0.4,
+					":invalid": {
+						borderColor: "$error400",
+					},
+				},
+			},
+			":disabled": {
+				borderColor: "$borderDark500",
+				":invalid": {
+					borderColor: "$error400",
+				},
+			},
+		},
+		":active": {
+			":checked": {
+				bg: "$primary300",
+				borderColor: "$primary300",
+			},
+		},
+
+		":invalid": {
+			borderColor: "$error400",
+		},
+		":disabled": {
+			opacity: 0.4,
+		},
+	},
+});
+
+export { customColors, customButton, customCheckboxIcon, customCheckboxIndicator };
