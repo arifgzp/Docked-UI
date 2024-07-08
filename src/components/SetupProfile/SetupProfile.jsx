@@ -205,7 +205,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	}, [currentStep]);
 
 	return (
-		<Loader queryInfo={queryInfo} apiLoadingInfo={appStoreInstance.isLoading}>
+		<Loader queryInfo={queryInfo}>
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "height" : "height"}
 				style={{ flex: 1, zIndex: 999 }}

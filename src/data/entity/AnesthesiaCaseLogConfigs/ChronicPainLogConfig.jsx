@@ -16,6 +16,14 @@ const Options = {
 		{ label: "ICU", value: "ICU" },
 		{ label: "Death", value: "DEATH" },
 	],
+	Conduct: [
+		{ label: "O - observed", value: "O - observed" },
+		{ label: "A - assisted", value: "A - assisted" },
+		{ label: "AP - performed under supervision", value: "AP - performed under supervision" },
+		{ label: "P - Performed independently", value: "P - Performed independently" },
+		{ label: "S - Supervised", value: "S - Supervised" },
+		{ label: " C – Conducted", value: " C – Conducted" },
+	],
 	Gender: [
 		{ label: "Male", value: "Male" },
 		{ label: "Female", value: "Female" },
@@ -33,10 +41,11 @@ const Options = {
 };
 
 const ChornicPainCaseLogConfigTextAndSingleSelectOptions = [
-	{ name: "Patient Age", uid: "patientAge", type: "text", isRequire: true },
-	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true },
+	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%" },
+	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true, width: "$48%" },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
 	{ name: "Indication", uid: "indication", type: "text", isRequire: true },
+	{ name: "Conduct", uid: "conduct", type: "select-single", options: Options.Conduct, isRequire: true },
 ];
 
 const specialAnesthesiaChronicPainOptions = [

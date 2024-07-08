@@ -21,8 +21,10 @@ comorbidites="comorbidites",
 surgicalprocedure="surgicalprocedure",
 complication="complication",
 outcome="outcome",
+conduct="conduct",
 procedures="procedures",
-caseType="caseType"
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -42,6 +44,8 @@ export const AnaesthesiaCriticalCareCaseLogHasFilterEnumType = types.enumeration
   "surgicalprocedure",
   "complication",
   "outcome",
+  "conduct",
   "procedures",
   "caseType",
+  "remarks",
       ])

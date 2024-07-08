@@ -12,6 +12,7 @@ import {
 	useToast,
 	ToastTitle,
 	ToastDescription,
+	TextareaInput,
 } from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import { formatRFC3339 } from "date-fns";
@@ -47,6 +48,8 @@ import {
 	specialOrthodonticsClinicalCaseLog,
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 import IsReadyLoader from "../../../../components/IsReadyLoader";
+import { Textarea } from "@gluestack-ui/themed";
+import { Controller } from "react-hook-form";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -92,14 +95,14 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		defaultValues: {
 			faculty: null,
 			date: new Date(),
+			remarks: "",
 		},
 	});
 	const toast = useToast();
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 
 	const handleSaveClick = async (formData) => {
-		console.log("errors for the form", formState.errors);
-		console.log("FormData for Case Logs", formData);
+		console.log("FormData for Case Logs to be added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
@@ -238,6 +241,29 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 											refernceToGetSpecialOptions={caseLogFormToGet}
 										/>
 									</Box>
+									<Divider />
+									<VStack width={"$100%"} px='$5' space='sm' pb='$3'>
+										<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+											Remarks
+										</Text>
+										<Box w='$100%'>
+											<Controller
+												control={control}
+												key='remarks'
+												name='remarks'
+												rules={{
+													required: false,
+												}}
+												render={({ field: { onChange, onBlur, value } }) => {
+													return (
+														<Textarea w='$100%' size='sm' isReadOnly={false} isInvalid={false} isDisabled={false}>
+															<TextareaInput w='$100%' placeholder='Your remarks goes here...' onChangeText={onChange} value={value} />
+														</Textarea>
+													);
+												}}
+											/>
+										</Box>
+									</VStack>
 								</Box>
 							</ScrollView>
 							<Box p={20} paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>

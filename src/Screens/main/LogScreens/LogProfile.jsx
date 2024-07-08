@@ -120,6 +120,8 @@ const LogProfilePage = ({ navigation, route }) => {
 	const [toDate, setToDate] = useState(new Date());
 	const [facultyList, setFacultyList] = useState([]);
 	const [editFacultyIndex, setEditFacultyIndex] = useState(null);
+	const currentSpecialty = AppStore.UserBroadSpecialty;
+
 	const handleSetDate = (date, key) => {
 		if (date instanceof Date && !isNaN(date)) {
 			setValue(key, date);
@@ -305,7 +307,7 @@ const LogProfilePage = ({ navigation, route }) => {
 								<Divider />
 								<Box w='$100%'>
 									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
-										Faculties <Text color='#DE2E2E'>*</Text>
+										Faculties
 									</Text>
 								</Box>
 								<Box w='$100%'>
@@ -327,7 +329,10 @@ const LogProfilePage = ({ navigation, route }) => {
 													</HStack>
 													<Divider />
 													<Box gap='$2' px='$3' pt='$3' pb='$6'>
-														<Box>
+														<Box gap='$1'>
+															<Box>
+																<Text size='xs'>Faculty name</Text>
+															</Box>
 															<Box>
 																<Controller
 																	control={controlForFaculty}
@@ -349,7 +354,10 @@ const LogProfilePage = ({ navigation, route }) => {
 																<Box width='$100%'>{errorsForFaculty.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 															</Box>
 														</Box>
-														<Box>
+														<Box gap='$1'>
+															<Box>
+																<Text size='xs'>Designation</Text>
+															</Box>
 															<Box alignItems='center'>
 																<Controller
 																	control={controlForFaculty}
@@ -374,17 +382,17 @@ const LogProfilePage = ({ navigation, route }) => {
 																							Designation
 																						</Text>
 																						<Divider borderWidth={0.1} />
-																						<SelectItem label='Professor of Medicine' value='ProfessorOfMedicine' />
-																						<SelectItem label='Associate Professor of Surgery' value='AssociateProfessorOfSurgery' />
-																						<SelectItem label='Assistant Professor of Pediatrics' value='AssistantProfessorOfPediatrics' />
-																						<SelectItem label='Chief Medical Officer' value='ChiefMedicalOfficer' />
-																						<SelectItem label='Senior Consultant Cardiologist' value='SeniorConsultantCardiologist' />
-																						<SelectItem label='Consultant Oncologist' value='ConsultantOncologist' />
-																						<SelectItem label='Resident Physician' value='ResidentPhysician' />
-																						<SelectItem label='Clinical Instructor in Neurology' value='ClinicalInstructorInNeurology' />
-																						<SelectItem label='Adjunct Professor of Psychiatry' value='AdjunctProfessorOfPsychiatry' />
-																						<SelectItem label='Visiting Professor of Dermatology' value='VisitingProfessorOfDermatology' />
-																						<SelectItem label='Emeritus Professor of Obstetrics' value='EmeritusProfessorOfObstetrics' />
+																						<SelectItem label='Professor of Medicine' value='Professor Of Medicine' />
+																						<SelectItem label='Associate Professor of Surgery' value='Associate Professor Of Surgery' />
+																						<SelectItem label='Assistant Professor of Pediatrics' value='Assistant Professor Of Pediatrics' />
+																						<SelectItem label='Chief Medical Officer' value='Chief Medical Officer' />
+																						<SelectItem label='Senior Consultant Cardiologist' value='Senior Consultant Cardiologist' />
+																						<SelectItem label='Consultant Oncologist' value='Consultant Oncologist' />
+																						<SelectItem label='Resident Physician' value='Resident Physician' />
+																						<SelectItem label='Clinical Instructor in Neurology' value='Clinical Instructor In Neurology' />
+																						<SelectItem label='Adjunct Professor of Psychiatry' value='Adjunct Professor Of Psychiatry' />
+																						<SelectItem label='Visiting Professor of Dermatology' value='Visiting Professor Of Dermatology' />
+																						<SelectItem label='Emeritus Professor of Obstetrics' value='Emeritus Professor Of Obstetrics' />
 																					</SelectContent>
 																				</SelectPortal>
 																			</Select>
@@ -396,7 +404,10 @@ const LogProfilePage = ({ navigation, route }) => {
 																<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 															</Box>
 														</Box>
-														<Box>
+														<Box gap='$1'>
+															<Box>
+																<Text size='xs'>Phone Number</Text>
+															</Box>
 															<Box alignItems='center'>
 																<Controller
 																	control={controlForFaculty}
@@ -445,7 +456,10 @@ const LogProfilePage = ({ navigation, route }) => {
 													</HStack>
 													<Divider />
 													<Box gap='$2' px='$3' pt='$3' pb='$6'>
-														<Box>
+														<Box gap='$1'>
+															<Box>
+																<Text size='xs'>Faculty Name</Text>
+															</Box>
 															<Box>
 																<Controller
 																	control={controlForFaculty}
@@ -467,7 +481,10 @@ const LogProfilePage = ({ navigation, route }) => {
 																<Box width='$100%'>{errorsForFaculty.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 															</Box>
 														</Box>
-														<Box>
+														<Box gap='$1'>
+															<Box>
+																<Text size='xs'>Designation</Text>
+															</Box>
 															<Box alignItems='center'>
 																<Controller
 																	control={controlForFaculty}
@@ -492,17 +509,17 @@ const LogProfilePage = ({ navigation, route }) => {
 																							Designation
 																						</Text>
 																						<Divider borderWidth={0.1} />
-																						<SelectItem label='Professor of Medicine' value='ProfessorOfMedicine' />
-																						<SelectItem label='Associate Professor of Surgery' value='AssociateProfessorOfSurgery' />
-																						<SelectItem label='Assistant Professor of Pediatrics' value='AssistantProfessorOfPediatrics' />
-																						<SelectItem label='Chief Medical Officer' value='ChiefMedicalOfficer' />
-																						<SelectItem label='Senior Consultant Cardiologist' value='SeniorConsultantCardiologist' />
-																						<SelectItem label='Consultant Oncologist' value='ConsultantOncologist' />
-																						<SelectItem label='Resident Physician' value='ResidentPhysician' />
-																						<SelectItem label='Clinical Instructor in Neurology' value='ClinicalInstructorInNeurology' />
-																						<SelectItem label='Adjunct Professor of Psychiatry' value='AdjunctProfessorOfPsychiatry' />
-																						<SelectItem label='Visiting Professor of Dermatology' value='VisitingProfessorOfDermatology' />
-																						<SelectItem label='Emeritus Professor of Obstetrics' value='EmeritusProfessorOfObstetrics' />
+																						<SelectItem label='Professor of Medicine' value='Professor Of Medicine' />
+																						<SelectItem label='Associate Professor of Surgery' value='Associate Professor Of Surgery' />
+																						<SelectItem label='Assistant Professor of Pediatrics' value='Assistant Professor Of Pediatrics' />
+																						<SelectItem label='Chief Medical Officer' value='Chief Medical Officer' />
+																						<SelectItem label='Senior Consultant Cardiologist' value='Senior Consultant Cardiologist' />
+																						<SelectItem label='Consultant Oncologist' value='Consultant Oncologist' />
+																						<SelectItem label='Resident Physician' value='Resident Physician' />
+																						<SelectItem label='Clinical Instructor in Neurology' value='Clinical Instructor In Neurology' />
+																						<SelectItem label='Adjunct Professor of Psychiatry' value='Adjunct Professor OfP sychiatry' />
+																						<SelectItem label='Visiting Professor of Dermatology' value='Visiting Professor Of Dermatology' />
+																						<SelectItem label='Emeritus Professor of Obstetrics' value='Emeritus Professor Of Obstetrics' />
 																					</SelectContent>
 																				</SelectPortal>
 																			</Select>
@@ -514,7 +531,10 @@ const LogProfilePage = ({ navigation, route }) => {
 																<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 															</Box>
 														</Box>
-														<Box>
+														<Box gap='$1'>
+															<Box>
+																<Text size='xs'>Phone Number</Text>
+															</Box>
 															<Box alignItems='center'>
 																<Controller
 																	control={controlForFaculty}
@@ -596,139 +616,151 @@ const LogProfilePage = ({ navigation, route }) => {
 									</HStack>
 								</Button>
 								<Divider />
-								<Box w='$100%'>
-									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
-										Rotation<Text color='#DE2E2E'>*</Text>
-									</Text>
-								</Box>
-								<Box px='$3'>
-									<Text size='xs' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
-										Department
-									</Text>
-									<Box alignItems='center' paddingBottom={10}>
-										<Controller
-											control={control}
-											rules={{
-												required: true,
-											}}
-											name='department'
-											key='department'
-											render={({ field: { onChange, onBlur, value } }) => {
-												return (
-													<Select width={"$100%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-														<SelectTrigger variant='outline' size='sm'>
-															<SelectInput placeholder='Department' />
-															<SelectIcon mr='$3'>
-																<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-															</SelectIcon>
-														</SelectTrigger>
-														<SelectPortal>
-															<SelectBackdrop />
-															<SelectContent>
-																<Text padding={10} size='xl'>
-																	Department
-																</Text>
-																<Divider borderWidth={0.1} />
-																<SelectItem label='Cardiology' value='Cardiology' />
-																<SelectItem label='Neurology' value='Neurology' />
-																<SelectItem label='Pediatrics' value='Pediatrics' />
-																<SelectItem label='Oncology' value='Oncology' />
-																<SelectItem label='Orthopedics' value='Orthopedics' />
-																<SelectItem label='Radiology' value='Radiology' />
-																<SelectItem label='Dermatology' value='Dermatology' />
-																<SelectItem label='Psychiatry' value='Psychiatry' />
-																<SelectItem label='General Surgery' value='GeneralSurgery' />
-																<SelectItem label='Emergency Medicine' value='EmergencyMedicine' />
-																<SelectItem label='Obstetrics and Gynecology' value='ObstetricsAndGynecology' />
-																<SelectItem label='Anesthesiology' value='Anesthesiology' />
-																<SelectItem label='Endocrinology' value='Endocrinology' />
-																<SelectItem label='Gastroenterology' value='Gastroenterology' />
-															</SelectContent>
-														</SelectPortal>
-													</Select>
-												);
-											}}
-										/>
-									</Box>
-									<Box alignItems='center'>
-										<Box width={"$100%"}>{errors.department && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-									</Box>
-									<HStack width={"$100%"} space='sm'>
-										<VStack width={"$50%"}>
-											<Text size='xs' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
-												From
+								{currentSpecialty === "Anaesthesiology" ? (
+									<Box w='$100%'>
+										<Box w='$100%' pb='$3'>
+											<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
+												Rotation
 											</Text>
-											<Button
-												bg='$transparent'
-												justifyContent='space-between'
-												variant='date'
-												onPress={() => {
-													setCurrentKey("from");
-													setFromOpen(true);
-												}}>
-												<ButtonText fontFamily='Inter'>{format(new Date(fromDate), "d/MM/yyy")}</ButtonText>
-												<ButtonIcon as={Ionicons} size={20} name='calendar-outline' color='#367B71' />
-											</Button>
-										</VStack>
-										<VStack width={"$50%"}>
+										</Box>
+										<Box>
 											<Text size='xs' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
-												To
+												Department
 											</Text>
-											<Button
-												bg='$transparent'
-												justifyContent='space-between'
-												variant='date'
-												onPress={() => {
-													setCurrentKey("to");
-													setToOpen(true);
-												}}>
-												<ButtonText fontFamily='Inter'>{format(new Date(toDate), "d/MM/yyyy")}</ButtonText>
-												<ButtonIcon as={Ionicons} size={20} name='calendar-outline' color='#367B71' />
-											</Button>
-										</VStack>
-										<DatePicker
-											modal
-											open={fromOpen}
-											theme='light'
-											date={fromDate}
-											// onDateChange={(date) => {
-											// 	//setDate(date);
-											// 	handelSetDate(date);
-											// }}
-											onConfirm={(date) => {
-												setFromDate(date);
-												setFromOpen(false);
-												handleSetDate(date, currentKey);
-											}}
-											onCancel={() => {
-												setFromOpen(false);
-											}}
-											mode='date'
-										/>
-										<DatePicker
-											modal
-											open={toOpen}
-											theme='light'
-											date={toDate}
-											// onDateChange={(date) => {
-											// 	//setDate(date);
-											// 	handelSetDate(date);
-											// }}
-											onConfirm={(date) => {
-												setToDate(date);
-												setToOpen(false);
-												handleSetDate(date, currentKey);
-											}}
-											onCancel={() => {
-												setToOpen(false);
-											}}
-											mode='date'
-										/>
-									</HStack>
-								</Box>
+											<Box alignItems='center' paddingBottom={10}>
+												<Controller
+													control={control}
+													rules={{
+														required: true,
+													}}
+													name='department'
+													key='department'
+													render={({ field: { onChange, onBlur, value } }) => {
+														return (
+															<Select width={"$100%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+																<SelectTrigger variant='outline' size='sm'>
+																	<SelectInput placeholder='Department' />
+																	<SelectIcon mr='$3'>
+																		<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																	</SelectIcon>
+																</SelectTrigger>
+																<SelectPortal>
+																	<SelectBackdrop />
+																	<SelectContent>
+																		<Text padding={10} size='xl'>
+																			Department
+																		</Text>
+																		<Divider borderWidth={0.1} />
+																		<SelectItem label='General Surgery' value='General Surgery' />
+																		<SelectItem label='Trauma services' value='Trauma services' />
+																		<SelectItem label='Cardiovascular & Thoracic Surgery' value='Cardiovascular & Thoracic Surgery' />
+																		<SelectItem label='Neuro-surgery' value='Neuro-surgery' />
+																		<SelectItem label='Ophthalmology' value='Ophthalmology' />
+																		<SelectItem label='Plastic & Reconstructive Surgery' value='Plastic & Reconstructive Surgery' />
+																		<SelectItem label='Day care services' value='Day care services' />
+																		<SelectItem label='Paediatric surgery' value='Paediatric surgery' />
+																		<SelectItem label='Orthopaedics' value='Orthopaedics' />
+																		<SelectItem label='Dental & Maxillo-facial Surgery' value='Dental & Maxillo-facial Surgery' />
+																		<SelectItem label='Radiology suite' value='Radiology suite' />
+																		<SelectItem label='Urology' value='Urology' />
+																		<SelectItem label='Gynaecology & Obstetric' value='Gynaecology & Obstetric' />
+																		<SelectItem label='Transplant & Re-implant Surgery' value='Transplant & Re-implant Surgery' />
+																		<SelectItem label='MRI' value='MRI' />
+																		<SelectItem label='Endoscopic surgery' value='Endoscopic surgery' />
+																		<SelectItem label='ENT Surgery' value='ENT Surgery' />
+																		<SelectItem label='CT Scan' value='CT Scan' />
+																		<SelectItem label='Cardiac Catheterisation Laboratory' value='Cardiac Catheterisation Laboratory' />
+																		<SelectItem label='ЕСТ' value='ЕСТ' />
+																	</SelectContent>
+																</SelectPortal>
+															</Select>
+														);
+													}}
+												/>
+											</Box>
+											<Box alignItems='center'>
+												<Box width={"$100%"}>{errors.department && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+											</Box>
+											<HStack width={"$100%"} space='md'>
+												<VStack width={"$48%"}>
+													<Text size='xs' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
+														From
+													</Text>
+													<Button
+														bg='$transparent'
+														justifyContent='space-between'
+														variant='date'
+														onPress={() => {
+															setCurrentKey("from");
+															setFromOpen(true);
+														}}>
+														<ButtonText fontFamily='Inter'>{format(new Date(fromDate), "d/MM/yyy")}</ButtonText>
+														<ButtonIcon as={Ionicons} size={20} name='calendar-outline' color='#367B71' />
+													</Button>
+												</VStack>
+												<VStack width={"$48%"}>
+													<Text size='xs' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
+														To
+													</Text>
+													<Button
+														bg='$transparent'
+														justifyContent='space-between'
+														variant='date'
+														onPress={() => {
+															setCurrentKey("to");
+															setToOpen(true);
+														}}>
+														<ButtonText fontFamily='Inter'>{format(new Date(toDate), "d/MM/yyyy")}</ButtonText>
+														<ButtonIcon as={Ionicons} size={20} name='calendar-outline' color='#367B71' />
+													</Button>
+												</VStack>
+												<DatePicker
+													modal
+													open={fromOpen}
+													theme='light'
+													date={fromDate}
+													// onDateChange={(date) => {
+													// 	//setDate(date);
+													// 	handelSetDate(date);
+													// }}
+													onConfirm={(date) => {
+														setFromDate(date);
+														setFromOpen(false);
+														handleSetDate(date, currentKey);
+													}}
+													onCancel={() => {
+														setFromOpen(false);
+													}}
+													mode='date'
+												/>
+												<DatePicker
+													modal
+													open={toOpen}
+													theme='light'
+													date={toDate}
+													// onDateChange={(date) => {
+													// 	//setDate(date);
+													// 	handelSetDate(date);
+													// }}
+													onConfirm={(date) => {
+														setToDate(date);
+														setToOpen(false);
+														handleSetDate(date, currentKey);
+													}}
+													onCancel={() => {
+														setToOpen(false);
+													}}
+													mode='date'
+												/>
+											</HStack>
+										</Box>
+									</Box>
+								) : (
+									<Box></Box>
+								)}
 							</VStack>
 						</Box>
-						<Divider />
+						{currentSpecialty === "Anaesthesiology" ? <Divider /> : <Box></Box>}
 					</ScrollView>
 					<Box width='$100%' flex={1 / 4} pt={10} p={14} paddingBottom={"$30%"}>
 						<Button onPress={handleSubmit(handleOnSave)} variant='primary'>

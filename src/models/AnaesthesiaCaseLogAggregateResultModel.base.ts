@@ -49,12 +49,16 @@ export const AnaesthesiaCaseLogAggregateResultModelBase = ModelBase
     typeOfSurgeryMax: types.union(types.undefined, types.null, types.string),
     npoMin: types.union(types.undefined, types.null, types.string),
     npoMax: types.union(types.undefined, types.null, types.string),
+    conductMin: types.union(types.undefined, types.null, types.string),
+    conductMax: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMin: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
     outcomeMax: types.union(types.undefined, types.null, types.string),
     caseTypeMin: types.union(types.undefined, types.null, types.string),
     caseTypeMax: types.union(types.undefined, types.null, types.string),
+    remarksMin: types.union(types.undefined, types.null, types.string),
+    remarksMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -96,15 +100,19 @@ export class AnaesthesiaCaseLogAggregateResultModelSelector extends QueryBuilder
   get typeOfSurgeryMax() { return this.__attr(`typeOfSurgeryMax`) }
   get npoMin() { return this.__attr(`npoMin`) }
   get npoMax() { return this.__attr(`npoMax`) }
+  get conductMin() { return this.__attr(`conductMin`) }
+  get conductMax() { return this.__attr(`conductMax`) }
   get medicalRegistrationNumberMin() { return this.__attr(`medicalRegistrationNumberMin`) }
   get medicalRegistrationNumberMax() { return this.__attr(`medicalRegistrationNumberMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
   get outcomeMax() { return this.__attr(`outcomeMax`) }
   get caseTypeMin() { return this.__attr(`caseTypeMin`) }
   get caseTypeMax() { return this.__attr(`caseTypeMax`) }
+  get remarksMin() { return this.__attr(`remarksMin`) }
+  get remarksMax() { return this.__attr(`remarksMax`) }
 }
 export function selectFromAnaesthesiaCaseLogAggregateResult() {
   return new AnaesthesiaCaseLogAggregateResultModelSelector()
 }
 
-export const anaesthesiaCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.weightMin.weightMax.heightMin.heightMax.diagnosisMin.diagnosisMax.surgicalProcedureMin.surgicalProcedureMax.specialityMin.specialityMax.asaGradeMin.asaGradeMax.typeOfSurgeryMin.typeOfSurgeryMax.npoMin.npoMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax
+export const anaesthesiaCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.weightMin.weightMax.heightMin.heightMax.diagnosisMin.diagnosisMax.surgicalProcedureMin.surgicalProcedureMax.specialityMin.specialityMax.asaGradeMin.asaGradeMax.typeOfSurgeryMin.typeOfSurgeryMax.npoMin.npoMax.conductMin.conductMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

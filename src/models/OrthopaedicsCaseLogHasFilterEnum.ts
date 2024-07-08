@@ -17,12 +17,14 @@ patientAge="patientAge",
 patientSex="patientSex",
 rotation="rotation",
 diseaseCategory="diseaseCategory",
+conduct="conduct",
 site="site",
 joint="joint",
 bones="bones",
 outcomes="outcomes",
 diagnosis="diagnosis",
-caseType="caseType"
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -38,10 +40,12 @@ export const OrthopaedicsCaseLogHasFilterEnumType = types.enumeration("Orthopaed
   "patientSex",
   "rotation",
   "diseaseCategory",
+  "conduct",
   "site",
   "joint",
   "bones",
   "outcomes",
   "diagnosis",
   "caseType",
+  "remarks",
       ])

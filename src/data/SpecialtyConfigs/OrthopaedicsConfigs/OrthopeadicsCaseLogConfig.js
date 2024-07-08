@@ -274,17 +274,17 @@ const bones = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Distal",
+						id: "Distal1",
 						name: "Distal",
 						nodeType: "leaf",
 					},
 					{
-						id: "Middle",
+						id: "Middle1",
 						name: "Middle",
 						nodeType: "leaf",
 					},
 					{
-						id: "Proximal",
+						id: "Proximal1",
 						name: "Proximal",
 						nodeType: "leaf",
 					},
@@ -350,17 +350,17 @@ const bones = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Proximal",
+						id: "Proximal2",
 						name: "Proximal",
 						nodeType: "leaf",
 					},
 					{
-						id: "Middle",
+						id: "Middle2",
 						name: "Middle",
 						nodeType: "leaf",
 					},
 					{
-						id: "Distal",
+						id: "Distal2",
 						name: "Distal",
 						nodeType: "leaf",
 					},
@@ -373,17 +373,17 @@ const bones = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Proximal",
+						id: "Proximal3",
 						name: "Proximal",
 						nodeType: "leaf",
 					},
 					{
-						id: "Middle",
+						id: "Middle3",
 						name: "Middle",
 						nodeType: "leaf",
 					},
 					{
-						id: "Distal",
+						id: "Distal3",
 						name: "Distal",
 						nodeType: "leaf",
 					},
@@ -396,21 +396,26 @@ const bones = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Proximal",
+						id: "Proximal4",
 						name: "Proximal",
 						nodeType: "leaf",
 					},
 					{
-						id: "Middle",
+						id: "Middle4",
 						name: "Middle",
 						nodeType: "leaf",
 					},
 					{
-						id: "Distal",
+						id: "Distal4",
 						name: "Distal",
 						nodeType: "leaf",
 					},
 				],
+			},
+			{
+				id: "Clavicle",
+				name: "Clavicle",
+				nodeType: "leaf",
 			},
 			{
 				id: "Femur",
@@ -447,21 +452,56 @@ const bones = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Distal",
+						id: "Distal5",
 						name: "Distal",
 						nodeType: "leaf",
 					},
 					{
-						id: "Middle",
-						name: "Middle",
+						id: "Middle5",
+						name: "Middle5",
 						nodeType: "leaf",
 					},
 					{
-						id: "Proximal",
+						id: "Proximal5",
 						name: "Proximal",
 						nodeType: "leaf",
 					},
 				],
+			},
+			{
+				id: "Fibula",
+				name: "Fibula",
+				nodeType: "leaf",
+			},
+			{
+				id: "Talus",
+				name: "Talus",
+				nodeType: "leaf",
+			},
+			{
+				id: "Calcaneum",
+				name: "Calcaneum",
+				nodeType: "leaf",
+			},
+			{
+				id: "Navicular",
+				name: "Navicular",
+				nodeType: "leaf",
+			},
+			{
+				id: "Cuneiforms",
+				name: "Cuneiforms",
+				nodeType: "leaf",
+			},
+			{
+				id: "Metatarsals",
+				name: "Metatarsals",
+				nodeType: "leaf",
+			},
+			{
+				id: "Phalanges(Foot)",
+				name: "ShPhalanges (Foot)",
+				nodeType: "leaf",
 			},
 			{
 				id: "Pelvic",
@@ -518,51 +558,6 @@ const bones = [
 						nodeType: "leaf",
 					},
 				],
-			},
-			{
-				id: "Metacarple",
-				name: "Metacarple",
-				nodeType: "leaf",
-			},
-			{
-				id: "Clavicle",
-				name: "Clavicle",
-				nodeType: "leaf",
-			},
-			{
-				id: "Fibula",
-				name: "Fibula",
-				nodeType: "leaf",
-			},
-			{
-				id: "Talus",
-				name: "Talus",
-				nodeType: "leaf",
-			},
-			{
-				id: "Calcaneum",
-				name: "Calcaneum",
-				nodeType: "leaf",
-			},
-			{
-				id: "Navicular",
-				name: "Navicular",
-				nodeType: "leaf",
-			},
-			{
-				id: "Cuneiforms",
-				name: "Cuneiforms",
-				nodeType: "leaf",
-			},
-			{
-				id: "Metatarsals",
-				name: "Metatarsals",
-				nodeType: "leaf",
-			},
-			{
-				id: "Phalanges(Foot)",
-				name: "ShPhalanges (Foot)",
-				nodeType: "leaf",
 			},
 			{
 				id: "Ribs",

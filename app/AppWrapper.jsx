@@ -36,7 +36,6 @@ const AppWrapper = () => {
 					<Stack.Navigator
 						initialRouteName={"Login Page"}
 						screenOptions={{
-							animation: "slide_from_right", // Define the animation type
 							gestureEnabled: false,
 						}}>
 						<Stack.Screen

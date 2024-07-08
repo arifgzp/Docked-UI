@@ -157,7 +157,7 @@ const SpecialCaseLogSelectOptions = ({
 	//console.log("SpecialCaseLogSelectOptions >> specialCaseLogsOption", specialCaseLogsOption);
 	console.log("SpecialCaseLogSelectOptions >> caseLogData", caseLogData);
 	return (
-		<VStack alignItems='center' gap='$4' pb='$4' px='$4'>
+		<VStack alignItems='center' gap='$4' px='$4'>
 			{specialCaseLogsOption.map((option) => {
 				console.log(activeTreeSelectorValue[option.id]);
 				if (!isEmpty(activeTreeSelectorValue[option.id])) {

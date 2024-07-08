@@ -20,7 +20,6 @@ export default function LandingScreenPages({ navigation }) {
 		<Stack.Navigator
 			initialRouteName='Dashboard'
 			screenOptions={{
-				animation: "slide_from_right", // Define the animation type
 				gestureEnabled: false,
 			}}>
 			<Stack.Screen

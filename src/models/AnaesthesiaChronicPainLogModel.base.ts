@@ -27,11 +27,13 @@ export const AnaesthesiaChronicPainLogModelBase = ModelBase
     patientSex: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
     indication: types.union(types.undefined, types.null, types.string),
+    conduct: types.union(types.undefined, types.null, types.string),
     technique: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     method: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     drugsUsed: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    intervention: types.union(types.undefined, types.null, types.string),
+    intervention: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     caseType: types.union(types.undefined, types.null, types.string),
+    remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -51,14 +53,16 @@ export class AnaesthesiaChronicPainLogModelSelector extends QueryBuilder {
   get patientSex() { return this.__attr(`patientSex`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
   get indication() { return this.__attr(`indication`) }
+  get conduct() { return this.__attr(`conduct`) }
   get technique() { return this.__attr(`technique`) }
   get method() { return this.__attr(`method`) }
   get drugsUsed() { return this.__attr(`drugsUsed`) }
   get intervention() { return this.__attr(`intervention`) }
   get caseType() { return this.__attr(`caseType`) }
+  get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromAnaesthesiaChronicPainLog() {
   return new AnaesthesiaChronicPainLogModelSelector()
 }
 
-export const anaesthesiaChronicPainLogModelPrimitives = selectFromAnaesthesiaChronicPainLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.diagnosis.indication.technique.method.drugsUsed.intervention.caseType
+export const anaesthesiaChronicPainLogModelPrimitives = selectFromAnaesthesiaChronicPainLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.diagnosis.indication.conduct.technique.method.drugsUsed.intervention.caseType.remarks

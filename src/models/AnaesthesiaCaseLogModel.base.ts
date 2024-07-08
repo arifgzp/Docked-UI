@@ -33,12 +33,13 @@ export const AnaesthesiaCaseLogModelBase = ModelBase
     asaGrade: types.union(types.undefined, types.null, types.string),
     typeOfSurgery: types.union(types.undefined, types.null, types.string),
     npo: types.union(types.undefined, types.null, types.string),
+    conduct: types.union(types.undefined, types.null, types.string),
     comorbidity: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     examination: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     laboratoryFindings: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     medicalRegistrationNumber: types.union(types.undefined, types.null, types.string),
     typeOfAnaesthesia: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    drugsUsed: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
+    drugs: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     airManagement: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     regionalTechniques: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     interventionalProcedures: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
@@ -46,6 +47,7 @@ export const AnaesthesiaCaseLogModelBase = ModelBase
     complications: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     outcome: types.union(types.undefined, types.null, types.string),
     caseType: types.union(types.undefined, types.null, types.string),
+    remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -71,12 +73,13 @@ export class AnaesthesiaCaseLogModelSelector extends QueryBuilder {
   get asaGrade() { return this.__attr(`asaGrade`) }
   get typeOfSurgery() { return this.__attr(`typeOfSurgery`) }
   get npo() { return this.__attr(`npo`) }
+  get conduct() { return this.__attr(`conduct`) }
   get comorbidity() { return this.__attr(`comorbidity`) }
   get examination() { return this.__attr(`examination`) }
   get laboratoryFindings() { return this.__attr(`laboratoryFindings`) }
   get medicalRegistrationNumber() { return this.__attr(`medicalRegistrationNumber`) }
   get typeOfAnaesthesia() { return this.__attr(`typeOfAnaesthesia`) }
-  get drugsUsed() { return this.__attr(`drugsUsed`) }
+  get drugs() { return this.__attr(`drugs`) }
   get airManagement() { return this.__attr(`airManagement`) }
   get regionalTechniques() { return this.__attr(`regionalTechniques`) }
   get interventionalProcedures() { return this.__attr(`interventionalProcedures`) }
@@ -84,9 +87,10 @@ export class AnaesthesiaCaseLogModelSelector extends QueryBuilder {
   get complications() { return this.__attr(`complications`) }
   get outcome() { return this.__attr(`outcome`) }
   get caseType() { return this.__attr(`caseType`) }
+  get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromAnaesthesiaCaseLog() {
   return new AnaesthesiaCaseLogModelSelector()
 }
 
-export const anaesthesiaCaseLogModelPrimitives = selectFromAnaesthesiaCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality.asaGrade.typeOfSurgery.npo.comorbidity.examination.laboratoryFindings.medicalRegistrationNumber.typeOfAnaesthesia.drugsUsed.airManagement.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.caseType
+export const anaesthesiaCaseLogModelPrimitives = selectFromAnaesthesiaCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality.asaGrade.typeOfSurgery.npo.conduct.comorbidity.examination.laboratoryFindings.medicalRegistrationNumber.typeOfAnaesthesia.drugs.airManagement.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.caseType.remarks

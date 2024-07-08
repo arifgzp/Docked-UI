@@ -121,8 +121,8 @@ const LoginPage = ({ navigation }) => {
 				}
 			} else {
 				// If credentials don't match, display error message
-				setEmailError("Please enter valid credentials");
-				setPasswordError("Please enter valid credentials");
+				setEmailError("Please Enter valid Email Address");
+				setPasswordError("Please Enter the Correct Password");
 			}
 		} catch (error) {
 			console.error("Login error:", error);

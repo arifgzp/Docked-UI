@@ -59,7 +59,7 @@ const applianceUsed = [
 			{
 				id: "Hawleys",
 				name: "Hawleys",
-				selectType: "none",
+				selectType: "multiple",
 				nodeType: "parent",
 				children: [
 					{
@@ -101,47 +101,6 @@ const applianceUsed = [
 				],
 			},
 			{
-				id: "TransverseExpansion",
-				name: "Transverse Expansion",
-				selectType: "single",
-				nodeType: "parent",
-				children: [
-					{
-						id: "WithScrew",
-						name: "With Screw",
-						nodeType: "leaf",
-					},
-					{
-						id: "WithQuadHelix",
-						name: "With Quad Helix",
-						nodeType: "leaf",
-					},
-				],
-			},
-			{
-				id: "Frankle",
-				name: "Frankle",
-				selectType: "single",
-				nodeType: "parent",
-				children: [
-					{
-						id: "1",
-						name: "1",
-						nodeType: "leaf",
-					},
-					{
-						id: "2",
-						name: "2",
-						nodeType: "leaf",
-					},
-					{
-						id: "3",
-						name: "3",
-						nodeType: "leaf",
-					},
-				],
-			},
-			{
 				id: "NanceHoldingArch",
 				name: "Nance Holding Arch",
 				nodeType: "leaf",
@@ -162,7 +121,7 @@ const applianceUsed = [
 				nodeType: "leaf",
 			},
 			{
-				id: "Tongue Crib",
+				id: "TongueCrib",
 				name: "Tongue Crib",
 				nodeType: "leaf",
 			},
@@ -180,6 +139,24 @@ const applianceUsed = [
 				id: "SplintForBruxism",
 				name: "Splint For Bruxism",
 				nodeType: "leaf",
+			},
+			{
+				id: "TransverseExpansion",
+				name: "Transverse Expansion",
+				selectType: "single",
+				nodeType: "parent",
+				children: [
+					{
+						id: "WithScrew",
+						name: "With Screw",
+						nodeType: "leaf",
+					},
+					{
+						id: "WithQuadHelix",
+						name: "With Quad Helix",
+						nodeType: "leaf",
+					},
+				],
 			},
 			{
 				id: "Activator",
@@ -215,6 +192,29 @@ const applianceUsed = [
 				id: "Pendulum",
 				name: "Pendulum",
 				nodeType: "leaf",
+			},
+			{
+				id: "Frankle",
+				name: "Frankle",
+				selectType: "single",
+				nodeType: "parent",
+				children: [
+					{
+						id: "Frankle1",
+						name: "1",
+						nodeType: "leaf",
+					},
+					{
+						id: "Frankle2",
+						name: "2",
+						nodeType: "leaf",
+					},
+					{
+						id: "Frankle3",
+						name: "3",
+						nodeType: "leaf",
+					},
+				],
 			},
 		],
 	},

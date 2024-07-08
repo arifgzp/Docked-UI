@@ -164,7 +164,6 @@ const LandingScreen = ({ navigation, route }) => {
 	return (
 		<Tab.Navigator
 			screenOptions={{
-				animation: "slide_from_right",
 				tabBarShowLabel: true,
 				tabBarStyle: {
 					position: "absolute",

@@ -37,10 +37,12 @@ export const AnaesthesiaChronicPainLogAggregateResultModelBase = ModelBase
     diagnosisMax: types.union(types.undefined, types.null, types.string),
     indicationMin: types.union(types.undefined, types.null, types.string),
     indicationMax: types.union(types.undefined, types.null, types.string),
-    interventionMin: types.union(types.undefined, types.null, types.string),
-    interventionMax: types.union(types.undefined, types.null, types.string),
+    conductMin: types.union(types.undefined, types.null, types.string),
+    conductMax: types.union(types.undefined, types.null, types.string),
     caseTypeMin: types.union(types.undefined, types.null, types.string),
     caseTypeMax: types.union(types.undefined, types.null, types.string),
+    remarksMin: types.union(types.undefined, types.null, types.string),
+    remarksMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -70,13 +72,15 @@ export class AnaesthesiaChronicPainLogAggregateResultModelSelector extends Query
   get diagnosisMax() { return this.__attr(`diagnosisMax`) }
   get indicationMin() { return this.__attr(`indicationMin`) }
   get indicationMax() { return this.__attr(`indicationMax`) }
-  get interventionMin() { return this.__attr(`interventionMin`) }
-  get interventionMax() { return this.__attr(`interventionMax`) }
+  get conductMin() { return this.__attr(`conductMin`) }
+  get conductMax() { return this.__attr(`conductMax`) }
   get caseTypeMin() { return this.__attr(`caseTypeMin`) }
   get caseTypeMax() { return this.__attr(`caseTypeMax`) }
+  get remarksMin() { return this.__attr(`remarksMin`) }
+  get remarksMax() { return this.__attr(`remarksMax`) }
 }
 export function selectFromAnaesthesiaChronicPainLogAggregateResult() {
   return new AnaesthesiaChronicPainLogAggregateResultModelSelector()
 }
 
-export const anaesthesiaChronicPainLogAggregateResultModelPrimitives = selectFromAnaesthesiaChronicPainLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.indicationMin.indicationMax.interventionMin.interventionMax.caseTypeMin.caseTypeMax
+export const anaesthesiaChronicPainLogAggregateResultModelPrimitives = selectFromAnaesthesiaChronicPainLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.indicationMin.indicationMax.conductMin.conductMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

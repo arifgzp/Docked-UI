@@ -27,10 +27,12 @@ export const OrthodonticsClinicalCaseLogModelBase = ModelBase
     faculty: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
     techniqueUsed: types.union(types.undefined, types.null, types.string),
+    conduct: types.union(types.undefined, types.null, types.string),
     applianceUsed: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     treatmentPlan: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     outcome: types.union(types.undefined, types.null, types.string),
     caseType: types.union(types.undefined, types.null, types.string),
+    remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -50,13 +52,15 @@ export class OrthodonticsClinicalCaseLogModelSelector extends QueryBuilder {
   get faculty() { return this.__attr(`faculty`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
   get techniqueUsed() { return this.__attr(`techniqueUsed`) }
+  get conduct() { return this.__attr(`conduct`) }
   get applianceUsed() { return this.__attr(`applianceUsed`) }
   get treatmentPlan() { return this.__attr(`treatmentPlan`) }
   get outcome() { return this.__attr(`outcome`) }
   get caseType() { return this.__attr(`caseType`) }
+  get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromOrthodonticsClinicalCaseLog() {
   return new OrthodonticsClinicalCaseLogModelSelector()
 }
 
-export const orthodonticsClinicalCaseLogModelPrimitives = selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.patientAge.patientSex.hospital.rotation.faculty.diagnosis.techniqueUsed.applianceUsed.treatmentPlan.outcome.caseType
+export const orthodonticsClinicalCaseLogModelPrimitives = selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.patientAge.patientSex.hospital.rotation.faculty.diagnosis.techniqueUsed.conduct.applianceUsed.treatmentPlan.outcome.caseType.remarks

@@ -24,7 +24,6 @@ export default function RootLogScreens({ navigation }) {
 		<Stack.Navigator
 			initialRouteName='RootLogBook'
 			screenOptions={{
-				animation: "slide_from_right", // Define the animation type
 				gestureEnabled: false,
 			}}>
 			<Stack.Screen

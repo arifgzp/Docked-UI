@@ -18,11 +18,13 @@ patientAge="patientAge",
 patientSex="patientSex",
 diagnosis="diagnosis",
 indication="indication",
+conduct="conduct",
 technique="technique",
 method="method",
 drugsUsed="drugsUsed",
 intervention="intervention",
-caseType="caseType"
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -39,9 +41,11 @@ export const AnaesthesiaChronicPainLogHasFilterEnumType = types.enumeration("Ana
   "patientSex",
   "diagnosis",
   "indication",
+  "conduct",
   "technique",
   "method",
   "drugsUsed",
   "intervention",
   "caseType",
+  "remarks",
       ])

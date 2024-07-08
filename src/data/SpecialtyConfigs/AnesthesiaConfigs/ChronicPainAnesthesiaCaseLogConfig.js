@@ -25,11 +25,6 @@ const technique = [
 				name: "Computed Tomography (CT) guided",
 				nodeType: "leaf",
 			},
-			{
-				id: "PAIN",
-				name: "Pain",
-				nodeType: "leaf",
-			},
 		],
 	},
 ];
@@ -66,6 +61,11 @@ const method = [
 						],
 					},
 					{
+						id: "RadiofrequencyAblation(RFA)",
+						name: "Radiofrequency Ablation (RFA)",
+						nodeType: "leaf",
+					},
+					{
 						id: "Cryoablation",
 						name: "Cryoablation",
 						selectType: "single",
@@ -82,11 +82,6 @@ const method = [
 								nodeType: "leaf",
 							},
 						],
-					},
-					{
-						id: "RadiofrequencyAblation(RFA)",
-						name: "Radiofrequency Ablation (RFA)",
-						nodeType: "leaf",
 					},
 				],
 			},
@@ -125,6 +120,31 @@ const drugsUsed = [
 		nodeType: "parent",
 		children: [
 			{
+				id: "Lidocaine",
+				name: "Lidocaine",
+				nodeType: "leaf",
+			},
+			{
+				id: "Bupivacaine",
+				name: "Bupivacaine",
+				nodeType: "leaf",
+			},
+			{
+				id: "Ropivacaine",
+				name: "Ropivacaine",
+				nodeType: "leaf",
+			},
+			{
+				id: "Volume",
+				name: "Volume",
+				nodeType: "leaf",
+			},
+			{
+				id: "Strength",
+				name: "Strength",
+				nodeType: "leaf",
+			},
+			{
 				id: "Adjuvant",
 				name: "Adjuvant",
 				selectType: "multiple",
@@ -157,31 +177,6 @@ const drugsUsed = [
 					},
 				],
 			},
-			{
-				id: "Lidocaine",
-				name: "Lidocaine",
-				nodeType: "leaf",
-			},
-			{
-				id: "Bupivacaine",
-				name: "Bupivacaine",
-				nodeType: "leaf",
-			},
-			{
-				id: "Ropivacaine",
-				name: "Ropivacaine",
-				nodeType: "leaf",
-			},
-			{
-				id: "Volume",
-				name: "Volume",
-				nodeType: "leaf",
-			},
-			{
-				id: "Strength",
-				name: "Strength",
-				nodeType: "leaf",
-			},
 		],
 	},
 ];
@@ -190,7 +185,7 @@ const intervention = [
 	{
 		id: "intervention",
 		name: "Intervention",
-		selectType: "multiple",
+		selectType: "none",
 		nodeType: "parent",
 		children: [
 			{
@@ -274,6 +269,16 @@ const intervention = [
 						],
 					},
 					{
+						id: "SuperiorHypogastricPlexusBlock",
+						name: "Superior Hypogastric Plexus Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "GenitofemoralNerveBlock",
+						name: "Genitofemoral Nerve Block",
+						nodeType: "leaf",
+					},
+					{
 						id: "LumbarBlocks",
 						name: "Lumbar Blocks",
 						selectType: "multiple",
@@ -300,16 +305,6 @@ const intervention = [
 								nodeType: "leaf",
 							},
 						],
-					},
-					{
-						id: "GenitofemoralNerveBlock",
-						name: "Genitofemoral Nerve Block",
-						nodeType: "leaf",
-					},
-					{
-						id: "SuperiorHypogastricPlexusBlock",
-						name: "Superior Hypogastric Plexus Block",
-						nodeType: "leaf",
 					},
 				],
 			},

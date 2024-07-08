@@ -24,9 +24,11 @@ speciality="speciality",
 asaGrade="asaGrade",
 typeOfSurgery="typeOfSurgery",
 npo="npo",
+conduct="conduct",
 medicalRegistrationNumber="medicalRegistrationNumber",
 outcome="outcome",
-caseType="caseType"
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -49,7 +51,9 @@ export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("Anaesthesi
   "asaGrade",
   "typeOfSurgery",
   "npo",
+  "conduct",
   "medicalRegistrationNumber",
   "outcome",
   "caseType",
+  "remarks",
       ])

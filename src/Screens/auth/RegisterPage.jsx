@@ -249,7 +249,7 @@ const RegisterPage = ({ navigation, route }) => {
 						<Box height='$10%'>
 							<Image width={140} height={100} source={ImageAssets.logo} alt='Docked-Logo' />
 						</Box>
-						<Box h='$90%' p='$5'>
+						<Box h='$100%' p='$5'>
 							<VStack space='xl'>
 								<Text bold size='xl' color='#FFFFFC'>
 									Create an Account
@@ -338,7 +338,7 @@ const RegisterPage = ({ navigation, route }) => {
 									<VStack space='xs' justifycontent='center' alignItems='center'>
 										<HStack>
 											<Checkbox size='md' isInvalid={false} isDisabled={false}>
-												<CheckboxIndicator mr='$2'>
+												<CheckboxIndicator borderColor='#979797' mr='$2'>
 													<CheckboxIcon as={CheckIcon} />
 												</CheckboxIndicator>
 											</Checkbox>

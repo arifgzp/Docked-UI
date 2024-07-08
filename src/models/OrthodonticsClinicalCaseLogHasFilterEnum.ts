@@ -18,10 +18,12 @@ rotation="rotation",
 faculty="faculty",
 diagnosis="diagnosis",
 techniqueUsed="techniqueUsed",
+conduct="conduct",
 applianceUsed="applianceUsed",
 treatmentPlan="treatmentPlan",
 outcome="outcome",
-caseType="caseType"
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -38,8 +40,10 @@ export const OrthodonticsClinicalCaseLogHasFilterEnumType = types.enumeration("O
   "faculty",
   "diagnosis",
   "techniqueUsed",
+  "conduct",
   "applianceUsed",
   "treatmentPlan",
   "outcome",
   "caseType",
+  "remarks",
       ])

@@ -8,8 +8,8 @@ const procedures = [
 			{
 				id: "Technique",
 				name: "Technique",
-				nodeType: "parent",
 				selectType: "single",
+				nodeType: "parent",
 				children: [
 					{
 						id: "Anatomical",
@@ -30,28 +30,28 @@ const procedures = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Side",
+						id: "Side1",
 						name: "Side",
-						nodeType: "parent",
 						selectType: "single",
+						nodeType: "parent",
 						children: [
 							{
-								id: "Right",
+								id: "Right1",
 								name: "Right",
 								nodeType: "leaf",
 							},
 							{
-								id: "Left",
+								id: "Left1",
 								name: "Left",
 								nodeType: "leaf",
 							},
 						],
 					},
 					{
-						id: "Vessel",
+						id: "Vessel1",
 						name: "Vessel",
-						nodeType: "parent",
 						selectType: "single",
+						nodeType: "parent",
 						children: [
 							{
 								id: "Radial",
@@ -84,25 +84,25 @@ const procedures = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Side",
+						id: "Side2",
 						name: "Side",
-						nodeType: "parent",
 						selectType: "single",
+						nodeType: "parent",
 						children: [
 							{
-								id: "Right",
+								id: "Right2",
 								name: "Right",
 								nodeType: "leaf",
 							},
 							{
-								id: "Left",
+								id: "Left2",
 								name: "Left",
 								nodeType: "leaf",
 							},
 						],
 					},
 					{
-						id: "Vessel",
+						id: "Vessel2",
 						name: "Vessel",
 						nodeType: "parent",
 						selectType: "single",
@@ -159,8 +159,8 @@ const procedures = [
 			{
 				id: "CirculatorySupport",
 				name: "Circulatory Support",
-				nodeType: "parent",
 				selectType: "multiple",
+				nodeType: "parent",
 				children: [
 					{
 						id: "Inotropes",
@@ -182,8 +182,8 @@ const procedures = [
 			{
 				id: "Pacing",
 				name: "Pacing",
-				nodeType: "parent",
 				selectType: "single",
+				nodeType: "parent",
 				children: [
 					{
 						id: "Transvenous",

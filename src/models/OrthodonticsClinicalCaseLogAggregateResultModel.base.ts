@@ -37,10 +37,14 @@ export const OrthodonticsClinicalCaseLogAggregateResultModelBase = ModelBase
     diagnosisMax: types.union(types.undefined, types.null, types.string),
     techniqueUsedMin: types.union(types.undefined, types.null, types.string),
     techniqueUsedMax: types.union(types.undefined, types.null, types.string),
+    conductMin: types.union(types.undefined, types.null, types.string),
+    conductMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
     outcomeMax: types.union(types.undefined, types.null, types.string),
     caseTypeMin: types.union(types.undefined, types.null, types.string),
     caseTypeMax: types.union(types.undefined, types.null, types.string),
+    remarksMin: types.union(types.undefined, types.null, types.string),
+    remarksMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -70,13 +74,17 @@ export class OrthodonticsClinicalCaseLogAggregateResultModelSelector extends Que
   get diagnosisMax() { return this.__attr(`diagnosisMax`) }
   get techniqueUsedMin() { return this.__attr(`techniqueUsedMin`) }
   get techniqueUsedMax() { return this.__attr(`techniqueUsedMax`) }
+  get conductMin() { return this.__attr(`conductMin`) }
+  get conductMax() { return this.__attr(`conductMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
   get outcomeMax() { return this.__attr(`outcomeMax`) }
   get caseTypeMin() { return this.__attr(`caseTypeMin`) }
   get caseTypeMax() { return this.__attr(`caseTypeMax`) }
+  get remarksMin() { return this.__attr(`remarksMin`) }
+  get remarksMax() { return this.__attr(`remarksMax`) }
 }
 export function selectFromOrthodonticsClinicalCaseLogAggregateResult() {
   return new OrthodonticsClinicalCaseLogAggregateResultModelSelector()
 }
 
-export const orthodonticsClinicalCaseLogAggregateResultModelPrimitives = selectFromOrthodonticsClinicalCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.hospitalMin.hospitalMax.rotationMin.rotationMax.facultyMin.facultyMax.diagnosisMin.diagnosisMax.techniqueUsedMin.techniqueUsedMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax
+export const orthodonticsClinicalCaseLogAggregateResultModelPrimitives = selectFromOrthodonticsClinicalCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.hospitalMin.hospitalMax.rotationMin.rotationMax.facultyMin.facultyMax.diagnosisMin.diagnosisMax.techniqueUsedMin.techniqueUsedMax.conductMin.conductMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

@@ -73,7 +73,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const handelSetDate = (date) => {
 		setValue("date", date);
 	};
-
+	const currentSpecialty = AppStore.UserBroadSpecialty;
 	/*useEffect(() => {
 		//TODO: This is a hack to set the default value of faculty in the form
 		if (!caseLogData) {
@@ -83,23 +83,29 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	}, []);*/
 
 	console.log("data for edit", caseLogData);
-	//console.log("prefilledData Mudit test", prefilledData);
+	console.log("prefilledData Mudit test", prefilledData);
+	const rotationForEdit = caseLogData?.rotation;
 	const rotations = prefilledData?.rotations;
-	const hospital = prefilledData?.hospital ?? caseLogData?.hospital;
+	const hospital = caseLogData?.hospital ?? prefilledData?.hospital;
 	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
+	console.log("activeRotation", activeRotation);
 	const activeRotationFrom = activeRotation ? format(parseISO(activeRotation?.from), "dd MMM yyyy") : null;
 	const activeRotationTo = activeRotation ? format(parseISO(activeRotation?.to), "dd MMM yyyy") : null;
 	const activeRotationText = activeRotation ? `${activeRotation.department}` : "No Rotation";
 	return (
 		<VStack gap='$2'>
-			<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
-				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
-					Rotation
-				</Text>
-				<Input variant='outline' size='sm' isDisabled={true}>
-					<InputField value={activeRotationText} />
-				</Input>
-			</VStack>
+			{currentSpecialty === "Anaesthesiology" ? (
+				<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
+					<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+						Rotation
+					</Text>
+					<Input variant='outline' size='sm' isDisabled={true}>
+						<InputField value={rotationForEdit ?? activeRotationText} />
+					</Input>
+				</VStack>
+			) : (
+				<Box></Box>
+			)}
 			<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
 				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
 					Hospital
@@ -129,7 +135,12 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						render={({ field: { onChange, onBlur, value } }) => {
 							console.log("Faculty >> Select value >> ", value);
 							return (
-								<Select onBlur={onBlur} isReadOnly={readOnlyFaculty} onValueChange={onChange} selectedValue={caseLogData?.faculty || value}>
+								<Select
+									onBlur={onBlur}
+									isDisabled={readOnlyFaculty}
+									isReadOnly={readOnlyFaculty}
+									onValueChange={onChange}
+									selectedValue={caseLogData?.faculty || value}>
 									<SelectTrigger variant='outline' size='sm'>
 										<SelectInput placeholder={`Faculty`} />
 										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
@@ -143,7 +154,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 											<Divider borderWidth={0.1} />
 											{prefilledData?.faculty.map((item) => {
 												console.log("Faculty >> SelectItem >> ", item);
-												return <SelectItem key={item?.id} label={item?.name} value={item?.id} />;
+												return <SelectItem key={item?.id} label={item?.name} value={item?.name} />;
 											})}
 										</SelectContent>
 									</SelectPortal>

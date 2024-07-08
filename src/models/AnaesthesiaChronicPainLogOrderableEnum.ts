@@ -18,8 +18,9 @@ patientAge="patientAge",
 patientSex="patientSex",
 diagnosis="diagnosis",
 indication="indication",
-intervention="intervention",
-caseType="caseType"
+conduct="conduct",
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -36,6 +37,7 @@ export const AnaesthesiaChronicPainLogOrderableEnumType = types.enumeration("Ana
   "patientSex",
   "diagnosis",
   "indication",
-  "intervention",
+  "conduct",
   "caseType",
+  "remarks",
       ])

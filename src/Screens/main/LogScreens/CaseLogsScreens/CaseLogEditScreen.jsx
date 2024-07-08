@@ -36,6 +36,8 @@ import {
 	OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions,
 	specialOrthodonticsClinicalCaseLog,
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
+import { Textarea } from "@gluestack-ui/themed";
+import { TextareaInput } from "@gluestack-ui/themed";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -84,6 +86,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 			hospital: "",
 			faculty: "",
 			date: new Date(),
+			remarks: "",
 		},
 	});
 
@@ -248,7 +251,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 				<Box flex={1} backgroundColor='$secondaryBackground'>
 					<>
 						<ScrollView>
-							<Box paddingTop={10} justifyContent='center' alignItems='center'>
+							<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 								<Box width={"$100%"}>
 									<CaselogDropDownOptions
 										formFields={getCaseLogFields(routes.params.caseType)}
@@ -260,31 +263,46 @@ const CaseLogEditScreen = ({ navigation }) => {
 										formState={formState}
 										readOnlyFaculty={true}
 									/>
-									<Divider />
 								</Box>
-							</Box>
-
-							<Box justifyContent='center' alignItems='center'>
-								<Box width={"$100%"}>
-									<SpecialCaseLogSelectOptions
-										control={control}
-										setValue={setValue}
-										getValues={getValues}
-										formState={formState}
-										caseLogData={caseLogData}
-										specialCaseLogsOption={getSpecialCaseLogOptions(routes.params.caseType)}
-										refernceToGetSpecialOptions={routes.params.caseType}
-									/>
+								<Divider />
+								<Box justifyContent='center' alignItems='center'>
+									<Box width={"$100%"}>
+										<SpecialCaseLogSelectOptions
+											control={control}
+											setValue={setValue}
+											getValues={getValues}
+											formState={formState}
+											caseLogData={caseLogData}
+											specialCaseLogsOption={getSpecialCaseLogOptions(routes.params.caseType)}
+											refernceToGetSpecialOptions={routes.params.caseType}
+										/>
+									</Box>
 								</Box>
+								<Divider />
+								<VStack width={"$100%"} px='$5' space='sm' pb='$3'>
+									<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+										Remarks
+									</Text>
+									<Box w='$100%'>
+										<Controller
+											control={control}
+											key='remarks'
+											name='remarks'
+											rules={{
+												required: false,
+											}}
+											render={({ field: { onChange, onBlur, value } }) => {
+												return (
+													<Textarea w='$100%' size='sm' isReadOnly={false} isInvalid={false} isDisabled={false}>
+														<TextareaInput w='$100%' placeholder='Your remarks goes here...' onChangeText={onChange} value={value} />
+													</Textarea>
+												);
+											}}
+										/>
+									</Box>
+								</VStack>
 							</Box>
 						</ScrollView>
-						{/* <Box mt='$3' paddingBottom={"$22%"} width={"$100%"} justifyContent='center' alignItems='center'>
-							<Button width={"$50%"} height={50} onPress={handleSubmit(handleOnUpdateClick)} size='lg' variant='secondary' borderRadius={10}>
-								<ButtonText color='#1E1E1E' fontFamily='Inter_SemiBold' textAlign='center'>
-									Update Log
-								</ButtonText>
-							</Button>
-						</Box> */}
 						<Box p={20} paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
 							<Button onPress={handleSubmit(handleOnUpdateClick)} variant='primary'>
 								<ButtonText>Update Log</ButtonText>

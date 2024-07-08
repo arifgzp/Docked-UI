@@ -18,8 +18,10 @@ rotation="rotation",
 faculty="faculty",
 diagnosis="diagnosis",
 techniqueUsed="techniqueUsed",
+conduct="conduct",
 outcome="outcome",
-caseType="caseType"
+caseType="caseType",
+remarks="remarks"
 }
 
 /**
@@ -36,6 +38,8 @@ export const OrthodonticsClinicalCaseLogOrderableEnumType = types.enumeration("O
   "faculty",
   "diagnosis",
   "techniqueUsed",
+  "conduct",
   "outcome",
   "caseType",
+  "remarks",
       ])

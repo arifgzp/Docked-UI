@@ -82,15 +82,15 @@ const specialtyList = {
 		SuperSpeciality: [
 			{
 				label: "Critical Care Anesthesiology",
-				value: "CriticalCareAnesthesiology",
+				value: "Critical Care Anesthesiology",
 			},
 			{
 				label: "Pediatric Anesthesiology",
-				value: "PediatricAnesthesiology",
+				value: "Pediatric Anesthesiology",
 			},
 			{
 				label: "Cardiac Anaesthesiology",
-				value: "CardiacAnaesthesiology",
+				value: "Cardiac Anaesthesiology",
 			},
 			{
 				label: "Neuro-anaesthesiology",
@@ -98,83 +98,29 @@ const specialtyList = {
 			},
 			{
 				label: "Transplant Anaesthesia",
-				value: "TransplantAnaesthesia",
+				value: "Transplant Anaesthesia",
 			},
 			{
 				label: "Obstetric Anaesthesiology",
-				value: "ObstetricAnaesthesiology",
+				value: "Obstetric Anaesthesiology",
 			},
 			{
 				label: "Pain Medicine",
-				value: "PainMedicine",
+				value: "Pain Medicine",
 			},
 			{
 				label: "Regional Anaesthesia",
-				value: "RegionalAnaesthesia",
+				value: "Regional Anaesthesia",
 			},
 		],
 		SubSpeciality: [],
 	},
 	Orthodontics: {
-		SuperSpeciality: [
-			{
-				label: "Craniofacial Orthodontics",
-				value: "CraniofacialOrthodontics",
-			},
-			{
-				label: "Surgical Orthodontics",
-				value: "SurgicalOrthodontics",
-			},
-			{
-				label: "Adult Orthodontics",
-				value: "AdultOrthodontics",
-			},
-			{
-				label: "Pediatric Orthodontics",
-				value: "PediatricOrthodontics",
-			},
-			{
-				label: "Lingual Orthodontics",
-				value: "LingualOrthodontics",
-			},
-			{
-				label: "Clear Aligner Therapy",
-				value: "ClearAlignerTherapy",
-			},
-		],
+		SuperSpeciality: [],
 		SubSpeciality: [],
 	},
 	Orthopaedics: {
-		SuperSpeciality: [
-			{
-				label: "Joint Replacement Surgery",
-				value: "JointReplacementSurgery",
-			},
-			{
-				label: "Sports Medicine",
-				value: "SportsMedicine",
-			},
-			{
-				label: "Spine Surgery",
-				value: "SpineSurgery",
-			},
-			{
-				label: "Pediatric Orthopaedics",
-				value: "PediatricOrthopaedics",
-			},
-			{
-				label: "Orthopaedic Oncology",
-				value: "OrthopaedicOncology",
-			},
-			{
-				label: "Trauma Surgery",
-				value: "TraumaSurgery",
-			},
-			{
-				label: "Hand Surgery",
-				value: "HandSurgery",
-			},
-		],
+		SuperSpeciality: [],
 		SubSpeciality: [],
 	},
 };
@@ -200,6 +146,7 @@ const ProfilePageEdit = ({ navigation }) => {
 		setValue("yearOfRegistration", date);
 	};
 	const isFocused = useIsFocused();
+	const currentSpecialty = appStoreInstance.UserBroadSpecialty;
 
 	const handleOnSave = async (data) => {
 		console.log("Finsished", data);
@@ -307,9 +254,12 @@ const ProfilePageEdit = ({ navigation }) => {
 													}}
 													render={({ field: { onChange, onBlur, value } }) => {
 														let options = specialtyList[appStoreInstance.UserBroadSpecialty].SuperSpeciality;
-
 														return (
-															<Select onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+															<Select
+																isDisabled={currentSpecialty === "Anaesthesiology" ? false : true}
+																onBlur={onBlur}
+																onValueChange={onChange}
+																selectedValue={value}>
 																<SelectTrigger variant='outline' size='sm'>
 																	<SelectInput placeholder='Super Specialty' />
 																	<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
@@ -317,7 +267,7 @@ const ProfilePageEdit = ({ navigation }) => {
 																<SelectPortal>
 																	<SelectBackdrop />
 																	<SelectContent>
-																		<Text padding={10} size='xl'>
+																		<Text padding={10} size='md'>
 																			Super Specialty
 																		</Text>
 																		<Divider borderWidth={0.1} />
@@ -351,7 +301,7 @@ const ProfilePageEdit = ({ navigation }) => {
 														let options = specialtyList[appStoreInstance.UserBroadSpecialty].SubSpeciality;
 
 														return (
-															<Select onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
+															<Select isDisabled={true} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
 																<SelectTrigger variant='outline' size='sm'>
 																	<SelectInput placeholder='Sub Specialty' />
 																	<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>

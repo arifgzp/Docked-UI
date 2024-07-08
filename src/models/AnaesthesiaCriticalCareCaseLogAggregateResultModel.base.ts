@@ -43,8 +43,12 @@ export const AnaesthesiaCriticalCareCaseLogAggregateResultModelBase = ModelBase
     complicationMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
     outcomeMax: types.union(types.undefined, types.null, types.string),
+    conductMin: types.union(types.undefined, types.null, types.string),
+    conductMax: types.union(types.undefined, types.null, types.string),
     caseTypeMin: types.union(types.undefined, types.null, types.string),
     caseTypeMax: types.union(types.undefined, types.null, types.string),
+    remarksMin: types.union(types.undefined, types.null, types.string),
+    remarksMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -80,11 +84,15 @@ export class AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector extends 
   get complicationMax() { return this.__attr(`complicationMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
   get outcomeMax() { return this.__attr(`outcomeMax`) }
+  get conductMin() { return this.__attr(`conductMin`) }
+  get conductMax() { return this.__attr(`conductMax`) }
   get caseTypeMin() { return this.__attr(`caseTypeMin`) }
   get caseTypeMax() { return this.__attr(`caseTypeMax`) }
+  get remarksMin() { return this.__attr(`remarksMin`) }
+  get remarksMax() { return this.__attr(`remarksMax`) }
 }
 export function selectFromAnaesthesiaCriticalCareCaseLogAggregateResult() {
   return new AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector()
 }
 
-export const anaesthesiaCriticalCareCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCriticalCareCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.comorbiditesMin.comorbiditesMax.surgicalprocedureMin.surgicalprocedureMax.complicationMin.complicationMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax
+export const anaesthesiaCriticalCareCaseLogAggregateResultModelPrimitives = selectFromAnaesthesiaCriticalCareCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.rotationMin.rotationMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.comorbiditesMin.comorbiditesMax.surgicalprocedureMin.surgicalprocedureMax.complicationMin.complicationMax.outcomeMin.outcomeMax.conductMin.conductMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

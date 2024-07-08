@@ -135,6 +135,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 
 	const [facultyList, setFacultyList] = useState([]);
 	const [rotationList, setRotationList] = useState([]);
+	const currentSpecialty = AppStore.UserBroadSpecialty;
 
 	const handleSetDate = (date, key) => {
 		if (date instanceof Date && !isNaN(date)) {
@@ -339,44 +340,50 @@ const LogProfileReadPage = ({ navigation, route }) => {
 									})
 								)}
 								<Divider />
-								<Box w='$100%'>
-									<Text color='#0F0F10' size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
-										Rotation
-									</Text>
-								</Box>
-								{rotationList.length === 0 ? (
-									<Box rounded='$xl' borderWidth='$1' p='$2' borderStyle='$dashed'>
-										<Text>No Records Found</Text>
+								{currentSpecialty === "Anaesthesiology" ? (
+									<Box w='$100%'>
+										<Box w='$100%'>
+											<Text color='#0F0F10' size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
+												Rotation
+											</Text>
+										</Box>
+										{rotationList.length === 0 ? (
+											<Box rounded='$xl' borderWidth='$1' p='$2' borderStyle='$dashed'>
+												<Text>No Records Found</Text>
+											</Box>
+										) : (
+											rotationList.map((rotation, index) => {
+												console.log("rotation", rotation);
+												return (
+													<VStack key={index} space='sm' width={"$100%"}>
+														<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
+															{rotation.department}
+														</Text>
+														<HStack space='lg'>
+															<Text fontSize='$xs'>
+																<Text bold size='xs' color='#4D5356'>
+																	From:
+																</Text>{" "}
+																{format(new Date(rotation?.from), "d/M/yyyy")}
+															</Text>
+															<Text fontSize='$xs'>
+																<Text bold size='xs' color='#4D5356'>
+																	To:
+																</Text>{" "}
+																{format(new Date(rotation?.to), "d/M/yyyy")}
+															</Text>
+														</HStack>
+													</VStack>
+												);
+											})
+										)}
 									</Box>
 								) : (
-									rotationList.map((rotation, index) => {
-										console.log("rotation", rotation);
-										return (
-											<VStack key={index} space='sm' width={"$100%"}>
-												<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-													{rotation.department}
-												</Text>
-												<HStack space='lg'>
-													<Text fontSize='$xs'>
-														<Text bold size='xs' color='#4D5356'>
-															From:
-														</Text>{" "}
-														{format(new Date(rotation?.from), "d/M/yyyy")}
-													</Text>
-													<Text fontSize='$xs'>
-														<Text bold size='xs' color='#4D5356'>
-															To:
-														</Text>{" "}
-														{format(new Date(rotation?.to), "d/M/yyyy")}
-													</Text>
-												</HStack>
-											</VStack>
-										);
-									})
+									<Box></Box>
 								)}
 							</VStack>
 						</Box>
-						<Divider />
+						{currentSpecialty === "Anaesthesiology" ? <Divider /> : <Box></Box>}
 					</ScrollView>
 				</Box>
 			</Loader>

@@ -73,12 +73,13 @@ type AnaesthesiaCaseLog  {
     asaGrade : String @dgraph(pred:"asaGrade")
     typeOfSurgery : String @dgraph(pred:"typeOfSurgery")
     npo : String @dgraph(pred:"npo")
+    conduct: String @dgraph(pred:"conduct")
     comorbidity : [String] @dgraph(pred:"comorbidity")
     examination : [String] @dgraph(pred:"examination")
     laboratoryFindings : [String] @dgraph(pred:"laboratoryFindings")
     medicalRegistrationNumber: String @search(by:[term])@dgraph(pred:"medicalRegistrationNumber")
     typeOfAnaesthesia: [String] @search(by:[term]) @dgraph(pred:"typeOfAnaesthesia")
-    drugsUsed: [String] @search(by:[term]) @dgraph(pred:"drugsUsed")
+    drugs: [String] @search(by:[term]) @dgraph(pred:"drugs")
     airManagement: [String] @search(by:[term]) @dgraph(pred:"airManagement")
     regionalTechniques: [String] @search(by:[term]) @dgraph(pred:"regionalTechniques")
     interventionalProcedures: [String] @search(by:[term]) @dgraph(pred:"interventionalProcedures")
@@ -86,6 +87,7 @@ type AnaesthesiaCaseLog  {
     complications: [String] @search(by:[term]) @dgraph(pred:"complications")
     outcome: String @search(by:[term]) @dgraph(pred:"outcome")
     caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
 }
 
 type AnaesthesiaChronicPainLog  {
@@ -100,11 +102,13 @@ type AnaesthesiaChronicPainLog  {
     patientSex: String @dgraph(pred:"patientSex")
     diagnosis: String @dgraph(pred:"diagnosis")
     indication: String @dgraph(pred:"indication")
+    conduct: String @dgraph(pred:"conduct")
     technique : [String] @dgraph(pred:"technique")
     method : [String] @dgraph(pred:"method")
     drugsUsed : [String] @dgraph(pred:"drugsUsed")
-    intervention: String @search(by:[term])@dgraph(pred:"intervention")
+    intervention: [String] @search(by:[term])@dgraph(pred:"intervention")
     caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
 }
 
 type AnaesthesiaCriticalCareCaseLog  {
@@ -122,8 +126,10 @@ type AnaesthesiaCriticalCareCaseLog  {
     surgicalprocedure : String @dgraph(pred:"surgicalprocedure")
     complication : String @dgraph(pred:"complication")
     outcome: String @search(by:[term]) @dgraph(pred:"outcome")
+    conduct: String @dgraph(pred:"conduct")
     procedures : [String] @dgraph(pred:"procedures")
     caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
 }
 
 type OrthodonticsClinicalCaseLog  {
@@ -138,10 +144,12 @@ type OrthodonticsClinicalCaseLog  {
     faculty: String @dgraph(pred:"faculty")
     diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
     techniqueUsed: String @search(by:[term]) @dgraph(pred:"techniqueUsed")
+    conduct: String @dgraph(pred:"conduct")
     applianceUsed: [String] @search(by:[term]) @dgraph(pred:"applianceUsed")
     treatmentPlan: [String] @search(by:[term]) @dgraph(pred:"treatmentPlan")
     outcome: String @dgraph(pred:"outcome")
     caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
 }
 
 type OrthopaedicsCaseLog  {
@@ -155,12 +163,14 @@ type OrthopaedicsCaseLog  {
     patientSex: String @dgraph(pred:"patientSex")
     rotation: String @search(by:[term]) @dgraph(pred:"rotation")
     diseaseCategory: [String] @search(by:[term]) @dgraph(pred:"diseaseCategory")
+    conduct: String @dgraph(pred:"conduct")
     site: [String] @search(by:[term]) @dgraph(pred:"site")
     joint: [String] @search(by:[term]) @dgraph(pred:"joint")
     bones: [String] @search(by:[term]) @dgraph(pred:"bones")
     outcomes: [String] @search(by:[term]) @dgraph(pred:"outcomes")
     diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
     caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
 }
 
 type LogProfile{
