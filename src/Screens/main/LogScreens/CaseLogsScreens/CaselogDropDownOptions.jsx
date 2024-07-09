@@ -89,9 +89,9 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const hospital = caseLogData?.hospital ?? prefilledData?.hospital;
 	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
 	console.log("activeRotation", activeRotation);
-	const activeRotationFrom = activeRotation ? format(parseISO(activeRotation?.from), "dd MMM yyyy") : null;
-	const activeRotationTo = activeRotation ? format(parseISO(activeRotation?.to), "dd MMM yyyy") : null;
-	const activeRotationText = activeRotation ? `${activeRotation.department}` : "No Rotation";
+	const activeRotationFrom = activeRotation?.from ? format(parseISO(activeRotation.from), "dd MMM yyyy") : null;
+	const activeRotationTo = activeRotation?.to ? format(parseISO(activeRotation.to), "dd MMM yyyy") : null;
+	const activeRotationText = activeRotation?.department ? `${activeRotation.department}` : "No Rotation";
 	return (
 		<VStack gap='$2'>
 			{currentSpecialty === "Anaesthesiology" ? (
