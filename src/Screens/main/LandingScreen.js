@@ -87,24 +87,24 @@ const CreateMenuList = (props) => {
 		setTimeout(() => {
 			switch (currentLogButton) {
 				case "CaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
 					break;
 
 				case "ChronicPainLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
 					setSelectedLogButton("");
 					break;
 
 				case "CriticalCareCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
+					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
 					break;
 
 				case "OrthopaedicsCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
+					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
 					break;
 
 				case "OrthodonticsClinicalCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
+					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
 					break;
 
 				default:
@@ -160,16 +160,19 @@ const CreateMenuList = (props) => {
 	);
 };
 
+const DummyCreateMenuComponent = (props) => {};
+
 const LandingScreen = ({ navigation, route }) => {
 	return (
 		<Tab.Navigator
 			screenOptions={{
 				tabBarShowLabel: true,
+				tabBarLabelStyle: { paddingBottom: 10 },
 				tabBarStyle: {
 					position: "absolute",
 					elevation: 0,
 					backgroundColor: "#FFFFFF",
-					height: 55,
+					height: 60,
 				},
 				tabBarActiveTintColor: "#0F0F10",
 				tabBarInactiveTintColor: "#979797",
@@ -207,7 +210,7 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarButton: (props) => <CreateMenuList {...props} />,
 				}}
 				name='Plus'
-				component={RootLogScreens} // dummy component, since it's not used
+				component={DummyCreateMenuComponent} // dummy component, since it's not used
 			/>
 			<Tab.Screen
 				options={{

@@ -232,7 +232,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 				console.log("finishUpdatingLogProfile.updateUser.user[0].logProfile", finishUpdatingLogProfile.updateUser.user[0].logProfile);
 				AppStore.setLogProfile(finishUpdatingLogProfile.updateUser.user[0].logProfile);
 				if (caseLogFormToGet) {
-					navigation.navigate("Plus", {
+					navigation.navigate("Log Book", {
 						screen: "CaseLogFormScreen",
 						params: { caseLogFormToGet: caseLogFormToGet },
 					});
