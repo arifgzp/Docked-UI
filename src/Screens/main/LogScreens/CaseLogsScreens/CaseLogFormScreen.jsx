@@ -155,6 +155,9 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			faculty: null,
 			date: new Date(),
 		});
+	}, []);
+
+	useEffect(() => {
 		const fetchLogProfilePrefilledData = async () => {
 			try {
 				const logProfileData = toJS(AppStore.UserLogProfile);
@@ -201,10 +204,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		}
 		return () => {
 			setCaseLogPreFilledData(null);
-			reset({
-				faculty: null,
-				date: new Date(),
-			});
 		};
 	}, [isFocused]);
 
