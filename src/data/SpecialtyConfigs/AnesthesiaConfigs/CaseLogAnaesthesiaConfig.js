@@ -127,7 +127,7 @@ const comorbidity = [
 
 const examination = [
 	{
-		id: "examination",
+		id: "Examination",
 		name: "Examination",
 		selectType: "multiple",
 		nodeType: "parent",
@@ -139,8 +139,8 @@ const examination = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "MillampatiClass",
-						name: "Millampati Class",
+						id: "MallampatiClass",
+						name: "Mallampati Class",
 						selectType: "single",
 						nodeType: "parent",
 						children: [
@@ -330,7 +330,7 @@ const typeOfAnaesthesia = [
 
 const drugs = [
 	{
-		id: "drugs",
+		id: "Drugs",
 		name: "Drugs",
 		selectType: "none",
 		nodeType: "parent",
@@ -652,7 +652,7 @@ const airManagement = [
 							},
 							{
 								id: "IV",
-								name: "IV2",
+								name: "IV",
 								nodeType: "leaf",
 							},
 						],
@@ -766,8 +766,8 @@ const regionalTechniques = [
 					{
 						id: "Adjuvants2",
 						name: "Adjuvants",
-						nodeType: "parent",
 						selectType: "multiple",
+						nodeType: "parent",
 						children: [
 							{
 								id: "Epinephrine",
@@ -986,11 +986,11 @@ const regionalTechniques = [
 			{
 				id: "NeuraxialBlock",
 				name: "Neuraxial Block",
-				selectType: "none",
+				selectType: "multiple",
 				nodeType: "parent",
 				children: [
 					{
-						id: "Spinal",
+						id: "Spinal1",
 						name: "Spinal",
 						selectType: "none",
 						nodeType: "parent",
@@ -1070,7 +1070,7 @@ const regionalTechniques = [
 							{
 								id: "DuralPuncture",
 								name: "Dural Puncture",
-								selectType: "none",
+								selectType: "single",
 								nodeType: "parent",
 								children: [
 									{
@@ -1209,7 +1209,7 @@ const interventionalProcedures = [
 					{
 						id: "Vessel2",
 						name: "Vessel",
-						selectType: "multiple",
+						selectType: "single",
 						nodeType: "parent",
 						children: [
 							{
@@ -1297,7 +1297,7 @@ const monitoring = [
 					{
 						id: "BloodPressure",
 						name: "Blood Pressure",
-						selectType: "none",
+						selectType: "multiple",
 						nodeType: "parent",
 						children: [
 							{
@@ -1496,7 +1496,7 @@ const monitoring = [
 					{
 						id: "EvokedPotential",
 						name: "Evoked Potential",
-						selectType: "multiple",
+						selectType: "single",
 						nodeType: "parent",
 						children: [
 							{
@@ -1538,7 +1538,7 @@ const monitoring = [
 								nodeType: "leaf",
 							},
 							{
-								id: "Spinal",
+								id: "Spinal2",
 								name: "Spinal",
 								nodeType: "leaf",
 							},
@@ -1617,7 +1617,7 @@ const monitoring = [
 			},
 			{
 				id: "Intake|OutputChart",
-				name: "Intake|Output Chart",
+				name: "Intake/Output Chart",
 				nodeType: "leaf",
 			},
 			{

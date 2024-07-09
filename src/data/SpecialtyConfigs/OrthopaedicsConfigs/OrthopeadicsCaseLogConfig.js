@@ -458,7 +458,7 @@ const bones = [
 					},
 					{
 						id: "Middle5",
-						name: "Middle5",
+						name: "Middle",
 						nodeType: "leaf",
 					},
 					{
@@ -500,7 +500,7 @@ const bones = [
 			},
 			{
 				id: "Phalanges(Foot)",
-				name: "ShPhalanges (Foot)",
+				name: "Phalanges (Foot)",
 				nodeType: "leaf",
 			},
 			{
@@ -510,8 +510,8 @@ const bones = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Ileum",
-						name: "Ileum",
+						id: "IIeum",
+						name: "IIeum",
 						nodeType: "leaf",
 					},
 					{

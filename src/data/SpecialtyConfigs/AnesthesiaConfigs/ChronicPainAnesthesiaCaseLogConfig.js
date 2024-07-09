@@ -46,7 +46,7 @@ const method = [
 						id: "Chemical",
 						name: "Chemical",
 						selectType: "single",
-						nodeType: "leaf",
+						nodeType: "parent",
 						children: [
 							{
 								id: "Alcohol",
@@ -69,7 +69,7 @@ const method = [
 						id: "Cryoablation",
 						name: "Cryoablation",
 						selectType: "single",
-						nodeType: "leaf",
+						nodeType: "parent",
 						children: [
 							{
 								id: "NitrousOxide",
@@ -89,7 +89,7 @@ const method = [
 				id: "SurgicalProcedure",
 				name: "Surgical Procedure",
 				selectType: "single",
-				nodeType: "leaf",
+				nodeType: "parent",
 				children: [
 					{
 						id: "SurgicalNeurolysis",
@@ -258,7 +258,7 @@ const intervention = [
 						children: [
 							{
 								id: "Endoscopic",
-								name: "Endoscopick",
+								name: "Endoscopic",
 								nodeType: "leaf",
 							},
 							{
@@ -417,7 +417,7 @@ const intervention = [
 					},
 					{
 						id: "TarsalTunnelInjection",
-						name: "TarsalTunnelInjection",
+						name: "Tarsal Tunnel injection",
 						nodeType: "leaf",
 					},
 				],
