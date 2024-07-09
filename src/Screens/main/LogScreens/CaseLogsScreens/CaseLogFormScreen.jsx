@@ -281,8 +281,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 								<Text textAlign='center' bold>
 									Please create your log profile before filing a case
 								</Text>
+
 								<Box>
-									<Button onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: caseLogFormToGet })} variant='primary'>
+									<Button
+										onPress={() => navigation.navigate("Log Book", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } })}
+										variant='primary'>
 										<ButtonText>Create Log Profile</ButtonText>
 									</Button>
 								</Box>

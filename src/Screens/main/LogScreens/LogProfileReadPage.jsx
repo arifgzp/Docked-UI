@@ -194,57 +194,6 @@ const LogProfileReadPage = ({ navigation, route }) => {
 		setShowModal(false);
 	};
 
-	const handleOnSave = async () => {
-		// Check if rotationList or facultyList is empty
-		if (facultyList.length === 0) {
-			// Raise an error indicating rotation or faculty cannot be empty
-			toast.show({
-				placement: "top",
-				render: ({ id }) => {
-					const toastId = "toast-" + id;
-					return (
-						<Toast nativeID={toastId} action='warning' variant='accent'>
-							<VStack space='xs' mx='$4'>
-								<ToastTitle>Alert</ToastTitle>
-								<ToastDescription>Rotation cannot be empty.</ToastDescription>
-							</VStack>
-						</Toast>
-					);
-				},
-			});
-			return; // Exit function early
-		}
-
-		const data = {
-			faculties: facultyList,
-			rotations: rotationList,
-			hospital: watch("hospital"),
-		};
-		console.log("caseLogFormToGet", caseLogFormToGet);
-		try {
-			const query = store.updateUserLogProfile(AppStore.UserId, {
-				set: { logProfile: data },
-			});
-			setQuery(query);
-			const finishUpdatingLogProfile = await query;
-			if (finishUpdatingLogProfile) {
-				console.log("finishUpdatingLogProfile for logprofile", finishUpdatingLogProfile);
-				console.log("finishUpdatingLogProfile.updateUser.user[0].logProfile", finishUpdatingLogProfile.updateUser.user[0].logProfile);
-				AppStore.setLogProfile(finishUpdatingLogProfile.updateUser.user[0].logProfile);
-				if (caseLogFormToGet) {
-					navigation.navigate("Log Book", {
-						screen: "CaseLogFormScreen",
-						params: { caseLogFormToGet: caseLogFormToGet },
-					});
-				} else {
-					navigation.goBack();
-				}
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	useEffect(() => {
 		const fetchLogProfile = async () => {
 			try {
@@ -292,7 +241,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 						<Box width={"$100%"} flex={3 / 4} alignItems='center' paddingTop={20} paddingBottom={20}>
 							<VStack space='lg' width={"$100%"} p='$3' alignItems='center'>
 								<Box w='$100%'>
-									<VStack alignItems='center' paddingBottom={10}>
+									<VStack alignItems='center'>
 										<Text bold fontSize={14} alignSelf='flex-start' color='#0F0F10'>
 											Hospital
 										</Text>
@@ -343,7 +292,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 								{currentSpecialty === "Anaesthesiology" ? (
 									<Box w='$100%'>
 										<Box w='$100%'>
-											<Text color='#0F0F10' size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
+											<Text color='#0F0F10' size='sm' alignSelf='flex-start' fontFamily='Inter_Bold' pb='$2'>
 												Rotation
 											</Text>
 										</Box>

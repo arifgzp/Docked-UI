@@ -39,6 +39,7 @@ import RootLogScreens from "./LogScreens/RootLogScreens";
 import ResourcesMainPage from "./Resources/ResourcesMainPage";
 import CommunityMainPage from "./Community/CommunityMainPage";
 import LandingScreenPages from "./LandingScreenPages";
+import CreateLogScreen from "./LogScreens/CreateLogScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -87,24 +88,24 @@ const CreateMenuList = (props) => {
 		setTimeout(() => {
 			switch (currentLogButton) {
 				case "CaseLog":
-					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
 					break;
 
 				case "ChronicPainLog":
-					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
 					setSelectedLogButton("");
 					break;
 
 				case "CriticalCareCaseLog":
-					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
 					break;
 
 				case "OrthopaedicsCaseLog":
-					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
 					break;
 
 				case "OrthodonticsClinicalCaseLog":
-					navigation.navigate("Log Book", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
 					break;
 
 				default:
@@ -160,8 +161,6 @@ const CreateMenuList = (props) => {
 	);
 };
 
-const DummyCreateMenuComponent = (props) => {};
-
 const LandingScreen = ({ navigation, route }) => {
 	return (
 		<Tab.Navigator
@@ -210,7 +209,7 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarButton: (props) => <CreateMenuList {...props} />,
 				}}
 				name='Plus'
-				component={DummyCreateMenuComponent} // dummy component, since it's not used
+				component={CreateLogScreen} // dummy component, since it's not used
 			/>
 			<Tab.Screen
 				options={{

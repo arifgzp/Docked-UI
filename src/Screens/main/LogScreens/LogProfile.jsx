@@ -216,8 +216,10 @@ const LogProfilePage = ({ navigation, route }) => {
 				console.log("finishUpdatingLogProfile for logprofile", finishUpdatingLogProfile);
 				console.log("finishUpdatingLogProfile.updateUser.user[0].logProfile", finishUpdatingLogProfile.updateUser.user[0].logProfile);
 				AppStore.setLogProfile(finishUpdatingLogProfile.updateUser.user[0].logProfile);
+
+				console.log("Log Profile Navigating to ", caseLogFormToGet);
 				if (caseLogFormToGet) {
-					navigation.navigate("Log Book", {
+					navigation.navigate("Plus", {
 						screen: "CaseLogFormScreen",
 						params: { caseLogFormToGet: caseLogFormToGet },
 					});
