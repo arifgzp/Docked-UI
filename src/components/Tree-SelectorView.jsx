@@ -353,7 +353,7 @@ class TreeView extends React.Component {
 					</ModalHeader>
 					<Divider />
 					<ModalBody p='$0'>
-						<HStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start' gap='$2'>
+						<VStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start' gap='$2'>
 							<TreeNode
 								key={`${rootNode.id}-children`}
 								nodes={rootNode.children}
@@ -368,7 +368,7 @@ class TreeView extends React.Component {
 								onClear={this.clearNodeSelection}
 								onDone={this.toggleCollapse}
 							/>
-						</HStack>
+						</VStack>
 					</ModalBody>
 					<Divider />
 					<ModalFooter justifyContent='center'>
