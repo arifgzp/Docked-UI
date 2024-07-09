@@ -142,12 +142,9 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
 			const data = await query;
-			if (data) {
-				setTimeout(() => {
-					navigation.navigate("RootLogBook");
-					reset();
-				}, 1000);
-			}
+			setTimeout(() => {
+				navigation.navigate("RootLogBook");
+			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
@@ -202,6 +199,13 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		if (isFocused) {
 			fetchLogProfilePrefilledData();
 		}
+		return () => {
+			setCaseLogPreFilledData(null);
+			reset({
+				faculty: null,
+				date: new Date(),
+			});
+		};
 	}, [isFocused]);
 
 	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
