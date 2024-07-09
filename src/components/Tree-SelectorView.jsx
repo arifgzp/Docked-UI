@@ -61,22 +61,22 @@ const BranchNode = observer((props) => {
 					) : (
 						<Ionicons name='add-circle-outline' size={26} color='#000' />
 					)}
-					<Text fontSize='$lg'>{node.name}</Text>
+					<Text fontSize='$lg' flex={1}>
+						{node.name}
+					</Text>
 				</HStack>
 			</TouchableOpacity>
-			<VStack gap='$2' flex={1}>
-				{shouldRenderLevel && (
-					<TreeNode
-						{...props}
-						key={`${nodeId}-children`}
-						nodes={node["children"]}
-						level={level + 1}
-						selectType={node["selectType"]}
-						parentId={nodeId}
-						selectionBreadcrumbKey={selectionBreadcrumbKey ? `${selectionBreadcrumbKey}/${nodeId}` : nodeId}
-					/>
-				)}
-			</VStack>
+			{shouldRenderLevel && (
+				<TreeNode
+					{...props}
+					key={`${nodeId}-children`}
+					nodes={node["children"]}
+					level={level + 1}
+					selectType={node["selectType"]}
+					parentId={nodeId}
+					selectionBreadcrumbKey={selectionBreadcrumbKey ? `${selectionBreadcrumbKey}/${nodeId}` : nodeId}
+				/>
+			)}
 		</VStack>
 	);
 });
@@ -205,15 +205,17 @@ const TreeNode = observer((props) => {
 	});
 
 	return (
-		<ChildrenWrapper
-			selectionBreadcrumbKey={selectionBreadcrumbKey}
-			selectType={selectType}
-			children={currentNodeChildList}
-			level={level}
-			selectedNodeKeys={selectedNodeKeys}
-			onSelectNode={onSelectNode}
-			onNodePress={onNodePress}
-		/>
+		<VStack gap='$2' flex={1}>
+			<ChildrenWrapper
+				selectionBreadcrumbKey={selectionBreadcrumbKey}
+				selectType={selectType}
+				children={currentNodeChildList}
+				level={level}
+				selectedNodeKeys={selectedNodeKeys}
+				onSelectNode={onSelectNode}
+				onNodePress={onNodePress}
+			/>
+		</VStack>
 	);
 });
 
@@ -353,7 +355,7 @@ class TreeView extends React.Component {
 					</ModalHeader>
 					<Divider />
 					<ModalBody p='$0'>
-						<VStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start' gap='$2'>
+						<Box w='$full' h='$full' py='$4'>
 							<TreeNode
 								key={`${rootNode.id}-children`}
 								nodes={rootNode.children}
@@ -368,7 +370,7 @@ class TreeView extends React.Component {
 								onClear={this.clearNodeSelection}
 								onDone={this.toggleCollapse}
 							/>
-						</VStack>
+						</Box>
 					</ModalBody>
 					<Divider />
 					<ModalFooter justifyContent='center'>
