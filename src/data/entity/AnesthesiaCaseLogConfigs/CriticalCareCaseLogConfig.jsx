@@ -12,9 +12,10 @@ const Options = {
 		{ label: "Emergency", value: "EMERGENCY" },
 	],
 	Outcome: [
-		{ label: "PACU", value: "PACU" },
-		{ label: "ICU", value: "ICU" },
-		{ label: "Death", value: "DEATH" },
+		{ label: "Death", value: "Death" },
+		{ label: "Discharge to home", value: "Discharge to home" },
+		{ label: "Discharge to HDU", value: "Discharge to HDU" },
+		{ label: "Shifted to ward", value: "Shifted to ward" },
 	],
 	Conduct: [
 		{ label: "O - observed", value: "O - observed" },
@@ -48,6 +49,7 @@ const CriticalCareCaseLogConfigTextAndSingleSelectOptions = [
 	{ name: "Surgical procedure", uid: "surgicalprocedure", type: "text", isRequire: true },
 	{ name: "Complication", uid: "complication", type: "text", isRequire: true },
 	{ name: "Conduct", uid: "conduct", type: "select-single", options: Options.Conduct, isRequire: true },
+	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true },
 ];
 
 const specialAnesthesiaCriticalCareCaseLogOptions = [{ id: "procedures", name: "Procedures" }];
