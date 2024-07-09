@@ -133,6 +133,18 @@ const examination = [
 		nodeType: "parent",
 		children: [
 			{
+				id: "Positivefinding",
+				name: "Positive finding",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "METs",
+				name: "METs",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
 				id: "AirwayAssessment",
 				name: "Airway Assessment",
 				selectType: "multiple",

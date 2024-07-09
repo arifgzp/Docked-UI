@@ -78,9 +78,12 @@ function TreeDataView(props) {
 					if (isLeafNodeSelectionArray) {
 						result.selectionList.push(
 							...leafNodeSelection.map((selection) => {
+								const isTextSelection = selection.includes("#V#");
+								const selectionKey = isTextSelection ? selection.split("#V#")[0] : selection;
+								const selectionLabel = getLabel(selectionKey, treeConfigData);
 								return {
-									key: selection,
-									label: getLabel(selection, treeConfigData),
+									key: selectionKey,
+									label: isTextSelection ? `${selectionLabel} : ${selection.split("#V#")[1]}` : selectionLabel,
 									children: null,
 								};
 							})
@@ -107,9 +110,12 @@ function TreeDataView(props) {
 						let leafNodeList = [];
 						if (isLeafNodeSelectionArray) {
 							leafNodeList = leafNodeSelection.map((selection) => {
+								const isTextSelection = selection.includes("#V#");
+								const selectionKey = isTextSelection ? selection.split("#V#")[0] : selection;
+								const selectionLabel = getLabel(selectionKey, treeConfigData);
 								return {
 									key: selection,
-									label: getLabel(selection, treeConfigData),
+									label: isTextSelection ? `${selectionLabel} : ${selection.split("#V#")[1]}` : selectionLabel,
 									children: null,
 								};
 							});
@@ -172,12 +178,12 @@ function TreeDataView(props) {
 						<HStack gap='$0.5' justifyContent='center'>
 							{getArrowIcon(level)}
 							<Pressable onPress={onShowTreeSelector.bind(null, predicate, node.clickablePath)}>
-								<Text fontSize='$xs' underline={true} color='$textColor400' mt='$0.5'>
+								<Text fontSize='$xs' underline={true} color='$textColor400' mt='$0.5' flex={1}>
 									{node.label}
 								</Text>
 							</Pressable>
 						</HStack>
-						<VStack>
+						<VStack flex={1}>
 							{map(node.children, (child) => {
 								return renderNodeLevel(child, level + 1);
 							})}
@@ -186,7 +192,7 @@ function TreeDataView(props) {
 				) : (
 					<HStack gap='$0.5' justifyContent='center'>
 						{getArrowIcon(level)}
-						<Text fontSize='$xs' color='$textColor400' mt='$0.5'>
+						<Text fontSize='$xs' color='$textColor400' mt='$0.5' flex={1}>
 							{node.label}
 						</Text>
 					</HStack>
@@ -200,17 +206,17 @@ function TreeDataView(props) {
 	//console.log("compactViewData", JSON.stringify(compactViewData));
 
 	return (
-		<VStack gap='$2' pl='$8' py='$2' width={"$90%"}>
+		<VStack gap='$2' pl='$8' py='$2' pr='$2'>
 			{map(compactViewData.selectionList, (selection) => {
 				return (
-					<HStack key={selection.key} w={"$full"} gap='$1' flexWrap='wrap'>
+					<HStack key={selection.key} flex={1} gap='$1'>
 						<Pressable onPress={onShowTreeSelector.bind(null, predicate, selection.key)}>
-							<Text fontWeight='$semibold' fontSize='$xs' underline={true} color='$textDark950'>
+							<Text fontWeight='$semibold' fontSize='$xs' underline={true} color='$textDark950' mt='$0.5'>
 								{selection.label}
 							</Text>
 						</Pressable>
 						{selection.children && (
-							<VStack>
+							<VStack flex={1}>
 								{map(selection.children, (child) => {
 									return renderNodeLevel(child, 1);
 								})}

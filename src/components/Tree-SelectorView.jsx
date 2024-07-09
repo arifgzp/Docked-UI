@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { forEach, remove, get } from "lodash";
+import { forEach, find } from "lodash";
 import {
 	Box,
 	CheckboxGroup,
@@ -38,6 +38,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { makeObservable, observable, action } from "mobx";
 import { observer } from "mobx-react";
 import { FontAwesome } from "@expo/vector-icons";
+import { Input } from "@gluestack-ui/themed";
+import { InputField } from "@gluestack-ui/themed";
 
 function noop() {}
 
@@ -51,16 +53,7 @@ const BranchNode = observer((props) => {
 	const shouldRenderLevel = hasChildrenNodes && isExpanded;
 
 	return (
-		<View
-			key={nodeId}
-			style={
-				level != 1
-					? {
-							marginLeft: 32,
-							paddingBottom: isExpanded ? 4 : 0,
-					  }
-					: { paddingBottom: isExpanded ? 4 : 0 }
-			}>
+		<VStack key={nodeId} ml={level != 1 ? 32 : 0} pb={isExpanded ? 4 : 0} flex={1}>
 			<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
 				<HStack alignItems='center' key={nodeId} gap='$2'>
 					{isExpanded ? (
@@ -71,7 +64,7 @@ const BranchNode = observer((props) => {
 					<Text fontSize='$lg'>{node.name}</Text>
 				</HStack>
 			</TouchableOpacity>
-			<VStack gap='$2'>
+			<VStack gap='$2' flex={1}>
 				{shouldRenderLevel && (
 					<TreeNode
 						{...props}
@@ -84,56 +77,74 @@ const BranchNode = observer((props) => {
 					/>
 				)}
 			</VStack>
-		</View>
+		</VStack>
 	);
 });
 
 const LeafNode = observer((props) => {
-	const { node, selectType, level, onNodePress } = props;
+	const { node, selectType, level, selectedNodeKeys, selectionBreadcrumbKey, onNodePress, onSelectNode } = props;
 	console.log("LeafNode Render .............. | ", node.name);
+
+	const handleOnChange = (event) => {
+		const value = event.nativeEvent.text;
+		const selectedValues = selectedNodeKeys[selectionBreadcrumbKey] || [];
+		const updatedValues = selectedValues.filter((v) => !v.includes(node.id));
+		updatedValues.push(`${node.id}#V#${value}`);
+		console.log("updatedValues", updatedValues);
+		onSelectNode(selectionBreadcrumbKey, updatedValues);
+		event.stopPropagation();
+	};
 
 	switch (selectType) {
 		case "multiple":
-			return (
-				<View
-					key={node.id}
-					style={
-						level != 1
-							? {
-									marginLeft: 32,
-							  }
-							: {}
-					}>
-					<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
-						<Checkbox key={node.id} size='lg' value={node.id} aria-label={node.name}>
-							<CheckboxIndicator mr='$2'>
-								<CheckboxIcon as={FontAwesome} name='check' size={14} />
-							</CheckboxIndicator>
-							<CheckboxLabel>{node.name}</CheckboxLabel>
-						</Checkbox>
-					</TouchableOpacity>
-				</View>
-			);
+			switch (node.inputType) {
+				case "text":
+					console.log("selectedNodeKeys >> Render", selectedNodeKeys);
+					const selectedValues = selectedNodeKeys[selectionBreadcrumbKey];
+					const textValue = find(selectedValues, (value) => value?.includes(node.id));
+					const value = textValue ? textValue.split("#V#")[1] : "";
+					return (
+						<View
+							key={node.id}
+							style={
+								level != 1
+									? {
+											marginLeft: 32,
+									  }
+									: {}
+							}>
+							<VStack space='xs'>
+								<Text lineHeight='$xs'>{node.name}</Text>
+								<Input variant='outline' size='sm'>
+									<InputField type='text' onChange={handleOnChange} value={value} />
+								</Input>
+							</VStack>
+						</View>
+					);
+
+				default:
+					return (
+						<HStack key={node.id} ml={level != 1 ? 32 : 0} flex={1}>
+							<Checkbox key={node.id} size='lg' flex={1} value={node.id} aria-label={node.name} onPress={onNodePress.bind(null, { node, level })}>
+								<CheckboxIndicator mr='$2'>
+									<CheckboxIcon as={FontAwesome} name='check' size={14} />
+								</CheckboxIndicator>
+								<CheckboxLabel flex={1}>{node.name}</CheckboxLabel>
+							</Checkbox>
+						</HStack>
+					);
+			}
+
 		case "single":
 			return (
-				<View
-					key={node.id}
-					style={
-						level != 1
-							? {
-									marginLeft: 32,
-							  }
-							: {}
-					}>
-					<TouchableOpacity onPress={onNodePress.bind(null, { node, level })}>
-						<Radio key={node.id} value={node.id} aria-label={node.name}>
-							<RadioIndicator mr='$2'>
-								<RadioIcon as={CircleIcon} />
-							</RadioIndicator>
-							<RadioLabel>{node.name}</RadioLabel>
-						</Radio>
-					</TouchableOpacity>
-				</View>
+				<HStack key={node.id} ml={level != 1 ? 32 : 0} flex={1}>
+					<Radio key={node.id} size='lg' flex={1} value={node.id} aria-label={node.name} onPress={onNodePress.bind(null, { node, level })}>
+						<RadioIndicator mr='$2'>
+							<RadioIcon as={CircleIcon} />
+						</RadioIndicator>
+						<RadioLabel flex={1}>{node.name}</RadioLabel>
+					</Radio>
+				</HStack>
 			);
 
 		default:
@@ -154,20 +165,24 @@ const ChildrenWrapper = observer((props) => {
 		case "multiple":
 			const checkBoxValues = selectedNodeKeys[selectionBreadcrumbKey] || [];
 			return (
-				<CheckboxGroup key={selectionBreadcrumbKey} value={checkBoxValues} onChange={onSelectNode.bind(null, selectionBreadcrumbKey)}>
-					<HStack space='lg'>
-						<VStack gap='$2'>{children}</VStack>
-					</HStack>
-				</CheckboxGroup>
+				<HStack flex={1}>
+					<CheckboxGroup key={selectionBreadcrumbKey} value={checkBoxValues} onChange={onSelectNode.bind(null, selectionBreadcrumbKey)} flex={1}>
+						<VStack gap='$2' flex={1}>
+							{children}
+						</VStack>
+					</CheckboxGroup>
+				</HStack>
 			);
 		case "single":
 			const radioValues = selectedNodeKeys[selectionBreadcrumbKey] || null;
 			return (
-				<RadioGroup key={selectionBreadcrumbKey} value={radioValues} onChange={onSelectNode.bind(null, selectionBreadcrumbKey)}>
-					<HStack space='lg'>
-						<VStack gap='$2'>{children}</VStack>
-					</HStack>
-				</RadioGroup>
+				<HStack flex={1}>
+					<RadioGroup key={selectionBreadcrumbKey} value={radioValues} onChange={onSelectNode.bind(null, selectionBreadcrumbKey)} flex={1}>
+						<VStack gap='$2' flex={1}>
+							{children}
+						</VStack>
+					</RadioGroup>
+				</HStack>
 			);
 		default:
 			return children;
@@ -269,7 +284,7 @@ class TreeView extends React.Component {
 	expandNode = (id) => this.updateNodeKeyById(id, true);
 
 	selectNode = (id, value) => {
-		//console.log(">>>>>>>>>>>>  selectNode ", id, value);
+		console.log(">>>>>>>>>>>>  selectNode ", id, value);
 		this.selectedNodeKeys[id] = value;
 	};
 
@@ -348,7 +363,7 @@ class TreeView extends React.Component {
 					</ModalHeader>
 					<Divider />
 					<ModalBody p='$0'>
-						<VStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start' gap='$2'>
+						<HStack w='$full' h='$full' py='$4' justifyContent='flex-start' alignItems='flex-start' gap='$2'>
 							<TreeNode
 								key={`${rootNode.id}-children`}
 								nodes={rootNode.children}
@@ -363,7 +378,7 @@ class TreeView extends React.Component {
 								onClear={this.clearNodeSelection}
 								onDone={this.toggleCollapse}
 							/>
-						</VStack>
+						</HStack>
 					</ModalBody>
 					<Divider />
 					<ModalFooter justifyContent='center'>
