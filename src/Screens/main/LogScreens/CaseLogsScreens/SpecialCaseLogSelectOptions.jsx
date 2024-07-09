@@ -40,9 +40,13 @@ const parserForConvertingIntoTreeFormData = (input, treeConfig) => {
 			const leafNode = treeLevels.pop();
 
 			const leafNodeSelector = treeLevels.join("/");
-
 			if (result[leafNodeSelector]) {
-				result[leafNodeSelector].push(leafNode);
+				console.log("leafNodeSelector >> ", leafNodeSelector);
+				console.log("Result >> ", result[leafNodeSelector]);
+				if (Array.isArray(result[leafNodeSelector])) {
+					// TODO: Added a safety check to avoid crash
+					result[leafNodeSelector].push(leafNode);
+				}
 			} else {
 				const leafNodeOwner = treeLevels.pop();
 				const selectType = getSelectType(leafNodeOwner, treeConfig);
