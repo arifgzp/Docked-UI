@@ -141,10 +141,9 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		try {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
-			const data = await query;
-			setTimeout(() => {
-				navigation.navigate("RootLogBook");
-			}, 1000);
+			await query;
+			//navigation.navigate("RootLogBook");
+			navigation.navigate("Log Book", { screen: "RootLogBook" });
 		} catch (error) {
 			console.log(error);
 		}

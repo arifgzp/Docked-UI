@@ -10,7 +10,7 @@ import AppStore from "../../../../../stores/AppStore";
 import useIsReady from "../../../../../hooks/useIsReady";
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
-import { forEach, map, compact } from "lodash";
+import { forEach, map, compact, orderBy } from "lodash";
 import { toJS } from "mobx";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
 import CaseLogAnaesthesiaConfig from "../../../../../data/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
@@ -136,6 +136,7 @@ const CaseLogTab = () => {
 			cardDetails.push(...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList);
 			break;
 	}
+	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
 	console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", cardDetails.length);
 
 	return (
