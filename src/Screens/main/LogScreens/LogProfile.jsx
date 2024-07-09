@@ -152,6 +152,7 @@ const LogProfilePage = ({ navigation, route }) => {
 			phoneNumber: watchForFaculty("facultyPhoneNumber"),
 		};
 		setFacultyList([...facultyList, newFaculty]);
+		setShowModal(false);
 		resetForFaculty({
 			facultyName: null,
 			facultyDesignation: null,
@@ -159,7 +160,6 @@ const LogProfilePage = ({ navigation, route }) => {
 			from: new Date(),
 			to: new Date(),
 		});
-		setShowModal(false);
 	};
 
 	const handleUpdateFaculty = () => {
@@ -171,6 +171,13 @@ const LogProfilePage = ({ navigation, route }) => {
 		};
 		setFacultyList(newFacultyList);
 		setShowModal(false);
+		resetForFaculty({
+			facultyName: null,
+			facultyDesignation: null,
+			facultyPhoneNumber: null,
+			from: new Date(),
+			to: new Date(),
+		});
 	};
 
 	const handleOnSave = async () => {
@@ -317,6 +324,13 @@ const LogProfilePage = ({ navigation, route }) => {
 										isOpen={showModal}
 										onClose={() => {
 											setShowModal(false);
+											resetForFaculty({
+												facultyName: null,
+												facultyDesignation: null,
+												facultyPhoneNumber: null,
+												from: new Date(),
+												to: new Date(),
+											});
 										}}
 										finalFocusRef={ref}>
 										<ModalBackdrop />
@@ -421,7 +435,7 @@ const LogProfilePage = ({ navigation, route }) => {
 																	render={({ field: { onChange, onBlur, value } }) => {
 																		return (
 																			<Input width={"$100%"} variant='outline' size='sm' isDisabled={false} isInvalid={false} isReadOnly={false}>
-																				<InputField onChangeText={onChange} value={value} placeholder='Phone Number' />
+																				<InputField inputMode='numeric' onChangeText={onChange} value={value} placeholder='Phone Number' />
 																			</Input>
 																		);
 																	}}
@@ -440,6 +454,13 @@ const LogProfilePage = ({ navigation, route }) => {
 															variant='secondary'
 															onPress={() => {
 																setShowModal(false);
+																resetForFaculty({
+																	facultyName: null,
+																	facultyDesignation: null,
+																	facultyPhoneNumber: null,
+																	from: new Date(),
+																	to: new Date(),
+																});
 															}}>
 															<ButtonText>Cancel</ButtonText>
 														</Button>
@@ -548,7 +569,7 @@ const LogProfilePage = ({ navigation, route }) => {
 																	render={({ field: { onChange, onBlur, value } }) => {
 																		return (
 																			<Input width={"$100%"} variant='outline' size='sm' isDisabled={false} isInvalid={false} isReadOnly={false}>
-																				<InputField onChangeText={onChange} value={value} placeholder='Phone Number' />
+																				<InputField inputMode='numeric' onChangeText={onChange} value={value} placeholder='Phone Number' />
 																			</Input>
 																		);
 																	}}
@@ -567,6 +588,13 @@ const LogProfilePage = ({ navigation, route }) => {
 															variant='secondary'
 															onPress={() => {
 																setShowModal(false);
+																resetForFaculty({
+																	facultyName: null,
+																	facultyDesignation: null,
+																	facultyPhoneNumber: null,
+																	from: new Date(),
+																	to: new Date(),
+																});
 															}}>
 															<ButtonText>Cancel</ButtonText>
 														</Button>
@@ -633,7 +661,7 @@ const LogProfilePage = ({ navigation, route }) => {
 												<Controller
 													control={control}
 													rules={{
-														required: true,
+														required: false,
 													}}
 													name='department'
 													key='department'

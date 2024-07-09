@@ -117,6 +117,12 @@ const executeUpload = async (url, formData, token) => {
 	}
 };
 
+const executeAPI = async (url, data) => {
+	const serverURL = NetworkUtils.getServerAPIURL();
+	const requestURL = `${serverURL}/${url}`;
+	return execute(requestURL, data);
+};
+
 const APIErrorType = types.model("APIError", {
 	name: types.string,
 	message: types.string,
@@ -445,6 +451,46 @@ const AppStore = types
 				console.error("AppStore > validateUserToken ");
 				console.log(error.stack);
 				self.markUserSignedOut();
+			}
+		}),
+
+		executeForgotPassword: flow(function* executeForgotPassword(data, navigation) {
+			try {
+				self._isLoading = true;
+				const response = yield execute("forgotPassword", data);
+				if (response) {
+					console.log(response);
+					navigation.navigate("ResetPasswordScreen", { enteredMail: data.User.userName });
+					return response;
+				} else {
+					console.log(response.error);
+				}
+			} catch (error) {
+				console.log(error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
+
+		executePasswordReset: flow(function* executePasswordReset(data, navigation, errorHandler) {
+			try {
+				self._isLoading = false;
+				const response = yield execute("resetPassword", data);
+				if (response) {
+					console.log(response);
+					if (response.message == "InvalidOTPException") {
+						errorHandler();
+					} else {
+						navigation.navigate("Login Page");
+					}
+					return response;
+				} else {
+					console.log(response.error);
+				}
+			} catch (error) {
+				console.log(error);
+			} finally {
+				self._isLoading = false;
 			}
 		}),
 

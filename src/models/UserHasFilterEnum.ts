@@ -38,7 +38,9 @@ anaesthesiaCaseLog="anaesthesiaCaseLog",
 anaesthesiaChronicPainLog="anaesthesiaChronicPainLog",
 anaesthesiaCriticalCareCaseLog="anaesthesiaCriticalCareCaseLog",
 orthodonticsClinicalCaseLog="orthodonticsClinicalCaseLog",
+orthodonticsPreClinical="orthodonticsPreClinical",
 orthopaedicsCaseLog="orthopaedicsCaseLog",
+orthopaedicsProcedureLog="orthopaedicsProcedureLog",
 logProfile="logProfile"
 }
 
@@ -76,6 +78,8 @@ export const UserHasFilterEnumType = types.enumeration("UserHasFilter", [
   "anaesthesiaChronicPainLog",
   "anaesthesiaCriticalCareCaseLog",
   "orthodonticsClinicalCaseLog",
+  "orthodonticsPreClinical",
   "orthopaedicsCaseLog",
+  "orthopaedicsProcedureLog",
   "logProfile",
       ])

@@ -11,6 +11,8 @@ import CriticalCareLAnesthesiaCaseLogConfig from "../../../../data/SpecialtyConf
 import OrthopeadicsCaseLogConfig from "../../../../data/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicsCaseLogConfig";
 import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsSpecialClinicalCaseLogConfig";
 import { FontAwesome6 } from "@expo/vector-icons";
+import OrthopeadicProcedureLogSpecialConfig from "../../../../data/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicProcedureLogSpecialConfig";
+import OrthodonticsPreClinicalSpecialConfig from "../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsPreClinicalSpecialConfig";
 
 const getSelectType = (key, configData) => {
 	//console.log("key", key);
@@ -141,8 +143,12 @@ const SpecialCaseLogSelectOptions = ({
 				return CriticalCareLAnesthesiaCaseLogConfig[key];
 			case "OrthopaedicsCaseLog":
 				return OrthopeadicsCaseLogConfig[key];
+			case "OrthopaedicsProcedureLog":
+				return OrthopeadicProcedureLogSpecialConfig[key];
 			case "OrthodonticsClinicalCaseLog":
 				return OrthodonticsSpecialClinicalCaseLogConfig[key];
+			case "OrthodonticsPreClinical":
+				return OrthodonticsPreClinicalSpecialConfig[key];
 			default:
 				return [];
 		}

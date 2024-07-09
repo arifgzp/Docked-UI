@@ -38,42 +38,43 @@ const EnterOTPPage = ({ navigation, route }) => {
 
 		if (!otpInput) {
 			setOTPError("Please Enter OTP");
-		}
-		const response = await appStoreInstance.VerifyAccount({
-			userName: enteredMail,
-			newUserVerificationCode: otpInput,
-			userStatus: "WIZARD_PENDING",
-		});
+		} else {
+			const response = await appStoreInstance.VerifyAccount({
+				userName: enteredMail,
+				newUserVerificationCode: otpInput,
+				userStatus: "WIZARD_PENDING",
+			});
 
-		console.log("response for OTP", response);
-		switch (response) {
-			case "FAILED":
-				setOTPError("Please Enter Valid OTP");
-				break;
+			console.log("response for OTP", response);
+			switch (response) {
+				case "FAILED":
+					setOTPError("Please Enter Valid OTP");
+					break;
 
-			case "SUCCESS":
-				navigation.navigate("Email Verified Page", { enteredPassword: enteredPassword, enteredMail: enteredMail });
-				break;
+				case "SUCCESS":
+					navigation.navigate("Email Verified Page", { enteredPassword: enteredPassword, enteredMail: enteredMail });
+					break;
 
-			case "ERROR":
-				toast.show({
-					placement: "top",
-					render: ({ id }) => {
-						const toastId = "toast-" + id;
-						return (
-							<Toast nativeID={toastId} action='error' variant='accent'>
-								<VStack space='xs' mx='$4'>
-									<ToastTitle>Something Went Wrong</ToastTitle>
-									<ToastDescription>"We're sorry, but we're having trouble processing your request. Please try again later.</ToastDescription>
-								</VStack>
-							</Toast>
-						);
-					},
-				});
-				break;
+				case "ERROR":
+					toast.show({
+						placement: "top",
+						render: ({ id }) => {
+							const toastId = "toast-" + id;
+							return (
+								<Toast nativeID={toastId} action='error' variant='accent'>
+									<VStack space='xs' mx='$4'>
+										<ToastTitle>Something Went Wrong</ToastTitle>
+										<ToastDescription>"We're sorry, but we're having trouble processing your request. Please try again later.</ToastDescription>
+									</VStack>
+								</Toast>
+							);
+						},
+					});
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
 		}
 	};
 	return (

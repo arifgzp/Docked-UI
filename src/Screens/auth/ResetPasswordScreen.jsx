@@ -31,47 +31,60 @@ import {
 import { Platform } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
+import FormValidation from "../../utils/FormValidation";
+import appStoreInstance from "../../stores/AppStore";
+import { observer } from "mobx-react";
+import Loader from "../../components/Loader";
 
-const ResetPasswordScreen = ({ navigation }) => {
-	const [formData, setFormData] = useState({ name: "", email: "", password: "", reEnterPassword: "" });
+const ResetPasswordScreen = ({ navigation, route }) => {
+	const { enteredMail } = route.params;
+	const [formData, setFormData] = useState({ otp: "", email: "", password: "", reEnterPassword: "" });
 	const [passwordVisible, setPasswordVisible] = useState(false);
 	const [joinPressed, setJoinPressed] = useState(false);
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
+	const [otpError, setOTPError] = useState("");
 	const [nameError, setNameError] = useState("");
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	const handleResetingPassword = () => {
+	const handelOtpWrongError = () => {
+		setOTPError("OTP is invalid");
+	};
+
+	const handelResetPasswordClick = async () => {
 		setJoinPressed(true);
-
-		// Check if password and re-entered password fields are empty first
-		if (!formData.password) {
-			setPasswordError("Password is required");
+		let isFormValid = true;
+		if (!FormValidation.validateEmail(enteredMail)) {
 			return;
 		}
-
-		if (!formData.reEnterPassword) {
-			setPasswordError("Password is required");
-			return;
+		if (formData.password.length < 8) {
+			setPasswordError("password shouldn't be less than 8 characters");
+			isFormValid = false;
 		}
-
-		// Check if the passwords match
-		if (formData.password !== formData.reEnterPassword) {
-			setPasswordError("Entered passwords do not match");
-			return;
+		if (formData.reEnterPassword != formData.password) {
+			setPasswordError("Confirm password does not match");
+			isFormValid = false;
 		}
-
-		// Clear any password error and navigate
-		setPasswordError("");
-		navigation.navigate("PasswordResetSuccessfully", { enteredMail: formData.email });
-	};
-
-	const handleChangeName = (text) => {
-		setFormData({ ...formData, name: text });
-	};
-
-	const handleChangeEmail = (text) => {
-		setFormData({ ...formData, email: text });
+		if (formData.otp == "") {
+			setOTPError("Please enter OTP");
+			isFormValid = false;
+		}
+		if (isFormValid) {
+			try {
+				let data = {
+					User: {
+						userName: enteredMail,
+						password: formData.password,
+						resetPasswordCode: formData.otp,
+					},
+				};
+				appStoreInstance.executePasswordReset(data, navigation, handelOtpWrongError);
+			} catch (error) {
+				if (error == "InvalidOTPException") {
+					setOTPError("Invalid OTP");
+				}
+			}
+		}
 	};
 
 	const handleChangePassword = (text) => {
@@ -82,91 +95,125 @@ const ResetPasswordScreen = ({ navigation }) => {
 		setFormData({ ...formData, reEnterPassword: text });
 	};
 
+	const handleChangeOTP = (text) => {
+		setFormData({ ...formData, otp: text });
+	};
+
 	const handleShowPasswordState = () => {
 		setPasswordVisible((showState) => {
 			return !showState;
 		});
 	};
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<Box flex={1} backgroundColor='$primaryBackground'>
-					<Box paddingLeft={20} justifyContent='center' flex={1 / 4}>
-						<Text size='xl' fontFamily='Inter_Bold'>
-							Reset Password
-						</Text>
+		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "height" : "height"}
+				style={{ flex: 1, zIndex: 999 }}
+				keyboardShouldPersistTaps='handled'>
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+					<Box w='$100%' flex={1} backgroundColor='$primaryBackground'>
+						<Box w='$100%' flex={3 / 4} p='$5'>
+							<VStack space='3xl'>
+								<Box pb='$5'>
+									<Text size='sm'>
+										An OTP (One-Time Password) has been sent to your registered email to initiate the password reset process. Please check your inbox
+										and use the provided OTP to reset your password.
+									</Text>
+								</Box>
+								<Box gap='$2'>
+									<Text size='xs'>New Password</Text>
+									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
+										<Box>
+											<Input variant='outline'>
+												<InputField
+													onChangeText={handleChangePassword}
+													value={formData.password}
+													type={passwordVisible ? "text" : "password"}
+													placeholder='New Password'
+												/>
+												<InputSlot pr='$3' onPress={handleShowPasswordState}>
+													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
+												</InputSlot>
+											</Input>
+											{joinPressed && passwordError && (
+												<FormControlError>
+													<FormControlErrorIcon as={AlertCircleIcon} />
+													<FormControlErrorText>{passwordError}</FormControlErrorText>
+												</FormControlError>
+											)}
+										</Box>
+									</FormControl>
+								</Box>
+								<Box gap='$2'>
+									<Text size='xs'>Re-enter New Password</Text>
+									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
+										<Box>
+											<Input variant='outline'>
+												<InputField
+													onChangeText={handleChangeReEnterPassword}
+													value={formData.reEnterPassword}
+													type={passwordVisible ? "text" : "password"}
+													placeholder='Re-enter New Password'
+													onFocus={() => setPasswordError("")}
+												/>
+												<InputSlot pr='$3' onPress={handleShowPasswordState}>
+													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
+												</InputSlot>
+											</Input>
+											{joinPressed && passwordError && (
+												<FormControlError>
+													<FormControlErrorIcon as={AlertCircleIcon} />
+													<FormControlErrorText>{passwordError}</FormControlErrorText>
+												</FormControlError>
+											)}
+										</Box>
+									</FormControl>
+								</Box>
+								<Box gap='$2'>
+									<Text size='xs'>Enter OTP</Text>
+									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && otpError} isReadOnly={false} isRequired={false}>
+										<Box>
+											<Input>
+												<InputField
+													inputMode='numeric'
+													onChangeText={handleChangeOTP}
+													value={formData.otp}
+													type={"text"}
+													placeholder='Enter 4 digit OTP'
+													onFocus={() => setOTPError("")}
+												/>
+											</Input>
+											{joinPressed && otpError && (
+												<FormControlError>
+													<FormControlErrorIcon as={AlertCircleIcon} />
+													<FormControlErrorText>{otpError}</FormControlErrorText>
+												</FormControlError>
+											)}
+										</Box>
+									</FormControl>
+								</Box>
+								<Box w='$100%'>
+									<Button w='$100%' onPress={handelResetPasswordClick} variant='primary'>
+										<ButtonText>Reset</ButtonText>
+									</Button>
+								</Box>
+							</VStack>
+						</Box>
+						<Box flex={1 / 4} paddingBottom={20} justifyContent='center'>
+							<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
+								<Text>Already a member?</Text>
+								<Box>
+									<Button variant='link' size='sm' onPress={() => navigation.navigate("Login Page")}>
+										<ButtonText color='#367B71'>Member Login</ButtonText>
+									</Button>
+								</Box>
+							</HStack>
+						</Box>
 					</Box>
-					<Box flex={3 / 4} justifyContent='center'>
-						<VStack space='3xl'>
-							<Box>
-								<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
-									<Box justifycontent='center' alignItems='center'>
-										<Input width={"$80%"} variant='underlined'>
-											<InputField
-												onChangeText={handleChangePassword}
-												value={formData.password}
-												type={passwordVisible ? "text" : "password"}
-												placeholder='Password'
-											/>
-											<InputSlot pr='$3' onPress={handleShowPasswordState}>
-												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
-											</InputSlot>
-										</Input>
-										{joinPressed && passwordError && (
-											<FormControlError width={"$80%"}>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{passwordError}</FormControlErrorText>
-											</FormControlError>
-										)}
-									</Box>
-								</FormControl>
-							</Box>
-							<Box>
-								<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
-									<Box justifycontent='center' alignItems='center'>
-										<Input width={"$80%"} variant='underlined'>
-											<InputField
-												onChangeText={handleChangeReEnterPassword}
-												value={formData.reEnterPassword}
-												type={passwordVisible ? "text" : "password"}
-												placeholder='Re-enter Password'
-											/>
-											<InputSlot pr='$3' onPress={handleShowPasswordState}>
-												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
-											</InputSlot>
-										</Input>
-										{joinPressed && passwordError && (
-											<FormControlError width={"$80%"}>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{passwordError}</FormControlErrorText>
-											</FormControlError>
-										)}
-									</Box>
-								</FormControl>
-							</Box>
-							<Box justifycontent='center' alignItems='center'>
-								<Button onPress={handleResetingPassword} variant='primary' size='lg'>
-									<ButtonText>Reset Password</ButtonText>
-								</Button>
-							</Box>
-						</VStack>
-					</Box>
-					<Box flex={1 / 4} paddingBottom={20} justifyContent='center'>
-						<VStack space='sm'>
-							<Text textAlign='center' bold fontFamily='Inter'>
-								Already A Member?
-							</Text>
-							<Box justifycontent='center' alignItems='center'>
-								<Button onPress={() => navigation.navigate("Login Page")} variant='secondary' size='lg'>
-									<ButtonText textAlign='center'>Member Login</ButtonText>
-								</Button>
-							</Box>
-						</VStack>
-					</Box>
-				</Box>
-			</ScrollView>
-		</KeyboardAvoidingView>
+				</ScrollView>
+			</KeyboardAvoidingView>
+		</Loader>
 	);
 };
 
-export default ResetPasswordScreen;
+export default observer(ResetPasswordScreen);

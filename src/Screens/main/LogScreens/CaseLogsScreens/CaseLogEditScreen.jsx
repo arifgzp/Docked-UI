@@ -38,6 +38,14 @@ import {
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsClinicalCaseLogConfig";
 import { Textarea } from "@gluestack-ui/themed";
 import { TextareaInput } from "@gluestack-ui/themed";
+import {
+	OrthopaedicsProcedureLogConfigTextAndSingleSelectOptions,
+	specialOrthopaedicsProcedureLogOption,
+} from "../../../../data/entity/OrthopaedicsCaseLogConfigs/OrthopeadicProcedureLogConfig";
+import {
+	OrthodonticsPreClinicalTextAndSingleSelectOptions,
+	specialOrthodonticsPreClinical,
+} from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -49,8 +57,12 @@ const getCaseLogFields = (key) => {
 			return CriticalCareCaseLogConfigTextAndSingleSelectOptions;
 		case "OrthopaedicsCaseLog":
 			return OrthopaedicsCaseLogConfigTextAndSingleSelectOptions;
+		case "OrthopaedicsProcedureLog":
+			return OrthopaedicsProcedureLogConfigTextAndSingleSelectOptions;
 		case "OrthodonticsClinicalCaseLog":
 			return OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions;
+		case "OrthodonticsPreClinical":
+			return OrthodonticsPreClinicalTextAndSingleSelectOptions;
 		default:
 			return [];
 	}
@@ -66,8 +78,12 @@ const getSpecialCaseLogOptions = (key) => {
 			return specialAnesthesiaCriticalCareCaseLogOptions;
 		case "OrthopaedicsCaseLog":
 			return specialOrthopaedicsCaseLogsOption;
+		case "OrthopaedicsProcedureLog":
+			return specialOrthopaedicsProcedureLogOption;
 		case "OrthodonticsClinicalCaseLog":
 			return specialOrthodonticsClinicalCaseLog;
+		case "OrthodonticsPreClinical":
+			return specialOrthodonticsPreClinical;
 		default:
 			return [];
 	}
@@ -135,8 +151,14 @@ const CaseLogEditScreen = ({ navigation }) => {
 			case "OrthopaedicsCaseLog":
 				queryToRun = "updateOrthopaedicsCaseLog";
 				break;
+			case "OrthopaedicsProcedureLog":
+				queryToRun = "updateOrthopaedicsProcedureLog";
+				break;
 			case "OrthodonticsClinicalCaseLog":
 				queryToRun = "updateOrthodonticsClinicalCaseLog";
+				break;
+			case "OrthodonticsPreClinical":
+				queryToRun = "updateOrthodonticsPreClinical";
 				break;
 			default:
 				throw new Error("Invalid case log type");
@@ -180,8 +202,16 @@ const CaseLogEditScreen = ({ navigation }) => {
 					caseLogData = store.getOrthopaedicsCaseLogById(routes.params.id)[0];
 					break;
 
+				case "OrthopaedicsProcedureLog":
+					caseLogData = store.getOrthopaedicsProcedureLogById(routes.params.id)[0];
+					break;
+
 				case "OrthodonticsClinicalCaseLog":
 					caseLogData = store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0];
+					break;
+
+				case "OrthodonticsPreClinical":
+					caseLogData = store.getOrthodonticsPreClinicalById(routes.params.id)[0];
 					break;
 			}
 			reset({ ...caseLogData });

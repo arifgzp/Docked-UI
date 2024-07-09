@@ -6,6 +6,8 @@ import { anaesthesiaChronicPainLogModelPrimitives } from "./AnaesthesiaChronicPa
 import { anaesthesiaCriticalCareCaseLogModelPrimitives } from "./AnaesthesiaCriticalCareCaseLogModel.base";
 import { orthopaedicsCaseLogModelPrimitives } from "./OrthopaedicsCaseLogModel.base";
 import { orthodonticsClinicalCaseLogModelPrimitives } from "./OrthodonticsClinicalCaseLogModel.base";
+import { orthopaedicsProcedureLogModelPrimitives } from "./OrthopaedicsProcedureLogModel.base";
+import { orthodonticsPreClinicalModelPrimitives } from "./OrthodonticsPreClinicalModel.base";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -31,4 +33,6 @@ export const AnaesthesiaCriticalCareCaseLogByModelSelector = selectFromUser().an
 	anaesthesiaCriticalCareCaseLogModelPrimitives
 );
 export const OrthopaedicsCaseLogByModelSelector = selectFromUser().orthopaedicsCaseLog(orthopaedicsCaseLogModelPrimitives);
+export const OrthopaedicsProcedureLogByModelSelector = selectFromUser().orthopaedicsProcedureLog(orthopaedicsProcedureLogModelPrimitives);
 export const OrthodonticsClinicalCaseLogByModelSelector = selectFromUser().orthodonticsClinicalCaseLog(orthodonticsClinicalCaseLogModelPrimitives);
+export const OrthodonticsClinicalPreClinicalByModelSelector = selectFromUser().orthodonticsPreClinical(orthodonticsPreClinicalModelPrimitives);

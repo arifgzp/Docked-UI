@@ -39,7 +39,7 @@ const ProfilePicture = ({ image, setImage }) => {
 						</Button>
 					</Box>
 					<Box justifycontent='center' alignItems='center'>
-						<Button onPress={pickImage} size='lg' variant='secondary'>
+						<Button isDisabled={true} onPress={pickImage} size='lg' variant='secondary'>
 							<ButtonText fontFamily='Inter_Regular' textAlign='center'>
 								Browse Gallery
 							</ButtonText>

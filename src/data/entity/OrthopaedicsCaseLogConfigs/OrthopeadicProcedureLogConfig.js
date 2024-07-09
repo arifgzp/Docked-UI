@@ -9,23 +9,26 @@ const Options = {
 		{ label: "Performed under supervision", value: "Performed under supervision" },
 		{ label: "Performed independently", value: "Performed independently" },
 		{ label: "Supervised", value: "Supervised" },
-		{ label: " Conducted", value: "Conducted" },
+		{ label: "Conducted", value: "Conducted" },
+	],
+	Outcome: [
+		{ label: "Uneventful", value: "Uneventful" },
+		{ label: "Admitted to ICU", value: "Admitted to ICU" },
+		{ label: "Other", value: "Other" },
 	],
 };
 
-const OrthopaedicsCaseLogConfigTextAndSingleSelectOptions = [
+const OrthopaedicsProcedureLogConfigTextAndSingleSelectOptions = [
 	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%" },
 	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true, width: "$48%" },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
+	{ name: "Site", uid: "sites", type: "text", isRequire: true },
+	{ name: "Procedure Name", uid: "procedureName", type: "text", isRequire: true },
+	{ name: "Complication", uid: "complication", type: "text", isRequire: true },
+	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true },
 	{ name: "Conduct", uid: "conduct", type: "select-single", options: Options.Conduct, isRequire: true },
 ];
 
-const specialOrthopaedicsCaseLogsOption = [
-	{ id: "diseaseCategory", name: "Disease Category" },
-	{ id: "site", name: "Site" },
-	{ id: "joint", name: "Joint" },
-	{ id: "bones", name: "Bones" },
-	{ id: "outcomes", name: "Outcomes" },
-];
+const specialOrthopaedicsProcedureLogOption = [{ id: "procedure", name: "Procedure" }];
 
-export { OrthopaedicsCaseLogConfigTextAndSingleSelectOptions, specialOrthopaedicsCaseLogsOption };
+export { OrthopaedicsProcedureLogConfigTextAndSingleSelectOptions, specialOrthopaedicsProcedureLogOption };

@@ -28,6 +28,12 @@ import {
 	updateOrthopaedicsCaseLogModelSelector,
 	selectFromUpdateOrthodonticsClinicalCaseLogPayload,
 	updateOrthodonticsClinicalCaseLogSelector,
+	OrthopaedicsProcedureLogByModelSelector,
+	OrthodonticsClinicalPreClinicalByModelSelector,
+	selectFromUpdateOrthopaedicsProcedureLogPayload,
+	updateOrthopaedicsProcedureLogModelSelector,
+	selectFromUpdateOrthodonticsPreClinicalPayload,
+	updateOrthodonticsPreClinicalModelSelector,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
@@ -170,6 +176,23 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return updateUserQuery;
 	},
 
+	updateUserOrthopaedicsProcedureLog(userId, updatedOrthopaedicsProcedureLog) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedOrthopaedicsProcedureLog);
+		const setDataPatch = updatedOrthopaedicsProcedureLog;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(OrthopaedicsProcedureLogByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserOrthopaedicsProcedureLog Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserOrthopaedicsProcedureLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
 	updateUserOrthodonticsClinicalCaseLog(userId, updatedOrthodonticsClinicalCaseLog) {
 		const dataFilter = {
 			id: userId,
@@ -184,6 +207,23 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log({ query: updateUserQuery.query });
 		console.log(updateUserQuery.variables);
 		console.log("********** updateUserOrthodonticsClinicalCaseLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateUserOrthodonticsPreClinical(userId, updatedOrthodonticsPreClinical) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedOrthodonticsPreClinical);
+		const setDataPatch = updatedOrthodonticsPreClinical;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(OrthodonticsClinicalPreClinicalByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserOrthodonticsPreClinical Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserOrthodonticsPreClinical Query ENDS **********");
 		return updateUserQuery;
 	},
 
@@ -269,6 +309,28 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return updateOrthopaedicsCaseLogQuery;
 	},
 
+	updateOrthopaedicsProcedureLog(orthopaedicsProcedureLogId, updatedOrthopaedicsProcedureLogInfo) {
+		const dataFilter = {
+			id: orthopaedicsProcedureLogId,
+		};
+		console.log("orthopaedicsCaseLogId", orthopaedicsProcedureLogId);
+		console.log("updatedOrthopaedicsProcedureLogInfo", updatedOrthopaedicsProcedureLogInfo);
+		const setDataPatch = updatedOrthopaedicsProcedureLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateOrthopaedicsProcedureLogesultSelector = selectFromUpdateOrthopaedicsProcedureLogPayload()
+			.orthopaedicsProcedureLog(updateOrthopaedicsProcedureLogModelSelector)
+			.toString();
+		const updateOrthopaedicsProcedureLogQuery: Query = self.mutateUpdateOrthopaedicsProcedureLog(
+			inputVariable,
+			updateOrthopaedicsProcedureLogesultSelector
+		);
+		console.log("********** updateOrthopaedicsProcedureLog Query STARTS **********");
+		console.log({ query: updateOrthopaedicsProcedureLogQuery.query });
+		console.log(updateOrthopaedicsProcedureLogQuery.variables);
+		console.log("********** updateOrthopaedicsProcedureLog Query ENDS **********");
+		return updateOrthopaedicsProcedureLogQuery;
+	},
+
 	updateOrthodonticsClinicalCaseLog(orthodonticsClinicalCaseLogId, updatedOrthodonticsClinicalCaseLogInfo) {
 		const dataFilter = {
 			id: orthodonticsClinicalCaseLogId,
@@ -289,6 +351,28 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log(updateOrthodonticsClinicalCaseLogQuery.variables);
 		console.log("********** updateOrthodonticsClinicalCaseLog Query ENDS **********");
 		return updateOrthodonticsClinicalCaseLogQuery;
+	},
+
+	updateOrthodonticsPreClinical(orthodonticsPreClinicalId, updatedOrthodonticsPreClinicalIdInfo) {
+		const dataFilter = {
+			id: orthodonticsPreClinicalId,
+		};
+		console.log("orthopaedicsCaseLogId", orthodonticsPreClinicalId);
+		console.log("updatedOrthopaedicsProcedureLogInfo", updatedOrthodonticsPreClinicalIdInfo);
+		const setDataPatch = updatedOrthodonticsPreClinicalIdInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateOrthodonticsPreClinicalresultSelector = selectFromUpdateOrthodonticsPreClinicalPayload()
+			.orthodonticsPreClinical(updateOrthodonticsPreClinicalModelSelector)
+			.toString();
+		const updateOrthodonticsPreClinicalQuery: Query = self.mutateUpdateOrthodonticsPreClinical(
+			inputVariable,
+			updateOrthodonticsPreClinicalresultSelector
+		);
+		console.log("********** updateOrthodonticsPreClinical Query STARTS **********");
+		console.log({ query: updateOrthodonticsPreClinicalQuery.query });
+		console.log(updateOrthodonticsPreClinicalQuery.variables);
+		console.log("********** updateOrthodonticsPreClinical Query ENDS **********");
+		return updateOrthodonticsPreClinicalQuery;
 	},
 
 	fetchAnaesthesiaCaseLogByUser(userName: string) {
@@ -343,6 +427,19 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return fetchOrthopaedicsCaseLogByUserQuery;
 	},
 
+	fetchOrthopaedicsProcedureLogUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchOrthopaedicsProcedureLogUserSelector = OrthopaedicsProcedureLogByModelSelector.toString();
+		const fetchOrthopaedicsProcedureLogUserQuery = self.queryQueryUser(variables, fetchOrthopaedicsProcedureLogUserSelector);
+		console.log("********** fetchOrthopaedicsProcedureLogUser Query STARTS **********");
+		console.log(fetchOrthopaedicsProcedureLogUserQuery.query);
+		console.log(fetchOrthopaedicsProcedureLogUserQuery.variables);
+		console.log("********** fetchOrthopaedicsProcedureLogUser Query ENDS **********");
+		return fetchOrthopaedicsProcedureLogUserQuery;
+	},
+
 	fetchOrthodonticsClinicalCaseLogByUser(userName: string) {
 		const variables = {
 			filter: { userName: { eq: userName } },
@@ -354,6 +451,19 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log(fetchOrthodonticsClinicalCaseLogByUserQuery.variables);
 		console.log("********** fetchOrthodonticsClinicalCaseLogByUser Query ENDS **********");
 		return fetchOrthodonticsClinicalCaseLogByUserQuery;
+	},
+
+	fetchOrthodonticsPreClinicalByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchOrthodonticsPreClinicalByUserSelector = OrthodonticsClinicalPreClinicalByModelSelector.toString();
+		const fetchOrthodonticsPreClinicalByUserQuery = self.queryQueryUser(variables, fetchOrthodonticsPreClinicalByUserSelector);
+		console.log("********** fetchOrthodonticsPreClinicalByUser Query STARTS **********");
+		console.log(fetchOrthodonticsPreClinicalByUserQuery.query);
+		console.log(fetchOrthodonticsPreClinicalByUserQuery.variables);
+		console.log("********** fetchOrthodonticsPreClinicalByUser Query ENDS **********");
+		return fetchOrthodonticsPreClinicalByUserQuery;
 	},
 
 	fetchAnaesthesiaCaseLog() {
@@ -436,11 +546,27 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return values(self.orthopaedicsCaseLogs).filter((obj) => obj.id == id);
 	},
 
+	get OrthopaedicsProcedureLogList() {
+		return values(self.orthopaedicsProcedureLogs);
+	},
+
+	getOrthopaedicsProcedureLogById(id) {
+		return values(self.orthopaedicsProcedureLogs).filter((obj) => obj.id == id);
+	},
+
 	get OrthodonticsClinicalCaseLogList() {
 		return values(self.orthodonticsClinicalCaseLogs);
 	},
 
 	getOrthodonticsClinicalCaseLogById(id) {
 		return values(self.orthodonticsClinicalCaseLogs).filter((obj) => obj.id == id);
+	},
+
+	get OrthodonticsPreClinicalList() {
+		return values(self.orthodonticsPreClinicals);
+	},
+
+	getOrthodonticsPreClinicalById(id) {
+		return values(self.orthodonticsPreClinicals).filter((obj) => obj.id == id);
 	},
 }));

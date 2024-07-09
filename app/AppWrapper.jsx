@@ -143,8 +143,9 @@ const AppWrapper = () => {
 							name='ResetPasswordScreen'
 							component={ResetPasswordScreen}
 							options={{
-								title: "",
-								headerShown: false,
+								title: "Reset Password",
+								headerShown: true,
+								headerStyle: { backgroundColor: "#E6E3DB" },
 							}}
 						/>
 						<Stack.Screen

@@ -177,6 +177,12 @@ const drugsUsed = [
 					},
 				],
 			},
+			{
+				id: "AdjuvantDose",
+				name: "Adjuvant Dose",
+				nodeType: "leaf",
+				inputType: "text",
+			},
 		],
 	},
 ];
@@ -305,6 +311,20 @@ const intervention = [
 								nodeType: "leaf",
 							},
 						],
+					},
+				],
+			},
+			{
+				id: "BotulinumInjection",
+				name: "Botulinum Injection",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "Muscle",
+						name: "Muscle",
+						nodeType: "leaf",
+						inputType: "text",
 					},
 				],
 			},

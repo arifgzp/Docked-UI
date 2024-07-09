@@ -18,12 +18,12 @@ const Options = {
 		{ label: "Shifted to ward", value: "Shifted to ward" },
 	],
 	Conduct: [
-		{ label: "O - observed", value: "O - observed" },
-		{ label: "A - assisted", value: "A - assisted" },
-		{ label: "AP - performed under supervision", value: "AP - performed under supervision" },
-		{ label: "P - Performed independently", value: "P - Performed independently" },
-		{ label: "S - Supervised", value: "S - Supervised" },
-		{ label: " C – Conducted", value: " C – Conducted" },
+		{ label: "Observed", value: "Observed" },
+		{ label: "Assisted", value: "Aassisted" },
+		{ label: "Performed under supervision", value: "Performed under supervision" },
+		{ label: "Performed independently", value: "Performed independently" },
+		{ label: "Supervised", value: "Supervised" },
+		{ label: "Conducted", value: "Conducted" },
 	],
 	Gender: [
 		{ label: "Male", value: "Male" },

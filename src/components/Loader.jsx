@@ -8,6 +8,7 @@ import { useWindowDimensions } from "react-native";
 
 import ToastAlert from "./ToastAlert.jsx";
 import CheckConnection from "../utils/CheckConnection.js";
+import appStoreInstance from "../stores/AppStore.js";
 
 var loadingTimer = null;
 
@@ -148,6 +149,7 @@ function Loader(props) {
 				}
 				setTimeout(() => {
 					console.log("logout");
+					appStoreInstance.SignOut();
 				}, 3100);
 
 				return;

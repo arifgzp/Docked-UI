@@ -21,6 +21,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { useState } from "react";
 import { HStack } from "@gluestack-ui/themed";
+import FormValidation from "../../utils/FormValidation";
+import appStoreInstance from "../../stores/AppStore";
+import Loader from "../../components/Loader";
+import { observer } from "mobx-react";
 
 const ForgotPasswordPage = ({ navigation }) => {
 	const [sendOTPPressed, setsendOTPPressed] = useState(false);
@@ -29,6 +33,29 @@ const ForgotPasswordPage = ({ navigation }) => {
 	const handleChangeEmail = (text) => {
 		setFormData({ ...formData, email: text });
 	};
+
+	const handleForgotPasswordEnterClick = () => {
+		setsendOTPPressed(true);
+		try {
+			if (!formData.email) {
+				setEmailError("Email is required");
+				return;
+			} else if (!FormValidation.validateEmail(formData.email)) {
+				setEmailError("Invalid Email");
+				return;
+			} else {
+				let data = {
+					User: {
+						userName: formData.email,
+					},
+				};
+				appStoreInstance.executeForgotPassword(data, navigation);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	const handleSendOTP = () => {
 		setsendOTPPressed(true);
 
@@ -50,63 +77,68 @@ const ForgotPasswordPage = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
-			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box flex={3 / 4}>
-					<VStack space='4xl'>
-						<Box paddingLeft={20} paddingRight={20} paddingTop={30}>
-							<VStack space='md'>
-								<Text bold size='2xl'>
-									Reset Password
-								</Text>
-								<Text size='sm'>To reset your password, please provide your email id to receive an OTP.</Text>
-							</VStack>
-						</Box>
-						<Box>
-							<FormControl
-								px='$5'
-								size='md'
-								isDisabled={false}
-								isInvalid={sendOTPPressed && !!emailError}
-								isReadOnly={false}
-								isRequired={false}
-								gap={"$2"}>
-								<Box justifycontent='center' alignItems='center'>
-									<Text alignSelf='flex-start' pb='$1' color='#515151' fontSize='$xs'>
-										Email Address
+		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "height" : "height"}
+				style={{ flex: 1, zIndex: 999 }}
+				keyboardShouldPersistTaps='handled'>
+				<Box flex={1} backgroundColor='$primaryBackground'>
+					<Box flex={3 / 4}>
+						<VStack space='4xl'>
+							<Box paddingLeft={20} paddingRight={20} paddingTop={30}>
+								<VStack space='md'>
+									<Text bold size='2xl'>
+										Reset Password
 									</Text>
-									<Input bg='#FFFFFC' variant='outline'>
-										<InputField type='text' onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' />
-									</Input>
-									{sendOTPPressed && emailError && (
-										<FormControlError alignSelf='flex-start'>
-											<FormControlErrorIcon as={AlertCircleIcon} />
-											<FormControlErrorText>{emailError}</FormControlErrorText>
-										</FormControlError>
-									)}
-								</Box>
-							</FormControl>
-						</Box>
-						<Box px='$5'>
-							<Button onPress={handleSendOTP} size='lg' variant='primary'>
-								<ButtonText>Send OTP</ButtonText>
-							</Button>
-						</Box>
-					</VStack>
+									<Text size='sm'>To reset your password, please provide your email id to receive an OTP.</Text>
+								</VStack>
+							</Box>
+							<Box>
+								<FormControl
+									px='$5'
+									size='md'
+									isDisabled={false}
+									isInvalid={sendOTPPressed && !!emailError}
+									isReadOnly={false}
+									isRequired={false}
+									gap={"$2"}>
+									<Box justifycontent='center' alignItems='center'>
+										<Text alignSelf='flex-start' pb='$1' color='#515151' fontSize='$xs'>
+											Email Address
+										</Text>
+										<Input bg='#FFFFFC' variant='outline'>
+											<InputField type='text' onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' />
+										</Input>
+										{sendOTPPressed && emailError && (
+											<FormControlError alignSelf='flex-start'>
+												<FormControlErrorIcon as={AlertCircleIcon} />
+												<FormControlErrorText>{emailError}</FormControlErrorText>
+											</FormControlError>
+										)}
+									</Box>
+								</FormControl>
+							</Box>
+							<Box px='$5'>
+								<Button onPress={handleForgotPasswordEnterClick} size='lg' variant='primary'>
+									<ButtonText>Send OTP</ButtonText>
+								</Button>
+							</Box>
+						</VStack>
+					</Box>
+					<Box flex={1 / 4} justifyContent='center'>
+						<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
+							<Text>Already a member?</Text>
+							<Box>
+								<Button variant='link' size='sm' onPress={() => navigation.navigate("Login Page")}>
+									<ButtonText color='#367B71'>Member Login</ButtonText>
+								</Button>
+							</Box>
+						</HStack>
+					</Box>
 				</Box>
-				<Box flex={1 / 4} justifyContent='center'>
-					<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
-						<Text>Already a member?</Text>
-						<Box>
-							<Button variant='link' size='sm' onPress={() => navigation.navigate("Login Page")}>
-								<ButtonText color='#367B71'>Member Login</ButtonText>
-							</Button>
-						</Box>
-					</HStack>
-				</Box>
-			</Box>
-		</KeyboardAvoidingView>
+			</KeyboardAvoidingView>
+		</Loader>
 	);
 };
 
-export default ForgotPasswordPage;
+export default observer(ForgotPasswordPage);

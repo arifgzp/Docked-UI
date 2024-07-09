@@ -56,6 +56,12 @@ const comorbidity = [
 						name: "Pacemaker",
 						nodeType: "leaf",
 					},
+					{
+						id: "Other1",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
+					},
 				],
 			},
 			{
@@ -78,6 +84,12 @@ const comorbidity = [
 						id: "ASTHMA",
 						name: "Asthma",
 						nodeType: "leaf",
+					},
+					{
+						id: "Other2",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
 					},
 				],
 			},
@@ -120,6 +132,34 @@ const comorbidity = [
 				id: "Obesity",
 				name: "Obesity",
 				nodeType: "leaf",
+			},
+			{
+				id: "Smoker",
+				name: "Smoker",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "PackYears",
+						name: "Pack Years",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+				],
+			},
+			{
+				id: "AlcoholIntake",
+				name: "Alcohol Intake",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "mlPerDay",
+						name: "ml Per Day",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+				],
 			},
 		],
 	},
@@ -212,6 +252,12 @@ const examination = [
 						],
 					},
 					{
+						id: "IIG",
+						name: "IIG",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+					{
 						id: "TMJMobility",
 						name: "TMJ Mobility",
 						selectType: "single",
@@ -233,6 +279,12 @@ const examination = [
 								nodeType: "leaf",
 							},
 						],
+					},
+					{
+						id: "TMD",
+						name: "TMD",
+						nodeType: "leaf",
+						inputType: "text",
 					},
 					{
 						id: "ULBTClass",
@@ -286,6 +338,53 @@ const examination = [
 						],
 					},
 				],
+			},
+		],
+	},
+];
+
+const laboratoryFindings = [
+	{
+		id: "laboratoryFindings",
+		name: "Laboratory Findings",
+		selectType: "multiple",
+		nodeType: "parent",
+		children: [
+			{
+				id: "PositiveFindings",
+				name: "Positive Findings",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "ECG",
+				name: "ECG",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "CXR",
+				name: "CXR",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "2Decho",
+				name: "2D Echo",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "PFT",
+				name: "PFT",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "Other3",
+				name: "Other",
+				nodeType: "leaf",
+				inputType: "text",
 			},
 		],
 	},
@@ -1071,6 +1170,12 @@ const regionalTechniques = [
 									},
 								],
 							},
+							{
+								id: "Space1",
+								name: "Space",
+								nodeType: "leaf",
+								inputType: "text",
+							},
 						],
 					},
 					{
@@ -1079,6 +1184,18 @@ const regionalTechniques = [
 						selectType: "multiple",
 						nodeType: "parent",
 						children: [
+							{
+								id: "Space2",
+								name: "Space",
+								nodeType: "leaf",
+								inputType: "text",
+							},
+							{
+								id: "Attempts3",
+								name: "Attempts",
+								nodeType: "leaf",
+								inputType: "text",
+							},
 							{
 								id: "DuralPuncture",
 								name: "Dural Puncture",
@@ -1108,6 +1225,44 @@ const regionalTechniques = [
 						id: "CSE",
 						name: "CSE",
 						nodeType: "leaf",
+					},
+				],
+			},
+			{
+				id: "SingleNerveBlock",
+				name: "Single Nerve Block",
+				nodeType: "leaf",
+				inputType: "text",
+			},
+			{
+				id: "LabourAnalgesia",
+				name: "Labour Analgesia",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "P | G | L | A",
+						name: "P / G / L / A",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+					{
+						id: "BolusDose",
+						name: "Bolus Dose",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+					{
+						id: "InfusionRate",
+						name: "Infusion Rate",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+					{
+						id: "Duration",
+						name: "Duration",
+						nodeType: "leaf",
+						inputType: "text",
 					},
 				],
 			},
@@ -1748,6 +1903,7 @@ const complications = [
 export default {
 	comorbidity,
 	examination,
+	laboratoryFindings,
 	typeOfAnaesthesia,
 	airManagement,
 	drugs,

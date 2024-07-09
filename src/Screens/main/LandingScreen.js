@@ -51,9 +51,15 @@ const anaesthesiaCaseLogEntryOptions = [
 	// { id: "SpecialCaseLogs", name: "Special Case Logs" },
 ];
 
-const orthopaedicsCaseLogEntryOptions = [{ id: "OrthopaedicsCaseLog", name: "Case Log" }];
+const orthopaedicsCaseLogEntryOptions = [
+	{ id: "OrthopaedicsCaseLog", name: "Case Log" },
+	{ id: "OrthopaedicsProcedureLog", name: "Procedure Log" },
+];
 
-const orthodonticsCaseLogEntryOptions = [{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" }];
+const orthodonticsCaseLogEntryOptions = [
+	{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" },
+	{ id: "OrthodonticsPreClinical", name: "Pre-Clinical Log" },
+];
 
 const getCreateMenuOptions = (specialty) => {
 	//console.log("UserBroadSpecialty: for the switch case.", specialty);
@@ -104,8 +110,16 @@ const CreateMenuList = (props) => {
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
 					break;
 
+				case "OrthopaedicsProcedureLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsProcedureLog" } });
+					break;
+
 				case "OrthodonticsClinicalCaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
+					break;
+
+				case "OrthodonticsPreClinical":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsPreClinical" } });
 					break;
 
 				default:
