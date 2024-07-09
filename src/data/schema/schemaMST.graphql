@@ -170,8 +170,8 @@ type OrthodonticsPreClinical  {
     cephalometricTracingRecord: [String] @search(by:[term]) @dgraph(pred:"cephalometricTracingRecord")
     claspRecord: [String] @search(by:[term]) @dgraph(pred:"claspRecord")
     springsRecord : [String] @dgraph(pred:"springsRecord")
-    canineRetractorsRecord : [String] @dgraph(pred:"springsRecord")
-    bowsRecord : [String] @dgraph(pred:"springsRecord")
+    canineRetractorsRecord : [String] @dgraph(pred:"canineRetractorsRecord")
+    bowsRecord : [String] @dgraph(pred:"bowsRecord")
     caseType : String @dgraph(pred:"caseType")
     remarks: String @dgraph(pred:"remarks")
 }
