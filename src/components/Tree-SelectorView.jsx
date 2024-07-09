@@ -104,22 +104,12 @@ const LeafNode = observer((props) => {
 					const textValue = find(selectedValues, (value) => value?.includes(node.id));
 					const value = textValue ? textValue.split("#V#")[1] : "";
 					return (
-						<View
-							key={node.id}
-							style={
-								level != 1
-									? {
-											marginLeft: 32,
-									  }
-									: {}
-							}>
-							<VStack space='xs'>
-								<Text lineHeight='$xs'>{node.name}</Text>
-								<Input variant='outline' size='sm'>
-									<InputField type='text' onChange={handleOnChange} value={value} />
-								</Input>
-							</VStack>
-						</View>
+						<VStack key={node.id} ml={level != 1 ? 32 : 0} flex={1} space='xs'>
+							<Text lineHeight='$xs'>{node.name}</Text>
+							<Input variant='outline' size='sm'>
+								<InputField type='text' onChange={handleOnChange} value={value} />
+							</Input>
+						</VStack>
 					);
 
 				default:
