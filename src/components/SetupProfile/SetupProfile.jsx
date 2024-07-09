@@ -15,6 +15,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	const [currentStep, setCurrentStep] = useState(1);
 	const [startingStep, setStartingStep] = useState(1);
 	const currentConfig = config[currentStep - 1];
+	const [isLoading, setIsLoading] = useState(false);
 
 	const formFields = currentConfig?.content?.config?.fields || [];
 	const currentStepLabel = currentConfig?.label || "";
@@ -38,6 +39,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 		if (currentStep === config.length) {
 			console.log("Finsished", data);
 			try {
+				setIsLoading(true);
 				const query = store.updateUser(appStoreInstance.UserId, { set: { userStatus: "REGISTERED" } });
 				AppStore.setBroadSpecialty(data.broadSpecialty);
 				console.log("Current Data 2", query);
@@ -93,10 +95,13 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				}
 			} catch (error) {
 				console.log(error);
+			} finally {
+				setIsLoading(false);
 			}
 		} else if (startingStep === currentStep) {
 			console.log("Current Data 1");
 			try {
+				setIsLoading(true);
 				const query = store.updateUser(AppStore.UserId, { set: data });
 				console.log("Current Data 2", query);
 				setQuery(query);
@@ -106,6 +111,8 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				}
 			} catch (error) {
 				console.log(error);
+			} finally {
+				setIsLoading(false);
 			}
 			setStartingStep(startingStep + 1);
 			setCurrentStep(currentStep + 1);
@@ -128,6 +135,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	const handleSkip = async (data) => {
 		console.log("data when skipping the create profile", data);
 		try {
+			setIsLoading(true);
 			const query = store.updateUser(AppStore.UserId, { set: { userStatus: "REGISTERED" } });
 			AppStore.setBroadSpecialty(data.broadSpecialty);
 			console.log("Current Data 2", query);
@@ -183,6 +191,8 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -205,7 +215,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	}, [currentStep]);
 
 	return (
-		<Loader queryInfo={queryInfo}>
+		<Loader apiLoadingInfo={isLoading}>
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "height" : "height"}
 				style={{ flex: 1, zIndex: 999 }}

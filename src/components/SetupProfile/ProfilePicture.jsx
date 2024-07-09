@@ -27,29 +27,27 @@ const ProfilePicture = ({ image, setImage }) => {
 		}
 	};
 	return (
-		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<Box flex={1} justifyContent='center'>
-					<VStack space='4xl' justifyContent='center'>
-						<Box alignItems='center'>{image ? <Image source={{ uri: image[0].uri }} /> : <Ionicons name='person' size={120} color='#367B71' />}</Box>
-						<Box justifycontent='center' alignItems='center'>
-							<Button isDisabled={true} size='lg' variant='secondary'>
-								<ButtonText fontFamily='Inter_Regular' textAlign='center'>
-									Take A Photo
-								</ButtonText>
-							</Button>
-						</Box>
-						<Box justifycontent='center' alignItems='center'>
-							<Button onPress={pickImage} size='lg' variant='secondary'>
-								<ButtonText fontFamily='Inter_Regular' textAlign='center'>
-									Browse Gallery
-								</ButtonText>
-							</Button>
-						</Box>
-					</VStack>
-				</Box>
-			</ScrollView>
-		</Loader>
+		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+			<Box flex={1} justifyContent='center'>
+				<VStack space='4xl' justifyContent='center'>
+					<Box alignItems='center'>{image ? <Image source={{ uri: image[0].uri }} /> : <Ionicons name='person' size={120} color='#367B71' />}</Box>
+					<Box justifycontent='center' alignItems='center'>
+						<Button isDisabled={true} size='lg' variant='secondary'>
+							<ButtonText fontFamily='Inter_Regular' textAlign='center'>
+								Take A Photo
+							</ButtonText>
+						</Button>
+					</Box>
+					<Box justifycontent='center' alignItems='center'>
+						<Button onPress={pickImage} size='lg' variant='secondary'>
+							<ButtonText fontFamily='Inter_Regular' textAlign='center'>
+								Browse Gallery
+							</ButtonText>
+						</Button>
+					</Box>
+				</VStack>
+			</Box>
+		</ScrollView>
 	);
 };
 

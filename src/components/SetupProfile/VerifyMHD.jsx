@@ -40,61 +40,60 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 		setValue("yearOfRegistration", date);
 	};
 	return (
-		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ zIndex: 999 }}>
-				<ScrollView>
-					<Box h='$100%' alignItems='center'>
-						<ScrollView>
-							<VStack space='4xl' width={"$100%"} alignItems='center'>
-								{formFields.map((field, index) => {
-									return (
-										<React.Fragment key={index}>
-											<Box width={"$100%"}>
-												<Box alignItems='center' paddingBottom={10}>
-													<Controller
-														control={control}
-														key={index}
-														rules={{
-															required: false,
-														}}
-														render={({ field: { onChange, onBlur, value } }) => {
-															if (field.type === "date") {
-																return (
-																	<VStack px='$5'>
-																		<Text size='xs'>{field.name}</Text>
-																		<Button
-																			bg='$transparent'
-																			borderColor='rgba(77, 83, 86, 0.4)'
-																			onPress={() => setOpen(true)}
-																			justifyContent='space-between'
-																			variant='date'>
-																			<ButtonText>Date - {format(new Date(date), "d/MM/yyyy")}</ButtonText>
-																			<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
-																		</Button>
-																	</VStack>
-																);
-															} else if (field.type === "text") {
-																return (
-																	<VStack w='$100%' px='$5'>
-																		<Text size='xs'>{field.name}</Text>
-																		<Input borderColor='rgba(77, 83, 86, 0.4)' variant='outline'>
-																			<InputField onChangeText={onChange} value={value} placeholder={field.name} />
-																		</Input>
-																	</VStack>
-																);
-															}
-														}}
-														name={field.uid}
-													/>
-												</Box>
-												<Box alignItems='center'>
-													<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-												</Box>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ zIndex: 999 }}>
+			<ScrollView>
+				<Box h='$100%' alignItems='center'>
+					<ScrollView>
+						<VStack space='4xl' width={"$100%"} alignItems='center'>
+							{formFields.map((field, index) => {
+								return (
+									<React.Fragment key={index}>
+										<Box width={"$100%"}>
+											<Box alignItems='center' paddingBottom={10}>
+												<Controller
+													control={control}
+													key={index}
+													rules={{
+														required: false,
+													}}
+													render={({ field: { onChange, onBlur, value } }) => {
+														if (field.type === "date") {
+															return (
+																<VStack px='$5'>
+																	<Text size='xs'>{field.name}</Text>
+																	<Button
+																		bg='$transparent'
+																		borderColor='rgba(77, 83, 86, 0.4)'
+																		onPress={() => setOpen(true)}
+																		justifyContent='space-between'
+																		variant='date'>
+																		<ButtonText>Date - {format(new Date(date), "d/MM/yyyy")}</ButtonText>
+																		<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
+																	</Button>
+																</VStack>
+															);
+														} else if (field.type === "text") {
+															return (
+																<VStack w='$100%' px='$5'>
+																	<Text size='xs'>{field.name}</Text>
+																	<Input borderColor='rgba(77, 83, 86, 0.4)' variant='outline'>
+																		<InputField onChangeText={onChange} value={value} placeholder={field.name} />
+																	</Input>
+																</VStack>
+															);
+														}
+													}}
+													name={field.uid}
+												/>
 											</Box>
-										</React.Fragment>
-									);
-								})}
-								{/* <VStack width={"$80%"} space='xs'>
+											<Box alignItems='center'>
+												<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+											</Box>
+										</Box>
+									</React.Fragment>
+								);
+							})}
+							{/* <VStack width={"$80%"} space='xs'>
 								<Box justifyContent='flex-start'>
 									<Button isDisabled={true} size='lg' variant='secondary'>
 										<ButtonText fontFamily='Inter_Regular' textAlign='center'>
@@ -104,27 +103,26 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 								</Box>
 								<Text size='xs'>This may take a few seconds...</Text>
 							</VStack> */}
-							</VStack>
-						</ScrollView>
-					</Box>
-				</ScrollView>
-				<DatePicker
-					modal
-					open={open}
-					theme='light'
-					date={date}
-					onConfirm={(date) => {
-						setDate(date);
-						setOpen(false);
-						handelSetDate(date);
-					}}
-					onCancel={() => {
-						setOpen(false);
-					}}
-					mode='date'
-				/>
-			</KeyboardAvoidingView>
-		</Loader>
+						</VStack>
+					</ScrollView>
+				</Box>
+			</ScrollView>
+			<DatePicker
+				modal
+				open={open}
+				theme='light'
+				date={date}
+				onConfirm={(date) => {
+					setDate(date);
+					setOpen(false);
+					handelSetDate(date);
+				}}
+				onCancel={() => {
+					setOpen(false);
+				}}
+				mode='date'
+			/>
+		</KeyboardAvoidingView>
 	);
 };
 

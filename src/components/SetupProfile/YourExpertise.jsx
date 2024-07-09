@@ -105,66 +105,30 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 	}, [selectedBroadSpecialty]);
 
 	return (
-		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<Box flex={1}>
-					<VStack space='4xl' width={"$100%"}>
-						{formFields.map((field, index) => {
-							let options = field.options;
-							if (field.uid === "superSpecialty") {
-								options = superSpecialtyOptions;
-							} else if (field.uid === "subSpecialty") {
-								options = subSpecialtyOptions;
-							}
-							return (
-								<React.Fragment key={index}>
-									<Box width={"$100%"}>
-										<Box px='$5' paddingBottom={10}>
-											<Controller
-												control={control}
-												key={field.uid}
-												name={field.uid}
-												rules={{
-													required: field.isRequire,
-												}}
-												render={({ field: { onChange, onBlur, value } }) => {
-													console.log("ID : ", field.uid, " | val : ", value);
-													if (field.uid === "broadSpecialty") {
-														return (
-															<VStack>
-																<Text size='xs'>{field.name}</Text>
-																<Select
-																	borderWidth={0.5}
-																	borderRadius={5}
-																	borderColor='rgba(77, 83, 86, 0.4)'
-																	onBlur={onBlur}
-																	onValueChange={(val) => {
-																		onChange(val);
-																		handleOnBroadSpecialtyChange(val);
-																	}}
-																	selectedValue={value}>
-																	<SelectTrigger variant='outline' size='md'>
-																		<SelectInput placeholder={field.name} />
-																		<SelectIcon mr='$3'>
-																			<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-																		</SelectIcon>
-																	</SelectTrigger>
-																	<SelectPortal>
-																		<SelectBackdrop />
-																		<SelectContent>
-																			<Text padding={10} size='xl'>
-																				{field.name}
-																			</Text>
-																			<Divider borderWidth={0.1} />
-																			{field.options.map((option, index) => {
-																				return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																			})}
-																		</SelectContent>
-																	</SelectPortal>
-																</Select>
-															</VStack>
-														);
-													}
+		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+			<Box flex={1}>
+				<VStack space='4xl' width={"$100%"}>
+					{formFields.map((field, index) => {
+						let options = field.options;
+						if (field.uid === "superSpecialty") {
+							options = superSpecialtyOptions;
+						} else if (field.uid === "subSpecialty") {
+							options = subSpecialtyOptions;
+						}
+						return (
+							<React.Fragment key={index}>
+								<Box width={"$100%"}>
+									<Box px='$5' paddingBottom={10}>
+										<Controller
+											control={control}
+											key={field.uid}
+											name={field.uid}
+											rules={{
+												required: field.isRequire,
+											}}
+											render={({ field: { onChange, onBlur, value } }) => {
+												console.log("ID : ", field.uid, " | val : ", value);
+												if (field.uid === "broadSpecialty") {
 													return (
 														<VStack>
 															<Text size='xs'>{field.name}</Text>
@@ -172,11 +136,12 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 																borderWidth={0.5}
 																borderRadius={5}
 																borderColor='rgba(77, 83, 86, 0.4)'
-																isDisabled={field.uid === "superSpecialty" ? isSuperOptionDisable : isSubOptionDisable}
 																onBlur={onBlur}
-																onValueChange={onChange}
-																selectedValue={value}
-																placeholder={field.uid === "superSpecialty" ? superSpecialtyPlaceholder : subSpecialtyPlaceholder}>
+																onValueChange={(val) => {
+																	onChange(val);
+																	handleOnBroadSpecialtyChange(val);
+																}}
+																selectedValue={value}>
 																<SelectTrigger variant='outline' size='md'>
 																	<SelectInput placeholder={field.name} />
 																	<SelectIcon mr='$3'>
@@ -190,28 +155,61 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 																			{field.name}
 																		</Text>
 																		<Divider borderWidth={0.1} />
-																		{options.map((option, index) => {
-																			return <SelectItem key={index} label={option.label} value={option.value} />;
+																		{field.options.map((option, index) => {
+																			return <SelectItem key={option.value} label={option.label} value={option.value} />;
 																		})}
 																	</SelectContent>
 																</SelectPortal>
 															</Select>
 														</VStack>
 													);
-												}}
-											/>
-										</Box>
-										<Box alignItems='center'>
-											<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-										</Box>
+												}
+												return (
+													<VStack>
+														<Text size='xs'>{field.name}</Text>
+														<Select
+															borderWidth={0.5}
+															borderRadius={5}
+															borderColor='rgba(77, 83, 86, 0.4)'
+															isDisabled={field.uid === "superSpecialty" ? isSuperOptionDisable : isSubOptionDisable}
+															onBlur={onBlur}
+															onValueChange={onChange}
+															selectedValue={value}
+															placeholder={field.uid === "superSpecialty" ? superSpecialtyPlaceholder : subSpecialtyPlaceholder}>
+															<SelectTrigger variant='outline' size='md'>
+																<SelectInput placeholder={field.name} />
+																<SelectIcon mr='$3'>
+																	<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																</SelectIcon>
+															</SelectTrigger>
+															<SelectPortal>
+																<SelectBackdrop />
+																<SelectContent>
+																	<Text padding={10} size='xl'>
+																		{field.name}
+																	</Text>
+																	<Divider borderWidth={0.1} />
+																	{options.map((option, index) => {
+																		return <SelectItem key={index} label={option.label} value={option.value} />;
+																	})}
+																</SelectContent>
+															</SelectPortal>
+														</Select>
+													</VStack>
+												);
+											}}
+										/>
 									</Box>
-								</React.Fragment>
-							);
-						})}
-					</VStack>
-				</Box>
-			</ScrollView>
-		</Loader>
+									<Box alignItems='center'>
+										<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+									</Box>
+								</Box>
+							</React.Fragment>
+						);
+					})}
+				</VStack>
+			</Box>
+		</ScrollView>
 	);
 };
 
