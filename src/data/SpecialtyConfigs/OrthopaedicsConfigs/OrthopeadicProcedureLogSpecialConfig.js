@@ -1,7 +1,7 @@
 const procedure = [
 	{
 		id: "procedure",
-		name: "procedure",
+		name: "Procedure",
 		selectType: "multiple",
 		nodeType: "parent",
 		children: [

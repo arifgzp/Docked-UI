@@ -11,6 +11,7 @@ import {
 	SelectInput,
 	SelectItem,
 	SelectPortal,
+	SelectScrollView,
 	SelectTrigger,
 } from "@gluestack-ui/themed";
 import {
@@ -32,6 +33,8 @@ import { useState, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { ChevronDown } from "lucide-react-native";
 import { ImageAssets } from "../../../assets/Assets";
+import { SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
+import { SelectDragIndicator } from "@gluestack-ui/themed";
 
 const RegisterMobileNumberPage = ({ navigation }) => {
 	const [numberInput, setNumberInput] = useState("");
@@ -117,13 +120,18 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 										</SelectTrigger>
 										<SelectPortal>
 											<SelectBackdrop />
-											<SelectContent>
-												<Text padding={10} size='xl'>
+											<SelectContent p='$0'>
+												<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
 													Phone Number
 												</Text>
 												<Divider borderWidth={0.1} />
-												<SelectItem key='+91' label='+91' value='+91' />;
+												<SelectScrollView>
+													<SelectItem key='+91' label='+91' value='+91' />;
+												</SelectScrollView>
 											</SelectContent>
+											<SelectDragIndicatorWrapper>
+												<SelectDragIndicator />
+											</SelectDragIndicatorWrapper>
 										</SelectPortal>
 									</Select>
 									<Input w='$70%' variant='outline'>

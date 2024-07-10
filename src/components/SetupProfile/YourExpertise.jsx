@@ -13,6 +13,7 @@ import {
 	SelectContent,
 	SelectItem,
 	Divider,
+	SelectDragIndicator,
 } from "@gluestack-ui/themed";
 import { ChevronDown } from "lucide-react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -20,6 +21,8 @@ import React, { useState, useEffect } from "react";
 import Loader from "../Loader";
 import { observer } from "mobx-react";
 import appStoreInstance from "../../stores/AppStore";
+import { SelectScrollView } from "@gluestack-ui/themed";
+import { SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
 
 const specialtyList = {
 	Anaesthesiology: {
@@ -150,15 +153,27 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 																</SelectTrigger>
 																<SelectPortal>
 																	<SelectBackdrop />
-																	<SelectContent>
-																		<Text padding={10} size='xl'>
+																	<SelectContent p='$0'>
+																		<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
 																			{field.name}
 																		</Text>
 																		<Divider borderWidth={0.1} />
-																		{field.options.map((option, index) => {
-																			return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																		})}
+																		<SelectScrollView>
+																			{field.options.map((option, index) => {
+																				return (
+																					<SelectItem
+																						bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																						key={option.value}
+																						label={option.label}
+																						value={option.value}
+																					/>
+																				);
+																			})}
+																		</SelectScrollView>
 																	</SelectContent>
+																	<SelectDragIndicatorWrapper>
+																		<SelectDragIndicator />
+																	</SelectDragIndicatorWrapper>
 																</SelectPortal>
 															</Select>
 														</VStack>
@@ -184,15 +199,25 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 															</SelectTrigger>
 															<SelectPortal>
 																<SelectBackdrop />
-																<SelectContent>
+																<SelectContent p='$0'>
 																	<Text padding={10} size='xl'>
 																		{field.name}
 																	</Text>
 																	<Divider borderWidth={0.1} />
 																	{options.map((option, index) => {
-																		return <SelectItem key={index} label={option.label} value={option.value} />;
+																		return (
+																			<SelectItem
+																				bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																				key={index}
+																				label={option.label}
+																				value={option.value}
+																			/>
+																		);
 																	})}
 																</SelectContent>
+																<SelectDragIndicatorWrapper>
+																	<SelectDragIndicator />
+																</SelectDragIndicatorWrapper>
 															</SelectPortal>
 														</Select>
 													</VStack>

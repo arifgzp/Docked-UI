@@ -1,4 +1,4 @@
-import { CheckIcon, CheckboxGroup, CheckboxIndicator, Divider, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import { CheckIcon, CheckboxGroup, CheckboxIndicator, Divider, KeyboardAvoidingView, SelectScrollView } from "@gluestack-ui/themed";
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
@@ -147,15 +147,20 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 									</SelectTrigger>
 									<SelectPortal>
 										<SelectBackdrop />
-										<SelectContent>
-											<Text padding={10} size='xl'>
+										<SelectContent p='$0'>
+											<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
 												Faculties
 											</Text>
 											<Divider borderWidth={0.1} />
-											{prefilledData?.faculty.map((item) => {
-												console.log("Faculty >> SelectItem >> ", item);
-												return <SelectItem key={item?.id} label={item?.name} value={item?.name} />;
-											})}
+											<SelectScrollView>
+												{prefilledData?.faculty.map((item, index) => {
+													console.log("Faculty >> SelectItem >> ", item);
+													return <SelectItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={item?.id} label={item?.name} value={item?.name} />;
+												})}
+											</SelectScrollView>
+											<SelectDragIndicatorWrapper>
+												<SelectDragIndicator />
+											</SelectDragIndicatorWrapper>
 										</SelectContent>
 									</SelectPortal>
 								</Select>
@@ -189,14 +194,26 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 													</SelectTrigger>
 													<SelectPortal>
 														<SelectBackdrop />
-														<SelectContent>
-															<Text padding={10} size='xl'>
+														<SelectContent p='$0'>
+															<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
 																{field.name}
 															</Text>
 															<Divider borderWidth={0.1} />
-															{field.options.map((option, index) => {
-																return <SelectItem key={option.value} label={option.label} value={option.value} />;
-															})}
+															<SelectScrollView>
+																{field.options.map((option, index) => {
+																	return (
+																		<SelectItem
+																			bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																			key={option.value}
+																			label={option.label}
+																			value={option.value}
+																		/>
+																	);
+																})}
+															</SelectScrollView>
+															<SelectDragIndicatorWrapper>
+																<SelectDragIndicator />
+															</SelectDragIndicatorWrapper>
 														</SelectContent>
 													</SelectPortal>
 												</Select>

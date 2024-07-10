@@ -26,6 +26,7 @@ import { observer } from "mobx-react";
 import appStoreInstance from "../../stores/AppStore";
 import { Input } from "@gluestack-ui/themed";
 import { InputField } from "@gluestack-ui/themed";
+import { SelectScrollView } from "@gluestack-ui/themed";
 
 const YourWorkplace = ({ control, formState, formFields }) => {
 	return (
@@ -63,14 +64,26 @@ const YourWorkplace = ({ control, formState, formFields }) => {
 																</SelectTrigger>
 																<SelectPortal>
 																	<SelectBackdrop />
-																	<SelectContent>
+																	<SelectContent p='$0'>
 																		<Text paddingBottom={10} size='xl'>
 																			{field.name}
 																		</Text>
 																		<Divider borderWidth={0.1} />
-																		{field.options.map((option, index) => {
-																			return <SelectItem key={index} label={option.label} value={option.value} />;
-																		})}
+																		<SelectScrollView>
+																			{field.options.map((option, index) => {
+																				return (
+																					<SelectItem
+																						bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																						key={index}
+																						label={option.label}
+																						value={option.value}
+																					/>
+																				);
+																			})}
+																		</SelectScrollView>
+																		<SelectDragIndicatorWrapper>
+																			<SelectDragIndicator />
+																		</SelectDragIndicatorWrapper>
 																	</SelectContent>
 																</SelectPortal>
 															</Select>

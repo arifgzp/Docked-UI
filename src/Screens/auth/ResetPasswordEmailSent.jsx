@@ -126,14 +126,14 @@ const ResetPasswordEmailSent = ({ navigation, route }) => {
 								)}
 							</FormControl>
 						</Box>
-						<HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
+						{/* <HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
 							<Text size='sm'>Didn’t Receive OTP?</Text>
 							<Box>
 								<Button variant='link' size='sm'>
 									<ButtonText color='#367B71'>Resend OTP</ButtonText>
 								</Button>
 							</Box>
-						</HStack>
+						</HStack> */}
 					</VStack>
 				</Box>
 				<Box justifyContent='center' height='$10%' p='$5'>

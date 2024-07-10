@@ -1,4 +1,4 @@
-import { CheckIcon, CheckboxGroup, CheckboxIndicator, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import { CheckIcon, CheckboxGroup, CheckboxIndicator, KeyboardAvoidingView, SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
@@ -45,6 +45,8 @@ import { useQuery } from "../../models";
 import Loader from "../../components/Loader";
 import { observer } from "mobx-react";
 import { useIsFocused } from "@react-navigation/native";
+import { SelectScrollView } from "@gluestack-ui/themed";
+import { SelectDragIndicator } from "@gluestack-ui/themed";
 
 const designation = [
 	{ label: "Doctor", value: "Doctor" },
@@ -266,14 +268,26 @@ const ProfilePageEdit = ({ navigation }) => {
 																</SelectTrigger>
 																<SelectPortal>
 																	<SelectBackdrop />
-																	<SelectContent>
-																		<Text padding={10} size='md'>
+																	<SelectContent p='$0'>
+																		<Text fontFamily='Inter_SemiBold' padding={10} size='md'>
 																			Super Specialty
 																		</Text>
 																		<Divider borderWidth={0.1} />
-																		{options.map((option, index) => {
-																			return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																		})}
+																		<SelectScrollView>
+																			{options.map((option, index) => {
+																				return (
+																					<SelectItem
+																						bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																						key={option.value}
+																						label={option.label}
+																						value={option.value}
+																					/>
+																				);
+																			})}
+																		</SelectScrollView>
+																		<SelectDragIndicatorWrapper>
+																			<SelectDragIndicator />
+																		</SelectDragIndicatorWrapper>
 																	</SelectContent>
 																</SelectPortal>
 															</Select>

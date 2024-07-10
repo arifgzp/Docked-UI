@@ -306,20 +306,20 @@ const LogProfileReadPage = ({ navigation, route }) => {
 												return (
 													<VStack key={index} space='sm' width={"$100%"}>
 														<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-															{rotation.department}
+															{rotation.department ? rotation.department : "--"}
 														</Text>
 														<HStack space='lg'>
 															<Text fontSize='$xs'>
 																<Text bold size='xs' color='#4D5356'>
 																	From:
 																</Text>{" "}
-																{format(new Date(rotation?.from), "d/M/yyyy")}
+																{rotation.from ? format(new Date(rotation?.from), "d/M/yyyy") : "--"}
 															</Text>
 															<Text fontSize='$xs'>
 																<Text bold size='xs' color='#4D5356'>
 																	To:
 																</Text>{" "}
-																{format(new Date(rotation?.to), "d/M/yyyy")}
+																{rotation.to ? format(new Date(rotation?.to), "d/M/yyyy") : "--"}
 															</Text>
 														</HStack>
 													</VStack>
