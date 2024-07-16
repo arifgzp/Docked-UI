@@ -35,7 +35,7 @@ import DatePicker from "react-native-date-picker";
 
 const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 	const [open, setOpen] = useState(false);
-	const [date, setDate] = useState(new Date());
+	const [date, setDate] = useState("--/--/--");
 	const handelSetDate = (date) => {
 		setValue("yearOfRegistration", date);
 	};
@@ -67,7 +67,7 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 																		onPress={() => setOpen(true)}
 																		justifyContent='space-between'
 																		variant='date'>
-																		<ButtonText>Date - {format(new Date(date), "d/MM/yyyy")}</ButtonText>
+																		<ButtonText>Date - {date}</ButtonText>
 																		<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
 																	</Button>
 																</VStack>
@@ -111,9 +111,9 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 				modal
 				open={open}
 				theme='light'
-				date={date}
+				date={!(date instanceof Date) ? new Date() : date}
 				onConfirm={(date) => {
-					setDate(date);
+					setDate(format(new Date(date), "dd / MM / yyyy"));
 					setOpen(false);
 					handelSetDate(date);
 				}}

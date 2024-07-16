@@ -26,6 +26,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 			superSpecialty: "",
 			subSpecialty: "",
 			designation: "",
+			designationOthers: "",
 			workPlace: "",
 			city: "",
 			medicalCouncilName: "",
@@ -46,7 +47,10 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				setQuery(query);
 				const finishWizardProcessData = await query;
 				if (finishWizardProcessData) {
-					const response = await AppStore.SignIn({ userName: enteredMail, password: enteredPassword });
+					const response = await AppStore.SignIn({
+						userName: enteredMail ? enteredMail : AppStore.UserName,
+						password: enteredPassword ? enteredPassword : AppStore.Password,
+					});
 
 					if (response) {
 						console.log("login response", response);
@@ -65,11 +69,12 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
 								AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
 								AppStore.setDesignation(fetchProfileData.designation);
+								AppStore.setDesignationOthers(fetchProfileData.designationOthers);
 								AppStore.setWorkPlace(fetchProfileData.workPlace);
 								AppStore.setCity(fetchProfileData.city);
 								AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 								AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
-								AppStore.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+								AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 							}
 
 							const query = store.fetchUserLogProfile(response.userName);
@@ -161,11 +166,12 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 							AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
 							AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
 							AppStore.setDesignation(fetchProfileData.designation);
+							AppStore.setDesignationOthers(fetchProfileData.designationOthers);
 							AppStore.setWorkPlace(fetchProfileData.workPlace);
 							AppStore.setCity(fetchProfileData.city);
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
-							AppStore.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 						}
 
 						const query = store.fetchUserLogProfile(response.userName);
@@ -272,6 +278,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 											formState={formState}
 											formFields={formFields}
 											setValue={setValue}
+											watch={watch}
 										/>
 									</ScrollView>
 								)}

@@ -47,6 +47,8 @@ export const UserAggregateResultModelBase = ModelBase
     subSpecialtyMax: types.union(types.undefined, types.null, types.string),
     designationMin: types.union(types.undefined, types.null, types.string),
     designationMax: types.union(types.undefined, types.null, types.string),
+    designationOthersMin: types.union(types.undefined, types.null, types.string),
+    designationOthersMax: types.union(types.undefined, types.null, types.string),
     workPlaceMin: types.union(types.undefined, types.null, types.string),
     workPlaceMax: types.union(types.undefined, types.null, types.string),
     cityMin: types.union(types.undefined, types.null, types.string),
@@ -100,6 +102,8 @@ export class UserAggregateResultModelSelector extends QueryBuilder {
   get subSpecialtyMax() { return this.__attr(`subSpecialtyMax`) }
   get designationMin() { return this.__attr(`designationMin`) }
   get designationMax() { return this.__attr(`designationMax`) }
+  get designationOthersMin() { return this.__attr(`designationOthersMin`) }
+  get designationOthersMax() { return this.__attr(`designationOthersMax`) }
   get workPlaceMin() { return this.__attr(`workPlaceMin`) }
   get workPlaceMax() { return this.__attr(`workPlaceMax`) }
   get cityMin() { return this.__attr(`cityMin`) }
@@ -119,4 +123,4 @@ export function selectFromUserAggregateResult() {
   return new UserAggregateResultModelSelector()
 }
 
-export const userAggregateResultModelPrimitives = selectFromUserAggregateResult().count.newUserVerificationCodeMin.newUserVerificationCodeMax.userNameMin.userNameMax.resetPasswordCodeMin.resetPasswordCodeMax.nameMin.nameMax.lastNameMin.lastNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.countryCodeMin.countryCodeMax.phoneNumberMin.phoneNumberMax.combinePhoneNumberMin.combinePhoneNumberMax.dateOfBirthMin.dateOfBirthMax.broadSpecialtyMin.broadSpecialtyMax.superSpecialtyMin.superSpecialtyMax.subSpecialtyMin.subSpecialtyMax.designationMin.designationMax.workPlaceMin.workPlaceMax.cityMin.cityMax.medicalCouncilNameMin.medicalCouncilNameMax.yearOfRegistrationMin.yearOfRegistrationMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.targetedCaseLogNumberMin.targetedCaseLogNumberMax.targetedCaseLogNumberSum.targetedCaseLogNumberAvg
+export const userAggregateResultModelPrimitives = selectFromUserAggregateResult().count.newUserVerificationCodeMin.newUserVerificationCodeMax.userNameMin.userNameMax.resetPasswordCodeMin.resetPasswordCodeMax.nameMin.nameMax.lastNameMin.lastNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.countryCodeMin.countryCodeMax.phoneNumberMin.phoneNumberMax.combinePhoneNumberMin.combinePhoneNumberMax.dateOfBirthMin.dateOfBirthMax.broadSpecialtyMin.broadSpecialtyMax.superSpecialtyMin.superSpecialtyMax.subSpecialtyMin.subSpecialtyMax.designationMin.designationMax.designationOthersMin.designationOthersMax.workPlaceMin.workPlaceMax.cityMin.cityMax.medicalCouncilNameMin.medicalCouncilNameMax.yearOfRegistrationMin.yearOfRegistrationMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.targetedCaseLogNumberMin.targetedCaseLogNumberMax.targetedCaseLogNumberSum.targetedCaseLogNumberAvg

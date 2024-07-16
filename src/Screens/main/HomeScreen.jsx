@@ -36,6 +36,7 @@ import { Card } from "@gluestack-ui/themed";
 import { Heading } from "@gluestack-ui/themed";
 import { LineChart, BarChart, PieChart, ProgressChart, ContributionGraph, StackedBarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import { observer } from "mobx-react";
 
 const HomeScreenPage = ({ navigation }) => {
 	const months = [
@@ -122,7 +123,7 @@ const HomeScreenPage = ({ navigation }) => {
 						<HStack justifyContent='space-between' alignItems='center'>
 							<VStack>
 								<Text fontFamily='Inter_Bold' color='#000' size='xl'>
-									Hello {appStoreInstance.Name ? appStoreInstance.Name.split(" ")[0] : "User"}
+									Hello Dr. {appStoreInstance.Name ? appStoreInstance.Name.split(" ")[0] : "User"}
 								</Text>
 								<Text>{appStoreInstance.UserBroadSpecialty}</Text>
 							</VStack>
@@ -256,13 +257,13 @@ const HomeScreenPage = ({ navigation }) => {
 						</HStack>
 					</ScrollView>
 					<Box p={10}>
-						<VStack space='md'>
-							<Text>Case logs</Text>
+						<VStack justifyContent='center' alignItems='center' space='md'>
+							<Text alignSelf='flex-start'>Case logs</Text>
 							<HStack space='lg'>
 								<Card width={"$40%"} size='sm' variant='filled' borderRadius={25}>
 									<VStack space='2xl' alignItems='center'>
 										<VStack alignItems='center'>
-											<Text size='xs'>Completed</Text>
+											<Text size='xs'>Completed Logs</Text>
 											<Text bold color='#000'>
 												30
 											</Text>
@@ -277,7 +278,7 @@ const HomeScreenPage = ({ navigation }) => {
 								<Card width={"$40%"} size='sm' variant='filled' borderRadius={25}>
 									<VStack space='md' alignItems='center'>
 										<VStack alignItems='center'>
-											<Text size='xs'>Uncompleted logs</Text>
+											<Text size='xs'>Uncompleted Logs</Text>
 											<Text bold color='#000'>
 												3
 											</Text>
@@ -308,4 +309,4 @@ const HomeScreenPage = ({ navigation }) => {
 	);
 };
 
-export default HomeScreenPage;
+export default observer(HomeScreenPage);

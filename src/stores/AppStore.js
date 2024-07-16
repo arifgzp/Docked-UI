@@ -149,6 +149,7 @@ const AppStore = types
 		_superSpecialty: types.maybeNull(types.string),
 		_subSpecialty: types.maybeNull(types.string),
 		_designation: types.maybeNull(types.string),
+		_designationOthers: types.maybeNull(types.string),
 		_workPlace: types.maybeNull(types.string),
 		_city: types.maybeNull(types.string),
 		_medicalCouncilName: types.maybeNull(types.string),
@@ -163,6 +164,8 @@ const AppStore = types
 		_isPasswordResetRequired: false,
 		_broadSpecialty: types.maybeNull(types.string),
 		_apiError: types.maybeNull(APIErrorType),
+		_userStatus: types.maybeNull(types.string),
+		_userPassword: types.maybeNull(types.string),
 	})
 	.views((self) => ({
 		get UserId() {
@@ -201,6 +204,10 @@ const AppStore = types
 			return self._userName;
 		},
 
+		get UserPassword() {
+			return self._userPassword;
+		},
+
 		get Name() {
 			return self._name;
 		},
@@ -215,6 +222,10 @@ const AppStore = types
 
 		get Designation() {
 			return self._designation;
+		},
+
+		get DesignationOthers() {
+			return self._designationOthers;
 		},
 
 		get Workplace() {
@@ -302,6 +313,14 @@ const AppStore = types
 			self._name = name;
 		},
 
+		setUserName(userName) {
+			self._userName = userName;
+		},
+
+		setUserPassword(password) {
+			self._userPassword = password;
+		},
+
 		setBroadSpecialty(broadSpecialty) {
 			self._broadSpecialty = broadSpecialty;
 		},
@@ -316,6 +335,10 @@ const AppStore = types
 
 		setDesignation(designation) {
 			self._designation = designation;
+		},
+
+		setDesignationOthers(otherDesignation) {
+			self._designationOthers = otherDesignation;
 		},
 
 		setWorkPlace(workPlace) {
@@ -334,7 +357,7 @@ const AppStore = types
 			self._yearOfRegistration = yearOfRegistration;
 		},
 
-		setmedicalRegistrationNumber(medicalRegistrationNumber) {
+		setMedicalRegistrationNumber(medicalRegistrationNumber) {
 			self._medicalRegistrationNumber = medicalRegistrationNumber;
 		},
 
@@ -356,6 +379,7 @@ const AppStore = types
 			superSpecialty,
 			subSpecialty,
 			designation,
+			designationOthers,
 			workPlace,
 			city,
 			medicalCouncilName,
@@ -371,6 +395,7 @@ const AppStore = types
 			self._superSpecialty = superSpecialty;
 			self._subSpecialty = subSpecialty;
 			self._designation = designation;
+			self._designationOthers = designationOthers;
 			self._workPlace = workPlace;
 			self._city = city;
 			self._medicalCouncilName = medicalCouncilName;
@@ -411,12 +436,14 @@ const AppStore = types
 			self._superSpecialty = null;
 			self._subSpecialty = null;
 			self._designation = null;
+			self._designationOthers = null;
 			self._workPlace = null;
 			self._city = null;
 			self._medicalCouncilName = null;
 			self._yearOfRegistration = null;
 			self._medicalRegistrationNumber = null;
 			self._verifiedMedicalRegistrationNumber = null;
+			self._logProfile = null;
 		},
 
 		validateUserToken: flow(function* validateUserToken() {

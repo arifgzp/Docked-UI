@@ -25,13 +25,20 @@ import Loader from "../../components/Loader";
 import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import appStoreInstance from "../../stores/AppStore";
+import { useNavigation } from "@react-navigation/native";
 
-const EnterOTPPage = ({ navigation, route }) => {
-	const { enteredMail, enteredNumber, enteredPassword } = route.params;
+const EnterOTPPage = ({ route }) => {
+	const navigation = useNavigation();
+	let params = null;
+	if (route?.params) {
+		params = route.params;
+	}
 	const [verifyPressed, setVerifyPressed] = useState(false);
 	const [OTPError, setOTPError] = useState("");
 	const [otpInput, setOTPInput] = useState("");
 	const toast = useToast();
+	const mail = appStoreInstance.UserName;
+	const password = appStoreInstance.UserPassword;
 
 	const handleVerify = async () => {
 		setVerifyPressed(true);
@@ -40,7 +47,7 @@ const EnterOTPPage = ({ navigation, route }) => {
 			setOTPError("Please Enter OTP");
 		} else {
 			const response = await appStoreInstance.VerifyAccount({
-				userName: enteredMail,
+				userName: params === null ? mail : params.enteredMail,
 				newUserVerificationCode: otpInput,
 				userStatus: "WIZARD_PENDING",
 			});
@@ -52,7 +59,13 @@ const EnterOTPPage = ({ navigation, route }) => {
 					break;
 
 				case "SUCCESS":
-					navigation.navigate("Email Verified Page", { enteredPassword: enteredPassword, enteredMail: enteredMail });
+					console.log("reach successsssss", response);
+					appStoreInstance.setUserPassword(params === null ? password : params.enteredPassword);
+					appStoreInstance.setUserName(params === null ? mail : params.enteredMail);
+					navigation.navigate("Email Verified Page", {
+						enteredPassword: params === null ? password : params.enteredPassword,
+						enteredMail: params === null ? mail : params.enteredMail,
+					});
 					break;
 
 				case "ERROR":
@@ -91,7 +104,7 @@ const EnterOTPPage = ({ navigation, route }) => {
 									Verify Your Email Address
 								</Text>
 								<Text size='sm'>
-									OTP sent successfully to <Text bold>{enteredMail}</Text>
+									OTP sent successfully to <Text bold>{mail ? mail : params.enteredMail}</Text>
 								</Text>
 							</VStack>
 						</Box>

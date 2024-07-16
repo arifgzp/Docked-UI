@@ -83,6 +83,7 @@ export const UserModelBase = withTypedRefs<Refs>()(ModelBase
     superSpecialty: types.union(types.undefined, types.null, types.string),
     subSpecialty: types.union(types.undefined, types.null, types.string),
     designation: types.union(types.undefined, types.null, types.string),
+    designationOthers: types.union(types.undefined, types.null, types.string),
     workPlace: types.union(types.undefined, types.null, types.string),
     city: types.union(types.undefined, types.null, types.string),
     medicalCouncilName: types.union(types.undefined, types.null, types.string),
@@ -133,6 +134,7 @@ export class UserModelSelector extends QueryBuilder {
   get superSpecialty() { return this.__attr(`superSpecialty`) }
   get subSpecialty() { return this.__attr(`subSpecialty`) }
   get designation() { return this.__attr(`designation`) }
+  get designationOthers() { return this.__attr(`designationOthers`) }
   get workPlace() { return this.__attr(`workPlace`) }
   get city() { return this.__attr(`city`) }
   get medicalCouncilName() { return this.__attr(`medicalCouncilName`) }
@@ -160,4 +162,4 @@ export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().newUserVerificationCode.userName.userStatus.resetPasswordCode.name.gender.role.lastName.createdOn.updatedOn.countryCode.phoneNumber.combinePhoneNumber.dateOfBirth.active.broadSpecialty.superSpecialty.subSpecialty.designation.workPlace.city.medicalCouncilName.yearOfRegistration.medicalRegistrationNumber.verifiedMedicalRegistrationNumber.targetedCaseLogNumber
+export const userModelPrimitives = selectFromUser().newUserVerificationCode.userName.userStatus.resetPasswordCode.name.gender.role.lastName.createdOn.updatedOn.countryCode.phoneNumber.combinePhoneNumber.dateOfBirth.active.broadSpecialty.superSpecialty.subSpecialty.designation.designationOthers.workPlace.city.medicalCouncilName.yearOfRegistration.medicalRegistrationNumber.verifiedMedicalRegistrationNumber.targetedCaseLogNumber

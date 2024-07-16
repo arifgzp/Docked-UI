@@ -21,6 +21,7 @@ export const FacultyModelBase = ModelBase
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     name: types.union(types.undefined, types.null, types.string),
     designation: types.union(types.undefined, types.null, types.string),
+    otherDesignation: types.union(types.undefined, types.null, types.string),
     phoneNumber: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
@@ -35,10 +36,11 @@ export class FacultyModelSelector extends QueryBuilder {
   get updatedOn() { return this.__attr(`updatedOn`) }
   get name() { return this.__attr(`name`) }
   get designation() { return this.__attr(`designation`) }
+  get otherDesignation() { return this.__attr(`otherDesignation`) }
   get phoneNumber() { return this.__attr(`phoneNumber`) }
 }
 export function selectFromFaculty() {
   return new FacultyModelSelector()
 }
 
-export const facultyModelPrimitives = selectFromFaculty().createdOn.updatedOn.name.designation.phoneNumber
+export const facultyModelPrimitives = selectFromFaculty().createdOn.updatedOn.name.designation.otherDesignation.phoneNumber

@@ -76,7 +76,8 @@ const CaseLogTab = () => {
 					}
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ":"));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -91,7 +92,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], airwayManagementConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -106,7 +108,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], drugsConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -121,7 +124,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], regionalTechniquesConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -136,7 +140,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], interventionalProceduresConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -151,7 +156,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], monitoringConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -166,7 +172,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], complicationsConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -181,7 +188,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], techniqueConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -196,7 +204,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], methodConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -211,7 +220,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], drugsUsedConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -226,7 +236,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], interventionConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -241,7 +252,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], proceduresConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -256,7 +268,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], diseaseCategoryConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -271,7 +284,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], siteConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -286,7 +300,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], jointConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -301,7 +316,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], bonesConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -316,7 +332,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], outcomesConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -331,7 +348,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], treatmentPlanConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -346,7 +364,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], applianceUsedConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -361,7 +380,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], procedureConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -376,7 +396,8 @@ const CaseLogTab = () => {
 					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], wireBendingRecordConfig);
 				})
 			);
-			return selectedNodes.join(", ");
+			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
 		}
 	};
 
@@ -895,7 +916,7 @@ const CaseLogTab = () => {
 													<HStack pr='$3' pl='$5' space='sm'>
 														<Text size='xs'>Site:</Text>
 														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.sites ? card.sites : "--"}
+															{card.sites ? card.sites.replace("#V#", ": ") : "--"}
 														</Text>
 													</HStack>
 													<HStack pr='$3' pl='$5' space='sm'>

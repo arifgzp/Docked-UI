@@ -40,9 +40,11 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 	const { enteredMail } = route.params;
 	const [formData, setFormData] = useState({ otp: "", email: "", password: "", reEnterPassword: "" });
 	const [passwordVisible, setPasswordVisible] = useState(false);
+	const [resetPasswordVisible, setResetPasswordVisible] = useState(false);
 	const [joinPressed, setJoinPressed] = useState(false);
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
+	const [resetPasswordError, setResetPasswordError] = useState("");
 	const [otpError, setOTPError] = useState("");
 	const [nameError, setNameError] = useState("");
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,12 +59,22 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 		if (!FormValidation.validateEmail(enteredMail)) {
 			return;
 		}
-		if (formData.password.length < 8) {
+		if (!formData.password) {
+			setPasswordError("please enter a new password");
+			isFormValid = false;
+		} else if (formData.password.length < 8) {
 			setPasswordError("password shouldn't be less than 8 characters");
 			isFormValid = false;
 		}
+
+		if (!formData.reEnterPassword) {
+			setResetPasswordError("please enter re-enter your new password");
+			isFormValid = false;
+		}
+
 		if (formData.reEnterPassword != formData.password) {
-			setPasswordError("Confirm password does not match");
+			setPasswordError("Entered password does not match");
+			setResetPasswordError("Entered password does not match");
 			isFormValid = false;
 		}
 		if (formData.otp == "") {
@@ -104,6 +116,13 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 			return !showState;
 		});
 	};
+
+	const handleShowResetPasswordState = () => {
+		setResetPasswordVisible((showState) => {
+			return !showState;
+		});
+	};
+
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
 			<KeyboardAvoidingView
@@ -130,6 +149,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 													value={formData.password}
 													type={passwordVisible ? "text" : "password"}
 													placeholder='New Password'
+													onFocus={() => setPasswordError("")}
 												/>
 												<InputSlot pr='$3' onPress={handleShowPasswordState}>
 													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
@@ -146,24 +166,24 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 								</Box>
 								<Box gap='$2'>
 									<Text size='xs'>Re-enter New Password</Text>
-									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
+									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && resetPasswordError} isReadOnly={false} isRequired={false}>
 										<Box>
 											<Input variant='outline'>
 												<InputField
 													onChangeText={handleChangeReEnterPassword}
 													value={formData.reEnterPassword}
-													type={passwordVisible ? "text" : "password"}
+													type={resetPasswordVisible ? "text" : "password"}
 													placeholder='Re-enter New Password'
-													onFocus={() => setPasswordError("")}
+													onFocus={() => setResetPasswordError("")}
 												/>
-												<InputSlot pr='$3' onPress={handleShowPasswordState}>
-													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
+												<InputSlot pr='$3' onPress={handleShowResetPasswordState}>
+													<InputIcon as={resetPasswordVisible ? Eye : EyeOff} color='#1E1E1E' />
 												</InputSlot>
 											</Input>
-											{joinPressed && passwordError && (
+											{joinPressed && resetPasswordError && (
 												<FormControlError>
 													<FormControlErrorIcon as={AlertCircleIcon} />
-													<FormControlErrorText>{passwordError}</FormControlErrorText>
+													<FormControlErrorText>{resetPasswordError}</FormControlErrorText>
 												</FormControlError>
 											)}
 										</Box>

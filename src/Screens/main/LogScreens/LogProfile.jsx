@@ -73,6 +73,9 @@ import IsReadyLoader from "../../../components/IsReadyLoader";
 import { useQuery } from "../../../models";
 import useIsReady from "../../../hooks/useIsReady";
 import { SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
+import { useIsFocused } from "@react-navigation/native";
+import { rotationForAnesthesiology, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
+import { designation } from "../../../data/entity/DesignationConfig";
 
 const LogProfilePage = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
@@ -88,15 +91,16 @@ const LogProfilePage = ({ navigation, route }) => {
 			hospital: "",
 			faculties: [],
 			rotations: [],
-			department: "",
-			from: new Date(),
-			to: new Date(),
+			department: null,
+			from: null,
+			to: null,
 		},
 	});
 	const isReady = useIsReady();
 	const [showModal, setShowModal] = useState(false);
 	const [modalView, setModalView] = useState("");
 	const ref = useRef(null);
+	const isFocused = useIsFocused();
 
 	const {
 		control: controlForFaculty,
@@ -109,6 +113,7 @@ const LogProfilePage = ({ navigation, route }) => {
 		defaultValues: {
 			facultyName: "",
 			facultyDesignation: "",
+			otherDesignation: "",
 			facultyPhoneNumber: "",
 		},
 	});
@@ -119,11 +124,12 @@ const LogProfilePage = ({ navigation, route }) => {
 	const [currentKey, setCurrentKey] = useState(null);
 	const [fromOpen, setFromOpen] = useState(false);
 	const [toOpen, setToOpen] = useState(false);
-	const [fromDate, setFromDate] = useState(new Date());
-	const [toDate, setToDate] = useState(new Date());
+	const [fromDate, setFromDate] = useState("--/--/--");
+	const [toDate, setToDate] = useState("--/--/--");
 	const [facultyList, setFacultyList] = useState([]);
 	const [editFacultyIndex, setEditFacultyIndex] = useState(null);
 	const currentSpecialty = AppStore.UserBroadSpecialty;
+	const logProfile = AppStore.UserLogProfile;
 
 	const handleSetDate = (date, key) => {
 		if (date instanceof Date && !isNaN(date)) {
@@ -142,6 +148,7 @@ const LogProfilePage = ({ navigation, route }) => {
 		console.log(faculty);
 		setValueForFaculty("facultyName", faculty.name);
 		setValueForFaculty("facultyDesignation", faculty.designation);
+		setValueForFaculty("otherDesignation", faculty.otherDesignation);
 		setValueForFaculty("facultyPhoneNumber", faculty.phoneNumber);
 		setEditFacultyIndex(index);
 		setModalView("faculty edit");
@@ -152,6 +159,7 @@ const LogProfilePage = ({ navigation, route }) => {
 		const newFaculty = {
 			name: watchForFaculty("facultyName"),
 			designation: watchForFaculty("facultyDesignation"),
+			otherDesignation: watchForFaculty("otherDesignation"),
 			phoneNumber: watchForFaculty("facultyPhoneNumber"),
 		};
 		setFacultyList([...facultyList, newFaculty]);
@@ -159,9 +167,13 @@ const LogProfilePage = ({ navigation, route }) => {
 		resetForFaculty({
 			facultyName: null,
 			facultyDesignation: null,
+			otherDesignation: null,
 			facultyPhoneNumber: null,
-			from: new Date(),
-			to: new Date(),
+		});
+		reset({
+			hospital: watch("hospital"),
+			from: watch("from"),
+			to: watch("to"),
 		});
 	};
 
@@ -170,6 +182,7 @@ const LogProfilePage = ({ navigation, route }) => {
 		newFacultyList[editFacultyIndex] = {
 			name: watchForFaculty("facultyName"),
 			designation: watchForFaculty("facultyDesignation"),
+			otherDesignation: watchForFaculty("otherDesignation"),
 			phoneNumber: watchForFaculty("facultyPhoneNumber"),
 		};
 		setFacultyList(newFacultyList);
@@ -177,9 +190,13 @@ const LogProfilePage = ({ navigation, route }) => {
 		resetForFaculty({
 			facultyName: null,
 			facultyDesignation: null,
+			otherDesignation: null,
 			facultyPhoneNumber: null,
-			from: new Date(),
-			to: new Date(),
+		});
+		reset({
+			hospital: watch("hospital"),
+			from: watch("from"),
+			to: watch("to"),
 		});
 	};
 
@@ -210,11 +227,17 @@ const LogProfilePage = ({ navigation, route }) => {
 				from: watch("from"),
 			},
 		];
-		const data = {
-			faculties: facultyList,
-			rotations: rotationData,
-			hospital: watch("hospital"),
-		};
+		console.log("rotationData", rotationData);
+		console.log("faculties", facultyList);
+		let data;
+		if (rotationData[0].department !== null && rotationData[0].from !== null && rotationData[0].to !== null) {
+			console.log("data when there is rotation.....", rotationData);
+			data = { faculties: facultyList, rotations: rotationData, hospital: watch("hospital") };
+		} else {
+			console.log("data when there is no ROTATION.....", rotationData);
+			data = { faculties: facultyList, hospital: watch("hospital") };
+		}
+
 		console.log("caseLogFormToGet", caseLogFormToGet);
 		try {
 			const query = store.updateUserLogProfile(AppStore.UserId, {
@@ -251,6 +274,7 @@ const LogProfilePage = ({ navigation, route }) => {
 				if (finishFetchingLogProfile) {
 					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
 					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					console.log("userData", userData);
 					const facultiesList = userData.logProfile.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
@@ -263,20 +287,23 @@ const LogProfilePage = ({ navigation, route }) => {
 					});
 					reset({
 						hospital: userData.logProfile.hospital,
-						from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
-						to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
-						department: userData.logProfile.rotations[0].department,
+						department: userData.logProfile.rotations[0]?.department ? userData.logProfile.rotations[0]?.department : null,
 						rotations: userData.logProfile.rotations[0],
 					});
 					setFacultyList(facultiesList);
-					setFromDate(new Date(userData.logProfile.rotations[0]?.from || new Date()));
-					setToDate(new Date(userData.logProfile.rotations[0]?.to || new Date()));
+					setFromDate(
+						userData.logProfile.rotations[0]?.from ? format(new Date(userData.logProfile.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--"
+					);
+					setToDate(userData.logProfile.rotations[0]?.to ? format(new Date(userData.logProfile.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
+					setValue("from", userData.logProfile.rotations[0]?.from ? userData.logProfile.rotations[0]?.from : null);
+					setValue("to", userData.logProfile.rotations[0]?.to ? userData.logProfile.rotations[0]?.to : null);
 					AppStore.setLogProfile(finishFetchingLogProfile.queryUser.user[0].logProfile);
 				}
 			} catch (error) {
 				console.log(error);
 			}
 		};
+
 		fetchLogProfile();
 	}, []);
 
@@ -331,8 +358,6 @@ const LogProfilePage = ({ navigation, route }) => {
 												facultyName: null,
 												facultyDesignation: null,
 												facultyPhoneNumber: null,
-												from: new Date(),
-												to: new Date(),
 											});
 										}}
 										finalFocusRef={ref}>
@@ -402,33 +427,16 @@ const LogProfilePage = ({ navigation, route }) => {
 																						</Text>
 																						<Divider borderWidth={0.1} />
 																						<SelectScrollView>
-																							<SelectItem bg='$warmGray100' label='Professor of Medicine' value='Professor Of Medicine' />
-																							<SelectItem label='Associate Professor of Surgery' value='Associate Professor Of Surgery' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Assistant Professor of Pediatrics'
-																								value='Assistant Professor Of Pediatrics'
-																							/>
-																							<SelectItem label='Chief Medical Officer' value='Chief Medical Officer' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Senior Consultant Cardiologist'
-																								value='Senior Consultant Cardiologist'
-																							/>
-																							<SelectItem label='Consultant Oncologist' value='Consultant Oncologist' />
-																							<SelectItem bg='$warmGray100' label='Resident Physician' value='Resident Physician' />
-																							<SelectItem label='Clinical Instructor in Neurology' value='Clinical Instructor In Neurology' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Adjunct Professor of Psychiatry'
-																								value='Adjunct Professor Of Psychiatry'
-																							/>
-																							<SelectItem label='Visiting Professor of Dermatology' value='Visiting Professor Of Dermatology' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Emeritus Professor of Obstetrics'
-																								value='Emeritus Professor Of Obstetrics'
-																							/>
+																							{designation.map((option, index) => {
+																								return (
+																									<SelectItem
+																										bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																										key={index}
+																										label={option.label}
+																										value={option.value}
+																									/>
+																								);
+																							})}
 																						</SelectScrollView>
 																						<SelectDragIndicatorWrapper>
 																							<SelectDragIndicator />
@@ -444,6 +452,33 @@ const LogProfilePage = ({ navigation, route }) => {
 																<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 															</Box>
 														</Box>
+														{watchForFaculty("facultyDesignation") === "Others" && (
+															<Box gap='$1'>
+																<Box>
+																	<Text size='xs'>Please specify your other Designation</Text>
+																</Box>
+																<Box alignItems='center'>
+																	<Controller
+																		control={controlForFaculty}
+																		key={"otherDesignation"}
+																		name={"otherDesignation"}
+																		rules={{
+																			required: false,
+																		}}
+																		render={({ field: { onChange, onBlur, value } }) => {
+																			return (
+																				<Input borderColor='rgba(77, 83, 86, 0.4)' variant='outline' size='sm'>
+																					<InputField onChangeText={onChange} value={value} placeholder={"Other designation"} />
+																				</Input>
+																			);
+																		}}
+																	/>
+																</Box>
+																<Box alignItems='center'>
+																	<Box width={"$100%"}>{errorsForFaculty.otherDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+																</Box>
+															</Box>
+														)}
 														<Box gap='$1'>
 															<Box>
 																<Text size='xs'>Phone Number</Text>
@@ -557,33 +592,16 @@ const LogProfilePage = ({ navigation, route }) => {
 																						</Text>
 																						<Divider borderWidth={0.1} />
 																						<SelectScrollView>
-																							<SelectItem bg='$warmGray100' label='Professor of Medicine' value='Professor Of Medicine' />
-																							<SelectItem label='Associate Professor of Surgery' value='Associate Professor Of Surgery' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Assistant Professor of Pediatrics'
-																								value='Assistant Professor Of Pediatrics'
-																							/>
-																							<SelectItem label='Chief Medical Officer' value='Chief Medical Officer' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Senior Consultant Cardiologist'
-																								value='Senior Consultant Cardiologist'
-																							/>
-																							<SelectItem label='Consultant Oncologist' value='Consultant Oncologist' />
-																							<SelectItem bg='$warmGray100' label='Resident Physician' value='Resident Physician' />
-																							<SelectItem label='Clinical Instructor in Neurology' value='Clinical Instructor In Neurology' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Adjunct Professor of Psychiatry'
-																								value='Adjunct Professor OfP sychiatry'
-																							/>
-																							<SelectItem label='Visiting Professor of Dermatology' value='Visiting Professor Of Dermatology' />
-																							<SelectItem
-																								bg='$warmGray100'
-																								label='Emeritus Professor of Obstetrics'
-																								value='Emeritus Professor Of Obstetrics'
-																							/>
+																							{designation.map((option, index) => {
+																								return (
+																									<SelectItem
+																										bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																										key={index}
+																										label={option.label}
+																										value={option.value}
+																									/>
+																								);
+																							})}
 																						</SelectScrollView>
 																						<SelectDragIndicatorWrapper>
 																							<SelectDragIndicator />
@@ -599,6 +617,33 @@ const LogProfilePage = ({ navigation, route }) => {
 																<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 															</Box>
 														</Box>
+														{watchForFaculty("facultyDesignation") === "Others" && (
+															<Box gap='$1'>
+																<Box>
+																	<Text size='xs'>Please specify your other Designation</Text>
+																</Box>
+																<Box alignItems='center'>
+																	<Controller
+																		control={controlForFaculty}
+																		key={"otherDesignation"}
+																		name={"otherDesignation"}
+																		rules={{
+																			required: false,
+																		}}
+																		render={({ field: { onChange, onBlur, value } }) => {
+																			return (
+																				<Input variant='outline' size='sm'>
+																					<InputField onChangeText={onChange} value={value} placeholder={"Other designation"} />
+																				</Input>
+																			);
+																		}}
+																	/>
+																</Box>
+																<Box alignItems='center'>
+																	<Box width={"$100%"}>{errorsForFaculty.otherDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+																</Box>
+															</Box>
+														)}
 														<Box gap='$1'>
 															<Box>
 																<Text size='xs'>Phone Number</Text>
@@ -637,8 +682,6 @@ const LogProfilePage = ({ navigation, route }) => {
 																	facultyName: null,
 																	facultyDesignation: null,
 																	facultyPhoneNumber: null,
-																	from: new Date(),
-																	to: new Date(),
 																});
 															}}>
 															<ButtonText>Cancel</ButtonText>
@@ -669,7 +712,7 @@ const LogProfilePage = ({ navigation, route }) => {
 															{faculty.name}
 														</Text>
 														<Text size='xs' color='#4D5356'>
-															{faculty.designation}
+															{faculty.designation === "Others" ? faculty.otherDesignation : faculty.designation}
 														</Text>
 													</VStack>
 													<HStack py='$1'>
@@ -691,7 +734,9 @@ const LogProfilePage = ({ navigation, route }) => {
 									</HStack>
 								</Button>
 								<Divider />
-								{currentSpecialty === "Anaesthesiology" ? (
+								{currentSpecialty === "Orthodontics" ? (
+									<Box></Box>
+								) : (
 									<Box w='$100%'>
 										<Box w='$100%' pb='$3'>
 											<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
@@ -727,34 +772,27 @@ const LogProfilePage = ({ navigation, route }) => {
 																		</Text>
 																		<Divider borderWidth={0.1} />
 																		<SelectScrollView p='$0'>
-																			<SelectItem bg='$warmGray100' label='General Surgery' value='General Surgery' />
-																			<SelectItem label='Trauma services' value='Trauma services' />
-																			<SelectItem
-																				bg='$warmGray100'
-																				label='Cardiovascular & Thoracic Surgery'
-																				value='Cardiovascular & Thoracic Surgery'
-																			/>
-																			<SelectItem label='Neuro-surgery' value='Neuro-surgery' />
-																			<SelectItem bg='$warmGray100' label='Ophthalmology' value='Ophthalmology' />
-																			<SelectItem label='Plastic & Reconstructive Surgery' value='Plastic & Reconstructive Surgery' />
-																			<SelectItem bg='$warmGray100' label='Day care services' value='Day care services' />
-																			<SelectItem label='Paediatric surgery' value='Paediatric surgery' />
-																			<SelectItem bg='$warmGray100' label='Orthopaedics' value='Orthopaedics' />
-																			<SelectItem label='Dental & Maxillo-facial Surgery' value='Dental & Maxillo-facial Surgery' />
-																			<SelectItem bg='$warmGray100' label='Radiology suite' value='Radiology suite' />
-																			<SelectItem label='Urology' value='Urology' />
-																			<SelectItem bg='$warmGray100' label='Gynaecology & Obstetric' value='Gynaecology & Obstetric' />
-																			<SelectItem label='Transplant & Re-implant Surgery' value='Transplant & Re-implant Surgery' />
-																			<SelectItem bg='$warmGray100' label='MRI' value='MRI' />
-																			<SelectItem label='Endoscopic surgery' value='Endoscopic surgery' />
-																			<SelectItem bg='$warmGray100' label='ENT Surgery' value='ENT Surgery' />
-																			<SelectItem label='CT Scan' value='CT Scan' />
-																			<SelectItem
-																				bg='$warmGray100'
-																				label='Cardiac Catheterisation Laboratory'
-																				value='Cardiac Catheterisation Laboratory'
-																			/>
-																			<SelectItem label='ЕСТ' value='ЕСТ' />
+																			{appStoreInstance.UserBroadSpecialty === "Orthopaedics"
+																				? rotationForOrthopaedics.map((rotation, index) => {
+																						return (
+																							<SelectItem
+																								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																								key={index}
+																								label={rotation.label}
+																								value={rotation.value}
+																							/>
+																						);
+																				  })
+																				: rotationForAnesthesiology.map((rotation, index) => {
+																						return (
+																							<SelectItem
+																								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																								key={index}
+																								label={rotation.label}
+																								value={rotation.value}
+																							/>
+																						);
+																				  })}
 																		</SelectScrollView>
 																		<SelectDragIndicatorWrapper>
 																			<SelectDragIndicator />
@@ -782,7 +820,7 @@ const LogProfilePage = ({ navigation, route }) => {
 															setCurrentKey("from");
 															setFromOpen(true);
 														}}>
-														<ButtonText fontFamily='Inter'>{format(new Date(fromDate), "d/MM/yyy")}</ButtonText>
+														<ButtonText fontFamily='Inter'>{fromDate}</ButtonText>
 														<ButtonIcon as={Ionicons} size={20} name='calendar-outline' color='#367B71' />
 													</Button>
 												</VStack>
@@ -798,7 +836,7 @@ const LogProfilePage = ({ navigation, route }) => {
 															setCurrentKey("to");
 															setToOpen(true);
 														}}>
-														<ButtonText fontFamily='Inter'>{format(new Date(toDate), "d/MM/yyyy")}</ButtonText>
+														<ButtonText fontFamily='Inter'>{toDate}</ButtonText>
 														<ButtonIcon as={Ionicons} size={20} name='calendar-outline' color='#367B71' />
 													</Button>
 												</VStack>
@@ -806,15 +844,15 @@ const LogProfilePage = ({ navigation, route }) => {
 													modal
 													open={fromOpen}
 													theme='light'
-													date={fromDate}
+													date={!(fromDate instanceof Date) ? new Date() : fromDate}
 													// onDateChange={(date) => {
 													// 	//setDate(date);
 													// 	handelSetDate(date);
 													// }}
-													onConfirm={(date) => {
-														setFromDate(date);
+													onConfirm={(fromDate) => {
+														setFromDate(format(new Date(fromDate), "dd / MM / yyyy"));
 														setFromOpen(false);
-														handleSetDate(date, currentKey);
+														handleSetDate(fromDate, currentKey);
 													}}
 													onCancel={() => {
 														setFromOpen(false);
@@ -825,15 +863,15 @@ const LogProfilePage = ({ navigation, route }) => {
 													modal
 													open={toOpen}
 													theme='light'
-													date={toDate}
+													date={!(toDate instanceof Date) ? new Date() : toDate}
 													// onDateChange={(date) => {
 													// 	//setDate(date);
 													// 	handelSetDate(date);
 													// }}
-													onConfirm={(date) => {
-														setToDate(date);
+													onConfirm={(toDate) => {
+														setToDate(format(new Date(toDate), "dd / MM / yyyy"));
 														setToOpen(false);
-														handleSetDate(date, currentKey);
+														handleSetDate(toDate, currentKey);
 													}}
 													onCancel={() => {
 														setToOpen(false);
@@ -843,8 +881,6 @@ const LogProfilePage = ({ navigation, route }) => {
 											</HStack>
 										</Box>
 									</Box>
-								) : (
-									<Box></Box>
 								)}
 							</VStack>
 						</Box>

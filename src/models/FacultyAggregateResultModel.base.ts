@@ -25,6 +25,8 @@ export const FacultyAggregateResultModelBase = ModelBase
     nameMax: types.union(types.undefined, types.null, types.string),
     designationMin: types.union(types.undefined, types.null, types.string),
     designationMax: types.union(types.undefined, types.null, types.string),
+    otherDesignationMin: types.union(types.undefined, types.null, types.string),
+    otherDesignationMax: types.union(types.undefined, types.null, types.string),
     phoneNumberMin: types.union(types.undefined, types.null, types.string),
     phoneNumberMax: types.union(types.undefined, types.null, types.string),
   })
@@ -44,6 +46,8 @@ export class FacultyAggregateResultModelSelector extends QueryBuilder {
   get nameMax() { return this.__attr(`nameMax`) }
   get designationMin() { return this.__attr(`designationMin`) }
   get designationMax() { return this.__attr(`designationMax`) }
+  get otherDesignationMin() { return this.__attr(`otherDesignationMin`) }
+  get otherDesignationMax() { return this.__attr(`otherDesignationMax`) }
   get phoneNumberMin() { return this.__attr(`phoneNumberMin`) }
   get phoneNumberMax() { return this.__attr(`phoneNumberMax`) }
 }
@@ -51,4 +55,4 @@ export function selectFromFacultyAggregateResult() {
   return new FacultyAggregateResultModelSelector()
 }
 
-export const facultyAggregateResultModelPrimitives = selectFromFacultyAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.nameMin.nameMax.designationMin.designationMax.phoneNumberMin.phoneNumberMax
+export const facultyAggregateResultModelPrimitives = selectFromFacultyAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.nameMin.nameMax.designationMin.designationMax.otherDesignationMin.otherDesignationMax.phoneNumberMin.phoneNumberMax

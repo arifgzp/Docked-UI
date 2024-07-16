@@ -67,7 +67,48 @@ const specialtyList = {
 		SubSpeciality: [],
 	},
 	Orthopaedics: {
-		SuperSpeciality: [],
+		SuperSpeciality: [
+			{
+				label: "Podiatry",
+				value: "Podiatry",
+			},
+			{
+				label: "Hand Surgery",
+				value: "Hand Surgery",
+			},
+			{
+				label: "Paediatric Orthopaedics",
+				value: "Paediatric Orthopaedics",
+			},
+			{
+				label: "Spine Surgery",
+				value: "Spine Surgery",
+			},
+			{
+				label: "Orthopaedic Oncology",
+				value: "Orthopaedic Oncology",
+			},
+			{
+				label: "Trauma Surgery",
+				value: "Trauma Surgery",
+			},
+			{
+				label: "Shoulder & Elbow Surgery",
+				value: "Shoulder & Elbow Surgery",
+			},
+			{
+				label: "Hip & Knee Surgery",
+				value: "Hip & Knee Surgery",
+			},
+			{
+				label: "Joint Replacement",
+				value: "Joint Replacement",
+			},
+			{
+				label: "Sports",
+				value: "Sports",
+			},
+		],
 		SubSpeciality: [],
 	},
 };
@@ -93,7 +134,7 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 	};
 
 	useEffect(() => {
-		if (selectedBroadSpecialty === "Anaesthesiology") {
+		if (selectedBroadSpecialty === "Anaesthesiology" || selectedBroadSpecialty === "Orthopaedics") {
 			const specialties = specialtyList[selectedBroadSpecialty] || { SuperSpeciality: [], SubSpeciality: [] };
 			setSuperSpecialtyOptions(specialties.SuperSpeciality);
 			setSubSpecialtyOptions(specialties.SubSpeciality);
@@ -170,10 +211,10 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 																				);
 																			})}
 																		</SelectScrollView>
+																		<SelectDragIndicatorWrapper>
+																			<SelectDragIndicator />
+																		</SelectDragIndicatorWrapper>
 																	</SelectContent>
-																	<SelectDragIndicatorWrapper>
-																		<SelectDragIndicator />
-																	</SelectDragIndicatorWrapper>
 																</SelectPortal>
 															</Select>
 														</VStack>
@@ -200,24 +241,26 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 															<SelectPortal>
 																<SelectBackdrop />
 																<SelectContent p='$0'>
-																	<Text padding={10} size='xl'>
+																	<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
 																		{field.name}
 																	</Text>
 																	<Divider borderWidth={0.1} />
-																	{options.map((option, index) => {
-																		return (
-																			<SelectItem
-																				bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
-																				key={index}
-																				label={option.label}
-																				value={option.value}
-																			/>
-																		);
-																	})}
+																	<SelectScrollView>
+																		{options.map((option, index) => {
+																			return (
+																				<SelectItem
+																					bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																					key={index}
+																					label={option.label}
+																					value={option.value}
+																				/>
+																			);
+																		})}
+																	</SelectScrollView>
+																	<SelectDragIndicatorWrapper>
+																		<SelectDragIndicator />
+																	</SelectDragIndicatorWrapper>
 																</SelectContent>
-																<SelectDragIndicatorWrapper>
-																	<SelectDragIndicator />
-																</SelectDragIndicatorWrapper>
 															</SelectPortal>
 														</Select>
 													</VStack>

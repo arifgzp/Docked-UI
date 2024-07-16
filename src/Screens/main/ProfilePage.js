@@ -66,11 +66,12 @@ const ProfilePage = ({ navigation }) => {
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
 						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
 						appStoreInstance.setDesignation(fetchProfileData.designation);
+						appStoreInstance.setDesignationOthers(fetchProfileData.designationOthers);
 						appStoreInstance.setWorkPlace(fetchProfileData.workPlace);
 						appStoreInstance.setCity(fetchProfileData.city);
 						appStoreInstance.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 						appStoreInstance.setYearOfRegistration(fetchProfileData.yearOfRegistration);
-						appStoreInstance.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+						appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 					}
 				} catch (error) {
 					console.log(error);
@@ -140,7 +141,13 @@ const ProfilePage = ({ navigation }) => {
 										<Text color='#000' size='sm'>
 											Designation
 										</Text>
-										<Text size='xs'>{appStoreInstance.Designation ? appStoreInstance.Designation : "—"}</Text>
+										<Text size='xs'>
+											{appStoreInstance.Designation
+												? appStoreInstance.Designation === "Others"
+													? appStoreInstance.DesignationOthers
+													: appStoreInstance.Designation
+												: "—"}
+										</Text>
 									</VStack>
 									<HStack w='$100%'>
 										<VStack w='$50%'>

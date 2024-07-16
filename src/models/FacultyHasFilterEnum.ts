@@ -12,6 +12,7 @@ export enum FacultyHasFilter {
 updatedOn="updatedOn",
 name="name",
 designation="designation",
+otherDesignation="otherDesignation",
 phoneNumber="phoneNumber"
 }
 
@@ -23,5 +24,6 @@ export const FacultyHasFilterEnumType = types.enumeration("FacultyHasFilter", [
   "updatedOn",
   "name",
   "designation",
+  "otherDesignation",
   "phoneNumber",
       ])

@@ -59,12 +59,24 @@ import { observer } from "mobx-react";
 import { useQuery } from "../../../../models";
 import AppStore from "../../../../stores/AppStore";
 
-const CaselogDropDownOptions = ({ navigation, control, formState, setValue, readOnly, prefilledData, formFields, readOnlyFaculty, caseLogData }) => {
+const CaselogDropDownOptions = ({
+	navigation,
+	watch,
+	control,
+	formState,
+	setValue,
+	readOnly,
+	prefilledData,
+	formFields,
+	readOnlyFaculty,
+	caseLogData,
+}) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [open, setOpen] = useState(false);
 	const [showActionSheet, setShowActionsheet] = useState(false);
-	const [date, setDate] = useState(caseLogData?.date ? new Date(caseLogData.date) : new Date());
+	const [date, setDate] = useState(caseLogData?.date ? format(new Date(caseLogData.date), "dd / MM / yyyy") : "--/--/--");
+	const [dateForModal, setDateForModal] = useState(caseLogData?.date ? new Date(caseLogData?.date) : new Date());
 
 	const handleCloseDateModal = () => {
 		setShowActionsheet(false);
@@ -94,7 +106,9 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 	const activeRotationText = activeRotation?.department ? `${activeRotation.department}` : "No Rotation";
 	return (
 		<VStack gap='$2'>
-			{currentSpecialty === "Anaesthesiology" ? (
+			{currentSpecialty === "Orthodontics" ? (
+				<Box></Box>
+			) : (
 				<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
 					<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
 						Rotation
@@ -103,8 +117,6 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 						<InputField value={rotationForEdit ?? activeRotationText} />
 					</Input>
 				</VStack>
-			) : (
-				<Box></Box>
 			)}
 			<VStack pl='$5' pr='$5' width={"$100%"} gap='$2'>
 				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
@@ -119,7 +131,7 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 					Date
 				</Text>
 				<Button onPress={() => setOpen(true)} justifyContent='space-between' variant='date'>
-					<ButtonText>{format(new Date(date), "dd / MM / yyyy")}</ButtonText>
+					<ButtonText>{date}</ButtonText>
 					<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
 				</Button>
 			</VStack>
@@ -221,6 +233,30 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 										}}
 									/>
 								</Box>
+								{field.outcome && watch("outcome") === "Others" && (
+									<VStack width='$100%' pt='$2' gap='$2'>
+										<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+											Other Outcome
+										</Text>
+										<Box alignItems='center'>
+											<Controller
+												control={control}
+												key='outcomeOther'
+												name='outcomeOther'
+												rules={{
+													required: false,
+												}}
+												render={({ field: { onChange, onBlur, value } }) => {
+													return (
+														<Input variant='outline' size='sm'>
+															<InputField onChangeText={onChange} value={value} placeholder='Other Outcome' />
+														</Input>
+													);
+												}}
+											/>
+										</Box>
+									</VStack>
+								)}
 							</VStack>
 						);
 					} else if (field.type === "text" || field.type === "number") {
@@ -260,11 +296,12 @@ const CaselogDropDownOptions = ({ navigation, control, formState, setValue, read
 				modal
 				open={open}
 				theme='light'
-				date={date}
-				onConfirm={(date) => {
-					setDate(date);
+				date={dateForModal}
+				onConfirm={(dateForModal) => {
+					setDate(format(new Date(dateForModal), "dd / MM / yyyy"));
+					setDateForModal(dateForModal);
 					setOpen(false);
-					handelSetDate(date);
+					handelSetDate(dateForModal);
 				}}
 				onCancel={() => {
 					setOpen(false);

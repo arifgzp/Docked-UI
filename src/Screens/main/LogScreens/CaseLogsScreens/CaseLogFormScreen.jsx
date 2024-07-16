@@ -14,11 +14,11 @@ import {
 	ToastDescription,
 	TextareaInput,
 } from "@gluestack-ui/themed";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { formatRFC3339 } from "date-fns";
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Platform } from "react-native";
 import Loader from "../../../../components/Loader";
@@ -116,8 +116,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	});
 	const toast = useToast();
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
-
+	const caseLogPrefilledRef = useRef();
+	const [buttonPressed, setButtonPressed] = useState({ active: false, screenName: "" });
+	const buttonPressedRef = useRef();
 	const handleSaveClick = async (formData) => {
+		setButtonPressed({ active: true, screenName: "RootLogBook" });
 		console.log("FormData for Case Logs to be added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
@@ -167,11 +170,73 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			setQuery(query);
 			await query;
 			//navigation.navigate("RootLogBook");
-			navigation.navigate("Log Book", { screen: "RootLogBook" });
+
+			// ours
+			// navigation.navigate("Log Book", { screen: "RootLogBook" });
 			reset();
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const handleAutoSave = async (formData) => {
+		console.log("FormData for Case Logs to be added", formData);
+		console.log("caseLogFromToGet", caseLogFormToGet);
+		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
+		formData.date = formatRFC3339(formData.date);
+		formData.caseType = caseLogFormToGet;
+		let queryToRun;
+		let caseLogToUpdate;
+
+		switch (caseLogFormToGet) {
+			case "CaseLog":
+				queryToRun = "updateUserAnaesthesiaCaseLog";
+				caseLogToUpdate = "anaesthesiaCaseLog";
+				break;
+			case "ChronicPain":
+				queryToRun = "updateUserAnaesthesiaChronicPainLog";
+				caseLogToUpdate = "anaesthesiaChronicPainLog";
+				break;
+			case "CriticalCareCaseLog":
+				queryToRun = "updateUserAnaesthesiaCritcalCareCaseLog";
+				caseLogToUpdate = "anaesthesiaCriticalCareCaseLog";
+				break;
+			case "OrthopaedicsCaseLog":
+				queryToRun = "updateUserOrthopaedicsCaseLog";
+				caseLogToUpdate = "orthopaedicsCaseLog";
+				break;
+			case "OrthopaedicsProcedureLog":
+				queryToRun = "updateUserOrthopaedicsProcedureLog";
+				caseLogToUpdate = "orthopaedicsProcedureLog";
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				queryToRun = "updateUserOrthodonticsClinicalCaseLog";
+				caseLogToUpdate = "orthodonticsClinicalCaseLog";
+				break;
+			case "OrthodonticsPreClinical":
+				queryToRun = "updateUserOrthodonticsPreClinical";
+				caseLogToUpdate = "orthodonticsPreClinical";
+				break;
+			default:
+				throw new Error("Invalid case log type");
+		}
+
+		console.log("queryToRun", queryToRun);
+		console.log("caseLogToUpdate", caseLogToUpdate);
+
+		try {
+			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
+			setQuery(query);
+			await query;
+			//navigation.navigate("RootLogBook");
+			reset();
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleNavigateToLogProfile = () => {
+		setButtonPressed({ active: true, screenName: "LogProfilePage" });
 	};
 
 	useEffect(() => {
@@ -195,6 +260,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 					console.log("hospitalDatafromAPPSTORE", hospitalData);
 					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0]?.department);
 					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+					caseLogPrefilledRef.current = { hospital: hospitalData, faculty: facultiesList, rotations: rotationsList };
 					setValue("hospital", hospitalData);
 					setValue("rotation", rotationsList[0]?.department);
 				} else {
@@ -215,7 +281,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 						console.log("hospitalData", hospitalData);
 						console.log("rotations[0].department", rotationsList[0]?.department);
 						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-						setValue("hospital", hospitalData);
+						caseLogPrefilledRef.current = { hospital: hospitalData, faculty: facultiesList, rotations: rotationsList };
 						setValue("rotation", rotationsList[0]?.department);
 					}
 				}
@@ -230,6 +296,45 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			setCaseLogPreFilledData(null);
 		};
 	}, [isFocused]);
+
+	useEffect(() => {
+		if (buttonPressed.active === true) {
+			console.log("RAAAAANNNN FIRSSSSSTTTTT");
+			console.log("buttonPressed.active ran first", buttonPressed.active);
+			if (buttonPressed.screenName === "RootLogBook") {
+				navigation.navigate("Log Book", { screen: "RootLogBook" });
+				buttonPressedRef.current = buttonPressed;
+			}
+			if (buttonPressed.screenName === "LogProfilePage") {
+				navigation.navigate("Log Book", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } });
+				buttonPressedRef.current = buttonPressed;
+			}
+		}
+	}, [buttonPressed]);
+
+	useFocusEffect(
+		useCallback(() => {
+			// Code to run when the screen is focused
+			console.log("Screen is focused");
+
+			return () => {
+				buttonPressedRef.current = buttonPressed;
+				console.log("RAAAAANNNN SECONDDDDDDDD", buttonPressedRef.current);
+				if (buttonPressedRef.current.active === false) {
+					console.log("buttonPressed", buttonPressedRef.active);
+					console.log("caseLogPrefilledData === undefined inside the loss of focus", caseLogPrefilledRef);
+					if (!caseLogPrefilledRef.current) {
+						return;
+					} else {
+						handleSubmit((data) => handleAutoSave(data))();
+					}
+				} else {
+					console.log("caseLogFormToGet when out form changes", caseLogFormToGet);
+				}
+				// Code to run when the screen is unfocused
+			};
+		}, [caseLogFormToGet])
+	);
 
 	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
 	console.log("caseLogPrefilledData for test", caseLogPrefilledData);
@@ -253,6 +358,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 											control={control}
 											setValue={setValue}
 											formState={formState}
+											watch={watch}
 											readOnlyFaculty={false}
 										/>
 									</Box>
@@ -307,9 +413,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 								</Text>
 
 								<Box>
-									<Button
-										onPress={() => navigation.navigate("Log Book", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } })}
-										variant='primary'>
+									<Button onPress={handleNavigateToLogProfile} variant='primary'>
 										<ButtonText>Create Log Profile</ButtonText>
 									</Button>
 								</Box>

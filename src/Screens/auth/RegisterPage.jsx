@@ -49,6 +49,11 @@ import { Divider } from "@gluestack-ui/themed";
 const RegisterPage = ({ navigation, route }) => {
 	const [showActionsheet, setShowActionsheet] = useState(false);
 	const { enteredNumber } = route.params;
+	const [isChecked, setIsChecked] = useState(true);
+	const toggleCheckbox = () => {
+		setIsChecked(!isChecked);
+	};
+
 	const [formData, setFormData] = useState({
 		name: "",
 		email: "",
@@ -260,7 +265,13 @@ const RegisterPage = ({ navigation, route }) => {
 											Name
 										</Text>
 										<Input bg='#FFFFFC' variant='outline'>
-											<InputField onChangeText={handleChangeName} value={formData.name} placeholder='Name' autoCapitalize='words' />
+											<InputField
+												onChangeText={handleChangeName}
+												value={formData.name}
+												placeholder='Name'
+												autoCapitalize='words'
+												onFocus={() => setNameError("")}
+											/>
 										</Input>
 										{joinPressed && nameError && (
 											<FormControlError>
@@ -276,7 +287,13 @@ const RegisterPage = ({ navigation, route }) => {
 											Email Address
 										</Text>
 										<Input bg='#FFFFFC' variant='outline'>
-											<InputField onChangeText={handleChangeEmail} value={formData.email} placeholder='Email' autoCapitalize='none' />
+											<InputField
+												onChangeText={handleChangeEmail}
+												value={formData.email}
+												placeholder='Email'
+												autoCapitalize='none'
+												onFocus={() => setEmailError("")}
+											/>
 										</Input>
 										{joinPressed && emailError && (
 											<FormControlError>
@@ -297,6 +314,7 @@ const RegisterPage = ({ navigation, route }) => {
 												value={formData.password}
 												type={passwordVisible ? "text" : "password"}
 												placeholder='Password'
+												onFocus={() => setPasswordError("")}
 											/>
 											<InputSlot pr='$3' onPress={handleShowPasswordState}>
 												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
@@ -321,6 +339,7 @@ const RegisterPage = ({ navigation, route }) => {
 												value={formData.reEnterPassword}
 												type={resetPasswordVisible ? "text" : "password"}
 												placeholder='Re-enter Password'
+												onFocus={() => setResetPasswordError("")}
 											/>
 											<InputSlot pr='$3' onPress={handleShowResetPasswordState}>
 												<InputIcon as={resetPasswordVisible ? Eye : EyeOff} color='#E6E3DB' />
@@ -337,7 +356,13 @@ const RegisterPage = ({ navigation, route }) => {
 								<Box>
 									<VStack space='xs' justifycontent='center' alignItems='center'>
 										<HStack>
-											<Checkbox size='md' isInvalid={false} isDisabled={false}>
+											<Checkbox
+												aria-label='privacy-policy'
+												value={isChecked}
+												onChange={toggleCheckbox}
+												size='md'
+												isInvalid={false}
+												isDisabled={false}>
 												<CheckboxIndicator borderColor='#979797' mr='$2'>
 													<CheckboxIcon as={CheckIcon} />
 												</CheckboxIndicator>
@@ -365,7 +390,7 @@ const RegisterPage = ({ navigation, route }) => {
 							<Box w='$100%' p='$5'>
 								<VStack w='$100%' space='sm'>
 									<Box>
-										<Button onPress={handleJoining} variant='primary'>
+										<Button isDisabled={isChecked} onPress={handleJoining} variant='primary'>
 											<ButtonText>Let’s get you Docked</ButtonText>
 										</Button>
 									</Box>

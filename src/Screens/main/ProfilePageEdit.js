@@ -49,11 +49,20 @@ import { SelectScrollView } from "@gluestack-ui/themed";
 import { SelectDragIndicator } from "@gluestack-ui/themed";
 
 const designation = [
-	{ label: "Doctor", value: "Doctor" },
-	{ label: "Consultant", value: "Consultant" },
-	{ label: "Surgeon", value: "Surgeon" },
-	{ label: "Resident", value: "Resident" },
-	{ label: "Specialist", value: "Specialist" },
+	{ label: "Head of Department", value: "Head of Department" },
+	{ label: "Professor", value: "Professor" },
+	{ label: "Additional Professor", value: "Additional Professor" },
+	{ label: "Associate Professor", value: "Associate Professor" },
+	{ label: "Assistant Professor", value: "Assistant Professor" },
+	{ label: "Reader", value: "Reader" },
+	{ label: "Senior Lecturer", value: "Senior Lecturer" },
+	{ label: "Lecturer", value: "Lecturer" },
+	{ label: "Senior Consultant", value: "Senior Consultant" },
+	{ label: "Junior Consultant", value: "Junior Consultant" },
+	{ label: "Tutor", value: "Tutor" },
+	{ label: "Senior Resident", value: "Senior Resident" },
+	{ label: "Junior Resident", value: "Junior Resident" },
+	{ label: "Others", value: "Others" },
 ];
 
 const city = [
@@ -122,7 +131,48 @@ const specialtyList = {
 		SubSpeciality: [],
 	},
 	Orthopaedics: {
-		SuperSpeciality: [],
+		SuperSpeciality: [
+			{
+				label: "Podiatry",
+				value: "Podiatry",
+			},
+			{
+				label: "Hand Surgery",
+				value: "Hand Surgery",
+			},
+			{
+				label: "Paediatric Orthopaedics",
+				value: "Paediatric Orthopaedics",
+			},
+			{
+				label: "Spine Surgery",
+				value: "Spine Surgery",
+			},
+			{
+				label: "Orthopaedic Oncology",
+				value: "Orthopaedic Oncology",
+			},
+			{
+				label: "Trauma Surgery",
+				value: "Trauma Surgery",
+			},
+			{
+				label: "Shoulder & Elbow Surgery",
+				value: "Shoulder & Elbow Surgery",
+			},
+			{
+				label: "Hip & Knee Surgery",
+				value: "Hip & Knee Surgery",
+			},
+			{
+				label: "Joint Replacement",
+				value: "Joint Replacement",
+			},
+			{
+				label: "Sports",
+				value: "Sports",
+			},
+		],
 		SubSpeciality: [],
 	},
 };
@@ -133,6 +183,7 @@ const ProfilePageEdit = ({ navigation }) => {
 			superSpecialty: "",
 			subSpecialty: "",
 			designation: "",
+			designationOthers: "",
 			workPlace: "",
 			city: "",
 			medicalCouncilName: "",
@@ -143,7 +194,10 @@ const ProfilePageEdit = ({ navigation }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [open, setOpen] = useState(false);
-	const [date, setDate] = useState(appStoreInstance.YearOfRegistration ? new Date(appStoreInstance.YearOfRegistration) : new Date());
+	const [date, setDate] = useState(
+		appStoreInstance.YearOfRegistration ? format(new Date(appStoreInstance.YearOfRegistration), "dd / MM / yyyy") : "--/--/--"
+	);
+	const [dateForModal, setDateForModal] = useState(appStoreInstance.YearOfRegistration ? new Date(appStoreInstance.YearOfRegistration) : new Date());
 	const handelSetDate = (date) => {
 		setValue("yearOfRegistration", date);
 	};
@@ -165,11 +219,13 @@ const ProfilePageEdit = ({ navigation }) => {
 				appStoreInstance.setSuperSpecialty(userProfileData.superSpecialty);
 				appStoreInstance.setSubSpecialty(userProfileData.subSpecialty);
 				appStoreInstance.setDesignation(userProfileData.designation);
+				appStoreInstance.setDesignationOthers(userProfileData.designationOthers);
 				appStoreInstance.setWorkPlace(userProfileData.workPlace);
 				appStoreInstance.setCity(userProfileData.city);
 				appStoreInstance.setMedicalCouncilName(userProfileData.medicalCouncilName);
 				appStoreInstance.setYearOfRegistration(userProfileData.yearOfRegistration);
-				appStoreInstance.setmedicalRegistrationNumber(userProfileData.medicalRegistrationNumber);
+				appStoreInstance.setMedicalRegistrationNumber(userProfileData.medicalRegistrationNumber);
+				navigation.goBack();
 			}
 		} catch (error) {
 			console.log(error);
@@ -177,50 +233,42 @@ const ProfilePageEdit = ({ navigation }) => {
 	};
 
 	useEffect(() => {
-		if (!appStoreInstance.SuperSpecialty) {
-			console.log("appStoreInstance.UserName", appStoreInstance.UserName);
-			const fetchUserProfile = async () => {
-				try {
-					const query = store.fetchUserById(appStoreInstance.UserName);
-					setQuery(query);
-					const finishFetchingUserProfile = await query;
-					if (finishFetchingUserProfile) {
-						console.log("finishFetchingUserProfile", finishFetchingUserProfile);
-						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-						console.log("finishFetchingUserProfile  FOR PROFILE PAGE   CITY", fetchProfileData.city);
-						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
-						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
-						appStoreInstance.setDesignation(fetchProfileData.designation);
-						appStoreInstance.setWorkPlace(fetchProfileData.workPlace);
-						appStoreInstance.setCity(fetchProfileData.city);
-						appStoreInstance.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
-						appStoreInstance.setYearOfRegistration(fetchProfileData.yearOfRegistration);
-						appStoreInstance.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
-						setValue("superSpecialty", appStoreInstance.SuperSpecialty);
-						setValue("subSpecialty", appStoreInstance.SubSpecialty);
-						setValue("designation", appStoreInstance.Designation);
-						setValue("workPlace", appStoreInstance.Workplace);
-						setValue("city", appStoreInstance.City);
-						setValue("medicalCouncilName", appStoreInstance.MedicalCouncilName);
-						setValue("yearOfRegistration", appStoreInstance.YearOfRegistration);
-						setValue("medicalRegistrationNumber", appStoreInstance.MedicalRegistrationNumber);
-					}
-				} catch (error) {
-					console.log(error);
+		const fetchUserProfile = async () => {
+			try {
+				const query = store.fetchUserById(appStoreInstance.UserName);
+				setQuery(query);
+				const finishFetchingUserProfile = await query;
+				if (finishFetchingUserProfile) {
+					console.log("finishFetchingUserProfile", finishFetchingUserProfile);
+					const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+					console.log("finishFetchingUserProfile  FOR PROFILE PAGE   superSpecialty", fetchProfileData.superSpecialty);
+					appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
+					appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
+					appStoreInstance.setDesignation(fetchProfileData.designation);
+					appStoreInstance.setDesignationOthers(fetchProfileData.designationOthers);
+					appStoreInstance.setWorkPlace(fetchProfileData.workPlace);
+					appStoreInstance.setCity(fetchProfileData.city);
+					appStoreInstance.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
+					appStoreInstance.setYearOfRegistration(fetchProfileData.yearOfRegistration);
+					appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+					reset({
+						superSpecialty: fetchProfileData.superSpecialty,
+						subSpecialty: fetchProfileData.subSpecialty,
+						designation: fetchProfileData.designation,
+						designationOthers: fetchProfileData.designationOthers,
+						workPlace: fetchProfileData.workPlace,
+						city: fetchProfileData.city,
+						medicalCouncilName: fetchProfileData.medicalCouncilName,
+						yearOfRegistration: fetchProfileData.yearOfRegistration,
+						medicalRegistrationNumber: fetchProfileData.medicalRegistrationNumber,
+					});
 				}
-			};
-			if (isFocused) {
-				fetchUserProfile();
+			} catch (error) {
+				console.log(error);
 			}
-		} else {
-			setValue("superSpecialty", appStoreInstance.SuperSpecialty);
-			setValue("subSpecialty", appStoreInstance.SubSpecialty);
-			setValue("designation", appStoreInstance.Designation);
-			setValue("workPlace", appStoreInstance.Workplace);
-			setValue("city", appStoreInstance.City);
-			setValue("medicalCouncilName", appStoreInstance.MedicalCouncilName);
-			setValue("yearOfRegistration", appStoreInstance.YearOfRegistration);
-			setValue("medicalRegistrationNumber", appStoreInstance.MedicalRegistrationNumber);
+		};
+		if (isFocused) {
+			fetchUserProfile();
 		}
 	}, [isFocused]);
 
@@ -258,7 +306,7 @@ const ProfilePageEdit = ({ navigation }) => {
 														let options = specialtyList[appStoreInstance.UserBroadSpecialty].SuperSpeciality;
 														return (
 															<Select
-																isDisabled={currentSpecialty === "Anaesthesiology" ? false : true}
+																isDisabled={currentSpecialty === "Orthodontics" ? true : false}
 																onBlur={onBlur}
 																onValueChange={onChange}
 																selectedValue={value}>
@@ -269,7 +317,7 @@ const ProfilePageEdit = ({ navigation }) => {
 																<SelectPortal>
 																	<SelectBackdrop />
 																	<SelectContent p='$0'>
-																		<Text fontFamily='Inter_SemiBold' padding={10} size='md'>
+																		<Text fontFamily='Inter_SemiBold' padding={10} size='lg'>
 																			Super Specialty
 																		</Text>
 																		<Divider borderWidth={0.1} />
@@ -323,12 +371,19 @@ const ProfilePageEdit = ({ navigation }) => {
 																<SelectPortal>
 																	<SelectBackdrop />
 																	<SelectContent>
-																		<Text padding={10} size='xl'>
+																		<Text fontFamily='Inter_SemiBold' padding={10} size='lg'>
 																			Sub Specialty
 																		</Text>
 																		<Divider borderWidth={0.1} />
 																		{options.map((option, index) => {
-																			return <SelectItem key={option.value} label={option.label} value={option.value} />;
+																			return (
+																				<SelectItem
+																					bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																					key={option.value}
+																					label={option.label}
+																					value={option.value}
+																				/>
+																			);
 																		})}
 																	</SelectContent>
 																</SelectPortal>
@@ -373,14 +428,26 @@ const ProfilePageEdit = ({ navigation }) => {
 															</SelectTrigger>
 															<SelectPortal>
 																<SelectBackdrop />
-																<SelectContent>
-																	<Text padding={10} size='xl'>
+																<SelectContent p='$0'>
+																	<Text fontFamily='Inter_SemiBold' padding={10} size='lg'>
 																		Designation
 																	</Text>
 																	<Divider borderWidth={0.1} />
-																	{designation.map((option, index) => {
-																		return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																	})}
+																	<SelectScrollView>
+																		{designation.map((option, index) => {
+																			return (
+																				<SelectItem
+																					bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																					key={option.value}
+																					label={option.label}
+																					value={option.value}
+																				/>
+																			);
+																		})}
+																	</SelectScrollView>
+																	<SelectDragIndicatorWrapper>
+																		<SelectDragIndicator />
+																	</SelectDragIndicatorWrapper>
 																</SelectContent>
 															</SelectPortal>
 														</Select>
@@ -392,6 +459,28 @@ const ProfilePageEdit = ({ navigation }) => {
 											<Box>{formState.errors.designation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
 										</Box>
 									</VStack>
+									{watch("designation") === "Others" && (
+										<Box width={"$95%"}>
+											<Text size='xs'>Please specify your other Designation</Text>
+											<Box>
+												<Controller
+													control={control}
+													key={"designationOthers"}
+													name={"designationOthers"}
+													rules={{
+														required: false,
+													}}
+													render={({ field: { onChange, onBlur, value } }) => {
+														return (
+															<Input size='sm' variant='outline'>
+																<InputField onChangeText={onChange} value={value} placeholder={"Other designation"} />
+															</Input>
+														);
+													}}
+												/>
+											</Box>
+										</Box>
+									)}
 									<HStack w='$100%'>
 										<VStack w='$50%'>
 											<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
@@ -433,24 +522,9 @@ const ProfilePageEdit = ({ navigation }) => {
 													render={({ field: { onChange, onBlur, value } }) => {
 														let options = city;
 														return (
-															<Select onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-																<SelectTrigger variant='outline' size='sm'>
-																	<SelectInput placeholder='City' />
-																	<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-																</SelectTrigger>
-																<SelectPortal>
-																	<SelectBackdrop />
-																	<SelectContent>
-																		<Text padding={10} size='xl'>
-																			City
-																		</Text>
-																		<Divider borderWidth={0.1} />
-																		{options.map((option, index) => {
-																			return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																		})}
-																	</SelectContent>
-																</SelectPortal>
-															</Select>
+															<Input variant='outline' size='sm'>
+																<InputField onChangeText={onChange} value={value} placeholder='City' />
+															</Input>
 														);
 													}}
 												/>
@@ -490,24 +564,9 @@ const ProfilePageEdit = ({ navigation }) => {
 												render={({ field: { onChange, onBlur, value } }) => {
 													let options = medicalCouncilName;
 													return (
-														<Select onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-															<SelectTrigger variant='outline' size='sm'>
-																<SelectInput placeholder='Medical Council Name' />
-																<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-															</SelectTrigger>
-															<SelectPortal>
-																<SelectBackdrop />
-																<SelectContent>
-																	<Text padding={10} size='xl'>
-																		Medical Council Name
-																	</Text>
-																	<Divider borderWidth={0.1} />
-																	{options.map((option, index) => {
-																		return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																	})}
-																</SelectContent>
-															</SelectPortal>
-														</Select>
+														<Input variant='outline' size='sm'>
+															<InputField onChangeText={onChange} value={value} placeholder='Medical Council Name' />
+														</Input>
 													);
 												}}
 											/>
@@ -521,7 +580,7 @@ const ProfilePageEdit = ({ navigation }) => {
 											Year of Registration
 										</Text>
 										<Button w='$95%' onPress={() => setOpen(true)} justifyContent='space-between' variant='date'>
-											<ButtonText>Year - {format(new Date(date), "d/MM/yyyy")}</ButtonText>
+											<ButtonText>Year - {date}</ButtonText>
 											<ButtonIcon as={Ionicons} size={20} name='calendar' color='#367B71' />
 										</Button>
 									</VStack>
@@ -540,24 +599,9 @@ const ProfilePageEdit = ({ navigation }) => {
 												render={({ field: { onChange, onBlur, value } }) => {
 													let options = medicalRegistrationNumber;
 													return (
-														<Select onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-															<SelectTrigger variant='outline' size='sm'>
-																<SelectInput placeholder='Medical Registration Number' />
-																<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-															</SelectTrigger>
-															<SelectPortal>
-																<SelectBackdrop />
-																<SelectContent>
-																	<Text padding={10} size='xl'>
-																		Medical Registration Number
-																	</Text>
-																	<Divider borderWidth={0.1} />
-																	{options.map((option, index) => {
-																		return <SelectItem key={option.value} label={option.label} value={option.value} />;
-																	})}
-																</SelectContent>
-															</SelectPortal>
-														</Select>
+														<Input variant='outline' size='sm'>
+															<InputField onChangeText={onChange} value={value} placeholder='Medical Registration Number' />
+														</Input>
 													);
 												}}
 											/>
@@ -582,11 +626,11 @@ const ProfilePageEdit = ({ navigation }) => {
 						modal
 						open={open}
 						theme='light'
-						date={date}
-						onConfirm={(date) => {
-							setDate(date);
+						date={dateForModal}
+						onConfirm={(dateForModal) => {
+							setDate(format(new Date(dateForModal), "dd / MM / yyyy"));
 							setOpen(false);
-							handelSetDate(date);
+							handelSetDate(dateForModal);
 						}}
 						onCancel={() => {
 							setOpen(false);

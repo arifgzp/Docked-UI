@@ -80,44 +80,59 @@ const LoginPage = ({ navigation }) => {
 
 			if (response) {
 				console.log("login response", response);
-				if (response.userStatus === "REGISTERED") {
-					navigation.navigate("Main Landing Page", { UserSpecialty: response.broadSpecialty });
-					AppStore.setBroadSpecialty(response.broadSpecialty);
-					AppStore.setUserId(response.id);
+				AppStore.setUserName(formData.email);
+				AppStore.setUserPassword(formData.password);
+				switch (response.userStatus) {
+					case "REGISTERED":
+						navigation.navigate("Main Landing Page", { UserSpecialty: response.broadSpecialty });
+						AppStore.setBroadSpecialty(response.broadSpecialty);
+						AppStore.setUserId(response.id);
 
-					const userQuery = store.fetchUserById(appStoreInstance.UserName);
-					setQuery(userQuery);
-					const finishFetchingUserProfile = await userQuery;
-					if (finishFetchingUserProfile) {
-						console.log("finishFetchingUserProfile", finishFetchingUserProfile);
-						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-						console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
-						AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
-						AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
-						AppStore.setDesignation(fetchProfileData.designation);
-						AppStore.setWorkPlace(fetchProfileData.workPlace);
-						AppStore.setCity(fetchProfileData.city);
-						AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
-						AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
-						AppStore.setmedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
-					}
+						const userQuery = store.fetchUserById(appStoreInstance.UserName);
+						setQuery(userQuery);
+						const finishFetchingUserProfile = await userQuery;
+						if (finishFetchingUserProfile) {
+							console.log("finishFetchingUserProfile", finishFetchingUserProfile);
+							const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+							console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
+							AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
+							AppStore.setSubSpecialty(fetchProfileData.subSpecialty);
+							AppStore.setDesignation(fetchProfileData.designation);
+							AppStore.setDesignationOthers(fetchProfileData.designationOthers);
+							AppStore.setWorkPlace(fetchProfileData.workPlace);
+							AppStore.setCity(fetchProfileData.city);
+							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
+							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
+							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+						}
 
-					const query = store.fetchUserLogProfile(response.userName);
-					setQuery(query);
+						const logQuery = store.fetchUserLogProfile(response.userName);
+						setQuery(logQuery);
 
-					const finishFetchingLogProfile = await query;
-					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+						const finishFetchingLogProfile = await logQuery;
+						console.log("finishFetchingLogProfile", finishFetchingLogProfile);
 
-					if (finishFetchingLogProfile) {
-						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0].logProfile);
-						const userLogProfileData = finishFetchingLogProfile.queryUser[0].logProfile;
-						console.log("userLogProfileData", userLogProfileData);
-						AppStore.setLogProfile(userLogProfileData);
-					}
-				} else if (response.userStatus === "WIZARD_PENDING") {
-					navigation.navigate("Profile Setup Page");
-				} else if (response.userStatus === "VERIFICATION_REQUIRED") {
-					navigation.navigate("Enter Email OTP Page");
+						if (finishFetchingLogProfile) {
+							console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0].logProfile);
+							const userLogProfileData = finishFetchingLogProfile.queryUser[0].logProfile;
+							console.log("userLogProfileData", userLogProfileData);
+							AppStore.setLogProfile(userLogProfileData);
+						}
+						console.log("Unknown:", response.userStatus);
+						break;
+
+					case "WIZARD_PENDING":
+						console.log("Unknown:", response.userStatus);
+						navigation.navigate("Profile Setup Page");
+						break;
+
+					case "VERIFICATION_REQUIRED":
+						console.log("Unknown:", response.userStatus);
+						navigation.navigate("Enter Email OTP Page");
+						break;
+
+					default:
+						console.log("Unknown user status:", response.userStatus);
 				}
 			} else {
 				// If credentials don't match, display error message
@@ -158,7 +173,13 @@ const LoginPage = ({ navigation }) => {
 													Email Address
 												</Text>
 												<Input bg='#FFFFFC' variant='outline'>
-													<InputField type='text' onChangeText={handleChangeEmail} value={formData.email} placeholder='Email Address' />
+													<InputField
+														type='text'
+														onChangeText={handleChangeEmail}
+														value={formData.email}
+														placeholder='Email Address'
+														onFocus={() => setEmailError("")}
+													/>
 												</Input>
 												{loginPressed && emailError && (
 													<FormControlError>
@@ -179,6 +200,7 @@ const LoginPage = ({ navigation }) => {
 														value={formData.password}
 														type={passwordVisible ? "text" : "password"}
 														placeholder='Password'
+														onFocus={() => setPasswordError("")}
 													/>
 													<InputSlot pr='$3' onPress={handleShowPasswordState}>
 														<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />

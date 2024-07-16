@@ -41,6 +41,8 @@ export const OrthopaedicsProcedureLogAggregateResultModelBase = ModelBase
     procedureNameMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
     outcomeMax: types.union(types.undefined, types.null, types.string),
+    outcomeOtherMin: types.union(types.undefined, types.null, types.string),
+    outcomeOtherMax: types.union(types.undefined, types.null, types.string),
     complicationMin: types.union(types.undefined, types.null, types.string),
     complicationMax: types.union(types.undefined, types.null, types.string),
     diagnosisMin: types.union(types.undefined, types.null, types.string),
@@ -82,6 +84,8 @@ export class OrthopaedicsProcedureLogAggregateResultModelSelector extends QueryB
   get procedureNameMax() { return this.__attr(`procedureNameMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
   get outcomeMax() { return this.__attr(`outcomeMax`) }
+  get outcomeOtherMin() { return this.__attr(`outcomeOtherMin`) }
+  get outcomeOtherMax() { return this.__attr(`outcomeOtherMax`) }
   get complicationMin() { return this.__attr(`complicationMin`) }
   get complicationMax() { return this.__attr(`complicationMax`) }
   get diagnosisMin() { return this.__attr(`diagnosisMin`) }
@@ -95,4 +99,4 @@ export function selectFromOrthopaedicsProcedureLogAggregateResult() {
   return new OrthopaedicsProcedureLogAggregateResultModelSelector()
 }
 
-export const orthopaedicsProcedureLogAggregateResultModelPrimitives = selectFromOrthopaedicsProcedureLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.rotationMin.rotationMax.conductMin.conductMax.sitesMin.sitesMax.procedureNameMin.procedureNameMax.outcomeMin.outcomeMax.complicationMin.complicationMax.diagnosisMin.diagnosisMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax
+export const orthopaedicsProcedureLogAggregateResultModelPrimitives = selectFromOrthopaedicsProcedureLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.rotationMin.rotationMax.conductMin.conductMax.sitesMin.sitesMax.procedureNameMin.procedureNameMax.outcomeMin.outcomeMax.outcomeOtherMin.outcomeOtherMax.complicationMin.complicationMax.diagnosisMin.diagnosisMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

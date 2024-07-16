@@ -2,7 +2,7 @@ import { Box, HStack, VStack, Button, ButtonText, KeyboardAvoidingView, Divider 
 import { Platform } from "react-native";
 import { ScrollView } from "@gluestack-ui/themed";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import CaselogDropDownOptions from "./CaselogDropDownOptions";
 import SpecialCaseLogSelectOptions from "./SpecialCaseLogSelectOptions";
 import { useQuery } from "../../../../models";
@@ -11,7 +11,7 @@ import { useRoute } from "@react-navigation/native";
 import Loader from "../../../../components/Loader";
 import { Text } from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 
 import useIsReady from "../../../../hooks/useIsReady";
 import { toJS } from "mobx";
@@ -97,6 +97,8 @@ const CaseLogEditScreen = ({ navigation }) => {
 	const { store, setQuery } = queryInfo;
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const [caseLogData, setCaseLogData] = useState({});
+	const [buttonPressed, setButtonPressed] = useState(false);
+	const buttonPressedRef = useRef();
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
 			hospital: "",
@@ -130,7 +132,8 @@ const CaseLogEditScreen = ({ navigation }) => {
 	}
 
 	const handleOnUpdateClick = async (formData) => {
-		console.log("this is the update query");
+		setButtonPressed(true);
+		console.log("this is the update query", formData);
 		delete formData.id;
 		delete formData.__typename;
 		formData.updatedOn = formatRFC3339(new Date());
@@ -170,15 +173,63 @@ const CaseLogEditScreen = ({ navigation }) => {
 			const query = store[queryToRun](routes.params.id, { set: formData, remove: dataToBeDeleted });
 			setQuery(query);
 			const data = await query;
-			if (data) {
-				setTimeout(() => {
-					navigation.goBack();
-				}, 1000);
-			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
+	const handleOnAutoUpdateClick = async (formData) => {
+		console.log("this is the update query", formData);
+		delete formData.id;
+		delete formData.__typename;
+		formData.updatedOn = formatRFC3339(new Date());
+		formData.faculty = caseLogData.faculty;
+
+		let queryToRun;
+
+		switch (routes.params.caseType) {
+			case "CaseLog":
+				queryToRun = "updateAnaesthesiaCaseLog";
+				break;
+			case "ChronicPain":
+				queryToRun = "updateAnaesthesiaChronicPainLog";
+				break;
+			case "CriticalCareCaseLog":
+				queryToRun = "updateAnaesthesiaCriticalCareCaseLog";
+				break;
+			case "OrthopaedicsCaseLog":
+				queryToRun = "updateOrthopaedicsCaseLog";
+				break;
+			case "OrthopaedicsProcedureLog":
+				queryToRun = "updateOrthopaedicsProcedureLog";
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				queryToRun = "updateOrthodonticsClinicalCaseLog";
+				break;
+			case "OrthodonticsPreClinical":
+				queryToRun = "updateOrthodonticsPreClinical";
+				break;
+			default:
+				throw new Error("Invalid case log type");
+		}
+		console.log("form Data For Update", formData);
+		const dataToBeDeleted = findMissingValues(caseLogData, formData);
+		console.log("dataToBeDeleted", dataToBeDeleted);
+		try {
+			const query = store[queryToRun](routes.params.id, { set: formData, remove: dataToBeDeleted });
+			setQuery(query);
+			const data = await query;
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		if (buttonPressed === true) {
+			navigation.goBack();
+			buttonPressedRef.current = buttonPressed;
+		}
+	}, [buttonPressed]);
 
 	useEffect(() => {
 		const fetchData = () => {
@@ -271,6 +322,22 @@ const CaseLogEditScreen = ({ navigation }) => {
 		}
 	}, [isFocused]);
 
+	useFocusEffect(
+		useCallback(() => {
+			// Code to run when the screen is focused
+			console.log("Screen is focused");
+
+			return () => {
+				if (!buttonPressedRef.current) {
+					console.log("buttonPressed", buttonPressed);
+					handleSubmit((data) => handleOnAutoUpdateClick(data))();
+				} else {
+					console.log("Screen is unfocused");
+				}
+			};
+		}, [])
+	);
+
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
@@ -292,6 +359,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 										setValue={setValue}
 										formState={formState}
 										readOnlyFaculty={true}
+										watch={watch}
 									/>
 								</Box>
 								<Divider />

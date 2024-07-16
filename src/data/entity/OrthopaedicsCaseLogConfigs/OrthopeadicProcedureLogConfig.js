@@ -14,7 +14,7 @@ const Options = {
 	Outcome: [
 		{ label: "Uneventful", value: "Uneventful" },
 		{ label: "Admitted to ICU", value: "Admitted to ICU" },
-		{ label: "Other", value: "Other" },
+		{ label: "Others", value: "Others" },
 	],
 };
 
@@ -25,8 +25,8 @@ const OrthopaedicsProcedureLogConfigTextAndSingleSelectOptions = [
 	{ name: "Site", uid: "sites", type: "text", isRequire: true },
 	{ name: "Procedure Name", uid: "procedureName", type: "text", isRequire: true },
 	{ name: "Complication", uid: "complication", type: "text", isRequire: true },
-	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true },
 	{ name: "Conduct", uid: "conduct", type: "select-single", options: Options.Conduct, isRequire: true },
+	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true, outcome: true },
 ];
 
 const specialOrthopaedicsProcedureLogOption = [{ id: "procedure", name: "Procedure" }];

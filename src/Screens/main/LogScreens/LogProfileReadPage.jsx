@@ -217,6 +217,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 						from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
 						to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
 					});
+					console.log("facultiesList", facultiesList);
 					setFacultyList(facultiesList);
 					setRotationList(rotationsList);
 				}
@@ -262,6 +263,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 									</Box>
 								) : (
 									facultyList.map((faculty, index) => {
+										console.log("faculty to be console", faculty);
 										return (
 											<HStack key={index} justifyContent='space-between' width={"$100%"}>
 												<VStack space='sm'>
@@ -270,7 +272,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 															{faculty.name}
 														</Text>
 														<Text size='xs' color='#4D5356'>
-															{faculty.designation}
+															{faculty.designation === "Others" ? faculty.otherDesignation : faculty.designation}
 														</Text>
 													</VStack>
 													<HStack py='$1'>
@@ -289,7 +291,9 @@ const LogProfileReadPage = ({ navigation, route }) => {
 									})
 								)}
 								<Divider />
-								{currentSpecialty === "Anaesthesiology" ? (
+								{currentSpecialty === "Orthodontics" ? (
+									<Box></Box>
+								) : (
 									<Box w='$100%'>
 										<Box w='$100%'>
 											<Text color='#0F0F10' size='sm' alignSelf='flex-start' fontFamily='Inter_Bold' pb='$2'>
@@ -327,12 +331,10 @@ const LogProfileReadPage = ({ navigation, route }) => {
 											})
 										)}
 									</Box>
-								) : (
-									<Box></Box>
 								)}
 							</VStack>
 						</Box>
-						{currentSpecialty === "Anaesthesiology" ? <Divider /> : <Box></Box>}
+						{currentSpecialty === "Orthodontics" ? <Box></Box> : <Divider />}
 					</ScrollView>
 				</Box>
 			</Loader>

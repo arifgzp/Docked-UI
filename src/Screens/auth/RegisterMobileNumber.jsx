@@ -82,76 +82,63 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 								</Text>
 							</VStack>
 						</Box>
-						<FormControl
-							width='$100%'
-							size='md'
-							isDisabled={false}
-							isInvalid={sendOTPPressed && errorMessage}
-							isReadOnly={false}
-							isRequired={false}
-							gap={"$4"}>
-							<Box width='$100%' alignItems='center'>
-								{/* <PhoneInput
-									ref={phoneInput}
-									defaultValue={numberInput}
-									defaultCode='IN'
-									layout='second'
-									onChangeText={handleChangeNumberInput}
-									value={numberInput}
-									withDarkTheme
-									withShadow
-									autoFocus
-									style={styles.phoneInput}
-									textContainerStyle={styles.textContainer}
-									textInputStyle={styles.textInput}
-									flagButtonStyle={styles.flag}
-									codeTextStyle={styles.codeText}
-								/> */}
-								<Text pb='$1' size='sm' alignSelf='flex-start'>
-									Phone Number
-								</Text>
-								<HStack justifyContent='space-between' w='$full'>
-									<Select w='$25%' isReadOnly selectedValue='+91'>
-										<SelectTrigger variant='outline'>
-											<SelectInput placeholder={`+91`} />
-											<SelectIcon mr='$3'>
-												<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-											</SelectIcon>
-										</SelectTrigger>
-										<SelectPortal>
-											<SelectBackdrop />
-											<SelectContent p='$0'>
-												<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-													Phone Number
-												</Text>
-												<Divider borderWidth={0.1} />
-												<SelectScrollView>
-													<SelectItem key='+91' label='+91' value='+91' />;
-												</SelectScrollView>
-											</SelectContent>
-											<SelectDragIndicatorWrapper>
-												<SelectDragIndicator />
-											</SelectDragIndicatorWrapper>
-										</SelectPortal>
-									</Select>
-									<Input w='$70%' variant='outline'>
-										<InputField
-											inputMode='numeric'
-											onChangeText={handleChangeNumberInput}
-											value={numberInput} // Add this line to control the input value
-											fontFamily='Inter'
-											placeholder='Phone Number'
-										/>
-									</Input>
-								</HStack>
-								{sendOTPPressed && errorMessage && (
-									<FormControlError alignSelf='flex-start'>
-										<FormControlErrorIcon size='xs' as={AlertCircleIcon} />
-										<FormControlErrorText size='xs'>{errorMessage}</FormControlErrorText>
-									</FormControlError>
-								)}
-							</Box>
-						</FormControl>
+						<VStack w='$full'>
+							<Text pb='$1' size='sm' alignSelf='flex-start'>
+								Phone Number
+							</Text>
+							<HStack justifyContent='space-between' w='$full'>
+								<Select w='$25%' isReadOnly selectedValue='+91'>
+									<SelectTrigger variant='outline'>
+										<SelectInput placeholder={`+91`} />
+										<SelectIcon mr='$3'>
+											<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+										</SelectIcon>
+									</SelectTrigger>
+									<SelectPortal>
+										<SelectBackdrop />
+										<SelectContent p='$0'>
+											<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
+												Phone Number
+											</Text>
+											<Divider borderWidth={0.1} />
+											<SelectScrollView>
+												<SelectItem key='+91' label='+91' value='+91' />;
+											</SelectScrollView>
+										</SelectContent>
+										<SelectDragIndicatorWrapper>
+											<SelectDragIndicator />
+										</SelectDragIndicatorWrapper>
+									</SelectPortal>
+								</Select>
+								<FormControl
+									w='$70%'
+									size='md'
+									isDisabled={false}
+									isInvalid={sendOTPPressed && errorMessage}
+									isReadOnly={false}
+									isRequired={false}
+									gap={"$4"}>
+									<Box alignItems='center'>
+										<Input variant='outline'>
+											<InputField
+												inputMode='numeric'
+												onChangeText={handleChangeNumberInput}
+												value={numberInput} // Add this line to control the input value
+												fontFamily='Inter'
+												placeholder='Phone Number'
+												onFocus={() => setErrorMessage("")}
+											/>
+										</Input>
+										{sendOTPPressed && errorMessage && (
+											<FormControlError alignSelf='flex-start'>
+												<FormControlErrorIcon size='xs' as={AlertCircleIcon} />
+												<FormControlErrorText size='xs'>{errorMessage}</FormControlErrorText>
+											</FormControlError>
+										)}
+									</Box>
+								</FormControl>
+							</HStack>
+						</VStack>
 					</VStack>
 				</Box>
 				<Box justifyContent='center' p='$5'>

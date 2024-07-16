@@ -9,7 +9,13 @@ import createProfileConfig from "../../data/entity/CreateProfileconfig";
 import { Box } from "@gluestack-ui/themed";
 
 const DockedProfile = ({ route }) => {
-	const { enteredMail, enteredPassword } = route.params;
+	let params = null;
+	if (route?.params) {
+		params = route.params;
+	}
+	const mail = appStoreInstance.UserName;
+	const password = appStoreInstance.UserPassword;
+
 	const navigation = useNavigation();
 
 	return (
@@ -19,7 +25,12 @@ const DockedProfile = ({ route }) => {
 				style={{ flex: 1, zIndex: 999 }}
 				keyboardShouldPersistTaps='handled'>
 				<Box h='$full'>
-					<SetupProfile enteredMail={enteredMail} enteredPassword={enteredPassword} config={createProfileConfig} navigation={navigation} />
+					<SetupProfile
+						enteredMail={params === null ? mail : params.enteredMail}
+						enteredPassword={params === null ? password : params.enteredPassword}
+						config={createProfileConfig}
+						navigation={navigation}
+					/>
 				</Box>
 			</KeyboardAvoidingView>
 		</Loader>

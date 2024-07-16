@@ -45,6 +45,12 @@ const treatmentPlan = [
 				name: "Face Mask",
 				nodeType: "leaf",
 			},
+			{
+				id: "Others",
+				name: "Others",
+				nodeType: "leaf",
+				inputType: "text",
+			},
 		],
 	},
 ];
@@ -215,6 +221,12 @@ const applianceUsed = [
 						nodeType: "leaf",
 					},
 				],
+			},
+			{
+				id: "Others",
+				name: "Others",
+				nodeType: "leaf",
+				inputType: "text",
 			},
 		],
 	},
