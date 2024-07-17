@@ -121,7 +121,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const buttonPressedRef = useRef();
 	const handleSaveClick = async (formData) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
-		console.log("FormData for Case Logs to be added", formData);
+		console.log("FormData for Case Logs to be manual saving added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
@@ -180,7 +180,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	};
 
 	const handleAutoSave = async (formData) => {
-		console.log("FormData for Case Logs to be added", formData);
+		console.log("FormData for Case Logs to be from auto saving added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
@@ -240,6 +240,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
+		buttonPressedRef.current = { active: false, screenName: "" };
 		reset({
 			faculty: null,
 			date: new Date(),
@@ -318,7 +319,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			console.log("Screen is focused");
 
 			return () => {
-				buttonPressedRef.current = buttonPressed;
 				console.log("RAAAAANNNN SECONDDDDDDDD", buttonPressedRef.current);
 				if (buttonPressedRef.current.active === false) {
 					console.log("buttonPressed", buttonPressedRef.active);
@@ -331,6 +331,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				} else {
 					console.log("caseLogFormToGet when out form changes", caseLogFormToGet);
 				}
+				buttonPressedRef.current = { active: false, screenName: "" };
 				// Code to run when the screen is unfocused
 			};
 		}, [caseLogFormToGet])

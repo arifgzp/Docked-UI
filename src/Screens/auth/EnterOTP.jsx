@@ -91,56 +91,57 @@ const EnterOTPPage = ({ route }) => {
 		}
 	};
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			style={{ flex: 1, zIndex: 999 }}
-			keyboardShouldPersistTaps='handled'>
-			<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
-				<Box height='$90%' p='$5' width='$full'>
-					<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>
-						<Box width='$full' alignSelf='flex-start'>
-							<VStack space='md'>
-								<Text fontFamily='Inter_Bold' size='2xl'>
-									Verify Your Email Address
-								</Text>
-								<Text size='sm'>
-									OTP sent successfully to <Text bold>{mail ? mail : params.enteredMail}</Text>
-								</Text>
-							</VStack>
-						</Box>
-						<Box alignSelf='flex-start' width='$80%'>
-							<FormControl
-								width='$full'
-								size='md'
-								isDisabled={false}
-								isInvalid={verifyPressed && OTPError}
-								isReadOnly={false}
-								isRequired={false}
-								gap='$4'>
-								<OtpInput
-									bg='$yellow'
-									width={"$60%"}
-									numberOfDigits={4}
-									focusColor={OTPError ? "#CC3F0C" : "#BFBDB9"}
-									focusStickBlinkingDuration={500}
-									onTextChange={(text) => setOTPInput(text)}
-									textInputProps={{
-										accessibilityLabel: "One-Time Password",
-									}}
-									theme={{
-										pinCodeContainerStyle: [styles.pinCodeContainer, OTPError && styles.pinCodeContainerError],
-										pinCodeTextStyle: styles.pinCodeText,
-									}}
-								/>
-								{verifyPressed && OTPError && (
-									<FormControlError>
-										<FormControlErrorIcon as={AlertCircleIcon} />
-										<FormControlErrorText>{OTPError}</FormControlErrorText>
-									</FormControlError>
-								)}
-							</FormControl>
-						</Box>
-						{/* <HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
+		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				style={{ flex: 1, zIndex: 999 }}
+				keyboardShouldPersistTaps='handled'>
+				<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
+					<Box height='$90%' p='$5' width='$full'>
+						<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>
+							<Box width='$full' alignSelf='flex-start'>
+								<VStack space='md'>
+									<Text fontFamily='Inter_Bold' size='2xl'>
+										Verify Your Email Address
+									</Text>
+									<Text size='sm'>
+										OTP sent successfully to <Text bold>{mail ? mail : params.enteredMail}</Text>
+									</Text>
+								</VStack>
+							</Box>
+							<Box alignSelf='flex-start' width='$80%'>
+								<FormControl
+									width='$full'
+									size='md'
+									isDisabled={false}
+									isInvalid={verifyPressed && OTPError}
+									isReadOnly={false}
+									isRequired={false}
+									gap='$4'>
+									<OtpInput
+										bg='$yellow'
+										width={"$60%"}
+										numberOfDigits={4}
+										focusColor={OTPError ? "#CC3F0C" : "#BFBDB9"}
+										focusStickBlinkingDuration={500}
+										onTextChange={(text) => setOTPInput(text)}
+										textInputProps={{
+											accessibilityLabel: "One-Time Password",
+										}}
+										theme={{
+											pinCodeContainerStyle: [styles.pinCodeContainer, OTPError && styles.pinCodeContainerError],
+											pinCodeTextStyle: styles.pinCodeText,
+										}}
+									/>
+									{verifyPressed && OTPError && (
+										<FormControlError>
+											<FormControlErrorIcon as={AlertCircleIcon} />
+											<FormControlErrorText>{OTPError}</FormControlErrorText>
+										</FormControlError>
+									)}
+								</FormControl>
+							</Box>
+							{/* <HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
 							<Text size='sm'>Didn’t Receive OTP?</Text>
 							<Box>
 								<Button variant='link' size='sm'>
@@ -148,22 +149,23 @@ const EnterOTPPage = ({ route }) => {
 								</Button>
 							</Box>
 						</HStack> */}
-					</VStack>
-				</Box>
-				<Box justifyContent='center' height='$10%' p='$5'>
-					<HStack width='$full' justifyContent='space-between'>
-						<Button onPress={() => navigation.goBack()} height={50} justifyContent='flex-start' alignItems='flex-start' variant='link'>
-							<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
-						</Button>
-						<Box justifyContent='center' alignItems='center'>
-							<Button onPress={handleVerify} variant='primary' size='lg'>
-								<ButtonText textAlign='center'>Verify</ButtonText>
+						</VStack>
+					</Box>
+					<Box justifyContent='center' height='$10%' p='$5'>
+						<HStack width='$full' justifyContent='space-between'>
+							<Button onPress={() => navigation.goBack()} height={50} justifyContent='flex-start' alignItems='flex-start' variant='link'>
+								<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
 							</Button>
-						</Box>
-					</HStack>
+							<Box justifyContent='center' alignItems='center'>
+								<Button onPress={handleVerify} variant='primary' size='lg'>
+									<ButtonText textAlign='center'>Verify</ButtonText>
+								</Button>
+							</Box>
+						</HStack>
+					</Box>
 				</Box>
-			</Box>
-		</KeyboardAvoidingView>
+			</KeyboardAvoidingView>
+		</Loader>
 	);
 };
 
