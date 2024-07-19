@@ -122,9 +122,45 @@ const CaselogDropDownOptions = ({
 				<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
 					Hospital
 				</Text>
-				<Input variant='outline' size='sm' isDisabled={true}>
-					<InputField value={hospital} />
-				</Input>
+				<Box>
+					<Controller
+						control={control}
+						key='hospital'
+						name='hospital'
+						render={({ field: { onChange, onBlur, value } }) => {
+							return (
+								<Select
+									onBlur={onBlur}
+									isDisabled={readOnlyFaculty}
+									isReadOnly={readOnlyFaculty}
+									onValueChange={onChange}
+									selectedValue={caseLogData?.hospital || value}>
+									<SelectTrigger variant='outline' size='sm'>
+										<SelectInput placeholder={`Hospital`} />
+										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+									</SelectTrigger>
+									<SelectPortal>
+										<SelectBackdrop />
+										<SelectContent p='$0'>
+											<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
+												Hospitals
+											</Text>
+											<Divider borderWidth={0.1} />
+											<SelectScrollView>
+												{prefilledData?.hospital.map((item, index) => {
+													return <SelectItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={item?.id} label={item?.name} value={item?.name} />;
+												})}
+											</SelectScrollView>
+											<SelectDragIndicatorWrapper>
+												<SelectDragIndicator />
+											</SelectDragIndicatorWrapper>
+										</SelectContent>
+									</SelectPortal>
+								</Select>
+							);
+						}}
+					/>
+				</Box>
 			</VStack>
 			<VStack width={"$100%"} pl='$5' pr='$5' gap='$2'>
 				<Text color='rgba(81, 81, 81, 0.7)' size='xs'>
@@ -145,7 +181,6 @@ const CaselogDropDownOptions = ({
 						key='faculty'
 						name='faculty'
 						render={({ field: { onChange, onBlur, value } }) => {
-							console.log("Faculty >> Select value >> ", value);
 							return (
 								<Select
 									onBlur={onBlur}
@@ -166,7 +201,6 @@ const CaselogDropDownOptions = ({
 											<Divider borderWidth={0.1} />
 											<SelectScrollView>
 												{prefilledData?.faculty.map((item, index) => {
-													console.log("Faculty >> SelectItem >> ", item);
 													return <SelectItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={item?.id} label={item?.name} value={item?.name} />;
 												})}
 											</SelectScrollView>

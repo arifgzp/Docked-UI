@@ -58,6 +58,7 @@ import {
 	OrthodonticsPreClinicalTextAndSingleSelectOptions,
 	specialOrthodonticsPreClinical,
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
+import appStoreInstance from "../../../../stores/AppStore";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -109,6 +110,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
+			hospital: null,
 			faculty: null,
 			date: new Date(),
 			remarks: "",
@@ -172,7 +174,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			//navigation.navigate("RootLogBook");
 
 			// ours
-			// navigation.navigate("Log Book", { screen: "RootLogBook" });
+			// navigation.navigate("Logbook", { screen: "RootLogBook" });
 			reset();
 		} catch (error) {
 			console.log(error);
@@ -255,14 +257,13 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				if (logProfileData) {
 					const facultiesList = logProfileData.faculties;
 					const rotationsList = logProfileData.rotations;
-					const hospitalData = logProfileData.hospital;
+					const hospitalData = logProfileData.hospitals;
 					console.log("facultiesListfromAPPSTORE", facultiesList);
 					console.log("rotationsListfromAPPSTORE", rotationsList);
 					console.log("hospitalDatafromAPPSTORE", hospitalData);
 					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0]?.department);
 					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
 					caseLogPrefilledRef.current = { hospital: hospitalData, faculty: facultiesList, rotations: rotationsList };
-					setValue("hospital", hospitalData);
 					setValue("rotation", rotationsList[0]?.department);
 				} else {
 					const query = store.fetchUserLogProfile(AppStore.UserName);
@@ -276,7 +277,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 						const facultiesList = userData.logProfile.faculties;
 						const rotationsList = userData.logProfile.rotations;
-						const hospitalData = userData.logProfile.hospital;
+						const hospitalData = userData.logProfile.hospitals;
 						console.log("facultiesList", facultiesList);
 						console.log("rotationsList", rotationsList);
 						console.log("hospitalData", hospitalData);
@@ -303,11 +304,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			console.log("RAAAAANNNN FIRSSSSSTTTTT");
 			console.log("buttonPressed.active ran first", buttonPressed.active);
 			if (buttonPressed.screenName === "RootLogBook") {
-				navigation.navigate("Log Book", { screen: "RootLogBook" });
+				navigation.navigate("Logbook", { screen: "RootLogBook" });
 				buttonPressedRef.current = buttonPressed;
 			}
 			if (buttonPressed.screenName === "LogProfilePage") {
-				navigation.navigate("Log Book", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } });
+				navigation.navigate("Logbook", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } });
 				buttonPressedRef.current = buttonPressed;
 			}
 		}
@@ -316,12 +317,13 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	useFocusEffect(
 		useCallback(() => {
 			// Code to run when the screen is focused
-			console.log("Screen is focused");
+			console.log("Screen is focused in case log form screen");
 
 			return () => {
 				console.log("RAAAAANNNN SECONDDDDDDDD", buttonPressedRef.current);
-				if (buttonPressedRef.current.active === false) {
-					console.log("buttonPressed", buttonPressedRef.active);
+				console.log("buttonPressedToNavigateToLogProfile should be false", appStoreInstance.ButtonPressed);
+				if (buttonPressedRef.current.active === false && (appStoreInstance.ButtonPressed === false || appStoreInstance.ButtonPressed === null)) {
+					console.log("buttonPressed", buttonPressedRef.current.active);
 					console.log("caseLogPrefilledData === undefined inside the loss of focus", caseLogPrefilledRef);
 					if (!caseLogPrefilledRef.current) {
 						return;
@@ -400,7 +402,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 									</VStack>
 								</Box>
 							</ScrollView>
-							<Box p={20} paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
+							<Box p={20} paddingTop={5} width={"$100%"}>
 								<Button onPress={handleSubmit(handleSaveClick)} variant='primary'>
 									<ButtonText>Save</ButtonText>
 								</Button>
@@ -408,7 +410,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 						</>
 					) : (
 						<Box p='$10' flex={1 / 1} height={"$100%"} justifyContent='center' alignItems='center'>
-							<VStack width={"$100%"} space='lg' mb='$20'>
+							<VStack width={"$100%"} space='lg'>
 								<Text textAlign='center' bold>
 									Please create your log profile before filing a case
 								</Text>

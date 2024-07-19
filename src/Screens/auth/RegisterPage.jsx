@@ -31,6 +31,7 @@ import {
 	useToast,
 	ToastTitle,
 	ToastDescription,
+	Icon,
 } from "@gluestack-ui/themed";
 import { Platform, Linking, TouchableOpacity } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
@@ -45,6 +46,7 @@ import { Link } from "@react-navigation/native";
 import { ActionsheetBackdrop } from "@gluestack-ui/themed";
 import { ActionsheetContent } from "@gluestack-ui/themed";
 import { Divider } from "@gluestack-ui/themed";
+import { Ionicons } from "@expo/vector-icons";
 
 const RegisterPage = ({ navigation, route }) => {
 	const [showActionsheet, setShowActionsheet] = useState(false);
@@ -241,6 +243,14 @@ const RegisterPage = ({ navigation, route }) => {
 		});
 	};
 
+	const handleClearEmailInputField = () => {
+		setFormData({ ...formData, email: "" });
+	};
+
+	const handleClearNameInputField = () => {
+		setFormData({ ...formData, name: "" });
+	};
+
 	const privacyPolicySheet = () => {
 		setShowActionsheet(!showActionsheet);
 	};
@@ -250,18 +260,18 @@ const RegisterPage = ({ navigation, route }) => {
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='handled'>
 					<Box flex={1} backgroundColor='$primaryBackground'>
-						<Image w='$100%' h='$100%' position='absolute' top={0} source={ImageAssets.registerBG} alt='Docked-Logo' />
-						<Box height='$10%'>
-							<Image width={140} height={100} source={ImageAssets.logo} alt='Docked-Logo' />
+						<Image w='$100%' h='$110%' position='absolute' top={0} source={ImageAssets.registerBG} alt='Docked-Logo' />
+						<Box pl='$3' p='$5' pt='$10' height='$12%'>
+							<Image width={110} height={50} source={ImageAssets.icon} alt='Docked-Logo' />
 						</Box>
-						<Box h='$100%' p='$5'>
-							<VStack space='xl'>
-								<Text bold size='xl' color='#FFFFFC'>
+						<Box justifyContent='space-between' h='$88%' p='$5'>
+							<VStack space='2xl'>
+								<Text bold fontSize={24} color='#FFFFFC'>
 									Create an Account
 								</Text>
 								<Box>
 									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && nameError} isReadOnly={false} isRequired={false}>
-										<Text pb='$1' color='#515151' fontSize='$xs'>
+										<Text pb='$1' color='#515151B3' fontSize='$xs'>
 											Name
 										</Text>
 										<Input bg='#FFFFFC' variant='outline'>
@@ -272,18 +282,24 @@ const RegisterPage = ({ navigation, route }) => {
 												autoCapitalize='words'
 												onFocus={() => setNameError("")}
 											/>
+											{formData.name !== "" && (
+												<InputSlot pr='$3' onPress={handleClearNameInputField}>
+													<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+												</InputSlot>
+											)}
 										</Input>
 										{joinPressed && nameError && (
 											<FormControlError>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{nameError}</FormControlErrorText>
+												<FormControlErrorText fontSize={11} color='#CC3F0C'>
+													{nameError}
+												</FormControlErrorText>
 											</FormControlError>
 										)}
 									</FormControl>
 								</Box>
 								<Box>
 									<FormControl isInvalid={joinPressed && emailError} size='md' isDisabled={false} isReadOnly={false} isRequired={false}>
-										<Text pb='$1' color='#515151' fontSize='$xs'>
+										<Text pb='$1' color='#515151B3' fontSize='$xs'>
 											Email Address
 										</Text>
 										<Input bg='#FFFFFC' variant='outline'>
@@ -294,18 +310,24 @@ const RegisterPage = ({ navigation, route }) => {
 												autoCapitalize='none'
 												onFocus={() => setEmailError("")}
 											/>
+											{formData.email !== "" && (
+												<InputSlot pr='$3' onPress={handleClearEmailInputField}>
+													<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+												</InputSlot>
+											)}
 										</Input>
 										{joinPressed && emailError && (
 											<FormControlError>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{emailError}</FormControlErrorText>
+												<FormControlErrorText fontSize={11} color='#CC3F0C'>
+													{emailError}
+												</FormControlErrorText>
 											</FormControlError>
 										)}
 									</FormControl>
 								</Box>
 								<Box>
 									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && passwordError} isReadOnly={false} isRequired={false}>
-										<Text pb='$1' color='#515151' fontSize='$xs'>
+										<Text pb='$1' color='#515151B3' fontSize='$xs'>
 											Password
 										</Text>
 										<Input bg='#FFFFFC' variant='outline'>
@@ -317,20 +339,21 @@ const RegisterPage = ({ navigation, route }) => {
 												onFocus={() => setPasswordError("")}
 											/>
 											<InputSlot pr='$3' onPress={handleShowPasswordState}>
-												<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
+												<InputIcon size={20} as={Ionicons} name={passwordVisible ? "eye" : "eye-off"} color='#E6E3DB' />
 											</InputSlot>
 										</Input>
 										{joinPressed && passwordError && (
 											<FormControlError>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{passwordError}</FormControlErrorText>
+												<FormControlErrorText fontSize={11} color='#CC3F0C'>
+													{passwordError}
+												</FormControlErrorText>
 											</FormControlError>
 										)}
 									</FormControl>
 								</Box>
 								<Box>
 									<FormControl size='md' isDisabled={false} isInvalid={joinPressed && resestPasswordError} isReadOnly={false} isRequired={false}>
-										<Text pb='$1' color='#515151' fontSize='$xs'>
+										<Text pb='$1' color='#515151B3' fontSize='$xs'>
 											Re-enter Password
 										</Text>
 										<Input bg='#FFFFFC' variant='outline'>
@@ -342,44 +365,46 @@ const RegisterPage = ({ navigation, route }) => {
 												onFocus={() => setResetPasswordError("")}
 											/>
 											<InputSlot pr='$3' onPress={handleShowResetPasswordState}>
-												<InputIcon as={resetPasswordVisible ? Eye : EyeOff} color='#E6E3DB' />
+												<InputIcon size={20} as={Ionicons} name={resetPasswordVisible ? "eye" : "eye-off"} color='#E6E3DB' />
 											</InputSlot>
 										</Input>
 										{joinPressed && resestPasswordError && (
 											<FormControlError>
-												<FormControlErrorIcon as={AlertCircleIcon} />
-												<FormControlErrorText>{resestPasswordError}</FormControlErrorText>
+												<FormControlErrorText fontSize={11} color='#CC3F0C'>
+													{resestPasswordError}
+												</FormControlErrorText>
 											</FormControlError>
 										)}
 									</FormControl>
 								</Box>
 								<Box>
-									<VStack space='xs' justifycontent='center' alignItems='center'>
-										<HStack>
+									<VStack space='lg' justifycontent='center' alignItems='center'>
+										<HStack w='$full'>
 											<Checkbox
+												w='$10%'
 												aria-label='privacy-policy'
 												value={isChecked}
 												onChange={toggleCheckbox}
 												size='md'
 												isInvalid={false}
 												isDisabled={false}>
-												<CheckboxIndicator borderColor='#979797' mr='$2'>
+												<CheckboxIndicator borderColor='#979797'>
 													<CheckboxIcon as={CheckIcon} />
 												</CheckboxIndicator>
 											</Checkbox>
-											<Text size='xs'>
+											<Text w='$90%' fontSize={12}>
 												To join as a member, you agree to docked's{" "}
 												<Link to='/#' onPress={privacyPolicySheet}>
-													<Text size='xs' underline>
+													<Text fontSize={12} underline>
 														Terms & Conditions of Use
 													</Text>
 												</Link>
 											</Text>
 										</HStack>
-										<Text size='xs'>
+										<Text fontSize={12}>
 											To learn more about how docked collects, uses, share and protects your personal data, please see{" "}
 											<Link to='/#' onPress={privacyPolicySheet}>
-												<Text size='xs' underline>
+												<Text fontSize={12} underline>
 													docked's Privacy Policy.
 												</Text>
 											</Link>
@@ -387,7 +412,7 @@ const RegisterPage = ({ navigation, route }) => {
 									</VStack>
 								</Box>
 							</VStack>
-							<Box w='$100%' p='$5'>
+							<Box pt='$0' w='$100%' p='$5'>
 								<VStack w='$100%' space='sm'>
 									<Box>
 										<Button isDisabled={isChecked} onPress={handleJoining} variant='primary'>
@@ -398,7 +423,9 @@ const RegisterPage = ({ navigation, route }) => {
 										<Text>Already a member?</Text>
 										<Box>
 											<Button variant='link' size='sm' onPress={() => navigation.navigate("Login Page")}>
-												<ButtonText color='#367B71'>Member Login</ButtonText>
+												<ButtonText color='#367B71' fontFamily='Inter_Regular'>
+													Member Login
+												</ButtonText>
 											</Button>
 										</Box>
 									</HStack>
@@ -408,6 +435,9 @@ const RegisterPage = ({ navigation, route }) => {
 					</Box>
 					<Actionsheet px='$2' isOpen={showActionsheet} onClose={privacyPolicySheet} zIndex={999}>
 						<ActionsheetBackdrop />
+						{/* <ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
+							<Icon as={Ionicons} name='close-circle' size={50} color='#5B5A56' />
+						</ActionsheetContent> */}
 						<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
 							<VStack>
 								<Text size='xs' bold></Text>
@@ -416,19 +446,18 @@ const RegisterPage = ({ navigation, route }) => {
 										Privacy Policy
 									</Text>
 									<Text size='xs'>
-										Our app respects your privacy and is committed to protecting your personal information. We collect minimal data necessary for app
-										functionality and do not share it with third parties. Any information collected is used solely for improving the user experience
-										within the app. We do not store any personally identifiable information unless explicitly provided by you. By using our app, you
-										consent to the collection and use of information as described in this policy.
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+										enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+										reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+										in culpa qui officia deserunt mollit anim id est laborum.
 									</Text>
 									<Text color='#21272A' size='md' bold>
 										Terms & Conditions
 									</Text>
 									<Text size='xs'>
-										Our app respects your privacy and is committed to protecting your personal information. We collect minimal data necessary for app
-										functionality and do not share it with third parties. Any information collected is used solely for improving the user experience
-										within the app. We do not store any personally identifiable information unless explicitly provided by you. By using our app, you
-										consent to the collection and use of information as described in this policy.
+										Rhoncus morbi et augue nec, in id ullamcorper at sit. Condimentum sit nunc in eros scelerisque sed. Rhoncus morbi et augue nec, in
+										id ullamcorper at sit. Condimentum sit nunc in eros scelerisque sed. Rhoncus morbi et augue nec, in id ullamcorper at sit.
+										Condimentum sit nunc in eros scelerisque sed.
 									</Text>
 								</VStack>
 							</VStack>

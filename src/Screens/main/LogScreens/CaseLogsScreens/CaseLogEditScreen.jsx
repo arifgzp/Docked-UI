@@ -282,7 +282,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 				if (logProfileData) {
 					const facultiesList = logProfileData.faculties;
 					const rotationsList = logProfileData.rotations;
-					const hospitalData = logProfileData.hospital;
+					const hospitalData = logProfileData.hospitals;
 					console.log("facultiesListfromAPPSTORE", facultiesList);
 					console.log("rotationsListfromAPPSTORE", rotationsList);
 					console.log("hospitalDatafromAPPSTORE", hospitalData);
@@ -303,7 +303,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 						const facultiesList = userData.logProfile.faculties;
 						const rotationsList = userData.logProfile.rotations;
-						const hospitalData = userData.logProfile.hospital;
+						const hospitalData = userData.logProfile.hospitals;
 						console.log("facultiesList", facultiesList);
 						console.log("rotationsList", rotationsList);
 						console.log("hospitalData", hospitalData);
@@ -401,7 +401,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 								</VStack>
 							</Box>
 						</ScrollView>
-						<Box p={20} paddingBottom={"$20%"} paddingTop={5} width={"$100%"}>
+						<Box p={20} paddingTop={5} width={"$100%"}>
 							<Button onPress={handleSubmit(handleOnUpdateClick)} variant='primary'>
 								<ButtonText>Update Log</ButtonText>
 							</Button>

@@ -6,4 +6,13 @@ export const ImageAssets = {
 	loginBG: require("./LoginBG.png"),
 	registerBG: require("./RegisterBG.png"),
 	profileIcon: require("./Icons/profileIcon.png"),
+	icon: require("./icon.png"),
+	HomeActive: require("./tabIcons/homeActive.png"),
+	HomeInactive: require("./tabIcons/homeInactive.png"),
+	LogbookActive: require("./tabIcons/LogbookActive.png"),
+	LogbookInactive: require("./tabIcons/LogbookInactive.png"),
+	ResourcesActive: require("./tabIcons/resourcesActive.png"),
+	ResourcesInactive: require("./tabIcons/resourcesInactive.png"),
+	CommunityActive: require("./tabIcons/commnunityActive.png"),
+	CommunityInactive: require("./tabIcons/commnunityInactive.png"),
 };

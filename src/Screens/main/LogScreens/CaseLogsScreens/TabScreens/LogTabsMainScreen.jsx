@@ -52,7 +52,7 @@ export default function LogTabsMainScreen({ navigation }) {
 	};
 
 	return (
-		<Box p='$4' w='$full' h='$full' bg='$primaryBackground'>
+		<Box p='$4' w='$full' h='$full' bg='$primaryBackground' pt='$10'>
 			<HStack alignItems='center' w='$100%' justifyContent='space-between'>
 				<Text size='xl' fontFamily='Inter_Bold'>
 					Logbook

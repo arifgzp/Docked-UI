@@ -28,7 +28,7 @@ const Stack = createNativeStackNavigator();
 const AppWrapper = () => {
 	return (
 		<>
-			<StatusBar barStyle='dark-content' backgroundColor='$primaryBackground' />
+			<StatusBar translucent backgroundColor='$transparent' barStyle='dark-content' />
 			<NavigationContainer>
 				{appStoreInstance.isUserSignedIn ? (
 					<LandingScreen />

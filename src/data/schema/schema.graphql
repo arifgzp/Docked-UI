@@ -225,9 +225,16 @@ type LogProfile{
     id: ID!
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
-    hospital: String  @search @dgraph(pred:"hospital")
+    hospitals: [Hospitals] @dgraph(pred:"hospitals")
     faculties : [Faculty] @dgraph(pred:"faculties")
     rotations : [Rotation] @dgraph(pred:"rotations")
+}
+
+type Hospitals{
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    name: String @search @dgraph(pred:"name")
 }
 
 type Faculty{

@@ -96,12 +96,12 @@ const EnterOTPPage = ({ route }) => {
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				style={{ flex: 1, zIndex: 999 }}
 				keyboardShouldPersistTaps='handled'>
-				<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
-					<Box height='$90%' p='$5' width='$full'>
+				<Box justifyContent='space-between' h='$full' width='$full' flex={1} backgroundColor='$primaryBackground' pt='$16'>
+					<Box p='$5' width='$full' pt='$0'>
 						<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>
 							<Box width='$full' alignSelf='flex-start'>
 								<VStack space='md'>
-									<Text fontFamily='Inter_Bold' size='2xl'>
+									<Text color='#000' fontFamily='Inter_Bold' size='2xl'>
 										Verify Your Email Address
 									</Text>
 									<Text size='sm'>
@@ -151,10 +151,18 @@ const EnterOTPPage = ({ route }) => {
 						</HStack> */}
 						</VStack>
 					</Box>
-					<Box justifyContent='center' height='$10%' p='$5'>
-						<HStack width='$full' justifyContent='space-between'>
-							<Button onPress={() => navigation.goBack()} height={50} justifyContent='flex-start' alignItems='flex-start' variant='link'>
-								<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
+					<Box justifyContent='center' p='$5'>
+						<HStack width='$full' justifyContent='space-between' alignItems='center'>
+							<Button
+								borderWidth={1}
+								borderRadius={"$full"}
+								borderColor='rgba(54, 123, 113, 0.5)'
+								onPress={() => navigation.goBack()}
+								height={40}
+								width={40}
+								justifyContent='center'
+								variant='link'>
+								<ButtonIcon as={Ionicons} size={25} name='arrow-back-outline' color='#367B71' />
 							</Button>
 							<Box justifyContent='center' alignItems='center'>
 								<Button onPress={handleVerify} variant='primary' size='lg'>
@@ -174,6 +182,8 @@ const styles = StyleSheet.create({
 		borderColor: "#BFBDB9", // Default border color
 		borderWidth: 1,
 		borderRadius: 10,
+		height: 55,
+		width: 50,
 	},
 	pinCodeContainerError: {
 		borderColor: "#CC3F0C", // Error border color

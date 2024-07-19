@@ -55,6 +55,10 @@ const LoginPage = ({ navigation }) => {
 		});
 	};
 
+	const handleClearInputField = () => {
+		setFormData({ ...formData, email: "" });
+	};
+
 	const handleLogin = async () => {
 		setLoginPressed(true);
 		if (!formData.email && !formData.password) {
@@ -104,6 +108,7 @@ const LoginPage = ({ navigation }) => {
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+							AppStore.ButtonPressed(false);
 						}
 
 						const logQuery = store.fetchUserLogProfile(response.userName);
@@ -151,22 +156,22 @@ const LoginPage = ({ navigation }) => {
 
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading}>
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, zIndex: 999 }}>
+			<KeyboardAvoidingView keyboardVerticalOffset={0} behavior={Platform.OS === "ios" ? "padding" : "null"} style={{ flex: 1, zIndex: 999 }}>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='handled'>
 					<Box flex={1} backgroundColor='$primaryBackground'>
-						<Image w='$100%' h='$100%' position='absolute' top={0} source={ImageAssets.loginBG} alt='Docked-Logo' />
-						<Box height='$35%'>
-							<Image width={140} height={100} source={ImageAssets.logo} alt='Docked-Logo' />
+						<Image w='$100%' h='$110%' position='absolute' top={0} source={ImageAssets.loginBG} alt='Docked-Logo' />
+						<Box pl='$3' p='$5' pt='$10' height='$40%'>
+							<Image width={120} height={60} source={ImageAssets.icon} alt='Docked-Logo' />
 						</Box>
-						<Box height='$65%'>
+						<Box justifyContent='space-between' height='$60%'>
 							<Box p='$5'>
 								<VStack space='2xl'>
 									<Box>
-										<Text fontFamily='Inter_Bold' fontSize='$2xl' color='#FFFFFC'>
+										<Text fontFamily='Inter_Bold' fontSize={24} color='#FFFFFC'>
 											Welcome Back
 										</Text>
 									</Box>
-									<VStack space='sm'>
+									<VStack space='lg'>
 										<Box>
 											<FormControl size='sm' isDisabled={false} isInvalid={loginPressed && !!emailError} isReadOnly={false} isRequired={false}>
 												<Text pb='$1' color='#515151' fontSize='$xs'>
@@ -180,11 +185,17 @@ const LoginPage = ({ navigation }) => {
 														placeholder='Email Address'
 														onFocus={() => setEmailError("")}
 													/>
+													{formData.email !== "" && (
+														<InputSlot pr='$3' onPress={handleClearInputField}>
+															<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+														</InputSlot>
+													)}
 												</Input>
 												{loginPressed && emailError && (
 													<FormControlError>
-														<FormControlErrorIcon as={AlertCircleIcon} />
-														<FormControlErrorText>{emailError}</FormControlErrorText>
+														<FormControlErrorText fontSize={11} color='#CC3F0C'>
+															{emailError}
+														</FormControlErrorText>
 													</FormControlError>
 												)}
 											</FormControl>
@@ -203,27 +214,30 @@ const LoginPage = ({ navigation }) => {
 														onFocus={() => setPasswordError("")}
 													/>
 													<InputSlot pr='$3' onPress={handleShowPasswordState}>
-														<InputIcon as={passwordVisible ? Eye : EyeOff} color='#E6E3DB' />
+														<InputIcon size={20} as={Ionicons} name={passwordVisible ? "eye" : "eye-off"} color='#E6E3DB' />
 													</InputSlot>
 												</Input>
 
 												{loginPressed && passwordError && (
 													<FormControlError>
-														<FormControlErrorIcon as={AlertCircleIcon} />
-														<FormControlErrorText>{passwordError}</FormControlErrorText>
+														<FormControlErrorText fontSize={11} color='#CC3F0C'>
+															{passwordError}
+														</FormControlErrorText>
 													</FormControlError>
 												)}
 											</FormControl>
 											<Box justifycontent='flex-end' alignItems='flex-end'>
 												<Button variant='link' size='sm' onPress={() => navigation.navigate("Forgot Password Page")}>
-													<ButtonText color='#367B71'>Forgot Password?</ButtonText>
+													<ButtonText color='#367B71' fontFamily='Inter_Regular' fontSize={13}>
+														Forgot Password?
+													</ButtonText>
 												</Button>
 											</Box>
 										</Box>
 									</VStack>
 								</VStack>
 							</Box>
-							<Box w='$100%' p='$5'>
+							<Box pt='$0' p='$5'>
 								<VStack w='$100%' space='sm'>
 									<Box>
 										<Button onPress={handleLogin} variant='primary'>
@@ -231,10 +245,12 @@ const LoginPage = ({ navigation }) => {
 										</Button>
 									</Box>
 									<HStack w='$100%' space='sm' justifyContent='center' alignItems='center'>
-										<Text>New to Docked?</Text>
+										<Text fontFamily='Inter_Regular'>New to Docked?</Text>
 										<Box>
 											<Button variant='link' size='sm' onPress={() => navigation.navigate("Register Mobile Number Page")}>
-												<ButtonText color='#367B71'>Sign Up</ButtonText>
+												<ButtonText color='#367B71' fontFamily='Inter_Regular'>
+													Sign Up
+												</ButtonText>
 											</Button>
 										</Box>
 									</HStack>

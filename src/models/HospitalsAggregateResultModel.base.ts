@@ -9,18 +9,20 @@ import { RootStoreType } from "./index"
 
 
 /**
- * LogProfileAggregateResultBase
- * auto generated base class for the model LogProfileAggregateResultModel.
+ * HospitalsAggregateResultBase
+ * auto generated base class for the model HospitalsAggregateResultModel.
  */
-export const LogProfileAggregateResultModelBase = ModelBase
-  .named('LogProfileAggregateResult')
+export const HospitalsAggregateResultModelBase = ModelBase
+  .named('HospitalsAggregateResult')
   .props({
-    __typename: types.optional(types.literal("LogProfileAggregateResult"), "LogProfileAggregateResult"),
+    __typename: types.optional(types.literal("HospitalsAggregateResult"), "HospitalsAggregateResult"),
     count: types.union(types.undefined, types.null, types.integer),
     createdOnMin: types.union(types.undefined, types.null, types.frozen()),
     createdOnMax: types.union(types.undefined, types.null, types.frozen()),
     updatedOnMin: types.union(types.undefined, types.null, types.frozen()),
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
+    nameMin: types.union(types.undefined, types.null, types.string),
+    nameMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -28,15 +30,17 @@ export const LogProfileAggregateResultModelBase = ModelBase
     }
   }))
 
-export class LogProfileAggregateResultModelSelector extends QueryBuilder {
+export class HospitalsAggregateResultModelSelector extends QueryBuilder {
   get count() { return this.__attr(`count`) }
   get createdOnMin() { return this.__attr(`createdOnMin`) }
   get createdOnMax() { return this.__attr(`createdOnMax`) }
   get updatedOnMin() { return this.__attr(`updatedOnMin`) }
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
+  get nameMin() { return this.__attr(`nameMin`) }
+  get nameMax() { return this.__attr(`nameMax`) }
 }
-export function selectFromLogProfileAggregateResult() {
-  return new LogProfileAggregateResultModelSelector()
+export function selectFromHospitalsAggregateResult() {
+  return new HospitalsAggregateResultModelSelector()
 }
 
-export const logProfileAggregateResultModelPrimitives = selectFromLogProfileAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax
+export const hospitalsAggregateResultModelPrimitives = selectFromHospitalsAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.nameMin.nameMax

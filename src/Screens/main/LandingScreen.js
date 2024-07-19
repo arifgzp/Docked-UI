@@ -40,6 +40,7 @@ import ResourcesMainPage from "./Resources/ResourcesMainPage";
 import CommunityMainPage from "./Community/CommunityMainPage";
 import LandingScreenPages from "./LandingScreenPages";
 import CreateLogScreen from "./LogScreens/CreateLogScreen";
+import { ImageAssets } from "../../../assets/Assets";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,8 +48,6 @@ const anaesthesiaCaseLogEntryOptions = [
 	{ id: "CaseLog", name: "Case Log" },
 	{ id: "ChronicPainLog", name: "Chronic Pain Log" },
 	{ id: "CriticalCareCaseLog", name: "Critical Care Case Log" },
-	// { id: "ThesisLogs", name: "Thesis Logs" },
-	// { id: "SpecialCaseLogs", name: "Special Case Logs" },
 ];
 
 const orthopaedicsCaseLogEntryOptions = [
@@ -62,23 +61,19 @@ const orthodonticsCaseLogEntryOptions = [
 ];
 
 const getCreateMenuOptions = (specialty) => {
-	//console.log("UserBroadSpecialty: for the switch case.", specialty);
 	switch (specialty) {
 		case "Orthopaedics":
 			return orthopaedicsCaseLogEntryOptions;
-
 		case "Orthodontics":
 			return orthodonticsCaseLogEntryOptions;
-
 		case "Anaesthesiology":
 			return anaesthesiaCaseLogEntryOptions;
-
 		default:
 			return anaesthesiaCaseLogEntryOptions;
 	}
 };
 
-const CreateMenuList = (props) => {
+const CreateMenuList = () => {
 	const [selectedLogButton, setSelectedLogButton] = useState("");
 	const [showActionsheet, setShowActionsheet] = useState(false);
 	const navigation = useNavigation();
@@ -96,34 +91,26 @@ const CreateMenuList = (props) => {
 				case "CaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
 					break;
-
 				case "ChronicPainLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
 					setSelectedLogButton("");
 					break;
-
 				case "CriticalCareCaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
 					break;
-
 				case "OrthopaedicsCaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
 					break;
-
 				case "OrthopaedicsProcedureLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsProcedureLog" } });
 					break;
-
 				case "OrthodonticsClinicalCaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
 					break;
-
 				case "OrthodonticsPreClinical":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsPreClinical" } });
 					break;
-
 				default:
-					// Optional: handle cases where keys.currentKey does not match any of the specified cases
 					console.log("Key not recognized");
 					break;
 			}
@@ -133,7 +120,7 @@ const CreateMenuList = (props) => {
 	return (
 		<Box pl='$4' pr='$4'>
 			<Button onPress={toggleCreateMenu} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={40} height={40}>
-				<ButtonIcon as={Ionicons} size='xl' name='add-outline' />
+				<ButtonIcon as={Ionicons} size='md' name='add-outline' />
 			</Button>
 			<Actionsheet isOpen={showActionsheet} onClose={toggleCreateMenu} zIndex={999}>
 				<ActionsheetBackdrop />
@@ -175,9 +162,91 @@ const CreateMenuList = (props) => {
 	);
 };
 
+const CustomTabBar = ({ state, descriptors, navigation }) => {
+	return (
+		<Box style={{ flexDirection: "row", height: 60, backgroundColor: "#FFF", elevation: 0, padding: 0 }}>
+			{state.routes.map((route, index) => {
+				const { options } = descriptors[route.key];
+				const isFocused = state.index === index;
+
+				const onPress = () => {
+					const event = navigation.emit({
+						type: "tabPress",
+						target: route.key,
+						canPreventDefault: true,
+					});
+
+					if (!isFocused && !event.defaultPrevented) {
+						navigation.navigate(route.name);
+					}
+				};
+
+				const onLongPress = () => {
+					navigation.emit({
+						type: "tabLongPress",
+						target: route.key,
+					});
+				};
+
+				let iconName;
+				switch (route.name) {
+					case "Home":
+						iconName = "home";
+						break;
+					case "Logbook":
+						iconName = "document-text";
+						break;
+					case "Plus":
+						iconName = "add-circle";
+						break;
+					case "Resources":
+						iconName = "play-circle";
+						break;
+					case "Community":
+						iconName = "people";
+						break;
+					default:
+						iconName = "home";
+						break;
+				}
+				const iconColor = isFocused ? "#0F0F10" : "#979797";
+
+				return (
+					<TouchableOpacity
+						key={route.key}
+						accessibilityRole='button'
+						accessibilityState={isFocused ? { selected: true } : {}}
+						accessibilityLabel={options.tabBarAccessibilityLabel}
+						testID={options.tabBarTestID}
+						onPress={onPress}
+						onLongPress={onLongPress}
+						style={{
+							flex: 1,
+							alignItems: "center",
+							justifyContent: "space-between",
+						}}>
+						{route.name !== "Plus" && (
+							<Box borderRadius='$full' width='$55%' height='$10%' backgroundColor={isFocused ? "#CC3F0C" : "transparent"}></Box>
+						)}
+						{route.name === "Plus" ? (
+							<CreateMenuList />
+						) : (
+							<Image width={20} height={20} source={ImageAssets[`${route.name}${isFocused ? "Active" : "Inactive"}`]} alt='Docked-Logo' />
+						)}
+						<Text fontSize={10} style={{ color: iconColor, paddingBottom: 10 }}>
+							{route.name === "Plus" ? "" : route.name}
+						</Text>
+					</TouchableOpacity>
+				);
+			})}
+		</Box>
+	);
+};
+
 const LandingScreen = ({ navigation, route }) => {
 	return (
 		<Tab.Navigator
+			tabBar={(props) => <CustomTabBar {...props} />}
 			screenOptions={{
 				tabBarShowLabel: true,
 				tabBarLabelStyle: { paddingBottom: 10 },
@@ -198,6 +267,7 @@ const LandingScreen = ({ navigation, route }) => {
 					shadowRadius: 3.84,
 					elevation: 5,
 				},
+
 				headerTitleAlign: "center",
 			}}>
 			<Tab.Screen
@@ -213,7 +283,7 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarIcon: ({ color, size }) => <Ionicons name='document-text' size={size} color={color} />,
 					headerShown: false,
 				}}
-				name='Log Book'
+				name='Logbook'
 				component={RootLogScreens}
 			/>
 			<Tab.Screen
@@ -227,7 +297,7 @@ const LandingScreen = ({ navigation, route }) => {
 			/>
 			<Tab.Screen
 				options={{
-					tabBarIcon: ({ color, size }) => <Ionicons name='play-circle-outline' size={size} color={color} />,
+					tabBarIcon: ({ color, size }) => <Ionicons name='play-circle' size={size} color={color} />,
 					headerShown: false,
 				}}
 				name='Resources'

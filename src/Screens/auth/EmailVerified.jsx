@@ -38,8 +38,8 @@ const EmailVerifiedPage = ({ navigation, route }) => {
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box flex={1 / 4}>
-					<Text bold size='xl' paddingTop={20} paddingLeft={20}>
+				<Box flex={1 / 4} pt='$16'>
+					<Text color='#000' bold size='2xl' paddingLeft={20}>
 						Member Onboarding
 					</Text>
 				</Box>

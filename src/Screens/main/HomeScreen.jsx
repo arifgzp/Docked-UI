@@ -117,7 +117,7 @@ const HomeScreenPage = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
-			<Box h='$full' backgroundColor='$primaryBackground'>
+			<Box h='$full' backgroundColor='$primaryBackground' pt='$8'>
 				<ScrollView>
 					<Box p={10}>
 						<HStack justifyContent='space-between' alignItems='center'>

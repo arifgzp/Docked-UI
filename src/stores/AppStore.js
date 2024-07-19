@@ -166,10 +166,15 @@ const AppStore = types
 		_apiError: types.maybeNull(APIErrorType),
 		_userStatus: types.maybeNull(types.string),
 		_userPassword: types.maybeNull(types.string),
+		_buttonPressed: types.maybeNull(types.boolean),
 	})
 	.views((self) => ({
 		get UserId() {
 			return self._userId;
+		},
+
+		get ButtonPressed() {
+			return self._buttonPressed;
 		},
 
 		get UserBroadSpecialty() {
@@ -307,6 +312,10 @@ const AppStore = types
 	.actions((self) => ({
 		setUserId(userId) {
 			self._userId = userId;
+		},
+
+		setButtonPressed(pressed) {
+			self._buttonPressed = pressed;
 		},
 
 		setName(name) {

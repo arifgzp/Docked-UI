@@ -15,6 +15,8 @@ import { useState } from "react";
 import { Platform, StyleSheet } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 import { Ionicons } from "@expo/vector-icons";
+import { ImageAssets } from "../../../assets/Assets";
+import { Image } from "@gluestack-ui/themed";
 
 const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 	const { enteredNumber } = route.params;
@@ -39,12 +41,12 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1, zIndex: 999 }}
 			keyboardShouldPersistTaps='handled'>
-			<Box h='$full' width='$full' flex={1} backgroundColor='$primaryBackground'>
-				<Box height='$90%' p='$5' width='$full'>
+			<Box justifyContent='space-between' h='$full' width='$full' flex={1} backgroundColor='$primaryBackground' pt='$16'>
+				<Box p='$5' pt='$0' width='$full'>
 					<VStack width='$full' space='xl' justifyContent='center' alignItems='center'>
 						<Box width='$full' alignSelf='flex-start'>
 							<VStack space='md'>
-								<Text fontFamily='Inter_Bold' size='2xl'>
+								<Text fontFamily='Inter_Bold' color='#000' size='2xl'>
 									Verify Your Phone Number
 								</Text>
 								<Text size='sm'>
@@ -62,7 +64,6 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 								isRequired={false}
 								gap='$4'>
 								<OtpInput
-									bg='$yellow'
 									width={"$60%"}
 									numberOfDigits={4}
 									focusColor={OTPError ? "#CC3F0C" : "#BFBDB9"}
@@ -94,10 +95,18 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 						</HStack> */}
 					</VStack>
 				</Box>
-				<Box justifyContent='center' height='$10%' p='$5'>
-					<HStack width='$full' justifyContent='space-between'>
-						<Button onPress={() => navigation.goBack()} height={50} justifyContent='flex-start' alignItems='flex-start' variant='link'>
-							<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
+				<Box p='$5' pt='$0'>
+					<HStack width='$full' justifyContent='space-between' alignItems='center'>
+						<Button
+							borderWidth={1}
+							borderRadius={"$full"}
+							borderColor='rgba(54, 123, 113, 0.5)'
+							onPress={() => navigation.goBack()}
+							height={40}
+							width={40}
+							justifyContent='center'
+							variant='link'>
+							<ButtonIcon as={Ionicons} size={25} name='arrow-back-outline' color='#367B71' />
 						</Button>
 						<Box justifyContent='center' alignItems='center'>
 							<Button onPress={handleVerify} variant='primary' size='lg'>
@@ -116,6 +125,8 @@ const styles = StyleSheet.create({
 		borderColor: "#BFBDB9", // Default border color
 		borderWidth: 1,
 		borderRadius: 10,
+		height: 55,
+		width: 50,
 	},
 	pinCodeContainerError: {
 		borderColor: "#CC3F0C", // Error border color

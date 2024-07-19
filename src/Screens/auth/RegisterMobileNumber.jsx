@@ -69,12 +69,12 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
-			<Box flex={1} backgroundColor='$primaryBackground'>
-				<Box width='$100%' height='$80%' p='$5' pt=''>
-					<VStack width='$100%' space='lg'>
+			<Box justifyContent='space-between' flex={1} backgroundColor='$primaryBackground'>
+				<Box width='$100%' height='$80%' p='$5' pt='$16'>
+					<VStack width='$100%' space='4xl'>
 						<Box>
 							<VStack space='sm'>
-								<Text fontFamily='Inter_Bold' size='2xl'>
+								<Text color='#000' fontFamily='Inter_Bold' fontSize={24}>
 									Enter Your Phone Number
 								</Text>
 								<Text fontFamily='Inter' size='sm'>
@@ -83,15 +83,12 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 							</VStack>
 						</Box>
 						<VStack w='$full'>
-							<Text pb='$1' size='sm' alignSelf='flex-start'>
-								Phone Number
-							</Text>
 							<HStack justifyContent='space-between' w='$full'>
 								<Select w='$25%' isReadOnly selectedValue='+91'>
 									<SelectTrigger variant='outline'>
 										<SelectInput placeholder={`+91`} />
 										<SelectIcon mr='$3'>
-											<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+											<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
 										</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
@@ -131,8 +128,10 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 										</Input>
 										{sendOTPPressed && errorMessage && (
 											<FormControlError alignSelf='flex-start'>
-												<FormControlErrorIcon size='xs' as={AlertCircleIcon} />
-												<FormControlErrorText size='xs'>{errorMessage}</FormControlErrorText>
+												<FormControlErrorIcon size='xs' color='#CC3F0C' as={AlertCircleIcon} />
+												<FormControlErrorText size='xs' color='#CC3F0C'>
+													{errorMessage}
+												</FormControlErrorText>
 											</FormControlError>
 										)}
 									</Box>
@@ -141,27 +140,15 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 						</VStack>
 					</VStack>
 				</Box>
-				<Box justifyContent='center' p='$5'>
+				<Box pt='$0' justifyContent='center' p='$5'>
 					<VStack space='4xl'>
 						<Box>
 							<Button onPress={handleSendOTP} variant='primary' size='lg'>
-								<ButtonText>Next</ButtonText>
+								<ButtonText fontSize={16}>Next</ButtonText>
 							</Button>
 						</Box>
 					</VStack>
 				</Box>
-				{/* <Box justifyContent='center'>
-					<VStack space='sm'>
-						<Text textAlign='center' bold fontFamily='Inter'>
-							Already A Member?
-						</Text>
-						<Box justifycontent='center' alignItems='center'>
-							<Button onPress={() => navigation.navigate("Login Page")} variant='secondary' size='lg'>
-								<ButtonText textAlign='center'>Member Login</ButtonText>
-							</Button>
-						</Box>
-					</VStack>
-				</Box> */}
 			</Box>
 		</KeyboardAvoidingView>
 	);

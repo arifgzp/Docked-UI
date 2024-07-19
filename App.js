@@ -47,15 +47,11 @@ function App() {
 		return null;
 	}
 	return (
-		<SafeAreaProvider>
-			<SafeAreaView style={{ flex: 1 }}>
-				<StoreContext.Provider value={rootStore}>
-					<GluestackUIProvider config={config}>
-						<AppWrapper />
-					</GluestackUIProvider>
-				</StoreContext.Provider>
-			</SafeAreaView>
-		</SafeAreaProvider>
+		<StoreContext.Provider value={rootStore}>
+			<GluestackUIProvider config={config}>
+				<AppWrapper />
+			</GluestackUIProvider>
+		</StoreContext.Provider>
 	);
 }
 

@@ -75,6 +75,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 								AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 								AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+								AppStore.ButtonPressed(false);
 							}
 
 							const query = store.fetchUserLogProfile(response.userName);
@@ -172,6 +173,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+							AppStore.ButtonPressed(false);
 						}
 
 						const query = store.fetchUserLogProfile(response.userName);
@@ -226,10 +228,10 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				behavior={Platform.OS === "ios" ? "height" : "height"}
 				style={{ flex: 1, zIndex: 999 }}
 				keyboardShouldPersistTaps='handled'>
-				<Box flex={1} h='$full' backgroundColor='$primaryBackground'>
+				<Box pt='$16' flex={1} h='$full' backgroundColor='$primaryBackground'>
 					<VStack flex={1} h='$full' space='lg' justifyContent='space-between'>
 						<ScrollView>
-							<Box p='$5'>
+							<Box p='$5' pt='$0'>
 								<VStack paddingTop={35} space='md'>
 									<HStack alignItems='center' justifyContent='space-between'>
 										<Text bold italic color='#CC3F0C'>
@@ -264,7 +266,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								);
 							})}
 						</HStack> */}
-									<Text size='xl'>{currentStepLabel}</Text>
+									<Text fontSize={14}>{currentStepLabel}</Text>
 								</VStack>
 							</Box>
 							<Box width={"$100%"} justifyContent='center'>
@@ -288,12 +290,15 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 							<HStack width='$full' justifyContent={currentStepLabel !== "Your Expertise" ? "space-between" : "flex-end"} alignItems='center'>
 								{currentStepLabel !== "Your Expertise" && (
 									<Button
+										borderWidth={1}
+										borderRadius={"$full"}
+										borderColor='rgba(54, 123, 113, 0.5)'
 										onPress={() => setCurrentStep(currentStep - 1)}
-										height={50}
-										justifyContent='flex-start'
-										alignItems='flex-start'
+										height={40}
+										width={40}
+										justifyContent='center'
 										variant='link'>
-										<ButtonIcon as={Ionicons} size={50} name='arrow-back-circle-outline' color='#367B71' />
+										<ButtonIcon as={Ionicons} size={25} name='arrow-back-outline' color='#367B71' />
 									</Button>
 								)}
 								<Box justifycontent='center' alignItems='center'>

@@ -7,21 +7,17 @@ import { types } from "mobx-state-tree"
  * Typescript enum
  */
 
-export enum LogProfileHasFilter {
+export enum HospitalsHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
-hospitals="hospitals",
-faculties="faculties",
-rotations="rotations"
+name="name"
 }
 
 /**
-* LogProfileHasFilter
+* HospitalsHasFilter
 */
-export const LogProfileHasFilterEnumType = types.enumeration("LogProfileHasFilter", [
+export const HospitalsHasFilterEnumType = types.enumeration("HospitalsHasFilter", [
         "createdOn",
   "updatedOn",
-  "hospitals",
-  "faculties",
-  "rotations",
+  "name",
       ])

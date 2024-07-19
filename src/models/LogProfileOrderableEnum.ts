@@ -9,8 +9,7 @@ import { types } from "mobx-state-tree"
 
 export enum LogProfileOrderable {
   createdOn="createdOn",
-updatedOn="updatedOn",
-hospital="hospital"
+updatedOn="updatedOn"
 }
 
 /**
@@ -19,5 +18,4 @@ hospital="hospital"
 export const LogProfileOrderableEnumType = types.enumeration("LogProfileOrderable", [
         "createdOn",
   "updatedOn",
-  "hospital",
       ])

@@ -2,6 +2,7 @@ import { Instance } from "mobx-state-tree";
 import { LogProfileModelBase, selectFromLogProfile } from "./LogProfileModel.base";
 import { facultyModelSelector } from "./FacultyModel";
 import { rotationModelSelector } from "./RotationModel";
+import { hospitalsModelPrimitives } from "./HospitalsModel.base";
 
 /* The TypeScript type of an instance of LogProfileModel */
 export interface LogProfileModelType extends Instance<typeof LogProfileModel.Type> {}
@@ -19,4 +20,7 @@ export const LogProfileModel = LogProfileModelBase.actions((self) => ({
 	},
 }));
 
-export const fetchLogProfileModelSelector = selectFromLogProfile().hospital.faculties(facultyModelSelector).rotations(rotationModelSelector);
+export const fetchLogProfileModelSelector = selectFromLogProfile()
+	.hospitals(hospitalsModelPrimitives)
+	.faculties(facultyModelSelector)
+	.rotations(rotationModelSelector);

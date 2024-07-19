@@ -132,7 +132,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 	const [toOpen, setToOpen] = useState(false);
 	const [fromDate, setFromDate] = useState(new Date());
 	const [toDate, setToDate] = useState(new Date());
-
+	const [hospitalList, setHospitalList] = useState([]);
 	const [facultyList, setFacultyList] = useState([]);
 	const [rotationList, setRotationList] = useState([]);
 	const currentSpecialty = AppStore.UserBroadSpecialty;
@@ -202,6 +202,11 @@ const LogProfileReadPage = ({ navigation, route }) => {
 				const finishFetchingLogProfile = await query;
 				if (finishFetchingLogProfile) {
 					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					const hospitalList = userData.logProfile.hospitals.map((hospital) => {
+						delete hospital.id;
+						delete hospital.__typename;
+						return hospital;
+					});
 					const facultiesList = userData.logProfile.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
@@ -218,6 +223,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 						to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
 					});
 					console.log("facultiesList", facultiesList);
+					setHospitalList(hospitalList);
 					setFacultyList(facultiesList);
 					setRotationList(rotationsList);
 				}
@@ -242,13 +248,28 @@ const LogProfileReadPage = ({ navigation, route }) => {
 						<Box width={"$100%"} flex={3 / 4} alignItems='center' paddingTop={20} paddingBottom={20}>
 							<VStack space='lg' width={"$100%"} p='$3' alignItems='center'>
 								<Box w='$100%'>
-									<VStack alignItems='center'>
+									<VStack space='xl'>
 										<Text bold fontSize={14} alignSelf='flex-start' color='#0F0F10'>
 											Hospital
 										</Text>
-										<Text fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-											{watch("hospital") ? watch("hospital") : "—"}
-										</Text>
+										{hospitalList.length === 0 ? (
+											<Box rounded='$xl' borderWidth='$1' p='$2' borderStyle='$dashed'>
+												<Text>No Records Found</Text>
+											</Box>
+										) : (
+											hospitalList.map((hospital, index) => {
+												return (
+													<VStack>
+														<Text bold size='sm' alignSelf='flex-start' color='#0F0F10'>
+															Hospital {index + 1}
+														</Text>
+														<Text size='xs' color='#4D5356'>
+															{hospital.name}
+														</Text>
+													</VStack>
+												);
+											})
+										)}
 									</VStack>
 								</Box>
 								<Divider />

@@ -44,7 +44,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { SelectIcon } from "@gluestack-ui/themed";
 import DatePicker from "react-native-date-picker";
 import { ChevronDown } from "lucide-react-native";
@@ -73,7 +73,7 @@ import IsReadyLoader from "../../../components/IsReadyLoader";
 import { useQuery } from "../../../models";
 import useIsReady from "../../../hooks/useIsReady";
 import { SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { rotationForAnesthesiology, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
 import { designation } from "../../../data/entity/DesignationConfig";
 
@@ -88,7 +88,7 @@ const LogProfilePage = ({ navigation, route }) => {
 		setValue,
 	} = useForm({
 		defaultValues: {
-			hospital: "",
+			hospitals: [],
 			faculties: [],
 			rotations: [],
 			department: null,
@@ -118,6 +118,17 @@ const LogProfilePage = ({ navigation, route }) => {
 		},
 	});
 
+	const {
+		control: controlForHospital,
+		handleSubmit: handleSubmitForHospital,
+		formState: { errors: errorsForHospital },
+		reset: resetForHospital,
+		watch: watchForHospital,
+		setValue: setValueForHospital,
+	} = useForm({
+		defaultValues: {},
+	});
+
 	const toast = useToast();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -127,6 +138,7 @@ const LogProfilePage = ({ navigation, route }) => {
 	const [fromDate, setFromDate] = useState("--/--/--");
 	const [toDate, setToDate] = useState("--/--/--");
 	const [facultyList, setFacultyList] = useState([]);
+	const [hospitalList, setHospitalList] = useState([]);
 	const [editFacultyIndex, setEditFacultyIndex] = useState(null);
 	const currentSpecialty = AppStore.UserBroadSpecialty;
 	const logProfile = AppStore.UserLogProfile;
@@ -171,9 +183,9 @@ const LogProfilePage = ({ navigation, route }) => {
 			facultyPhoneNumber: null,
 		});
 		reset({
-			hospital: watch("hospital"),
 			from: watch("from"),
 			to: watch("to"),
+			department: watch("department"),
 		});
 	};
 
@@ -194,15 +206,28 @@ const LogProfilePage = ({ navigation, route }) => {
 			facultyPhoneNumber: null,
 		});
 		reset({
-			hospital: watch("hospital"),
 			from: watch("from"),
 			to: watch("to"),
+			department: watch("department"),
 		});
+	};
+
+	const handleAddHospital = () => {
+		const newHospitalEntry = {
+			name: "", // You can modify this as per your requirement
+		};
+		setHospitalList([...hospitalList, newHospitalEntry]);
+	};
+
+	const handleHospitalChange = (index, newValue) => {
+		const updatedHospitalList = [...hospitalList];
+		updatedHospitalList[index].name = newValue;
+		setHospitalList(updatedHospitalList);
 	};
 
 	const handleOnSave = async () => {
 		// Check if rotationList or facultyList is empty
-		if (facultyList.length === 0) {
+		if (facultyList.length === 0 || hospitalList.length === 0) {
 			// Raise an error indicating rotation or faculty cannot be empty
 			toast.show({
 				placement: "top",
@@ -212,7 +237,7 @@ const LogProfilePage = ({ navigation, route }) => {
 						<Toast nativeID={toastId} action='warning' variant='accent'>
 							<VStack space='xs' mx='$4'>
 								<ToastTitle>Alert</ToastTitle>
-								<ToastDescription>Faculty cannot be empty.</ToastDescription>
+								<ToastDescription>Faculty or Hospital cannot be empty.</ToastDescription>
 							</VStack>
 						</Toast>
 					);
@@ -229,13 +254,14 @@ const LogProfilePage = ({ navigation, route }) => {
 		];
 		console.log("rotationData", rotationData);
 		console.log("faculties", facultyList);
+		console.log("hospitalLists", hospitalList);
 		let data;
 		if (rotationData[0].department !== null && rotationData[0].from !== null && rotationData[0].to !== null) {
 			console.log("data when there is rotation.....", rotationData);
-			data = { faculties: facultyList, rotations: rotationData, hospital: watch("hospital") };
+			data = { faculties: facultyList, rotations: rotationData, hospitals: hospitalList };
 		} else {
 			console.log("data when there is no ROTATION.....", rotationData);
-			data = { faculties: facultyList, hospital: watch("hospital") };
+			data = { faculties: facultyList, hospitals: hospitalList };
 		}
 
 		console.log("caseLogFormToGet", caseLogFormToGet);
@@ -275,6 +301,11 @@ const LogProfilePage = ({ navigation, route }) => {
 					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
 					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 					console.log("userData", userData);
+					const hospitalList = userData.logProfile.hospitals.map((hospital) => {
+						delete hospital.id;
+						delete hospital.__typename;
+						return hospital;
+					});
 					const facultiesList = userData.logProfile.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
@@ -290,10 +321,12 @@ const LogProfilePage = ({ navigation, route }) => {
 						department: userData.logProfile.rotations[0]?.department ? userData.logProfile.rotations[0]?.department : null,
 						rotations: userData.logProfile.rotations[0],
 					});
+
 					setFacultyList(facultiesList);
 					setFromDate(
 						userData.logProfile.rotations[0]?.from ? format(new Date(userData.logProfile.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--"
 					);
+					setHospitalList(hospitalList);
 					setToDate(userData.logProfile.rotations[0]?.to ? format(new Date(userData.logProfile.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
 					setValue("from", userData.logProfile.rotations[0]?.from ? userData.logProfile.rotations[0]?.from : null);
 					setValue("to", userData.logProfile.rotations[0]?.to ? userData.logProfile.rotations[0]?.to : null);
@@ -303,9 +336,24 @@ const LogProfilePage = ({ navigation, route }) => {
 				console.log(error);
 			}
 		};
+		if (isFocused) {
+			fetchLogProfile();
+		} else {
+			AppStore.setButtonPressed(false);
+		}
+	}, [isFocused]);
 
-		fetchLogProfile();
-	}, []);
+	useFocusEffect(
+		useCallback(() => {
+			// Code to run when the screen is focused
+			console.log("Screen is focused on Log Profile");
+			console.log("AppStore.ButtonPressed after Log Profile is in FOCUSSSS", AppStore.ButtonPressed);
+			return () => {
+				AppStore.setButtonPressed(false);
+				console.log("AppStore.ButtonPressed after Log Profile is out of focus", AppStore.ButtonPressed);
+			};
+		}, [caseLogFormToGet])
+	);
 
 	if (!isReady) {
 		return <IsReadyLoader />;
@@ -319,7 +367,35 @@ const LogProfilePage = ({ navigation, route }) => {
 						<Box width={"$100%"} flex={3 / 4} alignItems='center' paddingTop={20} paddingBottom={20}>
 							<VStack space='lg' width={"$100%"} p='$3' alignItems='center'>
 								<Box w='$100%'>
-									<VStack space='md' alignItems='center' paddingBottom={10}>
+									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
+										Hospital
+									</Text>
+								</Box>
+								<Box w='$100%' gap='$2'>
+									{hospitalList.length === 0 ? (
+										<Box rounded='$xl' borderWidth='$1' p='$2' borderStyle='$dashed'>
+											<Text>No Records Found</Text>
+										</Box>
+									) : (
+										hospitalList.map((hospital, index) => {
+											return (
+												<VStack space='sm'>
+													<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
+														Hospital {index + 1}
+													</Text>
+													<Input size='sm' variant='outline'>
+														<InputField
+															type='text'
+															value={hospital.name}
+															onChangeText={(newValue) => handleHospitalChange(index, newValue)}
+															placeholder={`Hospital ${index + 1}`}
+														/>
+													</Input>
+												</VStack>
+											);
+										})
+									)}
+									{/* <VStack space='md' alignItems='center' paddingBottom={10}>
 										<Text size='sm' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
 											Hospital <Text color='#DE2E2E'>*</Text>
 										</Text>
@@ -341,8 +417,14 @@ const LogProfilePage = ({ navigation, route }) => {
 									</VStack>
 									<Box alignItems='center'>
 										<Box width={"$100%"}>{errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-									</Box>
+									</Box> */}
 								</Box>
+								<Button onPress={handleAddHospital} ref={ref} alignSelf='flex-start' size='sm' variant='link'>
+									<HStack space='sm' alignItems='center'>
+										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
+										<ButtonText color='#000'>Add a new Hospital</ButtonText>
+									</HStack>
+								</Button>
 								<Divider />
 								<Box w='$100%'>
 									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
