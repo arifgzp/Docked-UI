@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { Divider, Image, MenuItem, Modal, ModalBackdrop, ModalBody, ModalCloseButton, RadioGroup } from "@gluestack-ui/themed";
+import { Divider, Image, MenuItem, Modal, ModalBackdrop, ModalBody, ModalCloseButton, Pressable, RadioGroup } from "@gluestack-ui/themed";
 import { ModalContent } from "@gluestack-ui/themed";
 import { ModalHeader } from "@gluestack-ui/themed";
 import { Heading } from "@gluestack-ui/themed";
@@ -118,53 +118,58 @@ const CreateMenuList = () => {
 	};
 
 	return (
-		<Box pl='$4' pr='$4'>
-			<Button onPress={toggleCreateMenu} borderRadius={"$full"} mt='$2' backgroundColor='#CC3F0C' width={40} height={40}>
-				<ButtonIcon as={Ionicons} size='md' name='add-outline' />
-			</Button>
-			<Actionsheet isOpen={showActionsheet} onClose={toggleCreateMenu} zIndex={999}>
-				<ActionsheetBackdrop />
-				<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
-					<VStack width={"$100%"} space='lg' mt='$2'>
-						<Text pl='$3' color='#000000' size='lg' fontFamily='Inter_Bold'>
-							Choose type of log entry
-						</Text>
+		<Pressable w='$full' h='$full' justifyContent='center' alignItems='center' onPress={toggleCreateMenu}>
+			<Box position='absolute' bottom='$10'>
+				<Button onPress={toggleCreateMenu} borderRadius={"$full"} backgroundColor='#CC3F0C' width={45} height={45}>
+					{/* <ButtonIcon as={Ionicons} size='lg' name='add-outline' /> */}
+					<ButtonText w='$400%' pt='$2' fontSize={32} fontFamily='Jua' textAlign='center'>
+						+
+					</ButtonText>
+				</Button>
+				<Actionsheet isOpen={showActionsheet} onClose={toggleCreateMenu} zIndex={999}>
+					<ActionsheetBackdrop />
+					<ActionsheetContent alignItems='flex-start' h='$72' zIndex={999}>
+						<VStack width={"$100%"} space='lg' mt='$2'>
+							<Text pl='$3' color='#000000' size='lg' fontFamily='Inter_Bold'>
+								Choose type of log entry
+							</Text>
+							<Divider />
+							<RadioGroup pl='$3' width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
+								<VStack w='$full' alignItems='flex-start' space='lg' mb='$2'>
+									{getCreateMenuOptions(AppStore.UserBroadSpecialty).map((option) => {
+										return (
+											<Radio key={option.id} width={"$100%"} value={option.id}>
+												<RadioIndicator mr='$2'>
+													<RadioIcon as={CircleIcon} />
+												</RadioIndicator>
+												<RadioLabel>{option.name}</RadioLabel>
+											</Radio>
+										);
+									})}
+								</VStack>
+							</RadioGroup>
+						</VStack>
+						<Box mt='$4'>
+							<Divider />
+						</Box>
 						<Divider />
-						<RadioGroup pl='$3' width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
-							<VStack w='$full' alignItems='flex-start' space='lg' mb='$2'>
-								{getCreateMenuOptions(AppStore.UserBroadSpecialty).map((option) => {
-									return (
-										<Radio key={option.id} width={"$100%"} value={option.id}>
-											<RadioIndicator mr='$2'>
-												<RadioIcon as={CircleIcon} />
-											</RadioIndicator>
-											<RadioLabel>{option.name}</RadioLabel>
-										</Radio>
-									);
-								})}
-							</VStack>
-						</RadioGroup>
-					</VStack>
-					<Box mt='$4'>
-						<Divider />
-					</Box>
-					<Divider />
-					<Box w='$90%' mt='$4' mb='$4' alignSelf='center'>
-						<Button onPress={handleOnProceedClick} backgroundColor='#367B71' borderRadius={"$full"}>
-							<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
-								Proceed for log entry
-							</ButtonText>
-						</Button>
-					</Box>
-				</ActionsheetContent>
-			</Actionsheet>
-		</Box>
+						<Box w='$90%' mt='$4' mb='$4' alignSelf='center'>
+							<Button onPress={handleOnProceedClick} backgroundColor='#367B71' borderRadius={"$full"}>
+								<ButtonText pl='$3' pr='$3' fontFamily='Inter_Regular'>
+									Proceed for log entry
+								</ButtonText>
+							</Button>
+						</Box>
+					</ActionsheetContent>
+				</Actionsheet>
+			</Box>
+		</Pressable>
 	);
 };
 
 const CustomTabBar = ({ state, descriptors, navigation }) => {
 	return (
-		<Box style={{ flexDirection: "row", height: 60, backgroundColor: "#FFF", elevation: 0, padding: 0 }}>
+		<Box style={{ flexDirection: "row", height: 60, backgroundColor: "#FFF", elevation: 0, padding: 0, gap: -20 }}>
 			{state.routes.map((route, index) => {
 				const { options } = descriptors[route.key];
 				const isFocused = state.index === index;
@@ -219,6 +224,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 						accessibilityLabel={options.tabBarAccessibilityLabel}
 						testID={options.tabBarTestID}
 						onPress={onPress}
+						bg='$yellow'
 						onLongPress={onLongPress}
 						style={{
 							flex: 1,
@@ -226,12 +232,12 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 							justifyContent: "space-between",
 						}}>
 						{route.name !== "Plus" && (
-							<Box borderRadius='$full' width='$55%' height='$10%' backgroundColor={isFocused ? "#CC3F0C" : "transparent"}></Box>
+							<Box borderRadius='$full' width='$40%' height='$6%' backgroundColor={isFocused ? "#CC3F0C" : "transparent"}></Box>
 						)}
 						{route.name === "Plus" ? (
 							<CreateMenuList />
 						) : (
-							<Image width={20} height={20} source={ImageAssets[`${route.name}${isFocused ? "Active" : "Inactive"}`]} alt='Docked-Logo' />
+							<Image width={25} height={25} source={ImageAssets[`${route.name}${isFocused ? "Active" : "Inactive"}`]} alt='Docked-Logo' />
 						)}
 						<Text fontSize={10} style={{ color: iconColor, paddingBottom: 10 }}>
 							{route.name === "Plus" ? "" : route.name}

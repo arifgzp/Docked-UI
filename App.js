@@ -25,6 +25,7 @@ function App() {
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),
 		Inter_Bold: require("./assets/fonts/Inter-Bold.ttf"),
 		Inter_SemiBold: require("./assets/fonts/Inter-SemiBold.ttf"),
+		Jua: require("./assets/fonts/Jua-Regular.ttf"),
 	});
 
 	SplashScreen.preventAutoHideAsync().catch(() => {
