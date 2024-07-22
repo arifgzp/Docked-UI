@@ -108,7 +108,7 @@ const LoginPage = ({ navigation }) => {
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
-							AppStore.ButtonPressed(false);
+							AppStore.setButtonPressed(false);
 						}
 
 						const logQuery = store.fetchUserLogProfile(response.userName);
@@ -160,12 +160,12 @@ const LoginPage = ({ navigation }) => {
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='handled'>
 					<Box flex={1} backgroundColor='$primaryBackground'>
 						<Image w='$100%' h='$110%' position='absolute' top={0} source={ImageAssets.loginBG} alt='Docked-Logo' />
-						<Box pl='$3' p='$5' pt='$10' height='$40%'>
+						<Box pl='$3' p='$5' pt='$10' height='$38%'>
 							<Image width={120} height={60} source={ImageAssets.icon} alt='Docked-Logo' />
 						</Box>
-						<Box justifyContent='space-between' height='$60%'>
+						<Box justifyContent='space-between' height='$62%'>
 							<Box p='$5'>
-								<VStack space='2xl'>
+								<VStack space='4xl'>
 									<Box>
 										<Text fontFamily='Inter_Bold' fontSize={24} color='#FFFFFC'>
 											Welcome Back

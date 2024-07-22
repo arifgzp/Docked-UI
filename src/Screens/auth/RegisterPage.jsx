@@ -396,7 +396,7 @@ const RegisterPage = ({ navigation, route }) => {
 												To join as a member, you agree to docked's{" "}
 												<Link to='/#' onPress={privacyPolicySheet}>
 													<Text fontSize={12} underline>
-														Terms & Conditions of Use
+														Terms & Conditions of Use.
 													</Text>
 												</Link>
 											</Text>

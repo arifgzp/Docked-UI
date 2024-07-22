@@ -139,7 +139,7 @@ const CreateMenuList = () => {
 									{getCreateMenuOptions(AppStore.UserBroadSpecialty).map((option) => {
 										return (
 											<Radio key={option.id} width={"$100%"} value={option.id}>
-												<RadioIndicator mr='$2'>
+												<RadioIndicator bg='#E6E3DB' borderColor='#E6E3DB' mr='$2'>
 													<RadioIcon as={CircleIcon} />
 												</RadioIndicator>
 												<RadioLabel>{option.name}</RadioLabel>

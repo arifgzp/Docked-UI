@@ -7,7 +7,7 @@ import ProfilePageEdit from "./ProfilePageEdit";
 const EditProfileButon = ({ navigation }) => {
 	return (
 		<Button onPress={() => navigation.navigate("ProfilePageEdit")} size='sm' variant='primary'>
-			<ButtonText pr={2} pl={2}>
+			<ButtonText fontSize={12} px={15}>
 				Edit
 			</ButtonText>
 		</Button>

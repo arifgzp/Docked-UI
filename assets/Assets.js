@@ -5,7 +5,7 @@ export const ImageAssets = {
 	data: require("./Images/data.png"),
 	loginBG: require("./LoginBG.png"),
 	registerBG: require("./RegisterBG.png"),
-	profileIcon: require("./Icons/profileIcon.png"),
+	profileIcon: require("./ProfileIcon.png"),
 	icon: require("./icon.png"),
 	HomeActive: require("./tabIcons/homeActive.png"),
 	HomeInactive: require("./tabIcons/homeInactive.png"),

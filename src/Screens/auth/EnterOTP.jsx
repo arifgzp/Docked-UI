@@ -40,6 +40,10 @@ const EnterOTPPage = ({ route }) => {
 	const mail = appStoreInstance.UserName;
 	const password = appStoreInstance.UserPassword;
 
+	const resendOTP = async () => {
+		const response = await appStoreInstance.SendVerificationCode({ Email: params === null ? mail : params.enteredMail });
+	};
+
 	const handleVerify = async () => {
 		setVerifyPressed(true);
 
@@ -109,7 +113,7 @@ const EnterOTPPage = ({ route }) => {
 									</Text>
 								</VStack>
 							</Box>
-							<Box alignSelf='flex-start' width='$80%'>
+							<Box alignSelf='flex-start' width='$75%'>
 								<FormControl
 									width='$full'
 									size='md'
@@ -141,14 +145,14 @@ const EnterOTPPage = ({ route }) => {
 									)}
 								</FormControl>
 							</Box>
-							{/* <HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
-							<Text size='sm'>Didn’t Receive OTP?</Text>
-							<Box>
-								<Button variant='link' size='sm'>
-									<ButtonText color='#367B71'>Resend OTP</ButtonText>
-								</Button>
-							</Box>
-						</HStack> */}
+							<HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
+								<Text size='sm'>Didn’t Receive OTP?</Text>
+								<Box>
+									<Button variant='link' size='sm' onPress={resendOTP}>
+										<ButtonText color='#367B71'>Resend OTP</ButtonText>
+									</Button>
+								</Box>
+							</HStack>
 						</VStack>
 					</Box>
 					<Box justifyContent='center' p='$5'>

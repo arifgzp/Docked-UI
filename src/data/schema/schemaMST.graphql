@@ -240,6 +240,8 @@ type Faculty{
     id: ID!
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    firstName: String @search @dgraph(pred:"firstName")
+    lastName: String @search @dgraph(pred:"lastName")
     name: String @search @dgraph(pred:"name")
     designation: String @search @dgraph(pred:"designation")
     otherDesignation: String @search @dgraph(pred:"otherDesignation")

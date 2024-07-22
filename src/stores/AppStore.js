@@ -601,6 +601,28 @@ const AppStore = types
 			}
 		}),
 
+		SendVerificationCode: flow(function* SendVerificationCode(formData) {
+			let status = "unknown";
+			try {
+				self._isLoading = true;
+				console.log("Verify Account Form", formData);
+				const responseData = yield execute("/sendVerificationCode", formData);
+
+				console.log("SendVerificationCode for OTP", responseData);
+				if (responseData.message === "InvalidOTPException") {
+					status = "FAILED";
+				} else {
+					status = "SUCCESS";
+				}
+			} catch (error) {
+				console.error("AppStore > SendVerificationCode ", error);
+				status = "ERROR";
+			} finally {
+				self._isLoading = false;
+				return status;
+			}
+		}),
+
 		SignIn: flow(function* SignIn(formData, skipPostLogin = false) {
 			try {
 				self._isLoading = true;

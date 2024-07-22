@@ -54,7 +54,7 @@ const RegisterMobileNumberOTPPage = ({ navigation, route }) => {
 								</Text>
 							</VStack>
 						</Box>
-						<Box alignSelf='flex-start' width='$80%'>
+						<Box alignSelf='flex-start' width='$75%'>
 							<FormControl
 								width='$full'
 								size='md'

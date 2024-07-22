@@ -32,12 +32,12 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 			<Box flex={1} alignItems='center'>
-				<VStack space='4xl' width={"$100%"} alignItems='center'>
+				<VStack space='2xl' width={"$100%"} alignItems='center'>
 					{formFields.map((field, index) => {
 						return (
 							<React.Fragment key={index}>
 								<Box width={"$100%"}>
-									<Box px='$5' paddingBottom={10}>
+									<Box px='$5'>
 										<Controller
 											control={control}
 											key={index}
@@ -48,7 +48,6 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 												if (field.type === "select-single") {
 													return (
 														<VStack>
-															<Text size='xs'>{field.name}</Text>
 															<Select
 																borderWidth={0.5}
 																borderRadius={5}
@@ -59,7 +58,7 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 																<SelectTrigger variant='outline' size='md'>
 																	<SelectInput placeholder={field.name} />
 																	<SelectIcon mr='$3'>
-																		<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																		<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
 																	</SelectIcon>
 																</SelectTrigger>
 																<SelectPortal>
@@ -92,7 +91,6 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 												} else if (field.type === "text") {
 													return (
 														<VStack>
-															<Text size='xs'>{field.name}</Text>
 															<Input borderColor='rgba(77, 83, 86, 0.4)' variant='outline'>
 																<InputField onChangeText={onChange} value={value} placeholder={field.name} />
 															</Input>

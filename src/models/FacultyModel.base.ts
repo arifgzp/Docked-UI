@@ -19,6 +19,8 @@ export const FacultyModelBase = ModelBase
     id: types.identifier,
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
+    firstName: types.union(types.undefined, types.null, types.string),
+    lastName: types.union(types.undefined, types.null, types.string),
     name: types.union(types.undefined, types.null, types.string),
     designation: types.union(types.undefined, types.null, types.string),
     otherDesignation: types.union(types.undefined, types.null, types.string),
@@ -34,6 +36,8 @@ export class FacultyModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
+  get firstName() { return this.__attr(`firstName`) }
+  get lastName() { return this.__attr(`lastName`) }
   get name() { return this.__attr(`name`) }
   get designation() { return this.__attr(`designation`) }
   get otherDesignation() { return this.__attr(`otherDesignation`) }
@@ -43,4 +47,4 @@ export function selectFromFaculty() {
   return new FacultyModelSelector()
 }
 
-export const facultyModelPrimitives = selectFromFaculty().createdOn.updatedOn.name.designation.otherDesignation.phoneNumber
+export const facultyModelPrimitives = selectFromFaculty().createdOn.updatedOn.firstName.lastName.name.designation.otherDesignation.phoneNumber

@@ -75,7 +75,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 								AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 								AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
-								AppStore.ButtonPressed(false);
+								AppStore.setButtonPressed(false);
 							}
 
 							const query = store.fetchUserLogProfile(response.userName);
@@ -173,7 +173,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
-							AppStore.ButtonPressed(false);
+							AppStore.setButtonPressed(false);
 						}
 
 						const query = store.fetchUserLogProfile(response.userName);
@@ -228,7 +228,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				behavior={Platform.OS === "ios" ? "height" : "height"}
 				style={{ flex: 1, zIndex: 999 }}
 				keyboardShouldPersistTaps='handled'>
-				<Box pt='$16' flex={1} h='$full' backgroundColor='$primaryBackground'>
+				<Box pt='$12' flex={1} h='$full' backgroundColor='$primaryBackground'>
 					<VStack flex={1} h='$full' space='lg' justifyContent='space-between'>
 						<ScrollView>
 							<Box p='$5' pt='$0'>
@@ -266,7 +266,8 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								);
 							})}
 						</HStack> */}
-									<Text fontSize={14}>{currentStepLabel}</Text>
+									<Text fontSize={14}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt </Text>
+									{/* <Text fontSize={14}>{currentStepLabel}</Text> */}
 								</VStack>
 							</Box>
 							<Box width={"$100%"} justifyContent='center'>

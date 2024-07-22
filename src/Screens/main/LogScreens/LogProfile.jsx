@@ -39,6 +39,8 @@ import {
 	useToast,
 	ToastTitle,
 	ToastDescription,
+	InputIcon,
+	InputSlot,
 } from "@gluestack-ui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
@@ -151,9 +153,71 @@ const LogProfilePage = ({ navigation, route }) => {
 		}
 	};
 
-	const handleOpenFaculty = () => {
-		setModalView("faculty");
-		setShowModal(true);
+	const handleAddFaculty = () => {
+		const newFacultyEntry = {
+			firstName: "",
+			lastName: "",
+			designation: "",
+			otherDesignation: "",
+			phoneNumber: "", // You can modify this as per your requirement
+		};
+		setFacultyList([...facultyList, newFacultyEntry]);
+		// setModalView("faculty");
+		// setShowModal(true);
+	};
+
+	const handleFacultyFirstNameChange = (index, newValue) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].firstName = newValue;
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleClearFacultyFirstNameChange = (index) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].firstName = "";
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleFacultyLastNameChange = (index, newValue) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].lastName = newValue;
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleClearFacultyLastNameChange = (index) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].lastName = "";
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleFacultyDesignationChange = (index, newValue) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].designation = newValue;
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleFacultyOtherDesignationChange = (index, newValue) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].otherDesignation = newValue;
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleClearFacultyOtherDesignationChange = (index) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].otherDesignation = "";
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleFacultyPhoneNumberChange = (index, newValue) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].phoneNumber = newValue;
+		setFacultyList(updatedFacultyList);
+	};
+
+	const handleClearFacultyPhoneNumberChange = (index) => {
+		const updatedFacultyList = [...facultyList];
+		updatedFacultyList[index].phoneNumber = "";
+		setFacultyList(updatedFacultyList);
 	};
 
 	const handleEditFaculty = (faculty, index) => {
@@ -222,6 +286,12 @@ const LogProfilePage = ({ navigation, route }) => {
 	const handleHospitalChange = (index, newValue) => {
 		const updatedHospitalList = [...hospitalList];
 		updatedHospitalList[index].name = newValue;
+		setHospitalList(updatedHospitalList);
+	};
+
+	const handleClearHospital = (index) => {
+		const updatedHospitalList = [...hospitalList];
+		updatedHospitalList[index].name = "";
 		setHospitalList(updatedHospitalList);
 	};
 
@@ -379,17 +449,22 @@ const LogProfilePage = ({ navigation, route }) => {
 									) : (
 										hospitalList.map((hospital, index) => {
 											return (
-												<VStack space='sm'>
+												<VStack key={index} space='sm'>
 													<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-														Hospital {index + 1}
+														Hospital - {index + 1}
 													</Text>
 													<Input size='sm' variant='outline'>
 														<InputField
 															type='text'
 															value={hospital.name}
 															onChangeText={(newValue) => handleHospitalChange(index, newValue)}
-															placeholder={`Hospital ${index + 1}`}
+															placeholder={`Hospital`}
 														/>
+														{hospital.name !== "" && (
+															<InputSlot pr='$3' onPress={(newValue) => handleClearHospital(index)}>
+																<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+															</InputSlot>
+														)}
 													</Input>
 												</VStack>
 											);
@@ -498,7 +573,7 @@ const LogProfilePage = ({ navigation, route }) => {
 																				<SelectTrigger variant='outline' size='sm'>
 																					<SelectInput placeholder='Designation' />
 																					<SelectIcon mr='$3'>
-																						<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																						<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
 																					</SelectIcon>
 																				</SelectTrigger>
 																				<SelectPortal>
@@ -784,32 +859,156 @@ const LogProfilePage = ({ navigation, route }) => {
 								) : (
 									facultyList.map((faculty, index) => {
 										return (
-											<HStack key={index} justifyContent='space-between' width={"$100%"}>
-												<VStack space='sm'>
-													<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-														Faculty {index + 1}
-													</Text>
-													<VStack>
-														<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-															{faculty.name}
+											<VStack w='$100%' key={index} space='sm'>
+												<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
+													Faculty {index + 1}
+												</Text>
+												<HStack justifyContent='space-between' w='$100%'>
+													<VStack w='$48%'>
+														<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
+															First Name
 														</Text>
-														<Text size='xs' color='#4D5356'>
-															{faculty.designation === "Others" ? faculty.otherDesignation : faculty.designation}
-														</Text>
+														<Input size='sm' variant='outline'>
+															<InputField
+																type='text'
+																value={faculty.firstName}
+																onChangeText={(newValue) => handleFacultyFirstNameChange(index, newValue)}
+																placeholder={`First Name`}
+															/>
+															{faculty.firstName !== "" && (
+																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyFirstNameChange(index)}>
+																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																</InputSlot>
+															)}
+														</Input>
 													</VStack>
-													<HStack py='$1'>
-														<Icon as={PhoneIcon} mr='$1' w='$4' h='$4' />
-														<Text fontSize='$xs'>{faculty.phoneNumber}</Text>
+													<VStack w='$48%'>
+														<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
+															Last Name
+														</Text>
+														<Input size='sm' variant='outline'>
+															<InputField
+																type='text'
+																value={faculty.lastName}
+																onChangeText={(newValue) => handleFacultyLastNameChange(index, newValue)}
+																placeholder={`Last Name`}
+															/>
+															{faculty.lastName !== "" && (
+																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyLastNameChange(index)}>
+																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																</InputSlot>
+															)}
+														</Input>
+													</VStack>
+												</HStack>
+												<VStack>
+													<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
+														Designation
+													</Text>
+													<Select
+														width={"$100%"}
+														onValueChange={(newValue) => handleFacultyDesignationChange(index, newValue)}
+														selectedValue={faculty.designation}>
+														<SelectTrigger variant='outline' size='sm'>
+															<SelectInput placeholder='Designation' />
+															<SelectIcon mr='$3'>
+																<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
+															</SelectIcon>
+														</SelectTrigger>
+														<SelectPortal>
+															<SelectBackdrop />
+															<SelectContent p='$0'>
+																<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
+																	Designation
+																</Text>
+																<Divider borderWidth={0.1} />
+																<SelectScrollView>
+																	{designation.map((option, index) => {
+																		return (
+																			<SelectItem
+																				bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																				key={index}
+																				label={option.label}
+																				value={option.value}
+																			/>
+																		);
+																	})}
+																</SelectScrollView>
+																<SelectDragIndicatorWrapper>
+																	<SelectDragIndicator />
+																</SelectDragIndicatorWrapper>
+															</SelectContent>
+														</SelectPortal>
+													</Select>
+												</VStack>
+												{faculty.designation === "Others" && (
+													<VStack>
+														<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
+															Other Designation
+														</Text>
+														<Input size='sm' variant='outline'>
+															<InputField
+																type='text'
+																value={faculty.otherDesignation}
+																onChangeText={(newValue) => handleFacultyOtherDesignationChange(index, newValue)}
+																placeholder={`Other Designation`}
+															/>
+															{faculty.otherDesignation !== "" && (
+																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyOtherDesignationChange(index)}>
+																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																</InputSlot>
+															)}
+														</Input>
+													</VStack>
+												)}
+												<VStack>
+													<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
+														Mobile Number
+													</Text>
+													<HStack w='$100%' justifyContent='space-between'>
+														<Select w='$25%' isReadOnly selectedValue='+91'>
+															<SelectTrigger variant='outline' size='sm'>
+																<SelectInput placeholder={`+91`} />
+																<SelectIcon mr='$3'>
+																	<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
+																</SelectIcon>
+															</SelectTrigger>
+															<SelectPortal>
+																<SelectBackdrop />
+																<SelectContent p='$0'>
+																	<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
+																		Phone Number
+																	</Text>
+																	<Divider borderWidth={0.1} />
+																	<SelectScrollView>
+																		<SelectItem key='+91' label='+91' value='+91' />;
+																	</SelectScrollView>
+																</SelectContent>
+																<SelectDragIndicatorWrapper>
+																	<SelectDragIndicator />
+																</SelectDragIndicatorWrapper>
+															</SelectPortal>
+														</Select>
+														<Input w='$70%' size='sm' variant='outline'>
+															<InputField
+																type='text'
+																value={faculty.phoneNumber}
+																onChangeText={(newValue) => handleFacultyPhoneNumberChange(index, newValue)}
+																placeholder={`Mobile Number`}
+															/>
+															{faculty.phoneNumber !== "" && (
+																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyPhoneNumberChange(index)}>
+																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																</InputSlot>
+															)}
+														</Input>
 													</HStack>
 												</VStack>
-												<Button onPress={() => handleEditFaculty(faculty, index)} ref={ref} size='sm' variant='secondary'>
-													<ButtonText fontSize={10}>Edit Faculty</ButtonText>
-												</Button>
-											</HStack>
+											</VStack>
 										);
 									})
 								)}
-								<Button onPress={handleOpenFaculty} ref={ref} alignSelf='flex-start' size='sm' variant='link'>
+								<Button onPress={handleAddFaculty} ref={ref} alignSelf='flex-start' size='sm' variant='link'>
 									<HStack space='sm' alignItems='center'>
 										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
 										<ButtonText color='#000'>Add a new Faculty</ButtonText>
@@ -968,7 +1167,7 @@ const LogProfilePage = ({ navigation, route }) => {
 						</Box>
 						{currentSpecialty === "Anaesthesiology" ? <Divider /> : <Box></Box>}
 					</ScrollView>
-					<Box width='$100%' flex={1 / 4} pt={10} p={14} paddingBottom={"$30%"}>
+					<Box width='$100%' flex={1 / 4} pt={10} p={14} paddingBottom={"$20%"}>
 						<Button onPress={handleSubmit(handleOnSave)} variant='primary'>
 							<ButtonText>Save</ButtonText>
 						</Button>

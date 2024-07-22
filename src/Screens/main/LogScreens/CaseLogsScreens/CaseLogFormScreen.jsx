@@ -402,7 +402,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 									</VStack>
 								</Box>
 							</ScrollView>
-							<Box p={20} paddingTop={5} width={"$100%"}>
+							<Box p={20} pb={"$10%"} paddingTop={5} width={"$100%"}>
 								<Button onPress={handleSubmit(handleSaveClick)} variant='primary'>
 									<ButtonText>Save</ButtonText>
 								</Button>

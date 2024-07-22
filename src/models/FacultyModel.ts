@@ -17,4 +17,4 @@ export const FacultyModel = FacultyModelBase.actions((self) => ({
 	},
 }));
 
-export const facultyModelSelector = selectFromFaculty().createdOn.updatedOn.name.designation.phoneNumber.otherDesignation;
+export const facultyModelSelector = selectFromFaculty().createdOn.updatedOn.name.designation.phoneNumber.otherDesignation.firstName.lastName;

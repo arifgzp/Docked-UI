@@ -44,12 +44,12 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 			<ScrollView>
 				<Box h='$100%' alignItems='center'>
 					<ScrollView>
-						<VStack space='4xl' width={"$100%"} alignItems='center'>
+						<VStack space='2xl' width={"$100%"} alignItems='center'>
 							{formFields.map((field, index) => {
 								return (
 									<React.Fragment key={index}>
 										<Box width={"$100%"}>
-											<Box alignItems='center' paddingBottom={10}>
+											<Box alignItems='center'>
 												<Controller
 													control={control}
 													key={index}
@@ -60,7 +60,6 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 														if (field.type === "date") {
 															return (
 																<VStack px='$5'>
-																	<Text size='xs'>{field.name}</Text>
 																	<Button
 																		bg='$transparent'
 																		borderColor='rgba(77, 83, 86, 0.4)'
@@ -75,7 +74,6 @@ const VerifyMHD = ({ control, formState, formFields, setValue }) => {
 														} else if (field.type === "text") {
 															return (
 																<VStack w='$100%' px='$5'>
-																	<Text size='xs'>{field.name}</Text>
 																	<Input borderColor='rgba(77, 83, 86, 0.4)' variant='outline'>
 																		<InputField onChangeText={onChange} value={value} placeholder={field.name} />
 																	</Input>

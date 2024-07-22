@@ -151,7 +151,7 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 			<Box flex={1}>
-				<VStack space='4xl' width={"$100%"}>
+				<VStack space='2xl' width={"$100%"}>
 					{formFields.map((field, index) => {
 						let options = field.options;
 						if (field.uid === "superSpecialty") {
@@ -162,7 +162,7 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 						return (
 							<React.Fragment key={index}>
 								<Box width={"$100%"}>
-									<Box px='$5' paddingBottom={10}>
+									<Box px='$5'>
 										<Controller
 											control={control}
 											key={field.uid}
@@ -175,7 +175,6 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 												if (field.uid === "broadSpecialty") {
 													return (
 														<VStack>
-															<Text size='xs'>{field.name}</Text>
 															<Select
 																borderWidth={0.5}
 																borderRadius={5}
@@ -189,7 +188,7 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 																<SelectTrigger variant='outline' size='md'>
 																	<SelectInput placeholder={field.name} />
 																	<SelectIcon mr='$3'>
-																		<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																		<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
 																	</SelectIcon>
 																</SelectTrigger>
 																<SelectPortal>
@@ -222,7 +221,6 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 												}
 												return (
 													<VStack>
-														<Text size='xs'>{field.name}</Text>
 														<Select
 															borderWidth={0.5}
 															borderRadius={5}
@@ -235,7 +233,7 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 															<SelectTrigger variant='outline' size='md'>
 																<SelectInput placeholder={field.name} />
 																<SelectIcon mr='$3'>
-																	<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
+																	<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
 																</SelectIcon>
 															</SelectTrigger>
 															<SelectPortal>
@@ -268,8 +266,14 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 											}}
 										/>
 									</Box>
-									<Box alignItems='center'>
-										<Box width={"$80%"}>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+									<Box px='$5'>
+										<Box width={"$80%"}>
+											{formState.errors[field.uid] && (
+												<Text size='xs' color='#CC3F0C'>
+													This is required.
+												</Text>
+											)}
+										</Box>
 									</Box>
 								</Box>
 							</React.Fragment>

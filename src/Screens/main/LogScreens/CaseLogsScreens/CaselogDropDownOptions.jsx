@@ -137,7 +137,7 @@ const CaselogDropDownOptions = ({
 									selectedValue={caseLogData?.hospital || value}>
 									<SelectTrigger variant='outline' size='sm'>
 										<SelectInput placeholder={`Hospital`} />
-										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+										<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
 										<SelectBackdrop />
@@ -190,7 +190,7 @@ const CaselogDropDownOptions = ({
 									selectedValue={caseLogData?.faculty || value}>
 									<SelectTrigger variant='outline' size='sm'>
 										<SelectInput placeholder={`Faculty`} />
-										<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+										<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
 										<SelectBackdrop />
@@ -201,7 +201,14 @@ const CaselogDropDownOptions = ({
 											<Divider borderWidth={0.1} />
 											<SelectScrollView>
 												{prefilledData?.faculty.map((item, index) => {
-													return <SelectItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={item?.id} label={item?.name} value={item?.name} />;
+													return (
+														<SelectItem
+															bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+															key={item?.id}
+															label={`${item?.firstName || ""} ${item?.lastName || ""}`}
+															value={`${item?.firstName || ""} ${item?.lastName || ""}`}
+														/>
+													);
 												})}
 											</SelectScrollView>
 											<SelectDragIndicatorWrapper>
@@ -236,7 +243,7 @@ const CaselogDropDownOptions = ({
 												<Select onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
 													<SelectTrigger variant='outline' size='sm'>
 														<SelectInput placeholder={field.name} />
-														<SelectIcon mr='$3'>{!readOnly && <Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+														<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 													</SelectTrigger>
 													<SelectPortal>
 														<SelectBackdrop />

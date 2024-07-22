@@ -261,7 +261,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 												return (
 													<VStack>
 														<Text bold size='sm' alignSelf='flex-start' color='#0F0F10'>
-															Hospital {index + 1}
+															Hospital - {index + 1}
 														</Text>
 														<Text size='xs' color='#4D5356'>
 															{hospital.name}
@@ -287,18 +287,17 @@ const LogProfileReadPage = ({ navigation, route }) => {
 										console.log("faculty to be console", faculty);
 										return (
 											<HStack key={index} justifyContent='space-between' width={"$100%"}>
-												<VStack space='sm'>
+												<VStack>
 													<VStack>
 														<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-															{faculty.name}
+															Dr. {faculty.firstName} {faculty.lastName}
 														</Text>
 														<Text size='xs' color='#4D5356'>
 															{faculty.designation === "Others" ? faculty.otherDesignation : faculty.designation}
 														</Text>
 													</VStack>
 													<HStack py='$1'>
-														<Icon as={PhoneIcon} mr='$1' w='$4' h='$4' />
-														<Text fontSize='$xs'>{faculty.phoneNumber}</Text>
+														<Text size='xs'>+91 {faculty.phoneNumber}</Text>
 													</HStack>
 												</VStack>
 												<HStack space='xs' alignItems='center' alignSelf='flex-start'>
@@ -337,13 +336,13 @@ const LogProfileReadPage = ({ navigation, route }) => {
 															<Text fontSize='$xs'>
 																<Text bold size='xs' color='#4D5356'>
 																	From:
-																</Text>{" "}
+																</Text>
 																{rotation.from ? format(new Date(rotation?.from), "d/M/yyyy") : "--"}
 															</Text>
 															<Text fontSize='$xs'>
 																<Text bold size='xs' color='#4D5356'>
 																	To:
-																</Text>{" "}
+																</Text>
 																{rotation.to ? format(new Date(rotation?.to), "d/M/yyyy") : "--"}
 															</Text>
 														</HStack>

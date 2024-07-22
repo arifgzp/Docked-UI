@@ -511,7 +511,9 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		self.anaesthesiaChronicPainLogs.clear();
 		self.anaesthesiaCriticalCareCaseLogs.clear();
 		self.orthopaedicsCaseLogs.clear();
+		self.orthopaedicsProcedureLogs.clear();
 		self.orthodonticsClinicalCaseLogs.clear();
+		self.orthodonticsPreClinicals.clear();
 	},
 })).views((self) => ({
 	get AnaesthesiaCaseLogList() {

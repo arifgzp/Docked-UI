@@ -25,7 +25,7 @@ import {
 	ButtonText,
 } from "@gluestack-ui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Platform, useWindowDimensions } from "react-native";
+import { View, Platform, useWindowDimensions, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView, Image } from "@gluestack-ui/themed";
 import { ImageAssets } from "../../../assets/Assets";
@@ -127,14 +127,17 @@ const HomeScreenPage = ({ navigation }) => {
 								</Text>
 								<Text>{appStoreInstance.UserBroadSpecialty}</Text>
 							</VStack>
-							<Button
+							<Pressable onPress={() => navigation.navigate("ProfilePage")}>
+								<Image width={35} height={35} source={ImageAssets.profileIcon} alt='Docked-Logo' />
+							</Pressable>
+							{/* <Button
 								onPress={() => navigation.navigate("ProfilePage")}
 								height={50}
 								justifyContent='flex-start'
 								alignItems='flex-start'
 								variant='link'>
 								<ButtonIcon as={Ionicons} size={50} name='person-circle-outline' color='#367B71' />
-							</Button>
+							</Button> */}
 						</HStack>
 					</Box>
 					<Box p={10} width={"$full"} borderBottomEndRadius={50} backgroundColor='#367B71'>

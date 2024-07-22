@@ -11,7 +11,7 @@ import { ButtonText } from "@gluestack-ui/themed";
 const EditProfileButon = ({ navigation }) => {
 	return (
 		<Button onPress={() => navigation.navigate("LogProfilePage", { caseLogFormToGet: "" })} size='sm' variant='primary'>
-			<ButtonText pr={2} pl={2}>
+			<ButtonText fontSize={12} px={15}>
 				Edit
 			</ButtonText>
 		</Button>

@@ -1,4 +1,4 @@
-import { CheckIcon, CheckboxGroup, CheckboxIndicator, KeyboardAvoidingView, SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
+import { CheckIcon, CheckboxGroup, CheckboxIndicator, InputIcon, KeyboardAvoidingView, SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
 import { CheckboxLabel } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
@@ -47,6 +47,7 @@ import { observer } from "mobx-react";
 import { useIsFocused } from "@react-navigation/native";
 import { SelectScrollView } from "@gluestack-ui/themed";
 import { SelectDragIndicator } from "@gluestack-ui/themed";
+import { InputSlot } from "@gluestack-ui/themed";
 
 const designation = [
 	{ label: "Head of Department", value: "Head of Department" },
@@ -201,6 +202,27 @@ const ProfilePageEdit = ({ navigation }) => {
 	const handelSetDate = (date) => {
 		setValue("yearOfRegistration", date);
 	};
+
+	const handleClearDesignationOthersInputField = () => {
+		setValue("designationOthers", "");
+	};
+
+	const handleClearWorkPlaceInputField = () => {
+		setValue("workPlace", "");
+	};
+
+	const handleClearCityInputField = () => {
+		setValue("city", "");
+	};
+
+	const handleClearMedicalCouncilNameInputField = () => {
+		setValue("medicalCouncilName", "");
+	};
+
+	const handleClearMedicalRegistrationNumberInputField = () => {
+		setValue("medicalRegistrationNumber", "");
+	};
+
 	const isFocused = useIsFocused();
 	const currentSpecialty = appStoreInstance.UserBroadSpecialty;
 
@@ -312,7 +334,7 @@ const ProfilePageEdit = ({ navigation }) => {
 																selectedValue={value}>
 																<SelectTrigger variant='outline' size='sm'>
 																	<SelectInput placeholder='Super Specialty' />
-																	<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+																	<SelectIcon mr='$3'>{<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 																</SelectTrigger>
 																<SelectPortal>
 																	<SelectBackdrop />
@@ -366,7 +388,7 @@ const ProfilePageEdit = ({ navigation }) => {
 															<Select isDisabled={true} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
 																<SelectTrigger variant='outline' size='sm'>
 																	<SelectInput placeholder='Sub Specialty' />
-																	<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+																	<SelectIcon mr='$3'>{<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 																</SelectTrigger>
 																<SelectPortal>
 																	<SelectBackdrop />
@@ -424,7 +446,7 @@ const ProfilePageEdit = ({ navigation }) => {
 														<Select onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
 															<SelectTrigger variant='outline' size='sm'>
 																<SelectInput placeholder='Designation' />
-																<SelectIcon mr='$3'>{<Icon as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
+																<SelectIcon mr='$3'>{<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 															</SelectTrigger>
 															<SelectPortal>
 																<SelectBackdrop />
@@ -474,6 +496,11 @@ const ProfilePageEdit = ({ navigation }) => {
 														return (
 															<Input size='sm' variant='outline'>
 																<InputField onChangeText={onChange} value={value} placeholder={"Other designation"} />
+																{watch("designationOthers") !== "" && (
+																	<InputSlot pr='$3' onPress={handleClearDesignationOthersInputField}>
+																		<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																	</InputSlot>
+																)}
 															</Input>
 														);
 													}}
@@ -498,6 +525,11 @@ const ProfilePageEdit = ({ navigation }) => {
 														return (
 															<Input variant='outline' size='sm'>
 																<InputField onChangeText={onChange} value={value} placeholder='Work Place' />
+																{watch("workPlace") !== "" && (
+																	<InputSlot pr='$3' onPress={handleClearWorkPlaceInputField}>
+																		<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																	</InputSlot>
+																)}
 															</Input>
 														);
 													}}
@@ -524,6 +556,11 @@ const ProfilePageEdit = ({ navigation }) => {
 														return (
 															<Input variant='outline' size='sm'>
 																<InputField onChangeText={onChange} value={value} placeholder='City' />
+																{watch("city") !== "" && (
+																	<InputSlot pr='$3' onPress={handleClearCityInputField}>
+																		<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																	</InputSlot>
+																)}
 															</Input>
 														);
 													}}
@@ -566,6 +603,11 @@ const ProfilePageEdit = ({ navigation }) => {
 													return (
 														<Input variant='outline' size='sm'>
 															<InputField onChangeText={onChange} value={value} placeholder='Medical Council Name' />
+															{watch("medicalCouncilName") !== "" && (
+																<InputSlot pr='$3' onPress={handleClearMedicalCouncilNameInputField}>
+																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																</InputSlot>
+															)}
 														</Input>
 													);
 												}}
@@ -601,6 +643,11 @@ const ProfilePageEdit = ({ navigation }) => {
 													return (
 														<Input variant='outline' size='sm'>
 															<InputField onChangeText={onChange} value={value} placeholder='Medical Registration Number' />
+															{watch("medicalRegistrationNumber") !== "" && (
+																<InputSlot pr='$3' onPress={handleClearMedicalRegistrationNumberInputField}>
+																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
+																</InputSlot>
+															)}
 														</Input>
 													);
 												}}

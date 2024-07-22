@@ -110,20 +110,20 @@ const ProfilePage = ({ navigation }) => {
 										Your Expertise
 									</Text>
 									<VStack>
-										<Text color='#000' size='sm'>
+										<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 											Broad Speciality
 										</Text>
 										<Text size='xs'>{appStoreInstance.UserBroadSpecialty ? appStoreInstance.UserBroadSpecialty : "—"}</Text>
 									</VStack>
 									<HStack w='$100%'>
 										<VStack w='$50%'>
-											<Text color='#000' size='sm'>
+											<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 												Super Speciality
 											</Text>
 											<Text size='xs'>{appStoreInstance.SuperSpecialty ? appStoreInstance.SuperSpecialty : "—"}</Text>
 										</VStack>
 										<VStack w='$50%'>
-											<Text color='#000' size='sm'>
+											<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 												Sub Speciality
 											</Text>
 											<Text size='xs'>{appStoreInstance.SubSpecialty ? appStoreInstance.SubSpecialty : "—"}</Text>
@@ -138,7 +138,7 @@ const ProfilePage = ({ navigation }) => {
 										Work
 									</Text>
 									<VStack>
-										<Text color='#000' size='sm'>
+										<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 											Designation
 										</Text>
 										<Text size='xs'>
@@ -151,13 +151,13 @@ const ProfilePage = ({ navigation }) => {
 									</VStack>
 									<HStack w='$100%'>
 										<VStack w='$50%'>
-											<Text color='#000' size='sm'>
+											<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 												Workplace
 											</Text>
 											<Text size='xs'>{appStoreInstance.Workplace ? appStoreInstance.Workplace : "—"}</Text>
 										</VStack>
 										<VStack w='$50%'>
-											<Text color='#000' size='sm'>
+											<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 												City
 											</Text>
 											<Text size='xs'>{appStoreInstance.City ? appStoreInstance.City : "—"}</Text>
@@ -180,13 +180,13 @@ const ProfilePage = ({ navigation }) => {
 										</HStack>
 									</HStack>
 									<VStack>
-										<Text color='#000' size='sm'>
+										<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 											Medical Council Name
 										</Text>
 										<Text size='xs'>{appStoreInstance.MedicalCouncilName ? appStoreInstance.MedicalCouncilName : "—"}</Text>
 									</VStack>
 									<VStack>
-										<Text color='#000' size='sm'>
+										<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 											Year of Registration
 										</Text>
 										<Text size='xs'>
@@ -194,7 +194,7 @@ const ProfilePage = ({ navigation }) => {
 										</Text>
 									</VStack>
 									<VStack>
-										<Text color='#000' size='sm'>
+										<Text fontFamily='Inter_Medium' color='#000' size='sm'>
 											Medical Registration Number
 										</Text>
 										<Text size='xs'>{appStoreInstance.MedicalRegistrationNumber ? appStoreInstance.MedicalRegistrationNumber : "—"}</Text>
