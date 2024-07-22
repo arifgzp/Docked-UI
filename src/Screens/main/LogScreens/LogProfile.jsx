@@ -418,9 +418,14 @@ const LogProfilePage = ({ navigation, route }) => {
 			// Code to run when the screen is focused
 			console.log("Screen is focused on Log Profile");
 			console.log("AppStore.ButtonPressed after Log Profile is in FOCUSSSS", AppStore.ButtonPressed);
+			console.log("caseLogFormToGet when in focus", caseLogFormToGet);
 			return () => {
 				AppStore.setButtonPressed(false);
 				console.log("AppStore.ButtonPressed after Log Profile is out of focus", AppStore.ButtonPressed);
+				if (caseLogFormToGet === "") {
+					console.log("this line should appear", caseLogFormToGet);
+					navigation.goBack();
+				}
 			};
 		}, [caseLogFormToGet])
 	);
