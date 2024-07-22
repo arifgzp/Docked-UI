@@ -205,7 +205,7 @@ const HomeScreenPage = ({ navigation }) => {
 							</VStack>
 						</HStack>
 					</Box>
-					<ScrollView horizontal={true}>
+					<ScrollView pb={15} horizontal={true}>
 						<HStack>
 							<Card borderRadius={25} size='md' variant='filled' m='$3'>
 								<Heading mb='$1' size='md'>

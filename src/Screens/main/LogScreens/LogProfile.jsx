@@ -997,6 +997,7 @@ const LogProfilePage = ({ navigation, route }) => {
 														<Input w='$70%' size='sm' variant='outline'>
 															<InputField
 																type='text'
+																inputMode='numeric'
 																value={faculty.phoneNumber}
 																onChangeText={(newValue) => handleFacultyPhoneNumberChange(index, newValue)}
 																placeholder={`Mobile Number`}
