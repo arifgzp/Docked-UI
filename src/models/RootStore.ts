@@ -1,4 +1,5 @@
-import { Instance } from "mobx-state-tree";
+import { filter, find, forEach, forIn, isEmpty, isNil } from "lodash";
+import { Instance, destroy } from "mobx-state-tree";
 import { RootStoreBase } from "./RootStore.base";
 import {
 	anaesthesiaCaseLogModelPrimitives,
@@ -34,6 +35,13 @@ import {
 	updateOrthopaedicsProcedureLogModelSelector,
 	selectFromUpdateOrthodonticsPreClinicalPayload,
 	updateOrthodonticsPreClinicalModelSelector,
+	deleteOrthodonticsPreClinicalPayloadModelPrimitives,
+	deleteOrthodonticsClinicalCaseLogPayloadModelPrimitives,
+	deleteAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives,
+	deleteAnaesthesiaChronicPainLogPayloadModelPrimitives,
+	deleteAnaesthesiaCaseLogPayloadModelPrimitives,
+	deleteOrthopaedicsCaseLogPayloadModelPrimitives,
+	deleteOrthopaedicsProcedureLogPayloadModelPrimitives,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
@@ -500,6 +508,153 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log(fetchAnaesthesiaCriticalCareCaseLogQuery.variables);
 		console.log("********** fetchAnaesthesiaCriticalCareCaseLog Query ENDS **********");
 		return fetchAnaesthesiaCriticalCareCaseLogQuery;
+	},
+
+	deleteOrthodonticsPreClinical(OrthodonticsPreClinicalList: []) {
+		const filterVariable = { filter: { id: OrthodonticsPreClinicalList } };
+		const resultSelector = deleteOrthodonticsPreClinicalPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(OrthodonticsPreClinicalList, (OrthodonticsPreClinicalID: string) => {
+				destroy(self.orthodonticsPreClinicals.get(OrthodonticsPreClinicalID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryOrthodonticsPreClinical")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteOrthodonticsPreClinical Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteOrthodonticsPreClinical Query ENDS ****");
+		return self.mutateDeleteOrthodonticsPreClinical(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	deleteOrthodonticsClinicalCaseLog(OrthodonticsClinicalCaseLogList: []) {
+		const filterVariable = { filter: { id: OrthodonticsClinicalCaseLogList } };
+		const resultSelector = deleteOrthodonticsClinicalCaseLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(OrthodonticsClinicalCaseLogList, (OrthodonticsClinicalCaseLogID: string) => {
+				destroy(self.orthodonticsClinicalCaseLogs.get(OrthodonticsClinicalCaseLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryOrthodonticsClinicalCaseLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteOrthodonticsClinicalCaseLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteOrthodonticsClinicalCaseLog Query ENDS ****");
+		return self.mutateDeleteOrthodonticsClinicalCaseLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	deleteAnaesthesiaCriticalCareCaseLog(AnaesthesiaCriticalCareCaseLogList: []) {
+		const filterVariable = { filter: { id: AnaesthesiaCriticalCareCaseLogList } };
+		const resultSelector = deleteAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(AnaesthesiaCriticalCareCaseLogList, (AnaesthesiaCriticalCareCaseLogID: string) => {
+				destroy(self.anaesthesiaCriticalCareCaseLogs.get(AnaesthesiaCriticalCareCaseLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryAnaesthesiaCriticalCareCaseLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteAnaesthesiaCriticalCareCaseLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteAnaesthesiaCriticalCareCaseLog Query ENDS ****");
+		return self.mutateDeleteAnaesthesiaCriticalCareCaseLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	deleteAnaesthesiaChronicPainLog(AnaesthesiaChronicPainLogList: []) {
+		const filterVariable = { filter: { id: AnaesthesiaChronicPainLogList } };
+		const resultSelector = deleteAnaesthesiaChronicPainLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(AnaesthesiaChronicPainLogList, (AnaesthesiaChronicPainLogID: string) => {
+				destroy(self.anaesthesiaChronicPainLogs.get(AnaesthesiaChronicPainLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryAnaesthesiaChronicPainLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteAnaesthesiaChronicPainLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteAnaesthesiaChronicPainLog Query ENDS ****");
+		return self.mutateDeleteAnaesthesiaChronicPainLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	deleteAnaesthesiaCaseLog(AnaesthesiaCaseLogList: []) {
+		const filterVariable = { filter: { id: AnaesthesiaCaseLogList } };
+		const resultSelector = deleteAnaesthesiaCaseLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(AnaesthesiaCaseLogList, (AnaesthesiaCaseLogID: string) => {
+				destroy(self.anaesthesiaCaseLogs.get(AnaesthesiaCaseLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryAnaesthesiaCaseLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteAnaesthesiaCaseLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteAnaesthesiaCaseLog Query ENDS ****");
+		return self.mutateDeleteAnaesthesiaCaseLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	deleteOrthopaedicsCaseLog(OrthopaedicsCaseLogList: []) {
+		const filterVariable = { filter: { id: OrthopaedicsCaseLogList } };
+		const resultSelector = deleteOrthopaedicsCaseLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(OrthopaedicsCaseLogList, (OrthopaedicsCaseLogID: string) => {
+				destroy(self.orthopaedicsCaseLogs.get(OrthopaedicsCaseLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryOrthopaedicsCaseLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteOrthopaedicsCaseLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteOrthopaedicsCaseLog Query ENDS ****");
+		return self.mutateDeleteOrthopaedicsCaseLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	deleteOrthopaedicsProcedureLog(OrthopaedicsProcedureLogList: []) {
+		const filterVariable = { filter: { id: OrthopaedicsProcedureLogList } };
+		const resultSelector = deleteOrthopaedicsProcedureLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(OrthopaedicsProcedureLogList, (OrthopaedicsProcedureLogID: string) => {
+				destroy(self.orthopaedicsProcedureLogs.get(OrthopaedicsProcedureLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryOrthopaedicsProcedureLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteOrthopaedicsProcedureLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteOrthopaedicsProcedureLog Query ENDS ****");
+		return self.mutateDeleteOrthopaedicsProcedureLog(filterVariable, resultSelector, optimisticDelete);
 	},
 
 	resetAllData() {

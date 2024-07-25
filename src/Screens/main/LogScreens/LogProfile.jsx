@@ -162,8 +162,6 @@ const LogProfilePage = ({ navigation, route }) => {
 			phoneNumber: "", // You can modify this as per your requirement
 		};
 		setFacultyList([...facultyList, newFacultyEntry]);
-		// setModalView("faculty");
-		// setShowModal(true);
 	};
 
 	const handleFacultyFirstNameChange = (index, newValue) => {
@@ -218,62 +216,6 @@ const LogProfilePage = ({ navigation, route }) => {
 		const updatedFacultyList = [...facultyList];
 		updatedFacultyList[index].phoneNumber = "";
 		setFacultyList(updatedFacultyList);
-	};
-
-	const handleEditFaculty = (faculty, index) => {
-		console.log(faculty);
-		setValueForFaculty("facultyName", faculty.name);
-		setValueForFaculty("facultyDesignation", faculty.designation);
-		setValueForFaculty("otherDesignation", faculty.otherDesignation);
-		setValueForFaculty("facultyPhoneNumber", faculty.phoneNumber);
-		setEditFacultyIndex(index);
-		setModalView("faculty edit");
-		setShowModal(true);
-	};
-
-	const handleSaveFaculty = () => {
-		const newFaculty = {
-			name: watchForFaculty("facultyName"),
-			designation: watchForFaculty("facultyDesignation"),
-			otherDesignation: watchForFaculty("otherDesignation"),
-			phoneNumber: watchForFaculty("facultyPhoneNumber"),
-		};
-		setFacultyList([...facultyList, newFaculty]);
-		setShowModal(false);
-		resetForFaculty({
-			facultyName: null,
-			facultyDesignation: null,
-			otherDesignation: null,
-			facultyPhoneNumber: null,
-		});
-		reset({
-			from: watch("from"),
-			to: watch("to"),
-			department: watch("department"),
-		});
-	};
-
-	const handleUpdateFaculty = () => {
-		const newFacultyList = [...facultyList];
-		newFacultyList[editFacultyIndex] = {
-			name: watchForFaculty("facultyName"),
-			designation: watchForFaculty("facultyDesignation"),
-			otherDesignation: watchForFaculty("otherDesignation"),
-			phoneNumber: watchForFaculty("facultyPhoneNumber"),
-		};
-		setFacultyList(newFacultyList);
-		setShowModal(false);
-		resetForFaculty({
-			facultyName: null,
-			facultyDesignation: null,
-			otherDesignation: null,
-			facultyPhoneNumber: null,
-		});
-		reset({
-			from: watch("from"),
-			to: watch("to"),
-			department: watch("department"),
-		});
 	};
 
 	const handleAddHospital = () => {
@@ -364,43 +306,75 @@ const LogProfilePage = ({ navigation, route }) => {
 	useEffect(() => {
 		const fetchLogProfile = async () => {
 			try {
-				const query = store.fetchUserLogProfile(AppStore.UserName);
-				setQuery(query);
-				const finishFetchingLogProfile = await query;
-				if (finishFetchingLogProfile) {
-					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-					console.log("userData", userData);
-					const hospitalList = userData.logProfile.hospitals.map((hospital) => {
+				const logProfileData = toJS(AppStore.UserLogProfile);
+				console.log("logProfileData", logProfileData);
+				if (logProfileData) {
+					const hospitalList = logProfileData.hospitals.map((hospital) => {
 						delete hospital.id;
 						delete hospital.__typename;
 						return hospital;
 					});
-					const facultiesList = userData.logProfile.faculties.map((faculty) => {
+					const facultiesList = logProfileData.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
 						return faculty;
 					});
-					const rotationsList = userData.logProfile.rotations.map((rotation) => {
+					const rotationsList = logProfileData.rotations.map((rotation) => {
 						delete rotation.id;
 						delete rotation.__typename;
 						return rotation;
 					});
 					reset({
-						hospital: userData.logProfile.hospital,
-						department: userData.logProfile.rotations[0]?.department ? userData.logProfile.rotations[0]?.department : null,
-						rotations: userData.logProfile.rotations[0],
+						hospital: logProfileData.hospital,
+						department: logProfileData.rotations[0]?.department ? logProfileData.rotations[0]?.department : null,
+						rotations: logProfileData.rotations[0],
 					});
 
 					setFacultyList(facultiesList);
-					setFromDate(
-						userData.logProfile.rotations[0]?.from ? format(new Date(userData.logProfile.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--"
-					);
+					setFromDate(logProfileData.rotations[0]?.from ? format(new Date(logProfileData.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--");
 					setHospitalList(hospitalList);
-					setToDate(userData.logProfile.rotations[0]?.to ? format(new Date(userData.logProfile.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
-					setValue("from", userData.logProfile.rotations[0]?.from ? userData.logProfile.rotations[0]?.from : null);
-					setValue("to", userData.logProfile.rotations[0]?.to ? userData.logProfile.rotations[0]?.to : null);
-					AppStore.setLogProfile(finishFetchingLogProfile.queryUser.user[0].logProfile);
+					setToDate(logProfileData.rotations[0]?.to ? format(new Date(logProfileData.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
+					setValue("from", logProfileData.rotations[0]?.from ? logProfileData.rotations[0]?.from : null);
+					setValue("to", logProfileData.rotations[0]?.to ? logProfileData.rotations[0]?.to : null);
+				} else {
+					const query = store.fetchUserLogProfile(AppStore.UserName);
+					setQuery(query);
+					const finishFetchingLogProfile = await query;
+					if (finishFetchingLogProfile) {
+						console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+						console.log("userData", userData);
+						const hospitalList = userData.logProfile.hospitals.map((hospital) => {
+							delete hospital.id;
+							delete hospital.__typename;
+							return hospital;
+						});
+						const facultiesList = userData.logProfile.faculties.map((faculty) => {
+							delete faculty.id;
+							delete faculty.__typename;
+							return faculty;
+						});
+						const rotationsList = userData.logProfile.rotations.map((rotation) => {
+							delete rotation.id;
+							delete rotation.__typename;
+							return rotation;
+						});
+						reset({
+							hospital: userData.logProfile.hospital,
+							department: userData.logProfile.rotations[0]?.department ? userData.logProfile.rotations[0]?.department : null,
+							rotations: userData.logProfile.rotations[0],
+						});
+
+						setFacultyList(facultiesList);
+						setFromDate(
+							userData.logProfile.rotations[0]?.from ? format(new Date(userData.logProfile.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--"
+						);
+						setHospitalList(hospitalList);
+						setToDate(userData.logProfile.rotations[0]?.to ? format(new Date(userData.logProfile.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
+						setValue("from", userData.logProfile.rotations[0]?.from ? userData.logProfile.rotations[0]?.from : null);
+						setValue("to", userData.logProfile.rotations[0]?.to ? userData.logProfile.rotations[0]?.to : null);
+						AppStore.setLogProfile(finishFetchingLogProfile.queryUser.user[0].logProfile);
+					}
 				}
 			} catch (error) {
 				console.log(error);
@@ -510,352 +484,6 @@ const LogProfilePage = ({ navigation, route }) => {
 									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
 										Faculties
 									</Text>
-								</Box>
-								<Box w='$100%'>
-									<Modal
-										isOpen={showModal}
-										onClose={() => {
-											setShowModal(false);
-											resetForFaculty({
-												facultyName: null,
-												facultyDesignation: null,
-												facultyPhoneNumber: null,
-											});
-										}}
-										finalFocusRef={ref}>
-										<ModalBackdrop />
-										<ModalContent>
-											{modalView === "faculty" ? (
-												<Box>
-													<HStack p='$3' justifyContent='space-between'>
-														<Heading size='lg'>Create Faculty</Heading>
-														<ModalCloseButton>
-															<Icon as={CloseIcon} />
-														</ModalCloseButton>
-													</HStack>
-													<Divider />
-													<Box gap='$2' px='$3' pt='$3' pb='$6'>
-														<Box gap='$1'>
-															<Box>
-																<Text size='xs'>Faculty name</Text>
-															</Box>
-															<Box>
-																<Controller
-																	control={controlForFaculty}
-																	rules={{
-																		required: true,
-																	}}
-																	key='facultyName'
-																	name='facultyName'
-																	render={({ field: { onChange, onBlur, value } }) => {
-																		return (
-																			<Input width={"$100%"} variant='outline' size='sm' isDisabled={false} isInvalid={false} isReadOnly={false}>
-																				<InputField onChangeText={onChange} value={value} placeholder='Faculty name' />
-																			</Input>
-																		);
-																	}}
-																/>
-															</Box>
-															<Box>
-																<Box width='$100%'>{errorsForFaculty.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-															</Box>
-														</Box>
-														<Box gap='$1'>
-															<Box>
-																<Text size='xs'>Designation</Text>
-															</Box>
-															<Box alignItems='center'>
-																<Controller
-																	control={controlForFaculty}
-																	rules={{
-																		required: true,
-																	}}
-																	name='facultyDesignation'
-																	key='facultyDesignation'
-																	render={({ field: { onChange, onBlur, value } }) => {
-																		return (
-																			<Select width={"$100%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-																				<SelectTrigger variant='outline' size='sm'>
-																					<SelectInput placeholder='Designation' />
-																					<SelectIcon mr='$3'>
-																						<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
-																					</SelectIcon>
-																				</SelectTrigger>
-																				<SelectPortal>
-																					<SelectBackdrop />
-																					<SelectContent p='$0'>
-																						<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-																							Designation
-																						</Text>
-																						<Divider borderWidth={0.1} />
-																						<SelectScrollView>
-																							{designation.map((option, index) => {
-																								return (
-																									<SelectItem
-																										bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
-																										key={index}
-																										label={option.label}
-																										value={option.value}
-																									/>
-																								);
-																							})}
-																						</SelectScrollView>
-																						<SelectDragIndicatorWrapper>
-																							<SelectDragIndicator />
-																						</SelectDragIndicatorWrapper>
-																					</SelectContent>
-																				</SelectPortal>
-																			</Select>
-																		);
-																	}}
-																/>
-															</Box>
-															<Box alignItems='center'>
-																<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-															</Box>
-														</Box>
-														{watchForFaculty("facultyDesignation") === "Others" && (
-															<Box gap='$1'>
-																<Box>
-																	<Text size='xs'>Please specify your other Designation</Text>
-																</Box>
-																<Box alignItems='center'>
-																	<Controller
-																		control={controlForFaculty}
-																		key={"otherDesignation"}
-																		name={"otherDesignation"}
-																		rules={{
-																			required: false,
-																		}}
-																		render={({ field: { onChange, onBlur, value } }) => {
-																			return (
-																				<Input borderColor='rgba(77, 83, 86, 0.4)' variant='outline' size='sm'>
-																					<InputField onChangeText={onChange} value={value} placeholder={"Other designation"} />
-																				</Input>
-																			);
-																		}}
-																	/>
-																</Box>
-																<Box alignItems='center'>
-																	<Box width={"$100%"}>{errorsForFaculty.otherDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-																</Box>
-															</Box>
-														)}
-														<Box gap='$1'>
-															<Box>
-																<Text size='xs'>Phone Number</Text>
-															</Box>
-															<Box alignItems='center'>
-																<Controller
-																	control={controlForFaculty}
-																	rules={{
-																		required: true,
-																	}}
-																	key='facultyPhoneNumber'
-																	name='facultyPhoneNumber'
-																	render={({ field: { onChange, onBlur, value } }) => {
-																		return (
-																			<Input width={"$100%"} variant='outline' size='sm' isDisabled={false} isInvalid={false} isReadOnly={false}>
-																				<InputField inputMode='numeric' onChangeText={onChange} value={value} placeholder='Phone Number' />
-																			</Input>
-																		);
-																	}}
-																/>
-															</Box>
-															<Box alignItems='center'>
-																<Box width={"$100%"}>{errorsForFaculty.facultyPhoneNumber && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-															</Box>
-														</Box>
-													</Box>
-													<Divider />
-													<HStack p='$3' justifyContent='$space-between'>
-														<Button
-															size='sm'
-															w='$45%'
-															variant='secondary'
-															onPress={() => {
-																setShowModal(false);
-																resetForFaculty({
-																	facultyName: null,
-																	facultyDesignation: null,
-																	facultyPhoneNumber: null,
-																	from: new Date(),
-																	to: new Date(),
-																});
-															}}>
-															<ButtonText>Cancel</ButtonText>
-														</Button>
-														<Button w='$50%' size='sm' variant='primary' action='positive' onPress={handleSubmitForFaculty(handleSaveFaculty)}>
-															<ButtonText>Save Faculty</ButtonText>
-														</Button>
-													</HStack>
-												</Box>
-											) : (
-												<Box>
-													<HStack p='$3' justifyContent='space-between'>
-														<Heading size='lg'>Edit Faculty</Heading>
-														<ModalCloseButton>
-															<Icon as={CloseIcon} />
-														</ModalCloseButton>
-													</HStack>
-													<Divider />
-													<Box gap='$2' px='$3' pt='$3' pb='$6'>
-														<Box gap='$1'>
-															<Box>
-																<Text size='xs'>Faculty Name</Text>
-															</Box>
-															<Box>
-																<Controller
-																	control={controlForFaculty}
-																	rules={{
-																		required: true,
-																	}}
-																	key='facultyName'
-																	name='facultyName'
-																	render={({ field: { onChange, onBlur, value } }) => {
-																		return (
-																			<Input width={"$100%"} variant='outline' size='sm' isDisabled={false} isInvalid={false} isReadOnly={false}>
-																				<InputField onChangeText={onChange} value={value} placeholder='Faculty name' />
-																			</Input>
-																		);
-																	}}
-																/>
-															</Box>
-															<Box>
-																<Box width='$100%'>{errorsForFaculty.facultyName && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-															</Box>
-														</Box>
-														<Box gap='$1'>
-															<Box>
-																<Text size='xs'>Designation</Text>
-															</Box>
-															<Box alignItems='center'>
-																<Controller
-																	control={controlForFaculty}
-																	rules={{
-																		required: true,
-																	}}
-																	name='facultyDesignation'
-																	key='facultyDesignation'
-																	render={({ field: { onChange, onBlur, value } }) => {
-																		return (
-																			<Select width={"$100%"} onBlur={onBlur} onValueChange={onChange} selectedValue={value}>
-																				<SelectTrigger variant='outline' size='sm'>
-																					<SelectInput placeholder='Designation' />
-																					<SelectIcon mr='$3'>
-																						<Icon as={ChevronDown} m='$2' w='$4' h='$4' />
-																					</SelectIcon>
-																				</SelectTrigger>
-																				<SelectPortal>
-																					<SelectBackdrop />
-																					<SelectContent p='$0'>
-																						<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-																							Designation
-																						</Text>
-																						<Divider borderWidth={0.1} />
-																						<SelectScrollView>
-																							{designation.map((option, index) => {
-																								return (
-																									<SelectItem
-																										bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
-																										key={index}
-																										label={option.label}
-																										value={option.value}
-																									/>
-																								);
-																							})}
-																						</SelectScrollView>
-																						<SelectDragIndicatorWrapper>
-																							<SelectDragIndicator />
-																						</SelectDragIndicatorWrapper>
-																					</SelectContent>
-																				</SelectPortal>
-																			</Select>
-																		);
-																	}}
-																/>
-															</Box>
-															<Box alignItems='center'>
-																<Box width={"$100%"}>{errorsForFaculty.facultyDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-															</Box>
-														</Box>
-														{watchForFaculty("facultyDesignation") === "Others" && (
-															<Box gap='$1'>
-																<Box>
-																	<Text size='xs'>Please specify your other Designation</Text>
-																</Box>
-																<Box alignItems='center'>
-																	<Controller
-																		control={controlForFaculty}
-																		key={"otherDesignation"}
-																		name={"otherDesignation"}
-																		rules={{
-																			required: false,
-																		}}
-																		render={({ field: { onChange, onBlur, value } }) => {
-																			return (
-																				<Input variant='outline' size='sm'>
-																					<InputField onChangeText={onChange} value={value} placeholder={"Other designation"} />
-																				</Input>
-																			);
-																		}}
-																	/>
-																</Box>
-																<Box alignItems='center'>
-																	<Box width={"$100%"}>{errorsForFaculty.otherDesignation && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-																</Box>
-															</Box>
-														)}
-														<Box gap='$1'>
-															<Box>
-																<Text size='xs'>Phone Number</Text>
-															</Box>
-															<Box alignItems='center'>
-																<Controller
-																	control={controlForFaculty}
-																	rules={{
-																		required: true,
-																	}}
-																	key='facultyPhoneNumber'
-																	name='facultyPhoneNumber'
-																	render={({ field: { onChange, onBlur, value } }) => {
-																		return (
-																			<Input width={"$100%"} variant='outline' size='sm' isDisabled={false} isInvalid={false} isReadOnly={false}>
-																				<InputField inputMode='numeric' onChangeText={onChange} value={value} placeholder='Phone Number' />
-																			</Input>
-																		);
-																	}}
-																/>
-															</Box>
-															<Box alignItems='center'>
-																<Box width={"$100%"}>{errorsForFaculty.facultyPhoneNumber && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-															</Box>
-														</Box>
-													</Box>
-													<Divider />
-													<HStack p='$3' justifyContent='$space-between'>
-														<Button
-															size='sm'
-															w='$45%'
-															variant='secondary'
-															onPress={() => {
-																setShowModal(false);
-																resetForFaculty({
-																	facultyName: null,
-																	facultyDesignation: null,
-																	facultyPhoneNumber: null,
-																});
-															}}>
-															<ButtonText>Cancel</ButtonText>
-														</Button>
-														<Button w='$50%' size='sm' variant='primary' action='positive' onPress={handleSubmitForFaculty(handleUpdateFaculty)}>
-															<ButtonText fontSize={12}>Update Faculty</ButtonText>
-														</Button>
-													</HStack>
-												</Box>
-											)}
-										</ModalContent>
-									</Modal>
 								</Box>
 								{facultyList.length === 0 ? (
 									<Box rounded='$xl' borderWidth='$1' p='$2' borderStyle='$dashed'>

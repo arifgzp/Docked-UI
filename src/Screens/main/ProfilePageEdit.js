@@ -295,10 +295,10 @@ const ProfilePageEdit = ({ navigation }) => {
 	}, [isFocused]);
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }}>
 			<Loader apiLoadingInfo={appStoreInstance.isLoading} queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box h='$full' p={10} pl={15} flex={1} backgroundColor='$secondaryBackground'>
-					<ScrollView>
+					<ScrollView keyboardShouldPersistTaps='handled'>
 						<VStack mb={"$20%"} space='xl'>
 							<Box>
 								<VStack space='md'>

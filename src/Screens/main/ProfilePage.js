@@ -53,16 +53,13 @@ const ProfilePage = ({ navigation }) => {
 
 	useEffect(() => {
 		if (!appStoreInstance.SuperSpecialty) {
-			console.log("appStoreInstance.UserName", appStoreInstance.UserName);
 			const fetchUserProfile = async () => {
 				try {
 					const userQuery = store.fetchUserById(appStoreInstance.UserName);
 					setQuery(userQuery);
 					const finishFetchingUserProfile = await userQuery;
 					if (finishFetchingUserProfile) {
-						console.log("finishFetchingUserProfile", finishFetchingUserProfile);
 						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-						console.log("finishFetchingUserProfile  FOR PROFILE PAGE   CITY", fetchProfileData.city);
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
 						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
 						appStoreInstance.setDesignation(fetchProfileData.designation);

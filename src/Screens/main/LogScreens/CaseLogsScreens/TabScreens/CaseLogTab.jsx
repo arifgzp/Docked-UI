@@ -1,8 +1,21 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Box, Button, ButtonIcon, Card, HStack, KeyboardAvoidingView, ScrollView, Text, VStack } from "@gluestack-ui/themed";
+import {
+	Box,
+	Button,
+	ButtonIcon,
+	ButtonText,
+	Card,
+	HStack,
+	KeyboardAvoidingView,
+	ModalCloseButton,
+	ModalContent,
+	ScrollView,
+	Text,
+	VStack,
+} from "@gluestack-ui/themed";
 import { format } from "date-fns";
 import { observer } from "mobx-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 import Loader from "../../../../../components/Loader";
 import { useQuery } from "../../../../../models";
@@ -20,6 +33,14 @@ import OrthopeadicsCaseLogConfig from "../../../../../data/SpecialtyConfigs/Orth
 import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsSpecialClinicalCaseLogConfig";
 import OrthopeadicProcedureLogSpecialConfig from "../../../../../data/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicProcedureLogSpecialConfig";
 import OrthodonticsPreClinicalSpecialConfig from "../../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsPreClinicalSpecialConfig";
+import { Modal } from "@gluestack-ui/themed";
+import { ModalBackdrop } from "@gluestack-ui/themed";
+import { ModalHeader } from "@gluestack-ui/themed";
+import { Heading } from "@gluestack-ui/themed";
+import { Icon } from "@gluestack-ui/themed";
+import { CloseIcon } from "@gluestack-ui/themed";
+import { ModalBody } from "@gluestack-ui/themed";
+import { ModalFooter } from "@gluestack-ui/themed";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
@@ -28,6 +49,9 @@ const CaseLogTab = () => {
 	const { store, setQuery } = queryInfo;
 	//const [cardDetails, setCardDetails] = useState([]);
 	const navigation = useNavigation();
+	const [showModal, setShowModal] = useState(false);
+	const ref = useRef(null);
+	const [caseLogToBeDeleted, setCaseLogToBeDeleted] = useState();
 
 	const handleButtonPress = (button, id, caseType) => {
 		switch (button) {
@@ -45,8 +69,6 @@ const CaseLogTab = () => {
 	};
 
 	const getTreeNodeLabel = (key, configData) => {
-		//console.log("key", key);
-		//console.log("configData", configData);
 		let label = key;
 		forEach(configData, (config) => {
 			if (config.id == key) {
@@ -65,7 +87,6 @@ const CaseLogTab = () => {
 	};
 
 	const getTypeOfAnesthesia = (caseData) => {
-		// console.log("caseData.typeOfAnaesthesia", caseData.typeOfAnaesthesia);
 		const typeOfAnaesthesiaConfig = CaseLogAnaesthesiaConfig["typeOfAnaesthesia"];
 		if (caseData.typeOfAnaesthesia && caseData.typeOfAnaesthesia.length > 0) {
 			const selectedNodes = compact(
@@ -82,7 +103,6 @@ const CaseLogTab = () => {
 	};
 
 	const getAirwayManagement = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const airwayManagementConfig = CaseLogAnaesthesiaConfig["airManagement"];
 		if (caseData.airManagement && caseData.airManagement.length > 0) {
 			const selectedNodes = compact(
@@ -98,7 +118,6 @@ const CaseLogTab = () => {
 	};
 
 	const getDrugs = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const drugsConfig = CaseLogAnaesthesiaConfig["drugs"];
 		if (caseData.drugs && caseData.drugs.length > 0) {
 			const selectedNodes = compact(
@@ -114,7 +133,6 @@ const CaseLogTab = () => {
 	};
 
 	const getRegionalTechniques = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const regionalTechniquesConfig = CaseLogAnaesthesiaConfig["regionalTechniques"];
 		if (caseData.regionalTechniques && caseData.regionalTechniques.length > 0) {
 			const selectedNodes = compact(
@@ -130,7 +148,6 @@ const CaseLogTab = () => {
 	};
 
 	const getInterventionalProcedures = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const interventionalProceduresConfig = CaseLogAnaesthesiaConfig["interventionalProcedures"];
 		if (caseData.interventionalProcedures && caseData.interventionalProcedures.length > 0) {
 			const selectedNodes = compact(
@@ -146,7 +163,6 @@ const CaseLogTab = () => {
 	};
 
 	const getMonitoring = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const monitoringConfig = CaseLogAnaesthesiaConfig["monitoring"];
 		if (caseData.monitoring && caseData.monitoring.length > 0) {
 			const selectedNodes = compact(
@@ -162,7 +178,6 @@ const CaseLogTab = () => {
 	};
 
 	const getComplications = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const complicationsConfig = CaseLogAnaesthesiaConfig["complications"];
 		if (caseData.complications && caseData.complications.length > 0) {
 			const selectedNodes = compact(
@@ -178,7 +193,6 @@ const CaseLogTab = () => {
 	};
 
 	const getTechnique = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const techniqueConfig = ChronicPainAnesthesiaCaseLogConfig["technique"];
 		if (caseData.technique && caseData.technique.length > 0) {
 			const selectedNodes = compact(
@@ -194,7 +208,6 @@ const CaseLogTab = () => {
 	};
 
 	const getMethod = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const methodConfig = ChronicPainAnesthesiaCaseLogConfig["method"];
 		if (caseData.method && caseData.method.length > 0) {
 			const selectedNodes = compact(
@@ -210,7 +223,6 @@ const CaseLogTab = () => {
 	};
 
 	const getDrugsUsed = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const drugsUsedConfig = ChronicPainAnesthesiaCaseLogConfig["drugsUsed"];
 		if (caseData.drugsUsed && caseData.drugsUsed.length > 0) {
 			const selectedNodes = compact(
@@ -226,7 +238,6 @@ const CaseLogTab = () => {
 	};
 
 	const getIntervention = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const interventionConfig = ChronicPainAnesthesiaCaseLogConfig["intervention"];
 		if (caseData.intervention && caseData.intervention.length > 0) {
 			const selectedNodes = compact(
@@ -242,7 +253,6 @@ const CaseLogTab = () => {
 	};
 
 	const getProcedures = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const proceduresConfig = CriticalCareLAnesthesiaCaseLogConfig["procedures"];
 		if (caseData.procedures && caseData.procedures.length > 0) {
 			const selectedNodes = compact(
@@ -258,7 +268,6 @@ const CaseLogTab = () => {
 	};
 
 	const getDiseaseCategory = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const diseaseCategoryConfig = OrthopeadicsCaseLogConfig["diseaseCategory"];
 		if (caseData.diseaseCategory && caseData.diseaseCategory.length > 0) {
 			const selectedNodes = compact(
@@ -274,7 +283,6 @@ const CaseLogTab = () => {
 	};
 
 	const getSite = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const siteConfig = OrthopeadicsCaseLogConfig["site"];
 		if (caseData.site && caseData.site.length > 0) {
 			const selectedNodes = compact(
@@ -290,7 +298,6 @@ const CaseLogTab = () => {
 	};
 
 	const getJoint = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const jointConfig = OrthopeadicsCaseLogConfig["joint"];
 		if (caseData.joint && caseData.joint.length > 0) {
 			const selectedNodes = compact(
@@ -306,7 +313,6 @@ const CaseLogTab = () => {
 	};
 
 	const getBones = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const bonesConfig = OrthopeadicsCaseLogConfig["bones"];
 		if (caseData.bones && caseData.bones.length > 0) {
 			const selectedNodes = compact(
@@ -322,7 +328,6 @@ const CaseLogTab = () => {
 	};
 
 	const getOutcomes = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const outcomesConfig = OrthopeadicsCaseLogConfig["outcomes"];
 		if (caseData.outcomes && caseData.outcomes.length > 0) {
 			const selectedNodes = compact(
@@ -338,7 +343,6 @@ const CaseLogTab = () => {
 	};
 
 	const getTreatmentPlan = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const treatmentPlanConfig = OrthodonticsSpecialClinicalCaseLogConfig["treatmentPlan"];
 		if (caseData.treatmentPlan && caseData.treatmentPlan.length > 0) {
 			const selectedNodes = compact(
@@ -354,7 +358,6 @@ const CaseLogTab = () => {
 	};
 
 	const getApplianceUsed = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const applianceUsedConfig = OrthodonticsSpecialClinicalCaseLogConfig["applianceUsed"];
 		if (caseData.applianceUsed && caseData.applianceUsed.length > 0) {
 			const selectedNodes = compact(
@@ -370,7 +373,6 @@ const CaseLogTab = () => {
 	};
 
 	const getProcedure = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const procedureConfig = OrthopeadicProcedureLogSpecialConfig["procedure"];
 		if (caseData.procedure && caseData.procedure.length > 0) {
 			const selectedNodes = compact(
@@ -386,7 +388,6 @@ const CaseLogTab = () => {
 	};
 
 	const getWireBendingRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const wireBendingRecordConfig = OrthodonticsPreClinicalSpecialConfig["wireBendingRecord"];
 		if (caseData.wireBendingRecord && caseData.wireBendingRecord.length > 0) {
 			const selectedNodes = compact(
@@ -402,7 +403,6 @@ const CaseLogTab = () => {
 	};
 
 	const getRoundWireLoopRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const roundWireLoopRecordConfig = OrthodonticsPreClinicalSpecialConfig["roundWireLoopRecord"];
 		if (caseData.roundWireLoopRecord && caseData.roundWireLoopRecord.length > 0) {
 			const selectedNodes = compact(
@@ -417,7 +417,6 @@ const CaseLogTab = () => {
 	};
 
 	const getLoopInEdgewiseWireRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const loopInEdgewiseWireRecordConfig = OrthodonticsPreClinicalSpecialConfig["loopInEdgewiseWireRecord"];
 		if (caseData.loopInEdgewiseWireRecord && caseData.loopInEdgewiseWireRecord.length > 0) {
 			const selectedNodes = compact(
@@ -432,7 +431,6 @@ const CaseLogTab = () => {
 	};
 
 	const getSolderingExerciseRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const solderingExerciseRecordConfig = OrthodonticsPreClinicalSpecialConfig["solderingExerciseRecord"];
 		if (caseData.solderingExerciseRecord && caseData.solderingExerciseRecord.length > 0) {
 			const selectedNodes = compact(
@@ -447,7 +445,6 @@ const CaseLogTab = () => {
 	};
 
 	const getCephalometricTracingRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const cephalometricTracingRecordConfig = OrthodonticsPreClinicalSpecialConfig["cephalometricTracingRecord"];
 		if (caseData.cephalometricTracingRecord && caseData.cephalometricTracingRecord.length > 0) {
 			const selectedNodes = compact(
@@ -462,7 +459,6 @@ const CaseLogTab = () => {
 	};
 
 	const getclaspRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const claspRecordConfig = OrthodonticsPreClinicalSpecialConfig["claspRecord"];
 		if (caseData.claspRecord && caseData.claspRecord.length > 0) {
 			const selectedNodes = compact(
@@ -477,7 +473,6 @@ const CaseLogTab = () => {
 	};
 
 	const getSpringsRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const springsRecordConfig = OrthodonticsPreClinicalSpecialConfig["springsRecord"];
 		if (caseData.springsRecord && caseData.springsRecord.length > 0) {
 			const selectedNodes = compact(
@@ -492,7 +487,6 @@ const CaseLogTab = () => {
 	};
 
 	const getCanineRetractorsRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
 		const canineRetractorsRecordConfig = OrthodonticsPreClinicalSpecialConfig["canineRetractorsRecord"];
 		if (caseData.canineRetractorsRecord && caseData.canineRetractorsRecord.length > 0) {
 			const selectedNodes = compact(
@@ -576,9 +570,7 @@ const CaseLogTab = () => {
 		return <IsReadyLoader />;
 	}
 
-	//console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", AppStore.UserBroadSpecialty);
 	let cardDetails = [];
-	//const cardDetails = [...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList];
 	switch (AppStore.UserBroadSpecialty) {
 		case "Orthodontics":
 			cardDetails.push(...store.OrthodonticsClinicalCaseLogList, ...store.OrthodonticsPreClinicalList);
@@ -593,7 +585,45 @@ const CaseLogTab = () => {
 			break;
 	}
 	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
-	console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", cardDetails.length);
+	console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", cardDetails);
+
+	const handleDeleteCaseLog = (card) => {
+		console.log("what is this card", card);
+		setShowModal(true);
+		setCaseLogToBeDeleted(card);
+	};
+
+	const handleOnConfirmDeleteCaseLog = async () => {
+		try {
+			let typename = caseLogToBeDeleted.__typename;
+			let modifiedTypename = typename.charAt(0).toLowerCase() + typename.slice(1);
+			console.log("modifiedTypename", modifiedTypename);
+			setShowModal(false);
+			const updateUserQuery = store.updateUser(AppStore.UserId, { remove: { [modifiedTypename]: { id: caseLogToBeDeleted.id } } });
+			setQuery(updateUserQuery);
+			const data = await updateUserQuery;
+			if (data) {
+				AppStore.setLogProfile(data.updateUser.user[0].logProfile);
+				const rootStoreAPIName = `delete${caseLogToBeDeleted.__typename}`;
+				const rootStoreAPIRef = store[rootStoreAPIName];
+				if (!rootStoreAPIRef) {
+					const message = `please check rootStoreAPIRef. not found in root store trying to find=>message ${rootStoreAPIName}`;
+					console.error(message);
+					throw new Error(message);
+				}
+				let query = rootStoreAPIRef([caseLogToBeDeleted.id]);
+				if (query) {
+					console.log("Query from query delete with caseLogToBeDeleted ID", caseLogToBeDeleted.id, query);
+					setQuery(query);
+
+					setCaseLogToBeDeleted(null);
+					await query;
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
@@ -607,7 +637,6 @@ const CaseLogTab = () => {
 					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
-								//console.log("cardDetails", card);
 								return (
 									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
 										<VStack width={"$100%"} space='xs' pb='$3'>
@@ -619,8 +648,14 @@ const CaseLogTab = () => {
 													</Text>
 												</HStack>
 												<HStack alignItems='center'>
-													<Button bg='#transparent' height={30} borderRadius={"$full"} size='xs'>
-														<ButtonIcon as={Ionicons} size={20} name='share-social' color='#367B71' />
+													<Button
+														bg='#transparent'
+														height={30}
+														borderRadius={"$full"}
+														size='xs'
+														onPress={handleDeleteCaseLog.bind(null, card)}
+														ref={ref}>
+														<ButtonIcon as={Ionicons} size={20} name='trash' color='#367B71' />
 													</Button>
 													<Button
 														bg='#transparent'
@@ -658,7 +693,6 @@ const CaseLogTab = () => {
 													</HStack>
 												</>
 											)}
-
 											<HStack pr='$3' pl='$5' space='sm'>
 												<Text size='xs'>Conduct:</Text>
 												<Text size='xs' fontFamily='Inter_Bold'>
@@ -945,6 +979,49 @@ const CaseLogTab = () => {
 													</HStack>
 												</>
 											)}
+											<Modal
+												isOpen={showModal}
+												onClose={() => {
+													setShowModal(false);
+												}}
+												finalFocusRef={ref}
+												size='md'>
+												<ModalBackdrop />
+												<ModalContent>
+													<ModalHeader>
+														<Heading color='#CC3F0C' size='md' className='text-typography-950'>
+															Delete!!!
+														</Heading>
+														<ModalCloseButton>
+															<Icon
+																as={CloseIcon}
+																size='md'
+																className='stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900'
+															/>
+														</ModalCloseButton>
+													</ModalHeader>
+													<ModalBody>
+														<Text size='sm' className='text-typography-500'>
+															Are you sure you want to delete this case log entry?
+														</Text>
+													</ModalBody>
+													<ModalFooter>
+														<HStack w='$50%' justifyContent='space-between'>
+															<Button
+																size='sm'
+																variant='secondary'
+																onPress={() => {
+																	setShowModal(false);
+																}}>
+																<ButtonText>No</ButtonText>
+															</Button>
+															<Button size='sm' variant='primary' bg='#CC3F0C' onPress={handleOnConfirmDeleteCaseLog}>
+																<ButtonText>Yes</ButtonText>
+															</Button>
+														</HStack>
+													</ModalFooter>
+												</ModalContent>
+											</Modal>
 										</VStack>
 									</Card>
 								);

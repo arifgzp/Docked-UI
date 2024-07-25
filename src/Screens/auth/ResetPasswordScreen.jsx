@@ -4,6 +4,7 @@ import { KeyboardAvoidingView } from "@gluestack-ui/themed";
 import { ScrollView } from "@gluestack-ui/themed";
 import { CheckboxIcon } from "@gluestack-ui/themed";
 import { Checkbox } from "@gluestack-ui/themed";
+import { Ionicons } from "@expo/vector-icons";
 import {
 	Box,
 	Center,
@@ -152,7 +153,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 													onFocus={() => setPasswordError("")}
 												/>
 												<InputSlot pr='$3' onPress={handleShowPasswordState}>
-													<InputIcon as={passwordVisible ? Eye : EyeOff} color='#1E1E1E' />
+													<InputIcon size={20} as={Ionicons} name={passwordVisible ? "eye" : "eye-off"} color='#E6E3DB' />
 												</InputSlot>
 											</Input>
 											{joinPressed && passwordError && (
@@ -177,7 +178,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
 													onFocus={() => setResetPasswordError("")}
 												/>
 												<InputSlot pr='$3' onPress={handleShowResetPasswordState}>
-													<InputIcon as={resetPasswordVisible ? Eye : EyeOff} color='#1E1E1E' />
+													<InputIcon size={20} as={Ionicons} name={resetPasswordVisible ? "eye" : "eye-off"} color='#E6E3DB' />
 												</InputSlot>
 											</Input>
 											{joinPressed && resetPasswordError && (

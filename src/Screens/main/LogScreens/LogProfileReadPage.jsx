@@ -197,35 +197,63 @@ const LogProfileReadPage = ({ navigation, route }) => {
 	useEffect(() => {
 		const fetchLogProfile = async () => {
 			try {
-				const query = store.fetchUserLogProfile(AppStore.UserName);
-				setQuery(query);
-				const finishFetchingLogProfile = await query;
-				if (finishFetchingLogProfile) {
-					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-					const hospitalList = userData.logProfile.hospitals.map((hospital) => {
+				const logProfileData = toJS(AppStore.UserLogProfile);
+				console.log("logProfileData", logProfileData);
+				if (logProfileData) {
+					const hospitalList = logProfileData.hospitals.map((hospital) => {
 						delete hospital.id;
 						delete hospital.__typename;
 						return hospital;
 					});
-					const facultiesList = userData.logProfile.faculties.map((faculty) => {
+					const facultiesList = logProfileData.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
 						return faculty;
 					});
-					const rotationsList = userData.logProfile.rotations.map((rotation) => {
+					const rotationsList = logProfileData.rotations.map((rotation) => {
 						delete rotation.id;
 						delete rotation.__typename;
 						return rotation;
 					});
 					reset({
-						hospital: userData.logProfile.hospital,
-						from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
-						to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
+						hospital: logProfileData.hospital,
+						department: logProfileData.rotations[0]?.department ? logProfileData.rotations[0]?.department : null,
+						rotations: logProfileData.rotations[0],
 					});
-					console.log("facultiesList", facultiesList);
 					setHospitalList(hospitalList);
 					setFacultyList(facultiesList);
 					setRotationList(rotationsList);
+				} else {
+					const query = store.fetchUserLogProfile(AppStore.UserName);
+					setQuery(query);
+					const finishFetchingLogProfile = await query;
+					if (finishFetchingLogProfile) {
+						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+						const hospitalList = userData.logProfile.hospitals.map((hospital) => {
+							delete hospital.id;
+							delete hospital.__typename;
+							return hospital;
+						});
+						const facultiesList = userData.logProfile.faculties.map((faculty) => {
+							delete faculty.id;
+							delete faculty.__typename;
+							return faculty;
+						});
+						const rotationsList = userData.logProfile.rotations.map((rotation) => {
+							delete rotation.id;
+							delete rotation.__typename;
+							return rotation;
+						});
+						reset({
+							hospital: userData.logProfile.hospital,
+							from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
+							to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
+						});
+						console.log("facultiesList", facultiesList);
+						setHospitalList(hospitalList);
+						setFacultyList(facultiesList);
+						setRotationList(rotationsList);
+					}
 				}
 			} catch (error) {
 				console.log(error);

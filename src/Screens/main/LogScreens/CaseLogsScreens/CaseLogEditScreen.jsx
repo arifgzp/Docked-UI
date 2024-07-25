@@ -46,6 +46,7 @@ import {
 	OrthodonticsPreClinicalTextAndSingleSelectOptions,
 	specialOrthodonticsPreClinical,
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
+import appStoreInstance from "../../../../stores/AppStore";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -107,6 +108,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 			remarks: "",
 		},
 	});
+	const { isDirty } = formState;
 
 	function findMissingValues(dbData, uiData) {
 		let missingValues = {};
@@ -132,6 +134,10 @@ const CaseLogEditScreen = ({ navigation }) => {
 	}
 
 	const handleOnUpdateClick = async (formData) => {
+		if (!isDirty) {
+			console.log("No changes detected, save operation aborted.");
+			navigation.goBack();
+		}
 		setButtonPressed(true);
 		console.log("this is the update query", formData);
 		delete formData.id;
@@ -277,29 +283,28 @@ const CaseLogEditScreen = ({ navigation }) => {
 			try {
 				const caseLogData = caseLogData;
 				console.log("caseLogData", caseLogData);
-				const logProfileData = toJS(AppStore.UserLogProfile);
+				const logProfileData = toJS(appStoreInstance.UserLogProfile);
 				console.log("logProfileData", logProfileData);
 				if (logProfileData) {
 					const facultiesList = logProfileData.faculties;
 					const rotationsList = logProfileData.rotations;
 					const hospitalData = logProfileData.hospitals;
-					console.log("facultiesListfromAPPSTORE", facultiesList);
-					console.log("rotationsListfromAPPSTORE", rotationsList);
-					console.log("hospitalDatafromAPPSTORE", hospitalData);
-					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0].department);
+					console.log("facultiesListfromappStoreInstance", facultiesList);
+					console.log("rotationsListfromappStoreInstance", rotationsList);
+					console.log("hospitalDatafromappStoreInstance", hospitalData);
+					console.log("rotations[0].departmentfromappStoreInstance", rotationsList[0].department);
 					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-					setValue("hospital", hospitalData);
 					setValue("faculty", facultiesList);
 					setValue("rotation", rotationsList[0].department);
 				} else {
-					const query = store.fetchUserLogProfile(AppStore.UserName);
+					const query = store.fetchUserLogProfile(appStoreInstance.UserName);
 					setQuery(query);
 					const finishFetchingLogProfile = await query;
 					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
 					if (finishFetchingLogProfile) {
 						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
 						const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
-						AppStore.setLogProfile(userDataForLogProfile);
+						appStoreInstance.setLogProfile(userDataForLogProfile);
 						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
 						const facultiesList = userData.logProfile.faculties;
 						const rotationsList = userData.logProfile.rotations;
@@ -309,7 +314,6 @@ const CaseLogEditScreen = ({ navigation }) => {
 						console.log("hospitalData", hospitalData);
 						console.log("rotations[0].department", rotationsList[0].department);
 						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-						setValue("hospital", hospitalData);
 						setValue("rotation", rotationsList[0].department);
 					}
 				}
@@ -330,13 +334,24 @@ const CaseLogEditScreen = ({ navigation }) => {
 			return () => {
 				if (!buttonPressedRef.current) {
 					console.log("buttonPressed", buttonPressed);
-					handleSubmit((data) => handleOnAutoUpdateClick(data))();
+					if (appStoreInstance.IsformDirty === false) {
+						console.log("No changes detected, save operation aborted.");
+						return;
+					} else if (appStoreInstance.IsformDirty === true) {
+						handleSubmit((data) => handleOnAutoUpdateClick(data))();
+						appStoreInstance.setIsFormDirty(false);
+					}
 				} else {
 					console.log("Screen is unfocused");
 				}
 			};
 		}, [])
 	);
+
+	useEffect(() => {
+		console.log("isDirty side effect", isDirty);
+		appStoreInstance.setIsFormDirty(isDirty);
+	}, [isDirty]);
 
 	if (!isReady) {
 		return <IsReadyLoader />;

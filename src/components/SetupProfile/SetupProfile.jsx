@@ -122,7 +122,6 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 			}
 			setStartingStep(startingStep + 1);
 			setCurrentStep(currentStep + 1);
-
 			console.log("Current Data", data);
 		} else if (currentStep < config.length) {
 			console.log("Current Data 3", data);

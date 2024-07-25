@@ -13,6 +13,7 @@ import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../data/Specialty
 import { FontAwesome6 } from "@expo/vector-icons";
 import OrthopeadicProcedureLogSpecialConfig from "../../../../data/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicProcedureLogSpecialConfig";
 import OrthodonticsPreClinicalSpecialConfig from "../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsPreClinicalSpecialConfig";
+import appStoreInstance from "../../../../stores/AppStore";
 
 const getSelectType = (key, configData) => {
 	//console.log("key", key);
@@ -125,6 +126,7 @@ const SpecialCaseLogSelectOptions = ({
 	});
 
 	const handleShowTreeSelector = (activeTreeSelectorId, activeTreeNodeId) => {
+		appStoreInstance.setIsFormDirty(true);
 		setShowTreeView(true);
 		setActiveTreeSelector(activeTreeSelectorId);
 		if (activeTreeNodeId) {

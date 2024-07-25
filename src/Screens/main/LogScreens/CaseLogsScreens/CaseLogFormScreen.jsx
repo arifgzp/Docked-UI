@@ -116,11 +116,13 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			remarks: "",
 		},
 	});
+	const { isDirty } = formState;
 	const toast = useToast();
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const caseLogPrefilledRef = useRef();
 	const [buttonPressed, setButtonPressed] = useState({ active: false, screenName: "" });
 	const buttonPressedRef = useRef();
+
 	const handleSaveClick = async (formData) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
 		console.log("FormData for Case Logs to be manual saving added", formData);
@@ -319,6 +321,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			// Code to run when the screen is focused
 			console.log("Screen is focused in case log form screen");
 
+			console.log("isDirty", isDirty);
 			return () => {
 				console.log("RAAAAANNNN SECONDDDDDDDD", buttonPressedRef.current);
 				console.log("buttonPressedToNavigateToLogProfile should be false", appStoreInstance.ButtonPressed);
@@ -328,7 +331,14 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 					if (!caseLogPrefilledRef.current) {
 						return;
 					} else {
-						handleSubmit((data) => handleAutoSave(data))();
+						console.log("appStoreInstance.IsformDirty", appStoreInstance.IsformDirty);
+						if (appStoreInstance.IsformDirty === false) {
+							console.log("No changes detected, save operation aborted.");
+							return;
+						} else if (appStoreInstance.IsformDirty === true) {
+							handleSubmit((data) => handleAutoSave(data))();
+							appStoreInstance.setIsFormDirty(false);
+						}
 					}
 				} else {
 					console.log("caseLogFormToGet when out form changes", caseLogFormToGet);
@@ -338,6 +348,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			};
 		}, [caseLogFormToGet])
 	);
+
+	useEffect(() => {
+		console.log("isDirty side effect", isDirty);
+		appStoreInstance.setIsFormDirty(isDirty);
+	}, [isDirty]);
 
 	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
 	console.log("caseLogPrefilledData for test", caseLogPrefilledData);

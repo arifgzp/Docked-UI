@@ -36,6 +36,7 @@ const execute = async (url, data, token, notifyError = true) => {
 		if (notifyError) appStoreInstance.setAPIError(error);
 	}
 };
+
 function removeBeforeLastSlash(str) {
 	// Find the position of the last slash
 	const lastSlashIndex = str.lastIndexOf("/");
@@ -48,6 +49,7 @@ function removeBeforeLastSlash(str) {
 	// Return the substring after the last slash
 	return str.substring(lastSlashIndex + 1);
 }
+
 const uploadImage = async (imageInput, UserId, token) => {
 	const serverURL = NetworkUtils.getServerURL();
 	const file = imageInput[0];
@@ -90,6 +92,7 @@ const uploadImage = async (imageInput, UserId, token) => {
 		this.setAPIError(error);
 	}
 };
+
 const executeUpload = async (url, formData, token) => {
 	const serverURL = NetworkUtils.getServerURL();
 	const requestURL = `${serverURL}/${url}`;
@@ -167,10 +170,15 @@ const AppStore = types
 		_userStatus: types.maybeNull(types.string),
 		_userPassword: types.maybeNull(types.string),
 		_buttonPressed: types.maybeNull(types.boolean),
+		_isFormDirty: types.maybeNull(types.boolean),
 	})
 	.views((self) => ({
 		get UserId() {
 			return self._userId;
+		},
+
+		get IsformDirty() {
+			return self._isFormDirty;
 		},
 
 		get ButtonPressed() {
@@ -312,6 +320,10 @@ const AppStore = types
 	.actions((self) => ({
 		setUserId(userId) {
 			self._userId = userId;
+		},
+
+		setIsFormDirty(isFormDirty) {
+			self._isFormDirty = isFormDirty;
 		},
 
 		setButtonPressed(pressed) {

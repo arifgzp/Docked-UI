@@ -58,6 +58,7 @@ import { format, parseISO } from "date-fns";
 import { observer } from "mobx-react";
 import { useQuery } from "../../../../models";
 import AppStore from "../../../../stores/AppStore";
+import appStoreInstance from "../../../../stores/AppStore";
 
 const CaselogDropDownOptions = ({
 	navigation,
@@ -78,12 +79,9 @@ const CaselogDropDownOptions = ({
 	const [date, setDate] = useState(caseLogData?.date ? format(new Date(caseLogData.date), "dd / MM / yyyy") : "--/--/--");
 	const [dateForModal, setDateForModal] = useState(caseLogData?.date ? new Date(caseLogData?.date) : new Date());
 
-	const handleCloseDateModal = () => {
-		setShowActionsheet(false);
-	};
-
 	const handelSetDate = (date) => {
 		setValue("date", date);
+		appStoreInstance.setIsFormDirty(true);
 	};
 	const currentSpecialty = AppStore.UserBroadSpecialty;
 	/*useEffect(() => {
