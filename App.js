@@ -19,7 +19,6 @@ LogBox.ignoreAllLogs();
 enableScreens(true);
 
 function App() {
-	console.log("font aoding");
 	const [fontsLoaded] = useFonts({
 		Inter: require("./assets/fonts/Inter.ttf"),
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),

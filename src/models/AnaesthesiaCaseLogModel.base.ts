@@ -23,6 +23,7 @@ export const AnaesthesiaCaseLogModelBase = ModelBase
     rotation: types.union(types.undefined, types.null, types.string),
     hospital: types.union(types.undefined, types.null, types.string),
     faculty: types.union(types.undefined, types.null, types.string),
+    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
     weight: types.union(types.undefined, types.null, types.string),
@@ -63,6 +64,7 @@ export class AnaesthesiaCaseLogModelSelector extends QueryBuilder {
   get rotation() { return this.__attr(`rotation`) }
   get hospital() { return this.__attr(`hospital`) }
   get faculty() { return this.__attr(`faculty`) }
+  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
   get weight() { return this.__attr(`weight`) }
@@ -93,4 +95,4 @@ export function selectFromAnaesthesiaCaseLog() {
   return new AnaesthesiaCaseLogModelSelector()
 }
 
-export const anaesthesiaCaseLogModelPrimitives = selectFromAnaesthesiaCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality.asaGrade.typeOfSurgery.npo.conduct.comorbidity.examination.laboratoryFindings.medicalRegistrationNumber.typeOfAnaesthesia.drugs.airManagement.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.caseType.remarks
+export const anaesthesiaCaseLogModelPrimitives = selectFromAnaesthesiaCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.complete.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality.asaGrade.typeOfSurgery.npo.conduct.comorbidity.examination.laboratoryFindings.medicalRegistrationNumber.typeOfAnaesthesia.drugs.airManagement.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.caseType.remarks

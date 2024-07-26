@@ -639,14 +639,24 @@ const CaseLogTab = () => {
 							cardDetails.map((card, index) => {
 								return (
 									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
+										{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute'></Box>}
 										<VStack width={"$100%"} space='xs' pb='$3'>
 											<HStack width={"$100%"} pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
-												<HStack space='sm'>
-													<Text size='xs'>Date of procedure:</Text>
-													<Text size='xs' fontFamily='Inter_Bold'>
-														{card.date ? format(new Date(card?.date), "d/MM/yyyy") : "--"}
-													</Text>
-												</HStack>
+												<VStack>
+													{card.complete === false && (
+														<Text size='xs' fontFamily='Inter_Medium' color='#CC3F0C'>
+															Incomplete
+														</Text>
+													)}
+													<HStack space='sm'>
+														<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+															Date of procedure:
+														</Text>
+														<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+															{card.date ? format(new Date(card?.date), "d/MM/yyyy") : "--"}
+														</Text>
+													</HStack>
+												</VStack>
 												<HStack alignItems='center'>
 													<Button
 														bg='#transparent'

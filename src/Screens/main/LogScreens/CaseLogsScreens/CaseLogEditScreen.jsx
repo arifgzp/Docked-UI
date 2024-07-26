@@ -142,6 +142,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 		console.log("this is the update query", formData);
 		delete formData.id;
 		delete formData.__typename;
+		formData.complete = true;
 		formData.updatedOn = formatRFC3339(new Date());
 		formData.faculty = caseLogData.faculty;
 
@@ -218,7 +219,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 			default:
 				throw new Error("Invalid case log type");
 		}
-		console.log("form Data For Update", formData);
+		console.log("form Data For auto Update", formData);
 		const dataToBeDeleted = findMissingValues(caseLogData, formData);
 		console.log("dataToBeDeleted", dataToBeDeleted);
 		try {

@@ -23,6 +23,7 @@ export const AnaesthesiaChronicPainLogModelBase = ModelBase
     rotation: types.union(types.undefined, types.null, types.string),
     hospital: types.union(types.undefined, types.null, types.string),
     faculty: types.union(types.undefined, types.null, types.string),
+    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
@@ -49,6 +50,7 @@ export class AnaesthesiaChronicPainLogModelSelector extends QueryBuilder {
   get rotation() { return this.__attr(`rotation`) }
   get hospital() { return this.__attr(`hospital`) }
   get faculty() { return this.__attr(`faculty`) }
+  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
@@ -65,4 +67,4 @@ export function selectFromAnaesthesiaChronicPainLog() {
   return new AnaesthesiaChronicPainLogModelSelector()
 }
 
-export const anaesthesiaChronicPainLogModelPrimitives = selectFromAnaesthesiaChronicPainLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.diagnosis.indication.conduct.technique.method.drugsUsed.intervention.caseType.remarks
+export const anaesthesiaChronicPainLogModelPrimitives = selectFromAnaesthesiaChronicPainLog().createdOn.updatedOn.date.rotation.hospital.faculty.complete.patientAge.patientSex.diagnosis.indication.conduct.technique.method.drugsUsed.intervention.caseType.remarks

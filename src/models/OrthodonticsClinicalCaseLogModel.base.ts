@@ -20,6 +20,7 @@ export const OrthodonticsClinicalCaseLogModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
+    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
     hospital: types.union(types.undefined, types.null, types.string),
@@ -45,6 +46,7 @@ export class OrthodonticsClinicalCaseLogModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
+  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
   get hospital() { return this.__attr(`hospital`) }
@@ -63,4 +65,4 @@ export function selectFromOrthodonticsClinicalCaseLog() {
   return new OrthodonticsClinicalCaseLogModelSelector()
 }
 
-export const orthodonticsClinicalCaseLogModelPrimitives = selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.patientAge.patientSex.hospital.rotation.faculty.diagnosis.techniqueUsed.conduct.applianceUsed.treatmentPlan.outcome.caseType.remarks
+export const orthodonticsClinicalCaseLogModelPrimitives = selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.complete.patientAge.patientSex.hospital.rotation.faculty.diagnosis.techniqueUsed.conduct.applianceUsed.treatmentPlan.outcome.caseType.remarks

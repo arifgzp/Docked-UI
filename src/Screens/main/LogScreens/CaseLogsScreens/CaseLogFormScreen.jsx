@@ -127,6 +127,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
 		console.log("FormData for Case Logs to be manual saving added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
+		formData.complete = true;
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
 		formData.caseType = caseLogFormToGet;
@@ -186,6 +187,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const handleAutoSave = async (formData) => {
 		console.log("FormData for Case Logs to be from auto saving added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
+		formData.complete = false;
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
 		formData.caseType = caseLogFormToGet;
