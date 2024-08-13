@@ -108,6 +108,33 @@ const CaseLogEditScreen = ({ navigation }) => {
 			remarks: "",
 		},
 	});
+	// const fixedFilledRefs = {
+	// 	hospital: useRef(),
+	// 	faculty: useRef(),
+	// 	date: useRef(),
+	// 	remarks: useRef(),
+	// };
+
+	// const scrollViewRef = useRef();
+	// const formFieldsArray = getCaseLogFields(routes.params.caseType);
+	// console.log("formFieldRef Array", formFieldsArray);
+	// const formFieldsRefs = Object.fromEntries(formFieldsArray.map((field) => [field.uid, useRef()]));
+
+	// const inputRefs = {
+	// 	...formFieldsRefs,
+	// 	...fixedFilledRefs,
+	// };
+
+	// console.log("console.log(inputRefs);", inputRefs);
+
+	// const scrollToInput = (inputRef) => {
+	// 	inputRef.current.measureLayout(scrollViewRef.current, (x, y, width, height) => {
+	// 		scrollViewRef.current.scrollTo({
+	// 			y: y - height,
+	// 			animated: true,
+	// 		});
+	// 	});
+	// };
 	const { isDirty } = formState;
 
 	function findMissingValues(dbData, uiData) {
@@ -139,7 +166,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 			navigation.goBack();
 		}
 		setButtonPressed(true);
-		console.log("this is the update query", formData);
+		console.log("this is the auto update query >>>>>>>>", formData);
 		delete formData.id;
 		delete formData.__typename;
 		formData.complete = true;
@@ -363,10 +390,13 @@ const CaseLogEditScreen = ({ navigation }) => {
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$secondaryBackground'>
 					<>
+						{/* <ScrollView ref={scrollViewRef}> */}
 						<ScrollView>
 							<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 								<Box width={"$100%"}>
 									<CaselogDropDownOptions
+										// inputRefs={inputRefs}
+										// scrollToInput={scrollToInput}
 										formFields={getCaseLogFields(routes.params.caseType)}
 										prefilledData={caseLogPrefilledData}
 										control={control}
@@ -408,7 +438,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 											render={({ field: { onChange, onBlur, value } }) => {
 												return (
 													<Textarea w='$100%' size='sm' isReadOnly={false} isInvalid={false} isDisabled={false}>
-														<TextareaInput w='$100%' placeholder='Your remarks goes here...' onChangeText={onChange} value={value} />
+														<TextareaInput w='$100%' onChangeText={onChange} value={value} />
 													</Textarea>
 												);
 											}}

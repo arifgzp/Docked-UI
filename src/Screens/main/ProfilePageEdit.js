@@ -273,6 +273,7 @@ const ProfilePageEdit = ({ navigation }) => {
 					appStoreInstance.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 					appStoreInstance.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 					appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+					appStoreInstance.setImagePath(fetchProfileData.imagePath);
 					reset({
 						superSpecialty: fetchProfileData.superSpecialty,
 						subSpecialty: fetchProfileData.subSpecialty,

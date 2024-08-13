@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import {
+	BadgeText,
 	Box,
 	Button,
 	ButtonIcon,
@@ -23,7 +24,7 @@ import AppStore from "../../../../../stores/AppStore";
 import useIsReady from "../../../../../hooks/useIsReady";
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
-import { forEach, map, compact, orderBy } from "lodash";
+import { forEach, map, compact, orderBy, intersection } from "lodash";
 import { toJS } from "mobx";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
 import CaseLogAnaesthesiaConfig from "../../../../../data/SpecialtyConfigs/AnesthesiaConfigs/CaseLogAnaesthesiaConfig";
@@ -41,6 +42,14 @@ import { Icon } from "@gluestack-ui/themed";
 import { CloseIcon } from "@gluestack-ui/themed";
 import { ModalBody } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
+import {
+	AnesthesiaCaseLogCardViewConfig,
+	AnesthesiaChronicPainCardLogViewConfig,
+	AnesthesiaCriticalCareCardLogViewConfig,
+	OrthopaedicsCaseLogCardViewConfig,
+	OrthopaedicsProcedureLogCardViewConfig,
+} from "../../../../../data/CardViewConfig/CaseLogCardViewConfig";
+import { Badge } from "@gluestack-ui/themed";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
@@ -52,6 +61,7 @@ const CaseLogTab = () => {
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
 	const [caseLogToBeDeleted, setCaseLogToBeDeleted] = useState();
+	const [cardToRender, setCardToRender] = useState();
 
 	const handleButtonPress = (button, id, caseType) => {
 		switch (button) {
@@ -84,435 +94,6 @@ const CaseLogTab = () => {
 		});
 		//console.log("Finakl LAbel >>>>> ", label);
 		return label;
-	};
-
-	const getTypeOfAnesthesia = (caseData) => {
-		const typeOfAnaesthesiaConfig = CaseLogAnaesthesiaConfig["typeOfAnaesthesia"];
-		if (caseData.typeOfAnaesthesia && caseData.typeOfAnaesthesia.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.typeOfAnaesthesia, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-					if (treeLevels.length === 2) {
-						return getTreeNodeLabel(treeLevels[1], typeOfAnaesthesiaConfig);
-					}
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ":"));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getAirwayManagement = (caseData) => {
-		const airwayManagementConfig = CaseLogAnaesthesiaConfig["airManagement"];
-		if (caseData.airManagement && caseData.airManagement.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.airManagement, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], airwayManagementConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getDrugs = (caseData) => {
-		const drugsConfig = CaseLogAnaesthesiaConfig["drugs"];
-		if (caseData.drugs && caseData.drugs.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.drugs, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], drugsConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getRegionalTechniques = (caseData) => {
-		const regionalTechniquesConfig = CaseLogAnaesthesiaConfig["regionalTechniques"];
-		if (caseData.regionalTechniques && caseData.regionalTechniques.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.regionalTechniques, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], regionalTechniquesConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getInterventionalProcedures = (caseData) => {
-		const interventionalProceduresConfig = CaseLogAnaesthesiaConfig["interventionalProcedures"];
-		if (caseData.interventionalProcedures && caseData.interventionalProcedures.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.interventionalProcedures, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], interventionalProceduresConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getMonitoring = (caseData) => {
-		const monitoringConfig = CaseLogAnaesthesiaConfig["monitoring"];
-		if (caseData.monitoring && caseData.monitoring.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.monitoring, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], monitoringConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getComplications = (caseData) => {
-		const complicationsConfig = CaseLogAnaesthesiaConfig["complications"];
-		if (caseData.complications && caseData.complications.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.complications, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], complicationsConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getTechnique = (caseData) => {
-		const techniqueConfig = ChronicPainAnesthesiaCaseLogConfig["technique"];
-		if (caseData.technique && caseData.technique.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.technique, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], techniqueConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getMethod = (caseData) => {
-		const methodConfig = ChronicPainAnesthesiaCaseLogConfig["method"];
-		if (caseData.method && caseData.method.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.method, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], methodConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getDrugsUsed = (caseData) => {
-		const drugsUsedConfig = ChronicPainAnesthesiaCaseLogConfig["drugsUsed"];
-		if (caseData.drugsUsed && caseData.drugsUsed.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.drugsUsed, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], drugsUsedConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getIntervention = (caseData) => {
-		const interventionConfig = ChronicPainAnesthesiaCaseLogConfig["intervention"];
-		if (caseData.intervention && caseData.intervention.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.intervention, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], interventionConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getProcedures = (caseData) => {
-		const proceduresConfig = CriticalCareLAnesthesiaCaseLogConfig["procedures"];
-		if (caseData.procedures && caseData.procedures.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.procedures, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], proceduresConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getDiseaseCategory = (caseData) => {
-		const diseaseCategoryConfig = OrthopeadicsCaseLogConfig["diseaseCategory"];
-		if (caseData.diseaseCategory && caseData.diseaseCategory.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.diseaseCategory, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], diseaseCategoryConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getSite = (caseData) => {
-		const siteConfig = OrthopeadicsCaseLogConfig["site"];
-		if (caseData.site && caseData.site.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.site, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], siteConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getJoint = (caseData) => {
-		const jointConfig = OrthopeadicsCaseLogConfig["joint"];
-		if (caseData.joint && caseData.joint.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.joint, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], jointConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getBones = (caseData) => {
-		const bonesConfig = OrthopeadicsCaseLogConfig["bones"];
-		if (caseData.bones && caseData.bones.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.bones, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], bonesConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getOutcomes = (caseData) => {
-		const outcomesConfig = OrthopeadicsCaseLogConfig["outcomes"];
-		if (caseData.outcomes && caseData.outcomes.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.outcomes, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], outcomesConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getTreatmentPlan = (caseData) => {
-		const treatmentPlanConfig = OrthodonticsSpecialClinicalCaseLogConfig["treatmentPlan"];
-		if (caseData.treatmentPlan && caseData.treatmentPlan.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.treatmentPlan, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], treatmentPlanConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getApplianceUsed = (caseData) => {
-		const applianceUsedConfig = OrthodonticsSpecialClinicalCaseLogConfig["applianceUsed"];
-		if (caseData.applianceUsed && caseData.applianceUsed.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.applianceUsed, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], applianceUsedConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getProcedure = (caseData) => {
-		const procedureConfig = OrthopeadicProcedureLogSpecialConfig["procedure"];
-		if (caseData.procedure && caseData.procedure.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.procedure, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], procedureConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getWireBendingRecord = (caseData) => {
-		const wireBendingRecordConfig = OrthodonticsPreClinicalSpecialConfig["wireBendingRecord"];
-		if (caseData.wireBendingRecord && caseData.wireBendingRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.wireBendingRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], wireBendingRecordConfig);
-				})
-			);
-			let replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
-		}
-	};
-
-	const getRoundWireLoopRecord = (caseData) => {
-		const roundWireLoopRecordConfig = OrthodonticsPreClinicalSpecialConfig["roundWireLoopRecord"];
-		if (caseData.roundWireLoopRecord && caseData.roundWireLoopRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.roundWireLoopRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], roundWireLoopRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getLoopInEdgewiseWireRecord = (caseData) => {
-		const loopInEdgewiseWireRecordConfig = OrthodonticsPreClinicalSpecialConfig["loopInEdgewiseWireRecord"];
-		if (caseData.loopInEdgewiseWireRecord && caseData.loopInEdgewiseWireRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.loopInEdgewiseWireRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], loopInEdgewiseWireRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getSolderingExerciseRecord = (caseData) => {
-		const solderingExerciseRecordConfig = OrthodonticsPreClinicalSpecialConfig["solderingExerciseRecord"];
-		if (caseData.solderingExerciseRecord && caseData.solderingExerciseRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.solderingExerciseRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], solderingExerciseRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getCephalometricTracingRecord = (caseData) => {
-		const cephalometricTracingRecordConfig = OrthodonticsPreClinicalSpecialConfig["cephalometricTracingRecord"];
-		if (caseData.cephalometricTracingRecord && caseData.cephalometricTracingRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.cephalometricTracingRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], cephalometricTracingRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getclaspRecord = (caseData) => {
-		const claspRecordConfig = OrthodonticsPreClinicalSpecialConfig["claspRecord"];
-		if (caseData.claspRecord && caseData.claspRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.claspRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], claspRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getSpringsRecord = (caseData) => {
-		const springsRecordConfig = OrthodonticsPreClinicalSpecialConfig["springsRecord"];
-		if (caseData.springsRecord && caseData.springsRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.springsRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], springsRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getCanineRetractorsRecord = (caseData) => {
-		const canineRetractorsRecordConfig = OrthodonticsPreClinicalSpecialConfig["canineRetractorsRecord"];
-		if (caseData.canineRetractorsRecord && caseData.canineRetractorsRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.canineRetractorsRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], canineRetractorsRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
-	};
-
-	const getBowsRecord = (caseData) => {
-		// console.log("caseData.airManagement", caseData.airManagement);
-		const bowsRecordConfig = OrthodonticsPreClinicalSpecialConfig["bowsRecord"];
-		if (caseData.bowsRecord && caseData.bowsRecord.length > 0) {
-			const selectedNodes = compact(
-				map(caseData.bowsRecord, (toaSelector) => {
-					const treeLevels = toaSelector.split("/");
-
-					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], bowsRecordConfig);
-				})
-			);
-			return selectedNodes.join(", ");
-		}
 	};
 
 	useEffect(() => {
@@ -625,6 +206,313 @@ const CaseLogTab = () => {
 		}
 	};
 
+	const getOfSurgeryTitle = (caseType) => {
+		const surgeryCaseTypes = new Set([
+			"OrthopaedicsProcedureLog",
+			"CaseLog",
+			// Add more case types here as needed
+		]);
+
+		return (
+			<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+				{surgeryCaseTypes.has(caseType) ? " of Surgery:" : ":"}
+			</Text>
+		);
+	};
+
+	const configMapping = {
+		OrthopaedicsProcedureLog: OrthopaedicsProcedureLogCardViewConfig,
+		OrthopaedicsCaseLog: OrthopaedicsCaseLogCardViewConfig,
+		AnaesthesiaCaseLog: AnesthesiaCaseLogCardViewConfig,
+		AnaesthesiaChronicPainLog: AnesthesiaChronicPainCardLogViewConfig,
+		AnaesthesiaCriticalCareCaseLog: AnesthesiaCriticalCareCardLogViewConfig,
+	};
+
+	const configMappingForDataStrcuture = {
+		OrthopaedicsCaseLog: OrthopeadicsCaseLogConfig,
+		OrthopaedicsProcedureLog: OrthopeadicProcedureLogSpecialConfig,
+		AnaesthesiaCaseLog: CaseLogAnaesthesiaConfig,
+		AnaesthesiaChronicPainLog: ChronicPainAnesthesiaCaseLogConfig,
+		AnaesthesiaCriticalCareCaseLog: CriticalCareLAnesthesiaCaseLogConfig,
+		// Add more mappings as needed
+		// caseTypeName: CorrespondingConfigFile,
+	};
+
+	const firstParentOptionToDisplay = (caseData, item) => {
+		console.log("item.value", item.value);
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			console.log("caseData[item.value", caseData[item.value]);
+			const selectedNodes = compact(
+				map(caseData[item.value], (selector) => {
+					console.log("what is slectors", selector);
+					const treeLevels = selector.split("/");
+					console.log("treelevels", treeLevels);
+
+					return getTreeNodeLabel(treeLevels[1], categoryConfig);
+				})
+			);
+			console.log("selectNodes", selectedNodes);
+
+			return selectedNodes[0];
+		}
+	};
+
+	const getonlySpecificOptionsValuesForAnesthesiaCaseLogCard = (caseData, item) => {
+		console.log("item.options", item.options);
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			const selectedNodes = compact(
+				map(caseData[item.value], (selector) => {
+					console.log("caselog options selectors", selector);
+					const treeLevels = selector.split("/");
+					console.log("treeLevels", treeLevels);
+
+					// Check if treeLevels has any item from item.options
+					if (intersection(treeLevels, item.options).length > 0) {
+						if (treeLevels.includes("NeuraxialBlock")) {
+							console.log("treeLevels inside the neuraxialBlock", treeLevels);
+							if (treeLevels.length > 3) {
+								return getTreeNodeLabel(treeLevels[treeLevels.length - 2], categoryConfig);
+							} else {
+								return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+							}
+						} else if (treeLevels.includes("LabourAnalgesia")) {
+							return getTreeNodeLabel(treeLevels[1], categoryConfig);
+						} else {
+							return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+						}
+					}
+
+					return null;
+				})
+			);
+
+			const replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
+		}
+	};
+
+	const getParentFollowedByFirstChild = (caseData, item) => {
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			const selectedNodesChild = compact(
+				map(caseData[item.value], (selector) => {
+					const treeLevels = selector.split("/");
+					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+				})
+			);
+
+			const selectedNodesParent = compact(
+				map(caseData[item.value], (selector) => {
+					const treeLevels = selector.split("/");
+					if (treeLevels.length > 2) {
+						return getTreeNodeLabel(treeLevels[treeLevels.length - 2], categoryConfig);
+					} else {
+						return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+					}
+				})
+			);
+
+			const replacedNodesForChild = selectedNodesChild.map((node) => node.replace("#V#", ": "));
+			const replacedNodesForParent = selectedNodesParent.map((node) => node.replace("#V#", ": "));
+			const parentFollowedByFirstChildList = replacedNodesForParent.map((parentNode, index) => {
+				if (parentNode === replacedNodesForChild[index]) {
+					return `${parentNode}`;
+				} else {
+					return `${parentNode}: ${replacedNodesForChild[index]}`;
+				}
+			});
+			return parentFollowedByFirstChildList.join(", ");
+		}
+	};
+
+	const getMultipleSelectSingleLayerValues = (caseData, item) => {
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			const selectedNodes = compact(
+				map(caseData[item.value], (selector) => {
+					const treeLevels = selector.split("/");
+					return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+				})
+			);
+
+			const replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			return replacedNodes.join(", ");
+		}
+	};
+
+	const getParentofSelectedValues = (caseData, item) => {
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			const selectedNodes = compact(
+				map(caseData[item.value], (selector) => {
+					const treeLevels = selector.split("/");
+					if (treeLevels.length === 2) {
+						return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+					} else {
+						return getTreeNodeLabel(treeLevels[treeLevels.length - 2], categoryConfig);
+					}
+				})
+			);
+
+			const replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+
+			return replacedNodes.join(", ");
+		}
+	};
+
+	const formatCaseType = (caseType) => {
+		return caseType.replace(/([A-Z])/g, " $1").trim();
+	};
+
+	const CardToRender = ({ config, card, index }) => {
+		console.log("what is config for the card", config);
+		return (
+			<Card key={card.id || index} variant='filled' m='$3' width='$100%' borderRadius='$3xl' p='$0'>
+				{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute' />}
+				<VStack width='$100%' space='xs' pb='$3'>
+					<HStack width='$100%' pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
+						<VStack>
+							{card.complete === false && (
+								<Text size='xs' fontFamily='Inter_Medium' color='#CC3F0C'>
+									Incomplete
+								</Text>
+							)}
+							<HStack space='sm'>
+								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+									Date{getOfSurgeryTitle(card.caseType)}
+								</Text>
+								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+									{card.date ? format(new Date(card.date), "d/MM/yyyy") : "--"}
+								</Text>
+							</HStack>
+						</VStack>
+						<HStack alignItems='center'>
+							<Button bg='transparent' height={30} borderRadius='$full' size='xs' onPress={() => handleDeleteCaseLog(card)} ref={ref}>
+								<ButtonIcon as={Ionicons} size={20} name='trash' color='#367B71' />
+							</Button>
+							<Button
+								bg='transparent'
+								onPress={() => handleButtonPress("CaseLogEditScreen", card?.id, card?.caseType)}
+								height={30}
+								borderRadius='$full'
+								size='xs'>
+								<ButtonIcon as={Ionicons} size={20} name='create' color='#367B71' />
+							</Button>
+						</HStack>
+					</HStack>
+
+					{("patientAge" in card || "patientSex" in card) && (
+						<HStack pt='$2' pb='$2' space='3xl' backgroundColor='#DDDDDD'>
+							<HStack pl='$5' space='sm'>
+								<Text size='xs'>Patient Age:</Text>
+								<Text size='xs' fontFamily='Inter_Bold'>
+									{card.patientAge ? `${card.patientAge} years` : "--"}
+								</Text>
+							</HStack>
+							<HStack space='sm'>
+								<Text size='xs'>Sex:</Text>
+								<Text size='xs' fontFamily='Inter_Bold'>
+									{card.patientSex || "--"}
+								</Text>
+							</HStack>
+						</HStack>
+					)}
+
+					{config.map((item, index) => (
+						<HStack key={index} pr='$3' pl='$5' space='sm'>
+							<Text size='xs'>{item.label}:</Text>
+							{"secondValue" in item ? (
+								<Text size='xs' fontFamily='Inter_Bold'>
+									{card[item.value] ? (
+										<>
+											{card[item.value]} {item.valueUnits}
+											{card[item.secondValue] ? (
+												<>
+													{" "}
+													{card[item.secondValue]} {item.secondValueUnits}
+												</>
+											) : (
+												" --"
+											)}
+										</>
+									) : (
+										"--"
+									)}
+								</Text>
+							) : item.multipleSelectValues ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{getMultipleSelectSingleLayerValues(card, item) || "--"}
+								</Text>
+							) : item.firstParentOptionToDisplay ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{firstParentOptionToDisplay(card, item) || "--"}
+								</Text>
+							) : item.onlySpecificOptionsForAnesthesiaCaseLogCard ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{getonlySpecificOptionsValuesForAnesthesiaCaseLogCard(card, item) || "--"}
+								</Text>
+							) : item.parentFollowedByFirstChild ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{getParentFollowedByFirstChild(card, item) || "--"}
+								</Text>
+							) : item.parentofSelectedValues ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{getParentofSelectedValues(card, item) || "--"}
+								</Text>
+							) : (
+								<Text size='xs' fontFamily='Inter_Bold'>
+									{card[item.value] || "--"}
+								</Text>
+							)}
+						</HStack>
+					))}
+					<HStack key={index} pt='$2' pr='$3' pl='$5' space='sm' justifyContent='flex-end'>
+						<Badge size='sm' variant='outline' action='muted'>
+							<BadgeText>{formatCaseType(card.caseType)}</BadgeText>
+						</Badge>
+					</HStack>
+				</VStack>
+			</Card>
+		);
+	};
+
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 			<Box flex={1} backgroundColor='$primaryBackground' alignItems='center'>
@@ -637,410 +525,57 @@ const CaseLogTab = () => {
 					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
-								return (
-									<Card key={card.id || index} variant='filled' m='$3' width={"$100%"} borderRadius='$3xl' p='$0'>
-										{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute'></Box>}
-										<VStack width={"$100%"} space='xs' pb='$3'>
-											<HStack width={"$100%"} pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
-												<VStack>
-													{card.complete === false && (
-														<Text size='xs' fontFamily='Inter_Medium' color='#CC3F0C'>
-															Incomplete
-														</Text>
-													)}
-													<HStack space='sm'>
-														<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-															Date of procedure:
-														</Text>
-														<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-															{card.date ? format(new Date(card?.date), "d/MM/yyyy") : "--"}
-														</Text>
-													</HStack>
-												</VStack>
-												<HStack alignItems='center'>
-													<Button
-														bg='#transparent'
-														height={30}
-														borderRadius={"$full"}
-														size='xs'
-														onPress={handleDeleteCaseLog.bind(null, card)}
-														ref={ref}>
-														<ButtonIcon as={Ionicons} size={20} name='trash' color='#367B71' />
-													</Button>
-													<Button
-														bg='#transparent'
-														onPress={handleButtonPress.bind(null, "CaseLogEditScreen", card?.id, card?.caseType)}
-														height={30}
-														borderRadius={"$full"}
-														size='xs'>
-														<ButtonIcon as={Ionicons} size={20} name='create' color='#367B71' />
-													</Button>
-												</HStack>
-											</HStack>
-											{AppStore.UserBroadSpecialty === "Orthodontics" && card.caseType === "OrthodonticsPreClinical" ? (
-												<></>
-											) : (
-												<>
-													<HStack pt='$2' pb='$2' space='3xl' backgroundColor='#DDDDDD'>
-														<HStack pl='$5' space='sm'>
-															<Text size='xs'>Patient Age:</Text>
-															<Text size='xs' fontFamily='Inter_Bold'>
-																{card.patientAge ? card.patientAge : "--"}
-															</Text>
-														</HStack>
-														<HStack space='sm'>
-															<Text size='xs'>Sex:</Text>
-															<Text size='xs' fontFamily='Inter_Bold'>
-																{card.patientSex ? card.patientSex : "--"}
-															</Text>
-														</HStack>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Diagnosis:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.diagnosis ? card.diagnosis : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											<HStack pr='$3' pl='$5' space='sm'>
-												<Text size='xs'>Conduct:</Text>
-												<Text size='xs' fontFamily='Inter_Bold'>
-													{card.conduct ? card.conduct : "--"}
-												</Text>
-											</HStack>
-											{AppStore.UserBroadSpecialty === "Anaesthesiology" && card.caseType === "CaseLog" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Surgery:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.surgicalProcedure ? card.surgicalProcedure : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Type of Anesthesia:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getTypeOfAnesthesia(card) ? getTypeOfAnesthesia(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Airway Management:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getAirwayManagement(card) ? getAirwayManagement(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Drugs:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getDrugs(card) ? getDrugs(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Regional Techniques:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getRegionalTechniques(card) ? getRegionalTechniques(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Interventional Procedures:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getInterventionalProcedures(card) ? getInterventionalProcedures(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Monitoring:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getMonitoring(card) ? getMonitoring(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Complications:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getComplications(card) ? getComplications(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Outcome:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.outcome ? card.outcome : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											{AppStore.UserBroadSpecialty === "Anaesthesiology" && card.caseType === "ChronicPain" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Indication:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.indication ? card.indication : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Technique:</Text>
-														<Text w='$75%' size='xs' fontFamily='Inter_Bold'>
-															{getTechnique(card) ? getTechnique(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Method:</Text>
-														<Text w='$75%' size='xs' fontFamily='Inter_Bold'>
-															{getMethod(card) ? getMethod(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Drugs Used:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{getDrugsUsed(card) ? getDrugsUsed(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Intervention:</Text>
-														<Text w='$75%' size='xs' fontFamily='Inter_Bold'>
-															{getIntervention(card) ? getIntervention(card) : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											{AppStore.UserBroadSpecialty === "Anaesthesiology" && card.caseType === "CriticalCareCaseLog" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Comorbidites:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.comorbidites ? card.comorbidites : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Surgical Procedure:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.surgicalprocedure ? card.surgicalprocedure : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Procedures:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getProcedures(card) ? getProcedures(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Complication:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.complication ? card.complication : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Outcome:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.outcome ? card.outcome : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											{AppStore.UserBroadSpecialty === "Orthodontics" && card.caseType === "OrthodonticsClinicalCaseLog" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Treatment Plan:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getTreatmentPlan(card) ? getTreatmentPlan(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Technique Used:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.techniqueUsed ? card.techniqueUsed : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Appliance Used:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getApplianceUsed(card) ? getApplianceUsed(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Outcome:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{card.outcome ? card.outcome : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											{AppStore.UserBroadSpecialty === "Orthodontics" && card.caseType === "OrthodonticsPreClinical" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Wire Bending Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getWireBendingRecord(card) ? getWireBendingRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Round WireLoop Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getRoundWireLoopRecord(card) ? getRoundWireLoopRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Loop In Edgewise Wire Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getLoopInEdgewiseWireRecord(card) ? getLoopInEdgewiseWireRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Soldering Exercise Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getSolderingExerciseRecord(card) ? getSolderingExerciseRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Cephalometric Tracing Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getCephalometricTracingRecord(card) ? getCephalometricTracingRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Clasp Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getclaspRecord(card) ? getclaspRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Springs Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getSpringsRecord(card) ? getSpringsRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Canine Retractors Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getCanineRetractorsRecord(card) ? getCanineRetractorsRecord(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Bows Record:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getBowsRecord(card) ? getBowsRecord(card) : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											{AppStore.UserBroadSpecialty === "Orthopaedics" && card.caseType === "OrthopaedicsCaseLog" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Disease Category:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getDiseaseCategory(card) ? getDiseaseCategory(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Site:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getSite(card) ? getSite(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Joint:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getJoint(card) ? getJoint(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Bones:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getBones(card) ? getBones(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Outcomes:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getOutcomes(card) ? getOutcomes(card) : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											{AppStore.UserBroadSpecialty === "Orthopaedics" && card.caseType === "OrthopaedicsProcedureLog" && (
-												<>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Site:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.sites ? card.sites.replace("#V#", ": ") : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Procedure:</Text>
-														<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-															{getProcedure(card) ? getProcedure(card) : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Procedure Name:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.procedureName ? card.procedureName : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Complication:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.complication ? card.complication : "--"}
-														</Text>
-													</HStack>
-													<HStack pr='$3' pl='$5' space='sm'>
-														<Text size='xs'>Outcome:</Text>
-														<Text size='xs' fontFamily='Inter_Bold'>
-															{card.outcome ? card.outcome : "--"}
-														</Text>
-													</HStack>
-												</>
-											)}
-											<Modal
-												isOpen={showModal}
-												onClose={() => {
-													setShowModal(false);
-												}}
-												finalFocusRef={ref}
-												size='md'>
-												<ModalBackdrop />
-												<ModalContent>
-													<ModalHeader>
-														<Heading color='#CC3F0C' size='md' className='text-typography-950'>
-															Delete!!!
-														</Heading>
-														<ModalCloseButton>
-															<Icon
-																as={CloseIcon}
-																size='md'
-																className='stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900'
-															/>
-														</ModalCloseButton>
-													</ModalHeader>
-													<ModalBody>
-														<Text size='sm' className='text-typography-500'>
-															Are you sure you want to delete this case log entry?
-														</Text>
-													</ModalBody>
-													<ModalFooter>
-														<HStack w='$50%' justifyContent='space-between'>
-															<Button
-																size='sm'
-																variant='secondary'
-																onPress={() => {
-																	setShowModal(false);
-																}}>
-																<ButtonText>No</ButtonText>
-															</Button>
-															<Button size='sm' variant='primary' bg='#CC3F0C' onPress={handleOnConfirmDeleteCaseLog}>
-																<ButtonText>Yes</ButtonText>
-															</Button>
-														</HStack>
-													</ModalFooter>
-												</ModalContent>
-											</Modal>
-										</VStack>
-									</Card>
-								);
+								const config = configMapping[card.__typename] || [];
+								return <CardToRender config={config} card={card} index={index} />;
 							})
 						) : (
 							<Box justifyContent='center' alignItems='center'>
 								<Text>No Cases found</Text>
 							</Box>
 						)}
+						<Modal
+							isOpen={showModal}
+							onClose={() => {
+								setShowModal(false);
+							}}
+							finalFocusRef={ref}
+							size='md'>
+							<ModalBackdrop />
+							<ModalContent>
+								<ModalHeader>
+									<Heading color='#CC3F0C' size='md' className='text-typography-950'>
+										Delete!!!
+									</Heading>
+									<ModalCloseButton>
+										<Icon
+											as={CloseIcon}
+											size='md'
+											className='stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900'
+										/>
+									</ModalCloseButton>
+								</ModalHeader>
+								<ModalBody>
+									<Text size='sm' className='text-typography-500'>
+										Are you sure you want to delete this case log entry?
+									</Text>
+								</ModalBody>
+								<ModalFooter>
+									<HStack w='$50%' justifyContent='space-between'>
+										<Button
+											size='sm'
+											variant='secondary'
+											onPress={() => {
+												setShowModal(false);
+											}}>
+											<ButtonText>No</ButtonText>
+										</Button>
+										<Button size='sm' variant='primary' bg='#CC3F0C' onPress={handleOnConfirmDeleteCaseLog}>
+											<ButtonText>Yes</ButtonText>
+										</Button>
+									</HStack>
+								</ModalFooter>
+							</ModalContent>
+						</Modal>
 					</VStack>
 				</ScrollView>
 			</Box>

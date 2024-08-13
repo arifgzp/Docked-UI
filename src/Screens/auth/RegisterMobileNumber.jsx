@@ -78,7 +78,7 @@ const RegisterMobileNumberPage = ({ navigation }) => {
 									Enter Your Phone Number
 								</Text>
 								<Text fontFamily='Inter' size='sm'>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+									Enter a 10 digit valid Phone Number
 								</Text>
 							</VStack>
 						</Box>

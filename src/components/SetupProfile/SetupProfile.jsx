@@ -36,13 +36,34 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	});
 	const CurrentStepComponent = currentConfig ? currentConfig.content.component : null;
 
+	function removeBeforeLastSlash(str) {
+		// Find the position of the last slash
+		const lastSlashIndex = str.lastIndexOf("/");
+
+		// If there is no slash in the string, return the original string
+		if (lastSlashIndex === -1) {
+			return str;
+		}
+
+		// Return the substring after the last slash
+		return str.substring(lastSlashIndex + 1);
+	}
+
 	const handleOnClick = async (data) => {
 		if (currentStep === config.length) {
 			console.log("Finsished", data);
+			if (image) {
+				const file = image[0];
+				const fileExtenstion = removeBeforeLastSlash(file.mimeType);
+				const filePath = `${appStoreInstance.UserId}/${appStoreInstance.UserId}.${fileExtenstion}`;
+				appStoreInstance.UploadImage(image);
+				data.imagePath = filePath;
+			}
+			data.userStatus = "REGISTERED";
 			try {
-				setIsLoading(true);
-				const query = store.updateUser(appStoreInstance.UserId, { set: { userStatus: "REGISTERED" } });
+				const query = store.updateUser(appStoreInstance.UserId, { set: data });
 				AppStore.setBroadSpecialty(data.broadSpecialty);
+				AppStore.setImagePath(data.imagePath);
 				console.log("Current Data 2", query);
 				setQuery(query);
 				const finishWizardProcessData = await query;
@@ -77,7 +98,6 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 								AppStore.setButtonPressed(false);
 							}
-
 							const query = store.fetchUserLogProfile(response.userName);
 							setQuery(query);
 
@@ -105,21 +125,17 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				setIsLoading(false);
 			}
 		} else if (startingStep === currentStep) {
-			console.log("Current Data 1");
-			try {
-				setIsLoading(true);
-				const query = store.updateUser(AppStore.UserId, { set: data });
-				console.log("Current Data 2", query);
-				setQuery(query);
-				const responseData = await query;
-				if (responseData) {
-					onCancel();
-				}
-			} catch (error) {
-				console.log(error);
-			} finally {
-				setIsLoading(false);
-			}
+			console.log("Current Data for not uploading users", data);
+			// try {
+			// 	const query = store.updateUser(AppStore.UserId, { set: data });
+			// 	console.log("Current Data 2", data);
+			// 	setQuery(query);
+			// 	const responseData = await query;
+			// } catch (error) {
+			// 	console.log(error);
+			// } finally {
+			// 	setIsLoading(false);
+			// }
 			setStartingStep(startingStep + 1);
 			setCurrentStep(currentStep + 1);
 			console.log("Current Data", data);
@@ -130,18 +146,15 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 			console.log("Current Data 4", data);
 			console.log("Finished");
 		}
-		// appStoreInstance.UploadImage(image);
+		//
 		// console.log("image", image, typeof image);
-	};
-	const onSubmitData = async (data) => {
-		console.log(data);
 	};
 
 	const handleSkip = async (data) => {
 		console.log("data when skipping the create profile", data);
+		data.userStatus = "REGISTERED";
 		try {
-			setIsLoading(true);
-			const query = store.updateUser(AppStore.UserId, { set: { userStatus: "REGISTERED" } });
+			const query = store.updateUser(AppStore.UserId, { set: data });
 			AppStore.setBroadSpecialty(data.broadSpecialty);
 			console.log("Current Data 2", query);
 			setQuery(query);
@@ -172,6 +185,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+							AppStore.setImagePath(fetchProfileData.imagePath);
 							AppStore.setButtonPressed(false);
 						}
 
@@ -265,7 +279,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 								);
 							})}
 						</HStack> */}
-									<Text fontSize={14}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt </Text>
+									{/* <Text fontSize={14}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt </Text> */}
 									{/* <Text fontSize={14}>{currentStepLabel}</Text> */}
 								</VStack>
 							</Box>

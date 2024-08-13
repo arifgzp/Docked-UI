@@ -39,7 +39,7 @@ import { makeObservable, observable, action } from "mobx";
 import { observer } from "mobx-react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Input } from "@gluestack-ui/themed";
-import { InputField } from "@gluestack-ui/themed";
+import { InputField, InputSlot } from "@gluestack-ui/themed";
 
 function noop() {}
 
@@ -89,7 +89,7 @@ const LeafNode = observer((props) => {
 		const value = event.nativeEvent.text;
 		const selectedValues = selectedNodeKeys[selectionBreadcrumbKey] || [];
 		const updatedValues = selectedValues.filter((v) => !v.includes(node.id));
-		updatedValues.push(`${node.id}#V#${value}`);
+		updatedValues.push(`${node.id}#V#${value}${node.unit ? `#V#${node.unit}` : ""}`);
 		console.log("updatedValues", updatedValues);
 		onSelectNode(selectionBreadcrumbKey, updatedValues);
 		event.stopPropagation();
@@ -108,6 +108,11 @@ const LeafNode = observer((props) => {
 							<Text lineHeight='$xs'>{node.name}</Text>
 							<Input variant='outline' size='sm'>
 								<InputField type='text' onChange={handleOnChange} value={value} />
+								{node.unit && (
+									<InputSlot pr='$3'>
+										<Text size='xs'>{node.unit}</Text>
+									</InputSlot>
+								)}
 							</Input>
 						</VStack>
 					);

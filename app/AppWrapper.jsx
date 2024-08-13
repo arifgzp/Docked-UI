@@ -22,10 +22,12 @@ import SetupProfile from "../src/components/SetupProfile/SetupProfile";
 import MainPage from "../src/components/MainPage";
 import appStoreInstance from "../src/stores/AppStore";
 import LandingScreen from "../src/Screens/main/LandingScreen";
+import { observer } from "mobx-react";
 
 const Stack = createNativeStackNavigator();
 
 const AppWrapper = () => {
+	console.log("appStoreInstance.isUserSignedIn", appStoreInstance.isUserSignedIn);
 	return (
 		<>
 			<StatusBar translucent backgroundColor='$transparent' barStyle='dark-content' />
@@ -188,4 +190,4 @@ const AppWrapper = () => {
 	);
 };
 
-export default AppWrapper;
+export default observer(AppWrapper);

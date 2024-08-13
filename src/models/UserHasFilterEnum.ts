@@ -42,7 +42,8 @@ orthodonticsClinicalCaseLog="orthodonticsClinicalCaseLog",
 orthodonticsPreClinical="orthodonticsPreClinical",
 orthopaedicsCaseLog="orthopaedicsCaseLog",
 orthopaedicsProcedureLog="orthopaedicsProcedureLog",
-logProfile="logProfile"
+logProfile="logProfile",
+imagePath="imagePath"
 }
 
 /**
@@ -84,4 +85,5 @@ export const UserHasFilterEnumType = types.enumeration("UserHasFilter", [
   "orthopaedicsCaseLog",
   "orthopaedicsProcedureLog",
   "logProfile",
+  "imagePath",
       ])

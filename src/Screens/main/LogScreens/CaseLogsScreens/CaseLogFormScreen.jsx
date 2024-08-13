@@ -107,6 +107,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
+
 	const { caseLogFormToGet } = route.params;
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
@@ -116,12 +117,41 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			remarks: "",
 		},
 	});
+
+	// const fixedFilledRefs = {
+	// 	hospital: useRef(),
+	// 	faculty: useRef(),
+	// 	date: useRef(),
+	// 	remarks: useRef(),
+	// };
+
+	const [key, setKey] = useState(0);
 	const { isDirty } = formState;
 	const toast = useToast();
 	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const caseLogPrefilledRef = useRef();
 	const [buttonPressed, setButtonPressed] = useState({ active: false, screenName: "" });
 	const buttonPressedRef = useRef();
+	// const scrollViewRef = useRef();
+	// const formFieldsArray = getCaseLogFields(caseLogFormToGet);
+	// console.log("formFieldRef Array", formFieldsArray);
+	// const formFieldsRefs = Object.fromEntries(formFieldsArray.map((field) => [field.uid, useRef()]));
+
+	// const inputRefs = {
+	// 	...formFieldsRefs,
+	// 	...fixedFilledRefs,
+	// };
+
+	// console.log("console.log(inputRefs);", inputRefs);
+
+	// const scrollToInput = (inputRef) => {
+	// 	inputRef.current.measureLayout(scrollViewRef.current, (x, y, width, height) => {
+	// 		scrollViewRef.current.scrollTo({
+	// 			y: y - height,
+	// 			animated: true,
+	// 		});
+	// 	});
+	// };
 
 	const handleSaveClick = async (formData) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
@@ -238,6 +268,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			reset();
 		} catch (error) {
 			console.log(error);
+		} finally {
+			reset();
+			console.log("is dirty when only the case log changes...", appStoreInstance.IsformDirty);
+			appStoreInstance.setIsFormDirty(false);
+			setValue("hospital", null);
 		}
 	};
 
@@ -318,10 +353,17 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		}
 	}, [buttonPressed]);
 
+	useEffect(() => {
+		console.log("THIS SHOULD WORK BROOOOO!!!!", key);
+		reset();
+		setKey((prev) => prev + 1);
+	}, [caseLogFormToGet]);
+
 	useFocusEffect(
 		useCallback(() => {
 			// Code to run when the screen is focused
 			console.log("Screen is focused in case log form screen");
+			reset();
 
 			console.log("isDirty", isDirty);
 			return () => {
@@ -369,10 +411,13 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				<Box flex={1} w='$100%' backgroundColor='$secondaryBackground'>
 					{caseLogPrefilledData ? (
 						<>
+							{/* <ScrollView ref={scrollViewRef}> */}
 							<ScrollView>
 								<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 									<Box width={"$100%"}>
 										<CaselogDropDownOptions
+											// inputRefs={inputRefs}
+											// scrollToInput={scrollToInput}
 											formFields={getCaseLogFields(caseLogFormToGet)}
 											prefilledData={caseLogPrefilledData}
 											control={control}
@@ -409,7 +454,14 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 												}}
 												render={({ field: { onChange, onBlur, value } }) => {
 													return (
-														<Textarea w='$100%' size='sm' isReadOnly={false} isInvalid={false} isDisabled={false}>
+														<Textarea
+															// ref={inputRefs.remarks}
+															// onFocus={() => scrollToInput(inputRefs.remarks)}
+															w='$100%'
+															size='sm'
+															isReadOnly={false}
+															isInvalid={false}
+															isDisabled={false}>
 															<TextareaInput w='$100%' placeholder='Your remarks goes here...' onChangeText={onChange} value={value} />
 														</Textarea>
 													);

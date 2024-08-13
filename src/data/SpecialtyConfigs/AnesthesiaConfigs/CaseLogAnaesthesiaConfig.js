@@ -256,6 +256,7 @@ const examination = [
 						name: "IIG",
 						nodeType: "leaf",
 						inputType: "text",
+						unit: "cm",
 					},
 					{
 						id: "TMJMobility",
@@ -285,6 +286,7 @@ const examination = [
 						name: "TMD",
 						nodeType: "leaf",
 						inputType: "text",
+						unit: "cm",
 					},
 					{
 						id: "ULBTClass",
@@ -940,7 +942,7 @@ const regionalTechniques = [
 			{
 				id: "UpperExtremityBlock",
 				name: "Upper Extremity Block",
-				selectType: "single",
+				selectType: "multiple",
 				nodeType: "parent",
 				children: [
 					{
@@ -978,7 +980,7 @@ const regionalTechniques = [
 			{
 				id: "LowerExtremityBlock",
 				name: "Lower Extremity Block",
-				selectType: "single",
+				selectType: "multiple",
 				nodeType: "parent",
 				children: [
 					{
@@ -1016,7 +1018,7 @@ const regionalTechniques = [
 			{
 				id: "TruncalBlock",
 				name: "Truncal Block",
-				selectType: "single",
+				selectType: "multiple",
 				nodeType: "parent",
 				children: [
 					{
@@ -1059,7 +1061,7 @@ const regionalTechniques = [
 			{
 				id: "Head&NeckBlock",
 				name: "Head & Neck block",
-				selectType: "single",
+				selectType: "multiple",
 				nodeType: "parent",
 				children: [
 					{

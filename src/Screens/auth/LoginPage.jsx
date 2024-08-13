@@ -108,6 +108,7 @@ const LoginPage = ({ navigation }) => {
 							AppStore.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 							AppStore.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+							AppStore.setImagePath(fetchProfileData.imagePath);
 							AppStore.setButtonPressed(false);
 						}
 

@@ -113,7 +113,7 @@ const specialtyList = {
 	},
 };
 
-const YourExpertise = ({ control, formState, formFields, reset }) => {
+const YourExpertise = ({ control, formState, formFields, reset, watch }) => {
 	const [selectedBroadSpecialty, setSelectedBroadSpecialty] = useState("");
 	const [superSpecialtyOptions, setSuperSpecialtyOptions] = useState([]);
 	const [subSpecialtyOptions, setSubSpecialtyOptions] = useState([]);
@@ -134,6 +134,8 @@ const YourExpertise = ({ control, formState, formFields, reset }) => {
 	};
 
 	useEffect(() => {
+		console.log("Log in the selection of the broad specialty?????");
+		setSelectedBroadSpecialty(watch("broadSpecialty"));
 		if (selectedBroadSpecialty === "Anaesthesiology" || selectedBroadSpecialty === "Orthopaedics") {
 			const specialties = specialtyList[selectedBroadSpecialty] || { SuperSpeciality: [], SubSpeciality: [] };
 			setSuperSpecialtyOptions(specialties.SuperSpeciality);

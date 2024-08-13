@@ -29,7 +29,8 @@ city="city",
 medicalCouncilName="medicalCouncilName",
 yearOfRegistration="yearOfRegistration",
 medicalRegistrationNumber="medicalRegistrationNumber",
-targetedCaseLogNumber="targetedCaseLogNumber"
+targetedCaseLogNumber="targetedCaseLogNumber",
+imagePath="imagePath"
 }
 
 /**
@@ -58,4 +59,5 @@ export const UserOrderableEnumType = types.enumeration("UserOrderable", [
   "yearOfRegistration",
   "medicalRegistrationNumber",
   "targetedCaseLogNumber",
+  "imagePath",
       ])

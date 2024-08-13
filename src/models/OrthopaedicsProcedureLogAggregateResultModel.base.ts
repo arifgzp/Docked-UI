@@ -39,6 +39,10 @@ export const OrthopaedicsProcedureLogAggregateResultModelBase = ModelBase
     sitesMax: types.union(types.undefined, types.null, types.string),
     procedureNameMin: types.union(types.undefined, types.null, types.string),
     procedureNameMax: types.union(types.undefined, types.null, types.string),
+    durationOfSurgeryHoursMin: types.union(types.undefined, types.null, types.string),
+    durationOfSurgeryHoursMax: types.union(types.undefined, types.null, types.string),
+    durationOfSurgeryMinutesMin: types.union(types.undefined, types.null, types.string),
+    durationOfSurgeryMinutesMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
     outcomeMax: types.union(types.undefined, types.null, types.string),
     outcomeOtherMin: types.union(types.undefined, types.null, types.string),
@@ -82,6 +86,10 @@ export class OrthopaedicsProcedureLogAggregateResultModelSelector extends QueryB
   get sitesMax() { return this.__attr(`sitesMax`) }
   get procedureNameMin() { return this.__attr(`procedureNameMin`) }
   get procedureNameMax() { return this.__attr(`procedureNameMax`) }
+  get durationOfSurgeryHoursMin() { return this.__attr(`durationOfSurgeryHoursMin`) }
+  get durationOfSurgeryHoursMax() { return this.__attr(`durationOfSurgeryHoursMax`) }
+  get durationOfSurgeryMinutesMin() { return this.__attr(`durationOfSurgeryMinutesMin`) }
+  get durationOfSurgeryMinutesMax() { return this.__attr(`durationOfSurgeryMinutesMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
   get outcomeMax() { return this.__attr(`outcomeMax`) }
   get outcomeOtherMin() { return this.__attr(`outcomeOtherMin`) }
@@ -99,4 +107,4 @@ export function selectFromOrthopaedicsProcedureLogAggregateResult() {
   return new OrthopaedicsProcedureLogAggregateResultModelSelector()
 }
 
-export const orthopaedicsProcedureLogAggregateResultModelPrimitives = selectFromOrthopaedicsProcedureLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.rotationMin.rotationMax.conductMin.conductMax.sitesMin.sitesMax.procedureNameMin.procedureNameMax.outcomeMin.outcomeMax.outcomeOtherMin.outcomeOtherMax.complicationMin.complicationMax.diagnosisMin.diagnosisMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax
+export const orthopaedicsProcedureLogAggregateResultModelPrimitives = selectFromOrthopaedicsProcedureLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.rotationMin.rotationMax.conductMin.conductMax.sitesMin.sitesMax.procedureNameMin.procedureNameMax.durationOfSurgeryHoursMin.durationOfSurgeryHoursMax.durationOfSurgeryMinutesMin.durationOfSurgeryMinutesMax.outcomeMin.outcomeMax.outcomeOtherMin.outcomeOtherMax.complicationMin.complicationMax.diagnosisMin.diagnosisMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

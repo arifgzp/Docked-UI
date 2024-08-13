@@ -30,6 +30,8 @@ export const OrthopaedicsProcedureLogModelBase = ModelBase
     sites: types.union(types.undefined, types.null, types.string),
     procedure: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     procedureName: types.union(types.undefined, types.null, types.string),
+    durationOfSurgeryHours: types.union(types.undefined, types.null, types.string),
+    durationOfSurgeryMinutes: types.union(types.undefined, types.null, types.string),
     outcome: types.union(types.undefined, types.null, types.string),
     outcomeOther: types.union(types.undefined, types.null, types.string),
     complication: types.union(types.undefined, types.null, types.string),
@@ -58,6 +60,8 @@ export class OrthopaedicsProcedureLogModelSelector extends QueryBuilder {
   get sites() { return this.__attr(`sites`) }
   get procedure() { return this.__attr(`procedure`) }
   get procedureName() { return this.__attr(`procedureName`) }
+  get durationOfSurgeryHours() { return this.__attr(`durationOfSurgeryHours`) }
+  get durationOfSurgeryMinutes() { return this.__attr(`durationOfSurgeryMinutes`) }
   get outcome() { return this.__attr(`outcome`) }
   get outcomeOther() { return this.__attr(`outcomeOther`) }
   get complication() { return this.__attr(`complication`) }
@@ -69,4 +73,4 @@ export function selectFromOrthopaedicsProcedureLog() {
   return new OrthopaedicsProcedureLogModelSelector()
 }
 
-export const orthopaedicsProcedureLogModelPrimitives = selectFromOrthopaedicsProcedureLog().createdOn.updatedOn.date.hospital.faculty.complete.patientAge.patientSex.rotation.conduct.sites.procedure.procedureName.outcome.outcomeOther.complication.diagnosis.caseType.remarks
+export const orthopaedicsProcedureLogModelPrimitives = selectFromOrthopaedicsProcedureLog().createdOn.updatedOn.date.hospital.faculty.complete.patientAge.patientSex.rotation.conduct.sites.procedure.procedureName.durationOfSurgeryHours.durationOfSurgeryMinutes.outcome.outcomeOther.complication.diagnosis.caseType.remarks

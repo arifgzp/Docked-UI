@@ -113,7 +113,7 @@ const EnterOTPPage = ({ route }) => {
 									</Text>
 								</VStack>
 							</Box>
-							<Box alignSelf='flex-start' width='$75%'>
+							<Box width='$85%'>
 								<FormControl
 									width='$full'
 									size='md'
@@ -145,7 +145,7 @@ const EnterOTPPage = ({ route }) => {
 									)}
 								</FormControl>
 							</Box>
-							<HStack w='$100%' space='sm' alignSelf='flex-start' alignItems='center'>
+							<HStack w='$85%' space='sm' alignSelf='flex-start' alignItems='center'>
 								<Text size='sm'>Didn’t Receive OTP?</Text>
 								<Box>
 									<Button variant='link' size='sm' onPress={resendOTP}>
@@ -161,7 +161,10 @@ const EnterOTPPage = ({ route }) => {
 								borderWidth={1}
 								borderRadius={"$full"}
 								borderColor='rgba(54, 123, 113, 0.5)'
-								onPress={() => navigation.goBack()}
+								onPress={() => {
+									navigation.goBack();
+									navigation.goBack();
+								}}
 								height={40}
 								width={40}
 								justifyContent='center'

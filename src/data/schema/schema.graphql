@@ -56,8 +56,8 @@ type User @secret(field: "password") {
     orthopaedicsCaseLog: [OrthopaedicsCaseLog] @dgraph(pred:"orthopaedicsCaseLog")
     orthopaedicsProcedureLog: [OrthopaedicsProcedureLog] @dgraph(pred:"orthopaedicsProcedureLog")
     logProfile: LogProfile @dgraph(pred:"logProfile")
+    imagePath: String @dgraph(pred:"imagePath")
 }
-
 
 type AnaesthesiaCaseLog  {
     id: ID!
@@ -220,6 +220,8 @@ type OrthopaedicsProcedureLog  {
     sites: String @search(by:[term]) @dgraph(pred:"sites")
     procedure: [String] @search(by:[term]) @dgraph(pred:"procedure")
     procedureName: String @search(by:[term]) @dgraph(pred:"procedureName")
+    durationOfSurgeryHours: String @search(by:[term]) @dgraph(pred:"durationOfSurgeryHours")
+    durationOfSurgeryMinutes: String @search(by:[term]) @dgraph(pred:"durationOfSurgeryMinutes")
     outcome: String @search(by:[term]) @dgraph(pred:"outcome")
     outcomeOther: String @search(by:[term]) @dgraph(pred:"outcomeOther")
     complication: String @search(by:[term]) @dgraph(pred:"complication")

@@ -57,6 +57,7 @@ const uploadImage = async (imageInput, UserId, token) => {
 	console.log("user token hai", token);
 	const fileExtenstion = removeBeforeLastSlash(file.mimeType);
 	const requestURL = `${serverURL}/upload/profilePhoto:${UserId}/${UserId}.${fileExtenstion}/upload`;
+
 	console.log("Rest URL : ", requestURL);
 	const formdata = new FormData();
 
@@ -171,10 +172,15 @@ const AppStore = types
 		_userPassword: types.maybeNull(types.string),
 		_buttonPressed: types.maybeNull(types.boolean),
 		_isFormDirty: types.maybeNull(types.boolean),
+		_imagePath: types.maybeNull(types.string),
 	})
 	.views((self) => ({
 		get UserId() {
 			return self._userId;
+		},
+
+		get ImagePath() {
+			return self._imagePath;
 		},
 
 		get IsformDirty() {
@@ -320,6 +326,10 @@ const AppStore = types
 	.actions((self) => ({
 		setUserId(userId) {
 			self._userId = userId;
+		},
+
+		setImagePath(imagePath) {
+			self._imagePath = imagePath;
 		},
 
 		setIsFormDirty(isFormDirty) {
@@ -696,6 +706,7 @@ const AppStore = types
 
 		UploadImage: flow(function* UploadImage(imageInput) {
 			try {
+				console.log("IMage INPUTEnnnnnn", imageInput);
 				self._isLoading = true;
 				const userId = self._userId;
 				const response = yield uploadImage(imageInput, userId, self._userToken);

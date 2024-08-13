@@ -42,8 +42,6 @@ function App() {
 		}
 	}, [fontsLoaded]);
 
-	const isUserSignedIn = appStoreInstance.isUserSignedIn;
-	console.log("isUserSignedIn >> ", isUserSignedIn);
 	if (!fontsLoaded) {
 		return null;
 	}

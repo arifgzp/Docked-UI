@@ -138,11 +138,13 @@ const drugsUsed = [
 				id: "Volume",
 				name: "Volume",
 				nodeType: "leaf",
+				inputType: "text",
 			},
 			{
 				id: "Strength",
 				name: "Strength",
 				nodeType: "leaf",
+				inputType: "text",
 			},
 			{
 				id: "Adjuvant",

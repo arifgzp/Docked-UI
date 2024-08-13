@@ -19,11 +19,13 @@ const Options = {
 };
 
 const OrthopaedicsProcedureLogConfigTextAndSingleSelectOptions = [
-	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%" },
+	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%", unit: "years" },
 	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true, width: "$48%" },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
 	{ name: "Site", uid: "sites", type: "text", isRequire: true },
 	{ name: "Procedure Name", uid: "procedureName", type: "text", isRequire: true },
+	{ name: "Duration of Surgery", placeholder: "in", uid: "durationOfSurgeryHours", type: "number", isRequire: true, width: "$48%", unit: "hours" },
+	{ name: "", uid: "durationOfSurgeryMinutes", placeholder: "in", type: "number", isRequire: true, width: "$48%", unit: "mins" },
 	{ name: "Complication", uid: "complication", type: "text", isRequire: true },
 	{ name: "Conduct", uid: "conduct", type: "select-single", options: Options.Conduct, isRequire: true },
 	{ name: "Outcome", uid: "outcome", type: "select-single", options: Options.Outcome, isRequire: true, outcome: true },

@@ -22,18 +22,6 @@ import { useEffect } from "react";
 
 const EmailSentPage = ({ navigation, route }) => {
 	const { enteredMail, enteredNumber, enteredPassword } = route.params;
-	useEffect(() => {
-		const backAction = () => {
-			// Prevent default behavior (navigating back)
-			return true;
-		};
-
-		// Add event listener for hardware back button press
-		const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-
-		// Remove event listener when component unmounts
-		return () => backHandler.remove();
-	}, []);
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>

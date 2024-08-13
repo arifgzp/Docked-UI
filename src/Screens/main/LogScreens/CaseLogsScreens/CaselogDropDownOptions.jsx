@@ -71,6 +71,8 @@ const CaselogDropDownOptions = ({
 	formFields,
 	readOnlyFaculty,
 	caseLogData,
+	// inputRefs,
+	// scrollToInput,
 }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -128,13 +130,15 @@ const CaselogDropDownOptions = ({
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
 								<Select
+									// ref={inputRefs.hospital}
+									// onFocus={() => scrollToInput(inputRefs.hospital)}
 									onBlur={onBlur}
 									isDisabled={readOnlyFaculty}
 									isReadOnly={readOnlyFaculty}
 									onValueChange={onChange}
 									selectedValue={caseLogData?.hospital || value}>
 									<SelectTrigger variant='outline' size='sm'>
-										<SelectInput placeholder={`Hospital`} />
+										<SelectInput />
 										<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
@@ -181,13 +185,15 @@ const CaselogDropDownOptions = ({
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
 								<Select
+									// ref={inputRefs.faculty}
+									// onFocus={() => scrollToInput(inputRefs.faculty)}
 									onBlur={onBlur}
 									isDisabled={readOnlyFaculty}
 									isReadOnly={readOnlyFaculty}
 									onValueChange={onChange}
 									selectedValue={caseLogData?.faculty || value}>
 									<SelectTrigger variant='outline' size='sm'>
-										<SelectInput placeholder={`Faculty`} />
+										<SelectInput />
 										<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 									</SelectTrigger>
 									<SelectPortal>
@@ -224,7 +230,7 @@ const CaselogDropDownOptions = ({
 				{formFields.map((field, index) => {
 					if (field.type === "select-single") {
 						return (
-							<VStack width={field.width ?? "$100%"} gap='$2'>
+							<VStack key={field.uid} width={field.width ?? "$100%"} gap='$2'>
 								<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
 									{field.name}
 								</Text>
@@ -238,9 +244,16 @@ const CaselogDropDownOptions = ({
 										}}
 										render={({ field: { onChange, onBlur, value } }) => {
 											return (
-												<Select onBlur={onBlur} isReadOnly={readOnly} onValueChange={onChange} selectedValue={value}>
+												<Select
+													// ref={inputRefs[field.uid]}
+													// onFocus={() => scrollToInput(inputRefs[field.uid])}
+													w='$100%'
+													onBlur={onBlur}
+													isReadOnly={readOnly}
+													onValueChange={onChange}
+													selectedValue={value}>
 													<SelectTrigger variant='outline' size='sm'>
-														<SelectInput placeholder={field.name} />
+														<SelectInput />
 														<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
 													</SelectTrigger>
 													<SelectPortal>
@@ -288,7 +301,7 @@ const CaselogDropDownOptions = ({
 												render={({ field: { onChange, onBlur, value } }) => {
 													return (
 														<Input variant='outline' size='sm'>
-															<InputField onChangeText={onChange} value={value} placeholder='Other Outcome' />
+															<InputField onChangeText={onChange} value={value} />
 														</Input>
 													);
 												}}
@@ -300,7 +313,7 @@ const CaselogDropDownOptions = ({
 						);
 					} else if (field.type === "text" || field.type === "number") {
 						return (
-							<VStack width={field.width ?? "$100%"} gap='$2'>
+							<VStack key={field.uid} justifyContent='flex-end' width={field.width ?? "$100%"} gap='$2'>
 								<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
 									{field.name}
 								</Text>
@@ -315,12 +328,12 @@ const CaselogDropDownOptions = ({
 										render={({ field: { onChange, onBlur, value } }) => {
 											return (
 												<Input variant='outline' size='sm'>
-													<InputField
-														keyboardType={field.type === "number" ? "number-pad" : "default"}
-														onChangeText={onChange}
-														value={value}
-														placeholder={field.name}
-													/>
+													<InputField keyboardType={field.type === "number" ? "number-pad" : "default"} onChangeText={onChange} value={value} />
+													{field.unit && (
+														<InputSlot pr='$3'>
+															<Text size='xs'>{field.unit}</Text>
+														</InputSlot>
+													)}
 												</Input>
 											);
 										}}

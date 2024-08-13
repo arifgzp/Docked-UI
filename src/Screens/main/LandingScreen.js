@@ -121,8 +121,7 @@ const CreateMenuList = () => {
 		<Pressable w='$full' h='$full' justifyContent='center' alignItems='center' onPress={toggleCreateMenu}>
 			<Box position='absolute' bottom='$10'>
 				<Button onPress={toggleCreateMenu} borderRadius={"$full"} backgroundColor='#CC3F0C' width={45} height={45}>
-					{/* <ButtonIcon as={Ionicons} size='lg' name='add-outline' /> */}
-					<ButtonText w='$400%' pt='$2' fontSize={32} fontFamily='Jua' textAlign='center'>
+					<ButtonText w='$400%' pt='$1.5' fontSize={32} fontFamily='Jua' textAlign='center'>
 						+
 					</ButtonText>
 				</Button>

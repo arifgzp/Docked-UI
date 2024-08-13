@@ -105,14 +105,14 @@ const createProfileConfig = [
 			},
 		},
 	},
-	// {
-	// 	step: 4,
-	// 	id: "step-4",
-	// 	label: "Your Profile Picture",
-	// 	content: {
-	// 		component: require("../../components/SetupProfile/ProfilePicture").default,
-	// 	},
-	// },
+	{
+		step: 4,
+		id: "step-4",
+		label: "Your Profile Picture",
+		content: {
+			component: require("../../components/SetupProfile/ProfilePicture").default,
+		},
+	},
 ];
 
 export default createProfileConfig;

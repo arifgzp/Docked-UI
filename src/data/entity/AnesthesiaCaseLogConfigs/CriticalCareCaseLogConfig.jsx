@@ -42,7 +42,7 @@ const Options = {
 };
 
 const CriticalCareCaseLogConfigTextAndSingleSelectOptions = [
-	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%" },
+	{ name: "Patient Age", uid: "patientAge", type: "number", isRequire: true, width: "$48%", unit: "years" },
 	{ name: "Patient Sex", uid: "patientSex", type: "select-single", options: Options.Gender, isRequire: true, width: "$48%" },
 	{ name: "Diagnosis", uid: "diagnosis", type: "text", isRequire: true },
 	{ name: "Comorbidites", uid: "comorbidites", type: "text", isRequire: true },

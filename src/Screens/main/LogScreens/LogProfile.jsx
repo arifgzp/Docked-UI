@@ -398,7 +398,6 @@ const LogProfilePage = ({ navigation, route }) => {
 				console.log("AppStore.ButtonPressed after Log Profile is out of focus", AppStore.ButtonPressed);
 				if (caseLogFormToGet === "") {
 					console.log("this line should appear", caseLogFormToGet);
-					navigation.goBack();
 				}
 			};
 		}, [caseLogFormToGet])

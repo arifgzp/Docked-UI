@@ -63,6 +63,8 @@ export const UserAggregateResultModelBase = ModelBase
     targetedCaseLogNumberMax: types.union(types.undefined, types.null, types.integer),
     targetedCaseLogNumberSum: types.union(types.undefined, types.null, types.integer),
     targetedCaseLogNumberAvg: types.union(types.undefined, types.null, types.number),
+    imagePathMin: types.union(types.undefined, types.null, types.string),
+    imagePathMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -118,9 +120,11 @@ export class UserAggregateResultModelSelector extends QueryBuilder {
   get targetedCaseLogNumberMax() { return this.__attr(`targetedCaseLogNumberMax`) }
   get targetedCaseLogNumberSum() { return this.__attr(`targetedCaseLogNumberSum`) }
   get targetedCaseLogNumberAvg() { return this.__attr(`targetedCaseLogNumberAvg`) }
+  get imagePathMin() { return this.__attr(`imagePathMin`) }
+  get imagePathMax() { return this.__attr(`imagePathMax`) }
 }
 export function selectFromUserAggregateResult() {
   return new UserAggregateResultModelSelector()
 }
 
-export const userAggregateResultModelPrimitives = selectFromUserAggregateResult().count.newUserVerificationCodeMin.newUserVerificationCodeMax.userNameMin.userNameMax.resetPasswordCodeMin.resetPasswordCodeMax.nameMin.nameMax.lastNameMin.lastNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.countryCodeMin.countryCodeMax.phoneNumberMin.phoneNumberMax.combinePhoneNumberMin.combinePhoneNumberMax.dateOfBirthMin.dateOfBirthMax.broadSpecialtyMin.broadSpecialtyMax.superSpecialtyMin.superSpecialtyMax.subSpecialtyMin.subSpecialtyMax.designationMin.designationMax.designationOthersMin.designationOthersMax.workPlaceMin.workPlaceMax.cityMin.cityMax.medicalCouncilNameMin.medicalCouncilNameMax.yearOfRegistrationMin.yearOfRegistrationMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.targetedCaseLogNumberMin.targetedCaseLogNumberMax.targetedCaseLogNumberSum.targetedCaseLogNumberAvg
+export const userAggregateResultModelPrimitives = selectFromUserAggregateResult().count.newUserVerificationCodeMin.newUserVerificationCodeMax.userNameMin.userNameMax.resetPasswordCodeMin.resetPasswordCodeMax.nameMin.nameMax.lastNameMin.lastNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.countryCodeMin.countryCodeMax.phoneNumberMin.phoneNumberMax.combinePhoneNumberMin.combinePhoneNumberMax.dateOfBirthMin.dateOfBirthMax.broadSpecialtyMin.broadSpecialtyMax.superSpecialtyMin.superSpecialtyMax.subSpecialtyMin.subSpecialtyMax.designationMin.designationMax.designationOthersMin.designationOthersMax.workPlaceMin.workPlaceMax.cityMin.cityMax.medicalCouncilNameMin.medicalCouncilNameMax.yearOfRegistrationMin.yearOfRegistrationMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.targetedCaseLogNumberMin.targetedCaseLogNumberMax.targetedCaseLogNumberSum.targetedCaseLogNumberAvg.imagePathMin.imagePathMax

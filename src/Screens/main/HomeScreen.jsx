@@ -36,9 +36,16 @@ import { Card } from "@gluestack-ui/themed";
 import { Heading } from "@gluestack-ui/themed";
 import { LineChart, BarChart, PieChart, ProgressChart, ContributionGraph, StackedBarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import { useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import { observer } from "mobx-react";
+import NetworkUtils from "../../utils/NetworkUtils";
+import { useQuery } from "../../models";
 
 const HomeScreenPage = ({ navigation }) => {
+	const isFocused = useIsFocused();
+	const queryInfo = useQuery();
+	const { store, setQuery } = queryInfo;
 	const months = [
 		{
 			name: "Jan",
@@ -115,6 +122,38 @@ const HomeScreenPage = ({ navigation }) => {
 		useShadowColorFromDataset: false, // optional
 	};
 
+	useEffect(() => {
+		if (!appStoreInstance.ImagePath) {
+			const fetchUserProfile = async () => {
+				try {
+					const userQuery = store.fetchUserById(appStoreInstance.UserName);
+					setQuery(userQuery);
+					const finishFetchingUserProfile = await userQuery;
+					if (finishFetchingUserProfile) {
+						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+						console.log("user data in dashboard", fetchProfileData);
+						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
+						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
+						appStoreInstance.setDesignation(fetchProfileData.designation);
+						appStoreInstance.setDesignationOthers(fetchProfileData.designationOthers);
+						appStoreInstance.setWorkPlace(fetchProfileData.workPlace);
+						appStoreInstance.setCity(fetchProfileData.city);
+						appStoreInstance.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
+						appStoreInstance.setYearOfRegistration(fetchProfileData.yearOfRegistration);
+						appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+						appStoreInstance.setImagePath(fetchProfileData.imagePath);
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			if (isFocused) {
+				fetchUserProfile();
+			}
+		}
+	}, [isFocused]);
+	const requrl = NetworkUtils.getServerURL();
+	const url = `${requrl}/download/profilePhoto:${appStoreInstance.ImagePath}`;
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box h='$full' backgroundColor='$primaryBackground' pt='$8'>
@@ -123,12 +162,18 @@ const HomeScreenPage = ({ navigation }) => {
 						<HStack justifyContent='space-between' alignItems='center'>
 							<VStack>
 								<Text fontFamily='Inter_Bold' color='#000' size='xl'>
-									Hello Dr. {appStoreInstance.Name ? appStoreInstance.Name.split(" ")[0] : "User"}
+									Hello Dr. {appStoreInstance.Name ? appStoreInstance.Name : "User"}
 								</Text>
 								<Text>{appStoreInstance.UserBroadSpecialty}</Text>
 							</VStack>
 							<Pressable onPress={() => navigation.navigate("ProfilePage")}>
-								<Image width={35} height={35} source={ImageAssets.profileIcon} alt='Docked-Logo' />
+								<Image
+									borderRadius='$full'
+									width={35}
+									height={35}
+									source={appStoreInstance.ImagePath !== null ? { uri: url } : ImageAssets.profileIcon}
+									alt='Docked-Logo'
+								/>
 							</Pressable>
 							{/* <Button
 								onPress={() => navigation.navigate("ProfilePage")}
@@ -140,7 +185,8 @@ const HomeScreenPage = ({ navigation }) => {
 							</Button> */}
 						</HStack>
 					</Box>
-					<Box p={10} width={"$full"} borderBottomEndRadius={50} backgroundColor='#367B71'>
+					<Box h={3} width={"$full"} backgroundColor='#367B71'></Box>
+					{/* <Box p={10} width={"$full"} borderBottomEndRadius={50} backgroundColor='#367B71'>
 						<HStack>
 							<Box width='$55%'>
 								<Text color='#FFF' size='xs'>
@@ -158,7 +204,7 @@ const HomeScreenPage = ({ navigation }) => {
 								</Button>
 							</Box>
 						</HStack>
-					</Box>
+					</Box> */}
 					<Box p={10}>
 						<HStack justifyContent='space-around'>
 							<VStack space='md' alignItems='center'>

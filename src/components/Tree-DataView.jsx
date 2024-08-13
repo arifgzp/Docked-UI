@@ -193,7 +193,7 @@ function TreeDataView(props) {
 					<HStack gap='$0.5' justifyContent='center'>
 						{getArrowIcon(level)}
 						<Text fontSize='$xs' color='$textColor400' mt='$0.5' flex={1}>
-							{node.label}
+							{node.label} {node.key.includes("cm") ? node.key.split("#").pop() : ""}
 						</Text>
 					</HStack>
 				)}

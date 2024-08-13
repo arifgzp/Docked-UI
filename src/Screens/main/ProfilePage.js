@@ -38,6 +38,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useQuery } from "../../models";
 import Loader from "../../components/Loader";
 import { format } from "date-fns";
+import NetworkUtils from "../../utils/NetworkUtils";
 
 const ProfilePage = ({ navigation }) => {
 	const isFocused = useIsFocused();
@@ -69,6 +70,7 @@ const ProfilePage = ({ navigation }) => {
 						appStoreInstance.setMedicalCouncilName(fetchProfileData.medicalCouncilName);
 						appStoreInstance.setYearOfRegistration(fetchProfileData.yearOfRegistration);
 						appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
+						appStoreInstance.setImagePath(fetchProfileData.imagePath);
 					}
 				} catch (error) {
 					console.log(error);
@@ -79,7 +81,8 @@ const ProfilePage = ({ navigation }) => {
 			}
 		}
 	}, [isFocused]);
-
+	const requrl = NetworkUtils.getServerURL();
+	const url = `${requrl}/download/profilePhoto:${appStoreInstance.ImagePath}`;
 	return (
 		<Loader apiLoadingInfo={appStoreInstance.isLoading} queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 			<KeyboardAvoidingView
@@ -91,7 +94,12 @@ const ProfilePage = ({ navigation }) => {
 						<VStack mb={"$20%"} space='xl'>
 							<Box mt={10}>
 								<HStack space='2xl' alignItems='center'>
-									<Image width={50} height={50} source={ImageAssets.profileIcon} alt='Docked-Logo' />
+									<Image
+										width={50}
+										height={50}
+										source={appStoreInstance.ImagePath !== null ? { uri: url } : ImageAssets.profileIcon}
+										alt='Docked-Logo'
+									/>
 									<VStack>
 										<Text fontFamily='Inter_Bold' color='#000' size='xl'>
 											{appStoreInstance.Name}
