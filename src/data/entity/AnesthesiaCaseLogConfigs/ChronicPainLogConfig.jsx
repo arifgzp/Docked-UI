@@ -18,7 +18,7 @@ const Options = {
 	],
 	Conduct: [
 		{ label: "Observed", value: "Observed" },
-		{ label: "Assisted", value: "Aassisted" },
+		{ label: "Assisted", value: "Assisted" },
 		{ label: "Performed under supervision", value: "Performed under supervision" },
 		{ label: "Performed independently", value: "Performed independently" },
 		{ label: "Supervised", value: "Supervised" },
