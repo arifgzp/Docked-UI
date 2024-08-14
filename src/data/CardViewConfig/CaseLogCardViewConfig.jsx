@@ -61,7 +61,7 @@ const AnesthesiaCaseLogCardViewConfig = [
 	},
 	{
 		label: "Surgery",
-		value: "surgery",
+		value: "surgicalProcedure",
 	},
 	{
 		label: "ASA Grade",
@@ -135,11 +135,11 @@ const AnesthesiaCriticalCareCardLogViewConfig = [
 	},
 	{
 		label: "Complications",
-		value: "complications",
+		value: "complication",
 	},
 	{
 		label: "Outcome",
-		value: "putcome",
+		value: "outcome",
 	},
 ];
 

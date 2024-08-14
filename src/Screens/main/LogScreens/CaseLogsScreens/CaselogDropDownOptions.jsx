@@ -45,7 +45,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Actionsheet } from "@gluestack-ui/themed";
 import { ActionsheetBackdrop } from "@gluestack-ui/themed";
 import { ActionsheetContent } from "@gluestack-ui/themed";
@@ -71,8 +71,8 @@ const CaselogDropDownOptions = ({
 	formFields,
 	readOnlyFaculty,
 	caseLogData,
-	// inputRefs,
-	// scrollToInput,
+	inputRefs,
+	scrollToInput,
 }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -80,20 +80,19 @@ const CaselogDropDownOptions = ({
 	const [showActionSheet, setShowActionsheet] = useState(false);
 	const [date, setDate] = useState(caseLogData?.date ? format(new Date(caseLogData.date), "dd / MM / yyyy") : "--/--/--");
 	const [dateForModal, setDateForModal] = useState(caseLogData?.date ? new Date(caseLogData?.date) : new Date());
+	const handleSelectPress = useCallback(
+		(fieldUid) => {
+			// Delay the scroll slightly to ensure the dropdown has time to open
+			setTimeout(() => scrollToInput(fieldUid), 100);
+		},
+		[scrollToInput]
+	);
 
 	const handelSetDate = (date) => {
 		setValue("date", date);
 		appStoreInstance.setIsFormDirty(true);
 	};
 	const currentSpecialty = AppStore.UserBroadSpecialty;
-	/*useEffect(() => {
-		//TODO: This is a hack to set the default value of faculty in the form
-		if (!caseLogData) {
-			const defaultFaculty = prefilledData?.faculty?.[0]?.name;
-			setValue("faculty", defaultFaculty);
-		}
-	}, []);*/
-
 	console.log("data for edit", caseLogData);
 	console.log("prefilledData Mudit test", prefilledData);
 	const rotationForEdit = caseLogData?.rotation;
@@ -130,8 +129,6 @@ const CaselogDropDownOptions = ({
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
 								<Select
-									// ref={inputRefs.hospital}
-									// onFocus={() => scrollToInput(inputRefs.hospital)}
 									onBlur={onBlur}
 									isDisabled={readOnlyFaculty}
 									isReadOnly={readOnlyFaculty}
@@ -185,8 +182,6 @@ const CaselogDropDownOptions = ({
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
 								<Select
-									// ref={inputRefs.faculty}
-									// onFocus={() => scrollToInput(inputRefs.faculty)}
 									onBlur={onBlur}
 									isDisabled={readOnlyFaculty}
 									isReadOnly={readOnlyFaculty}
@@ -245,8 +240,8 @@ const CaselogDropDownOptions = ({
 										render={({ field: { onChange, onBlur, value } }) => {
 											return (
 												<Select
-													// ref={inputRefs[field.uid]}
-													// onFocus={() => scrollToInput(inputRefs[field.uid])}
+													ref={(el) => (inputRefs.current[field.uid] = el)}
+													onFocus={() => scrollToInput(field.uid)}
 													w='$100%'
 													onBlur={onBlur}
 													isReadOnly={readOnly}
@@ -301,7 +296,12 @@ const CaselogDropDownOptions = ({
 												render={({ field: { onChange, onBlur, value } }) => {
 													return (
 														<Input variant='outline' size='sm'>
-															<InputField onChangeText={onChange} value={value} />
+															<InputField
+																ref={(el) => (inputRefs.current["outcomeOther"] = el)}
+																onFocus={() => scrollToInput("outcomeOther")}
+																onChangeText={onChange}
+																value={value}
+															/>
 														</Input>
 													);
 												}}
@@ -328,7 +328,13 @@ const CaselogDropDownOptions = ({
 										render={({ field: { onChange, onBlur, value } }) => {
 											return (
 												<Input variant='outline' size='sm'>
-													<InputField keyboardType={field.type === "number" ? "number-pad" : "default"} onChangeText={onChange} value={value} />
+													<InputField
+														ref={(el) => (inputRefs.current[field.uid] = el)}
+														onFocus={() => scrollToInput(field.uid)}
+														keyboardType={field.type === "number" ? "number-pad" : "default"}
+														onChangeText={onChange}
+														value={value}
+													/>
 													{field.unit && (
 														<InputSlot pr='$3'>
 															<Text size='xs'>{field.unit}</Text>

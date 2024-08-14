@@ -303,7 +303,9 @@ const CaseLogTab = () => {
 			);
 
 			const replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
-			return replacedNodes.join(", ");
+			const uniqueReplacedNodes = Array.from(new Set(replacedNodes));
+
+			return uniqueReplacedNodes.join(", ");
 		}
 	};
 

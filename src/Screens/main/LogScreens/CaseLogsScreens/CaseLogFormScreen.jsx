@@ -59,6 +59,7 @@ import {
 	specialOrthodonticsPreClinical,
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
 import appStoreInstance from "../../../../stores/AppStore";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -118,13 +119,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		},
 	});
 
-	// const fixedFilledRefs = {
-	// 	hospital: useRef(),
-	// 	faculty: useRef(),
-	// 	date: useRef(),
-	// 	remarks: useRef(),
-	// };
-
 	const [key, setKey] = useState(0);
 	const { isDirty } = formState;
 	const toast = useToast();
@@ -132,26 +126,15 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const caseLogPrefilledRef = useRef();
 	const [buttonPressed, setButtonPressed] = useState({ active: false, screenName: "" });
 	const buttonPressedRef = useRef();
-	// const scrollViewRef = useRef();
-	// const formFieldsArray = getCaseLogFields(caseLogFormToGet);
-	// console.log("formFieldRef Array", formFieldsArray);
-	// const formFieldsRefs = Object.fromEntries(formFieldsArray.map((field) => [field.uid, useRef()]));
 
-	// const inputRefs = {
-	// 	...formFieldsRefs,
-	// 	...fixedFilledRefs,
-	// };
+	const scrollViewRef = useRef(null);
+	const inputRefs = useRef({});
 
-	// console.log("console.log(inputRefs);", inputRefs);
-
-	// const scrollToInput = (inputRef) => {
-	// 	inputRef.current.measureLayout(scrollViewRef.current, (x, y, width, height) => {
-	// 		scrollViewRef.current.scrollTo({
-	// 			y: y - height,
-	// 			animated: true,
-	// 		});
-	// 	});
-	// };
+	const scrollToInput = (inputName) => {
+		inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
+			scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
+		});
+	};
 
 	const handleSaveClick = async (formData) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
@@ -204,10 +187,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
 			await query;
-			//navigation.navigate("RootLogBook");
-
-			// ours
-			// navigation.navigate("Logbook", { screen: "RootLogBook" });
 			reset();
 		} catch (error) {
 			console.log(error);
@@ -264,7 +243,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
 			await query;
-			//navigation.navigate("RootLogBook");
 			reset();
 		} catch (error) {
 			console.log(error);
@@ -411,13 +389,10 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				<Box flex={1} w='$100%' backgroundColor='$secondaryBackground'>
 					{caseLogPrefilledData ? (
 						<>
-							{/* <ScrollView ref={scrollViewRef}> */}
-							<ScrollView>
+							<ScrollView ref={scrollViewRef} keyboardShouldPersistTaps='handled'>
 								<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 									<Box width={"$100%"}>
 										<CaselogDropDownOptions
-											// inputRefs={inputRefs}
-											// scrollToInput={scrollToInput}
 											formFields={getCaseLogFields(caseLogFormToGet)}
 											prefilledData={caseLogPrefilledData}
 											control={control}
@@ -425,6 +400,8 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 											formState={formState}
 											watch={watch}
 											readOnlyFaculty={false}
+											inputRefs={inputRefs}
+											scrollToInput={scrollToInput}
 										/>
 									</Box>
 									<Divider />
@@ -454,14 +431,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 												}}
 												render={({ field: { onChange, onBlur, value } }) => {
 													return (
-														<Textarea
-															// ref={inputRefs.remarks}
-															// onFocus={() => scrollToInput(inputRefs.remarks)}
-															w='$100%'
-															size='sm'
-															isReadOnly={false}
-															isInvalid={false}
-															isDisabled={false}>
+														<Textarea w='$100%' size='sm' isReadOnly={false} isInvalid={false} isDisabled={false}>
 															<TextareaInput w='$100%' placeholder='Your remarks goes here...' onChangeText={onChange} value={value} />
 														</Textarea>
 													);
