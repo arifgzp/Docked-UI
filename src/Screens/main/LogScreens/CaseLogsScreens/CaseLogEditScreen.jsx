@@ -108,33 +108,14 @@ const CaseLogEditScreen = ({ navigation }) => {
 			remarks: "",
 		},
 	});
-	// const fixedFilledRefs = {
-	// 	hospital: useRef(),
-	// 	faculty: useRef(),
-	// 	date: useRef(),
-	// 	remarks: useRef(),
-	// };
+	const scrollViewRef = useRef(null);
+	const inputRefs = useRef({});
 
-	// const scrollViewRef = useRef();
-	// const formFieldsArray = getCaseLogFields(routes.params.caseType);
-	// console.log("formFieldRef Array", formFieldsArray);
-	// const formFieldsRefs = Object.fromEntries(formFieldsArray.map((field) => [field.uid, useRef()]));
-
-	// const inputRefs = {
-	// 	...formFieldsRefs,
-	// 	...fixedFilledRefs,
-	// };
-
-	// console.log("console.log(inputRefs);", inputRefs);
-
-	// const scrollToInput = (inputRef) => {
-	// 	inputRef.current.measureLayout(scrollViewRef.current, (x, y, width, height) => {
-	// 		scrollViewRef.current.scrollTo({
-	// 			y: y - height,
-	// 			animated: true,
-	// 		});
-	// 	});
-	// };
+	const scrollToInput = (inputName) => {
+		inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
+			scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
+		});
+	};
 	const { isDirty } = formState;
 
 	function findMissingValues(dbData, uiData) {
@@ -390,13 +371,10 @@ const CaseLogEditScreen = ({ navigation }) => {
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$secondaryBackground'>
 					<>
-						{/* <ScrollView ref={scrollViewRef}> */}
-						<ScrollView>
+						<ScrollView ref={scrollViewRef} keyboardShouldPersistTaps='handled'>
 							<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 								<Box width={"$100%"}>
 									<CaselogDropDownOptions
-										// inputRefs={inputRefs}
-										// scrollToInput={scrollToInput}
 										formFields={getCaseLogFields(routes.params.caseType)}
 										prefilledData={caseLogPrefilledData}
 										control={control}
@@ -406,6 +384,8 @@ const CaseLogEditScreen = ({ navigation }) => {
 										formState={formState}
 										readOnlyFaculty={true}
 										watch={watch}
+										inputRefs={inputRefs}
+										scrollToInput={scrollToInput}
 									/>
 								</Box>
 								<Divider />
