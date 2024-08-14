@@ -112,10 +112,13 @@ const CaseLogEditScreen = ({ navigation }) => {
 	const inputRefs = useRef({});
 
 	const scrollToInput = (inputName) => {
-		inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
-			scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
-		});
+		if (inputRefs.current[inputName]) {
+			inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
+				scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
+			});
+		}
 	};
+
 	const { isDirty } = formState;
 
 	function findMissingValues(dbData, uiData) {

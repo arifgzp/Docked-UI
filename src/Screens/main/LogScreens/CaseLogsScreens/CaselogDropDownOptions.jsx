@@ -82,8 +82,11 @@ const CaselogDropDownOptions = ({
 	const [dateForModal, setDateForModal] = useState(caseLogData?.date ? new Date(caseLogData?.date) : new Date());
 	const handleSelectPress = useCallback(
 		(fieldUid) => {
-			// Delay the scroll slightly to ensure the dropdown has time to open
-			setTimeout(() => scrollToInput(fieldUid), 100);
+			// Open the Select first
+			setTimeout(() => {
+				// Scroll to input after a delay to ensure the dropdown is visible
+				scrollToInput(fieldUid);
+			}, 100);
 		},
 		[scrollToInput]
 	);
@@ -132,7 +135,11 @@ const CaselogDropDownOptions = ({
 									onBlur={onBlur}
 									isDisabled={readOnlyFaculty}
 									isReadOnly={readOnlyFaculty}
-									onValueChange={onChange}
+									ref={(el) => (inputRefs.current["hospital"] = el)}
+									onValueChange={(value) => {
+										setValue("hospital", value);
+										scrollToInput("hospital");
+									}}
 									selectedValue={caseLogData?.hospital || value}>
 									<SelectTrigger variant='outline' size='sm'>
 										<SelectInput />
@@ -185,7 +192,11 @@ const CaselogDropDownOptions = ({
 									onBlur={onBlur}
 									isDisabled={readOnlyFaculty}
 									isReadOnly={readOnlyFaculty}
-									onValueChange={onChange}
+									ref={(el) => (inputRefs.current["faculty"] = el)}
+									onValueChange={(value) => {
+										setValue("faculty", value);
+										scrollToInput("faculty");
+									}}
 									selectedValue={caseLogData?.faculty || value}>
 									<SelectTrigger variant='outline' size='sm'>
 										<SelectInput />
@@ -241,11 +252,13 @@ const CaselogDropDownOptions = ({
 											return (
 												<Select
 													ref={(el) => (inputRefs.current[field.uid] = el)}
-													onFocus={() => scrollToInput(field.uid)}
 													w='$100%'
 													onBlur={onBlur}
 													isReadOnly={readOnly}
-													onValueChange={onChange}
+													onValueChange={(value) => {
+														setValue(field.uid, value);
+														scrollToInput(field.uid); // Center the field after a value is selected
+													}}
 													selectedValue={value}>
 													<SelectTrigger variant='outline' size='sm'>
 														<SelectInput />

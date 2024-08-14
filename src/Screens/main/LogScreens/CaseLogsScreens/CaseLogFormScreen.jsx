@@ -131,9 +131,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const inputRefs = useRef({});
 
 	const scrollToInput = (inputName) => {
-		inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
-			scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
-		});
+		if (inputRefs.current[inputName]) {
+			inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
+				scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
+			});
+		}
 	};
 
 	const handleSaveClick = async (formData) => {
