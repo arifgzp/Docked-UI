@@ -404,7 +404,6 @@ const CaseLogTab = () => {
 	};
 
 	const CardToRender = ({ config, card, index }) => {
-		console.log("what is config for the card", config);
 		return (
 			<Card key={card.id || index} variant='filled' m='$3' width='$100%' borderRadius='$3xl' p='$0'>
 				{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute' />}

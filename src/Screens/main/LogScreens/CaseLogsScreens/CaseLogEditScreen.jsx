@@ -47,6 +47,7 @@ import {
 	specialOrthodonticsPreClinical,
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
 import appStoreInstance from "../../../../stores/AppStore";
+import { Keyboard } from "react-native";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -108,6 +109,8 @@ const CaseLogEditScreen = ({ navigation }) => {
 			remarks: "",
 		},
 	});
+	const [openSelectField, setOpenSelectField] = useState(null);
+	const allFields = ["hospital", "date", "faculty", ...getCaseLogFields(routes.params.caseType).map((field) => field.uid), "outcomeOther"];
 	const scrollViewRef = useRef(null);
 	const inputRefs = useRef({});
 
@@ -116,6 +119,49 @@ const CaseLogEditScreen = ({ navigation }) => {
 			inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
 				scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
 			});
+		}
+	};
+
+	const handleNext = (currentFieldName) => {
+		const currentIndex = allFields.findIndex((field) => field === currentFieldName);
+		if (currentIndex < allFields.length - 1) {
+			const nextField = allFields[currentIndex + 1];
+
+			if (currentFieldName === "outcome" && watch("outcome") === "Others") {
+				// Delay focus to allow rendering of 'outcomeOther' field
+				setTimeout(() => {
+					scrollToInput("outcomeOther");
+					focusOnField("outcomeOther");
+				}, 100);
+			} else if (currentFieldName === "outcomeOther") {
+				const fieldAfterOutcome = allFields[allFields.indexOf("outcome") + 1];
+				scrollToInput(fieldAfterOutcome);
+				focusOnField(fieldAfterOutcome);
+			} else {
+				scrollToInput(nextField);
+				focusOnField(nextField);
+			}
+		} else {
+			setOpenSelectField(null);
+			Keyboard.dismiss();
+		}
+	};
+
+	const focusOnField = (fieldName) => {
+		if (
+			[
+				"hospital",
+				"faculty",
+				...getCaseLogFields(routes.params.caseType)
+					.filter((f) => f.type === "select-single")
+					.map((f) => f.uid),
+			].includes(fieldName)
+		) {
+			setOpenSelectField(fieldName);
+		} else if (fieldName === "date") {
+			// Do nothing for date, as it's handled separately
+		} else if (inputRefs.current[fieldName]) {
+			inputRefs.current[fieldName].focus();
 		}
 	};
 
@@ -389,6 +435,11 @@ const CaseLogEditScreen = ({ navigation }) => {
 										watch={watch}
 										inputRefs={inputRefs}
 										scrollToInput={scrollToInput}
+										handleNext={handleNext}
+										openSelectField={openSelectField}
+										setOpenSelectField={setOpenSelectField}
+										focusOnField={focusOnField}
+										allFields={allFields}
 									/>
 								</Box>
 								<Divider />

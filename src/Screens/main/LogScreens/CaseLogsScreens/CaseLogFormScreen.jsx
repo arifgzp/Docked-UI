@@ -60,6 +60,7 @@ import {
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
 import appStoreInstance from "../../../../stores/AppStore";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Keyboard } from "react-native";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -118,7 +119,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			remarks: "",
 		},
 	});
-
+	const [openSelectField, setOpenSelectField] = useState(null);
 	const [key, setKey] = useState(0);
 	const { isDirty } = formState;
 	const toast = useToast();
@@ -126,6 +127,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const caseLogPrefilledRef = useRef();
 	const [buttonPressed, setButtonPressed] = useState({ active: false, screenName: "" });
 	const buttonPressedRef = useRef();
+	const allFields = ["hospital", "date", "faculty", ...getCaseLogFields(caseLogFormToGet).map((field) => field.uid), "outcomeOther"];
 
 	const scrollViewRef = useRef(null);
 	const inputRefs = useRef({});
@@ -133,8 +135,51 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const scrollToInput = (inputName) => {
 		if (inputRefs.current[inputName]) {
 			inputRefs.current[inputName].measureLayout(scrollViewRef.current, (x, y) => {
-				scrollViewRef.current.scrollTo({ y: y - 100, animated: true });
+				scrollViewRef.current.scrollTo({ y: y - 150, animated: true });
 			});
+		}
+	};
+
+	const handleNext = (currentFieldName) => {
+		const currentIndex = allFields.findIndex((field) => field === currentFieldName);
+		if (currentIndex < allFields.length - 1) {
+			const nextField = allFields[currentIndex + 1];
+
+			if (currentFieldName === "outcome" && watch("outcome") === "Others") {
+				// Delay focus to allow rendering of 'outcomeOther' field
+				setTimeout(() => {
+					scrollToInput("outcomeOther");
+					focusOnField("outcomeOther");
+				}, 100);
+			} else if (currentFieldName === "outcomeOther") {
+				const fieldAfterOutcome = allFields[allFields.indexOf("outcome") + 1];
+				scrollToInput(fieldAfterOutcome);
+				focusOnField(fieldAfterOutcome);
+			} else {
+				scrollToInput(nextField);
+				focusOnField(nextField);
+			}
+		} else {
+			setOpenSelectField(null);
+			Keyboard.dismiss();
+		}
+	};
+
+	const focusOnField = (fieldName) => {
+		if (
+			[
+				"hospital",
+				"faculty",
+				...getCaseLogFields(caseLogFormToGet)
+					.filter((f) => f.type === "select-single")
+					.map((f) => f.uid),
+			].includes(fieldName)
+		) {
+			setOpenSelectField(fieldName);
+		} else if (fieldName === "date") {
+			// Do nothing for date, as it's handled separately
+		} else if (inputRefs.current[fieldName]) {
+			inputRefs.current[fieldName].focus();
 		}
 	};
 
@@ -327,8 +372,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				buttonPressedRef.current = buttonPressed;
 			}
 			if (buttonPressed.screenName === "LogProfilePage") {
-				navigation.navigate("Logbook", { screen: "LogProfilePage", params: { caseLogFormToGet: caseLogFormToGet } });
-				buttonPressedRef.current = buttonPressed;
+				navigation.navigate("LogProfileEditForFormStack", { caseLogFormToGet: caseLogFormToGet });
 			}
 		}
 	}, [buttonPressed]);
@@ -404,6 +448,11 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 											readOnlyFaculty={false}
 											inputRefs={inputRefs}
 											scrollToInput={scrollToInput}
+											handleNext={handleNext}
+											openSelectField={openSelectField}
+											setOpenSelectField={setOpenSelectField}
+											focusOnField={focusOnField}
+											allFields={allFields}
 										/>
 									</Box>
 									<Divider />

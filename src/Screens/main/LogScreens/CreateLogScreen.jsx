@@ -5,12 +5,13 @@ import { useNavigation } from "@react-navigation/native";
 import LogProfile from "./LogProfile";
 import appStoreInstance from "../../../stores/AppStore";
 import { observer } from "mobx-react";
+import LogProfileEditForFormStack from "./LogProfileEditForFormStack";
 
 const LogProfileButton = () => {
 	const navigation = useNavigation();
 
 	const navigateToLogProfile = () => {
-		navigation.navigate("LogProfilePage", { caseLogFormToGet: "" });
+		navigation.navigate("LogProfileEditForFormStack", { caseLogFormToGet: "" });
 		appStoreInstance.setButtonPressed(true);
 		console.log("appStoreInstance.ButtonPressed from create log screen immediately", appStoreInstance.ButtonPressed);
 	};
@@ -47,8 +48,8 @@ const CreateLogScreen = ({ navigation }) => {
 				}}
 			/>
 			<Stack.Screen
-				name='LogProfilePage'
-				component={LogProfile}
+				name='LogProfileEditForFormStack'
+				component={LogProfileEditForFormStack}
 				options={{
 					title: "Log Profile",
 					headerShown: true,

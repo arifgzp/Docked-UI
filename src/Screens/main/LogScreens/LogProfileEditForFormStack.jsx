@@ -79,7 +79,7 @@ import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { rotationForAnesthesiology, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
 import { designation } from "../../../data/entity/DesignationConfig";
 
-const LogProfilePage = ({ navigation, route }) => {
+const LogProfileEditForFormStack = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
 	const {
 		control,
@@ -812,4 +812,4 @@ const LogProfilePage = ({ navigation, route }) => {
 	);
 };
 
-export default observer(LogProfilePage);
+export default observer(LogProfileEditForFormStack);

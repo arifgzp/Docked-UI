@@ -35,19 +35,6 @@ export default function RootLogScreens({ navigation }) {
 				}}
 			/>
 			<Stack.Screen
-				name='CaseLogFormScreen'
-				component={CaseLogFormScreen}
-				options={{
-					title: "Case Log Entry",
-					headerShown: true,
-					headerStyle: { backgroundColor: "#FFF" },
-					headerTitleStyle: {
-						color: "#979797",
-						fontSize: 16, // You can adjust the font size as needed
-					},
-				}}
-			/>
-			<Stack.Screen
 				name='CaseLogEditScreen'
 				component={CaseLogEditScreen}
 				options={{

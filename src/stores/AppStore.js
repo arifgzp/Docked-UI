@@ -173,10 +173,15 @@ const AppStore = types
 		_buttonPressed: types.maybeNull(types.boolean),
 		_isFormDirty: types.maybeNull(types.boolean),
 		_imagePath: types.maybeNull(types.string),
+		_caseLogFormToGet: types.maybeNull(types.string),
 	})
 	.views((self) => ({
 		get UserId() {
 			return self._userId;
+		},
+
+		get CaseLogFormToGet() {
+			return self._caseLogFormToGet;
 		},
 
 		get ImagePath() {
@@ -326,6 +331,10 @@ const AppStore = types
 	.actions((self) => ({
 		setUserId(userId) {
 			self._userId = userId;
+		},
+
+		setCaseLogFormToGet(caseLogFormToGet) {
+			self._caseLogFormToGet = caseLogFormToGet;
 		},
 
 		setImagePath(imagePath) {

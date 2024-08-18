@@ -59,6 +59,7 @@ import { observer } from "mobx-react";
 import { useQuery } from "../../../../models";
 import AppStore from "../../../../stores/AppStore";
 import appStoreInstance from "../../../../stores/AppStore";
+import CustomSelect from "../../../../components/CustomSelect";
 
 const CaselogDropDownOptions = ({
 	navigation,
@@ -73,6 +74,11 @@ const CaselogDropDownOptions = ({
 	caseLogData,
 	inputRefs,
 	scrollToInput,
+	handleNext,
+	openSelectField,
+	setOpenSelectField,
+	focusOnField,
+	allFields,
 }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -95,6 +101,39 @@ const CaselogDropDownOptions = ({
 		setValue("date", date);
 		appStoreInstance.setIsFormDirty(true);
 	};
+
+	const handleHospitalSelect = (value) => {
+		setValue("hospital", value);
+		// Instead of calling handleNext, we'll open the date picker directly
+		setOpen(true);
+	};
+
+	const handleDateSelect = (date) => {
+		setDate(format(new Date(date), "dd / MM / yyyy"));
+		setDateForModal(date);
+		setOpen(false);
+		handelSetDate(date);
+		handleNext("date");
+	};
+
+	const handleFacultySelect = (value) => {
+		setValue("faculty", value);
+		handleNext("faculty");
+	};
+
+	useEffect(() => {
+		const subscription = watch((value, { name }) => {
+			if (name === "outcome" && value.outcome === "Others") {
+				// Delay to allow rendering of 'outcomeOther' field
+				setTimeout(() => {
+					scrollToInput("outcomeOther");
+					focusOnField("outcomeOther");
+				}, 100);
+			}
+		});
+		return () => subscription.unsubscribe();
+	}, [watch, scrollToInput, focusOnField]);
+
 	const currentSpecialty = AppStore.UserBroadSpecialty;
 	console.log("data for edit", caseLogData);
 	console.log("prefilledData Mudit test", prefilledData);
@@ -131,38 +170,19 @@ const CaselogDropDownOptions = ({
 						name='hospital'
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select
-									onBlur={onBlur}
-									isDisabled={readOnlyFaculty}
-									isReadOnly={readOnlyFaculty}
-									ref={(el) => (inputRefs.current["hospital"] = el)}
-									onValueChange={(value) => {
-										setValue("hospital", value);
-										scrollToInput("hospital");
+								<CustomSelect
+									field={{
+										name: "Hospital",
+										uid: "hospital",
+										options: prefilledData?.hospital.map((item) => ({ label: item.name, value: item.name })),
 									}}
-									selectedValue={caseLogData?.hospital || value}>
-									<SelectTrigger variant='outline' size='sm'>
-										<SelectInput />
-										<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-									</SelectTrigger>
-									<SelectPortal>
-										<SelectBackdrop />
-										<SelectContent p='$0'>
-											<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-												Hospitals
-											</Text>
-											<Divider borderWidth={0.1} />
-											<SelectScrollView>
-												{prefilledData?.hospital.map((item, index) => {
-													return <SelectItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={item?.id} label={item?.name} value={item?.name} />;
-												})}
-											</SelectScrollView>
-											<SelectDragIndicatorWrapper>
-												<SelectDragIndicator />
-											</SelectDragIndicatorWrapper>
-										</SelectContent>
-									</SelectPortal>
-								</Select>
+									value={value}
+									onChange={handleHospitalSelect}
+									isOpen={openSelectField === "hospital"}
+									onOpen={() => setOpenSelectField("hospital")}
+									onClose={() => setOpenSelectField(null)}
+									onSelect={() => {}} // This is handled by handleHospitalSelect
+								/>
 							);
 						}}
 					/>
@@ -188,45 +208,22 @@ const CaselogDropDownOptions = ({
 						name='faculty'
 						render={({ field: { onChange, onBlur, value } }) => {
 							return (
-								<Select
-									onBlur={onBlur}
-									isDisabled={readOnlyFaculty}
-									isReadOnly={readOnlyFaculty}
-									ref={(el) => (inputRefs.current["faculty"] = el)}
-									onValueChange={(value) => {
-										setValue("faculty", value);
-										scrollToInput("faculty");
+								<CustomSelect
+									field={{
+										name: "Faculty",
+										uid: "faculty",
+										options: prefilledData?.faculty.map((item) => ({
+											label: `${item?.firstName || ""} ${item?.lastName || ""}`,
+											value: `${item?.firstName || ""} ${item?.lastName || ""}`,
+										})),
 									}}
-									selectedValue={caseLogData?.faculty || value}>
-									<SelectTrigger variant='outline' size='sm'>
-										<SelectInput />
-										<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-									</SelectTrigger>
-									<SelectPortal>
-										<SelectBackdrop />
-										<SelectContent p='$0'>
-											<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-												Faculties
-											</Text>
-											<Divider borderWidth={0.1} />
-											<SelectScrollView>
-												{prefilledData?.faculty.map((item, index) => {
-													return (
-														<SelectItem
-															bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
-															key={item?.id}
-															label={`${item?.firstName || ""} ${item?.lastName || ""}`}
-															value={`${item?.firstName || ""} ${item?.lastName || ""}`}
-														/>
-													);
-												})}
-											</SelectScrollView>
-											<SelectDragIndicatorWrapper>
-												<SelectDragIndicator />
-											</SelectDragIndicatorWrapper>
-										</SelectContent>
-									</SelectPortal>
-								</Select>
+									value={value}
+									onChange={handleFacultySelect}
+									isOpen={openSelectField === "faculty"}
+									onOpen={() => setOpenSelectField("faculty")}
+									onClose={() => setOpenSelectField(null)}
+									onSelect={() => {}} // This is handled by handleFacultySelect
+								/>
 							);
 						}}
 					/>
@@ -250,45 +247,15 @@ const CaselogDropDownOptions = ({
 										}}
 										render={({ field: { onChange, onBlur, value } }) => {
 											return (
-												<Select
-													ref={(el) => (inputRefs.current[field.uid] = el)}
-													w='$100%'
-													onBlur={onBlur}
-													isReadOnly={readOnly}
-													onValueChange={(value) => {
-														setValue(field.uid, value);
-														scrollToInput(field.uid); // Center the field after a value is selected
-													}}
-													selectedValue={value}>
-													<SelectTrigger variant='outline' size='sm'>
-														<SelectInput />
-														<SelectIcon mr='$3'>{!readOnly && <Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />}</SelectIcon>
-													</SelectTrigger>
-													<SelectPortal>
-														<SelectBackdrop />
-														<SelectContent p='$0'>
-															<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-																{field.name}
-															</Text>
-															<Divider borderWidth={0.1} />
-															<SelectScrollView>
-																{field.options.map((option, index) => {
-																	return (
-																		<SelectItem
-																			bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
-																			key={option.value}
-																			label={option.label}
-																			value={option.value}
-																		/>
-																	);
-																})}
-															</SelectScrollView>
-															<SelectDragIndicatorWrapper>
-																<SelectDragIndicator />
-															</SelectDragIndicatorWrapper>
-														</SelectContent>
-													</SelectPortal>
-												</Select>
+												<CustomSelect
+													field={field}
+													value={value}
+													onChange={onChange}
+													isOpen={openSelectField === field.uid}
+													onOpen={() => setOpenSelectField(field.uid)}
+													onClose={() => setOpenSelectField(null)}
+													onSelect={handleNext}
+												/>
 											);
 										}}
 									/>
@@ -314,6 +281,9 @@ const CaselogDropDownOptions = ({
 																onFocus={() => scrollToInput("outcomeOther")}
 																onChangeText={onChange}
 																value={value}
+																onSubmitEditing={() => handleNext("outcomeOther")}
+																returnKeyType='next'
+																blurOnSubmit={false}
 															/>
 														</Input>
 													);
@@ -347,6 +317,9 @@ const CaselogDropDownOptions = ({
 														keyboardType={field.type === "number" ? "number-pad" : "default"}
 														onChangeText={onChange}
 														value={value}
+														onSubmitEditing={() => handleNext(field.uid)}
+														returnKeyType='next'
+														blurOnSubmit={false}
 													/>
 													{field.unit && (
 														<InputSlot pr='$3'>
@@ -368,12 +341,7 @@ const CaselogDropDownOptions = ({
 				open={open}
 				theme='light'
 				date={dateForModal}
-				onConfirm={(dateForModal) => {
-					setDate(format(new Date(dateForModal), "dd / MM / yyyy"));
-					setDateForModal(dateForModal);
-					setOpen(false);
-					handelSetDate(dateForModal);
-				}}
+				onConfirm={handleDateSelect}
 				onCancel={() => {
 					setOpen(false);
 				}}
