@@ -142,8 +142,13 @@ const CaseLogTab = () => {
 				console.log(error);
 			}
 		};
+
 		if (isFocused) {
-			fetchData();
+			const timer = setTimeout(() => {
+				fetchData();
+			}, 500);
+
+			return () => clearTimeout(timer); // Cleanup to prevent memory leaks if component unmounts
 		}
 	}, [AppStore.UserBroadSpecialty, isFocused]);
 

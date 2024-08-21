@@ -272,7 +272,7 @@ const LogProfileReadPage = ({ navigation, route }) => {
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$secondaryBackground' justifyContent='center' alignItems='center'>
-					<ScrollView width={"$100%"}>
+					<ScrollView pb='$15%' width={"$100%"}>
 						<Box width={"$100%"} flex={3 / 4} alignItems='center' paddingTop={20} paddingBottom={20}>
 							<VStack space='lg' width={"$100%"} p='$3' alignItems='center'>
 								<Box w='$100%'>
