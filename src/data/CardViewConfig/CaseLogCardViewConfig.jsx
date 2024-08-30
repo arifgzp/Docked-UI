@@ -212,10 +212,6 @@ const PublicationLogCardLogViewConfig = [
 		value: "title",
 	},
 	{
-		label: "Title",
-		value: "title",
-	},
-	{
 		label: "Journal Name",
 		value: "journalName",
 	},
@@ -239,8 +235,8 @@ const AdminWorkLogCardLogViewConfig = [
 		value: "position",
 	},
 	{
-		label: "Organization",
-		value: "organization",
+		label: "Organisation",
+		value: "organisation",
 	},
 ];
 

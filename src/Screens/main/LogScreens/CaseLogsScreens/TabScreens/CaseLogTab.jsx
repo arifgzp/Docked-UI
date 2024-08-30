@@ -392,7 +392,9 @@ const CaseLogTab = () => {
 							return getTreeNodeLabel(treeLevels[treeLevels.length - 2], categoryConfig);
 						}
 					} else if (treeLevels[2] === "Therapeuticlasertherapy") {
-						return `Therapeutic Laser Therapy: ${getTreeNodeLabel(treeLevels[3], categoryConfig)};`;
+						if (treeLevels[3]) {
+							return `Therapeutic Laser Therapy: ${getTreeNodeLabel(treeLevels[3], categoryConfig)};`;
+						}
 					} else if (treeLevels[2] === "Hemostasis") {
 						return getTreeNodeLabel(treeLevels[2], categoryConfig);
 					} else if (treeLevels[2] === "SurgicalExcision") {

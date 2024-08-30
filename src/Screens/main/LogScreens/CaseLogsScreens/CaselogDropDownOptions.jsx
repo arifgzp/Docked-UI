@@ -141,6 +141,7 @@ const CaselogDropDownOptions = ({
 	const rotationForEdit = caseLogData?.rotation;
 	const rotations = prefilledData?.rotations;
 	const hospital = caseLogData?.hospital ?? prefilledData?.hospital;
+	const faculty = caseLogData?.faculty ?? prefilledData?.faculty;
 	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
 	console.log("activeRotation", activeRotation);
 	const activeRotationFrom = activeRotation?.from ? format(parseISO(activeRotation.from), "dd MMM yyyy") : null;
@@ -183,6 +184,7 @@ const CaselogDropDownOptions = ({
 									onOpen={() => setOpenSelectField("hospital")}
 									onClose={() => setOpenSelectField(null)}
 									onSelect={() => {}} // This is handled by handleHospitalSelect
+									readOnly={readOnlyFaculty}
 								/>
 							);
 						}}
@@ -213,10 +215,13 @@ const CaselogDropDownOptions = ({
 									field={{
 										name: "Faculty",
 										uid: "faculty",
-										options: prefilledData?.faculty.map((item) => ({
-											label: `${item?.firstName || ""} ${item?.lastName || ""}`,
-											value: `${item?.firstName || ""} ${item?.lastName || ""}`,
-										})),
+										options: prefilledData?.faculty.map((item) => {
+											console.log("itemitemitemitemitemitem", item);
+											return {
+												label: `${item?.firstName || ""} ${item?.lastName || ""}`,
+												value: `${item?.firstName || ""} ${item?.lastName || ""}`,
+											};
+										}),
 									}}
 									value={value}
 									onChange={handleFacultySelect}
@@ -224,6 +229,7 @@ const CaselogDropDownOptions = ({
 									onOpen={() => setOpenSelectField("faculty")}
 									onClose={() => setOpenSelectField(null)}
 									onSelect={() => {}} // This is handled by handleFacultySelect
+									readOnly={readOnlyFaculty}
 								/>
 							);
 						}}

@@ -16,30 +16,38 @@ import { ChevronDown } from "lucide-react-native";
 import { Divider } from "@gluestack-ui/themed";
 import { ScrollView } from "@gluestack-ui/themed";
 
-const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelect }) => {
+const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelect, readOnly }) => {
 	const screenHeight = Dimensions.get("window").height;
+
 	const handleOptionSelect = (optionValue) => {
-		onChange(optionValue);
-		onClose();
-		if (field.uid === "outcome" && optionValue === "Others") {
-			// Delay to allow rendering of 'outcomeOther' field
-			setTimeout(() => {
-				onSelect("outcome");
-			}, 100);
-		} else {
-			onSelect(field.uid);
+		if (!readOnly) {
+			onChange(optionValue);
+			onClose();
+			if (field.uid === "outcome" && optionValue === "Others") {
+				setTimeout(() => {
+					onSelect("outcome");
+				}, 100);
+			} else {
+				onSelect(field.uid);
+			}
 		}
 	};
 
 	return (
 		<>
-			<TouchableOpacity onPress={onOpen}>
-				<HStack h='$9' borderWidth={0.2} px={10} borderRadius={2} justifyContent='space-between' alignItems='center'>
-					<Text fontSize={14}>{value ? field?.options?.find((opt) => opt.value === value)?.label : ""}</Text>
-					<Icon color='#367B71' as={ChevronDown} w='$4' h='$4' />
+			<TouchableOpacity onPress={readOnly ? null : onOpen}>
+				<HStack h='$9' borderWidth={0.2} px={10} borderRadius={2} justifyContent='space-between' alignItems='center' opacity={readOnly ? 0.5 : 1}>
+					<Text fontSize={14}>
+						{Array.isArray(value) && value[0] && typeof value[0] === "object"
+							? `${value[0].firstName || ""} ${value[0].lastName || ""}`.trim()
+							: value
+							? field?.options?.find((opt) => opt.value === value)?.label
+							: ""}
+					</Text>
+					{!readOnly && <Icon color='#367B71' as={ChevronDown} w='$4' h='$4' />}
 				</HStack>
 			</TouchableOpacity>
-			<Actionsheet isOpen={isOpen} onClose={onClose}>
+			<Actionsheet isOpen={isOpen && !readOnly} onClose={onClose}>
 				<ActionsheetBackdrop />
 				<ActionsheetContent maxHeight={screenHeight * 0.5}>
 					<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>

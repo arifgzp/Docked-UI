@@ -171,7 +171,6 @@ function TreeDataView(props) {
 	};
 
 	const renderNodeLevel = (node, level = 0) => {
-		console.log("nodes at this level is what??", node);
 		return (
 			<HStack key={node.key} justifyContent='flex-start' alignItems='flex-start' gap='$0.5' flexWrap='wrap'>
 				{node.children ? (
