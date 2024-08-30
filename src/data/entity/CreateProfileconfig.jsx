@@ -3,6 +3,7 @@ const Options = {
 		{ label: "Anaesthesiology", value: "Anaesthesiology" },
 		{ label: "Orthodontics", value: "Orthodontics" },
 		{ label: "Orthopaedics", value: "Orthopaedics" },
+		{ label: "Oral Medicine & Radiology", value: "OralMedicineAndRadiology" },
 	],
 	designation: [
 		{ label: "Head of Department", value: "Head of Department" },

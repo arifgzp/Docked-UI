@@ -8,6 +8,11 @@ import { orthopaedicsCaseLogModelPrimitives } from "./OrthopaedicsCaseLogModel.b
 import { orthodonticsClinicalCaseLogModelPrimitives } from "./OrthodonticsClinicalCaseLogModel.base";
 import { orthopaedicsProcedureLogModelPrimitives } from "./OrthopaedicsProcedureLogModel.base";
 import { orthodonticsPreClinicalModelPrimitives } from "./OrthodonticsPreClinicalModel.base";
+import { adminWorkLogModelPrimitives } from "./AdminWorkLogModel.base";
+import { publicationLogModelPrimitives } from "./PublicationLogModel.base";
+import { academicLogModelPrimitives } from "./AcademicLogModel.base";
+import { oralMedicineAndRadiologyCaseLogModelPrimitives } from "./OralMedicineAndRadiologyCaseLogModel.base";
+import { oralRadiologyModelPrimitives, selectFromOralRadiology } from "./OralRadiologyModel.base";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -36,3 +41,10 @@ export const OrthopaedicsCaseLogByModelSelector = selectFromUser().orthopaedicsC
 export const OrthopaedicsProcedureLogByModelSelector = selectFromUser().orthopaedicsProcedureLog(orthopaedicsProcedureLogModelPrimitives);
 export const OrthodonticsClinicalCaseLogByModelSelector = selectFromUser().orthodonticsClinicalCaseLog(orthodonticsClinicalCaseLogModelPrimitives);
 export const OrthodonticsClinicalPreClinicalByModelSelector = selectFromUser().orthodonticsPreClinical(orthodonticsPreClinicalModelPrimitives);
+export const AdminWorkLogByModelSelector = selectFromUser().adminWorkLog(adminWorkLogModelPrimitives);
+export const AcademicLogByModelSelector = selectFromUser().academicLog(academicLogModelPrimitives);
+export const PublicationLogByModelSelector = selectFromUser().publicationLog(publicationLogModelPrimitives);
+export const OralMedicineAndRadiologyCaseLogByModelSelector = selectFromUser().oralMedicineAndRadiologyCaseLog(
+	oralMedicineAndRadiologyCaseLogModelPrimitives
+);
+export const OralRadiologyByModelSelector = selectFromUser().oralRadiology(oralRadiologyModelPrimitives);

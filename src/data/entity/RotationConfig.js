@@ -32,4 +32,18 @@ const rotationForOrthopaedics = [
 	{ label: "Hand & Micro-Surgery", value: "Hand & Micro-Surgery" },
 ];
 
-export { rotationForAnesthesiology, rotationForOrthopaedics };
+const rotationForORM = [
+	{ label: "Medical Oncology", value: "Medical Oncology" },
+	{ label: "Radiation Oncology", value: "Radiation Oncology" },
+	{ label: "Surgical Oncology", value: "Surgical Oncology" },
+	{ label: "Dermatology", value: "Dermatology" },
+	{ label: "General Medicine", value: "General Medicine" },
+	{ label: "Neurology", value: "Neurology" },
+	{ label: "ENT", value: "ENT" },
+	{ label: "CBCT", value: "CBCT" },
+	{ label: "PET CT", value: "PET CT" },
+	{ label: "MRI", value: "MRI" },
+	{ label: "X-Ray", value: "X-Ray" },
+];
+
+export { rotationForAnesthesiology, rotationForOrthopaedics, rotationForORM };

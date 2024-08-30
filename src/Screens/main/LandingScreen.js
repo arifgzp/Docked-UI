@@ -44,34 +44,41 @@ import { ImageAssets } from "../../../assets/Assets";
 
 const Tab = createBottomTabNavigator();
 
-const anaesthesiaCaseLogEntryOptions = [
-	{ id: "CaseLog", name: "Case Log" },
-	{ id: "ChronicPainLog", name: "Chronic Pain Log" },
-	{ id: "CriticalCareCaseLog", name: "Critical Care Case Log" },
-];
-
-const orthopaedicsCaseLogEntryOptions = [
-	{ id: "OrthopaedicsCaseLog", name: "Case Log" },
-	{ id: "OrthopaedicsProcedureLog", name: "Procedure Log" },
-];
-
-const orthodonticsCaseLogEntryOptions = [
-	{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" },
-	{ id: "OrthodonticsPreClinical", name: "Pre-Clinical Log" },
-];
-
 const getCreateMenuOptions = (specialty) => {
-	switch (specialty) {
-		case "Orthopaedics":
-			return orthopaedicsCaseLogEntryOptions;
-		case "Orthodontics":
-			return orthodonticsCaseLogEntryOptions;
-		case "Anaesthesiology":
-			return anaesthesiaCaseLogEntryOptions;
-		default:
-			return anaesthesiaCaseLogEntryOptions;
-	}
+	const commonOptions = [
+		{ id: "Academic", name: "Academic", nested: true },
+		// { id: "ThesisLog", name: "Thesis Log" },
+		// { id: "CustomLog", name: "Custom Log" },
+	];
+
+	const specialtyOptions = {
+		Orthopaedics: [
+			{ id: "OrthopaedicsCaseLog", name: "Case Log" },
+			{ id: "OrthopaedicsProcedureLog", name: "Procedure Log" },
+		],
+		Orthodontics: [
+			{ id: "OrthodonticsClinicalCaseLog", name: "Clinical Case Log" },
+			{ id: "OrthodonticsPreClinical", name: "Pre-Clinical Log" },
+		],
+		Anaesthesiology: [
+			{ id: "CaseLog", name: "Case Log" },
+			{ id: "ChronicPainLog", name: "Chronic Pain Log" },
+			{ id: "CriticalCareCaseLog", name: "Critical Care Case Log" },
+		],
+		OralMedicineAndRadiology: [
+			{ id: "OralMedicineCaseLog", name: "Medicine Case Log" },
+			{ id: "OralRadiology", name: "Radiology Log" },
+		],
+	};
+
+	return [...(specialtyOptions[specialty] || []), ...commonOptions];
 };
+
+const academicOptions = [
+	{ id: "AcademicLog", name: "Academic Log" },
+	{ id: "PublicationLog", name: "Publication Log" },
+	{ id: "AdminWorkLog", name: "Admin Work Log" },
+];
 
 const CreateMenuList = () => {
 	const [selectedLogButton, setSelectedLogButton] = useState("");
@@ -83,17 +90,42 @@ const CreateMenuList = () => {
 		setSelectedLogButton("");
 	};
 
+	const handleOptionSelect = (optionId) => {
+		if (optionId === "Academic") {
+			setSelectedLogButton(optionId);
+		} else if (["AcademicLog", "PublicationLog", "AdminWorkLog"].includes(optionId)) {
+			setSelectedLogButton(optionId);
+		} else {
+			setSelectedLogButton(optionId);
+		}
+	};
+
 	const handleOnProceedClick = () => {
 		const currentLogButton = selectedLogButton;
 		toggleCreateMenu();
 		setTimeout(() => {
 			switch (currentLogButton) {
+				case "AcademicLog":
+					console.log("what is currentLogButton", currentLogButton);
+					navigation.navigate("Plus", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AcademicLog" } });
+					break;
+				case "PublicationLog":
+					navigation.navigate("Plus", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "PublicationLog" } });
+					break;
+				case "AdminWorkLog":
+					navigation.navigate("Plus", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AdminWorkLog" } });
+					break;
+				case "ThesisLog":
+					navigation.navigate("Plus", { screen: "ThesisLogFormScreen" });
+					break;
+				case "CustomLog":
+					navigation.navigate("Plus", { screen: "CustomLogFormScreen" });
+					break;
 				case "CaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
 					break;
 				case "ChronicPainLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
-					setSelectedLogButton("");
 					break;
 				case "CriticalCareCaseLog":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
@@ -110,11 +142,43 @@ const CreateMenuList = () => {
 				case "OrthodonticsPreClinical":
 					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsPreClinical" } });
 					break;
+				case "OralMedicineCaseLog":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OralMedicineCaseLog" } });
+					break;
+				case "OralRadiology":
+					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OralRadiology" } });
+					break;
 				default:
 					console.log("Key not recognized");
 					break;
 			}
 		}, 500);
+	};
+
+	const renderOptions = () => {
+		const options = getCreateMenuOptions(AppStore.UserBroadSpecialty);
+		return options.map((option) => (
+			<React.Fragment key={option.id}>
+				<Radio width={"$100%"} value={option.id} onPress={() => handleOptionSelect(option.id)}>
+					<RadioIndicator bg='#E6E3DB' borderColor='#E6E3DB' mr='$2'>
+						<RadioIcon as={CircleIcon} />
+					</RadioIndicator>
+					<RadioLabel>{option.name}</RadioLabel>
+				</Radio>
+				{option.id === "Academic" && (selectedLogButton === "Academic" || academicOptions.some((ao) => ao.id === selectedLogButton)) && (
+					<VStack w='$full' alignItems='flex-start' space='lg' ml='$6'>
+						{academicOptions.map((academicOption) => (
+							<Radio key={academicOption.id} width={"$100%"} value={academicOption.id} onPress={() => handleOptionSelect(academicOption.id)}>
+								<RadioIndicator bg='#E6E3DB' borderColor='#E6E3DB' mr='$2'>
+									<RadioIcon as={CircleIcon} />
+								</RadioIndicator>
+								<RadioLabel>{academicOption.name}</RadioLabel>
+							</Radio>
+						))}
+					</VStack>
+				)}
+			</React.Fragment>
+		));
 	};
 
 	return (
@@ -133,18 +197,9 @@ const CreateMenuList = () => {
 								Choose type of log entry
 							</Text>
 							<Divider />
-							<RadioGroup pl='$3' width={"$100%"} value={selectedLogButton} onChange={setSelectedLogButton}>
+							<RadioGroup pl='$3' width={"$100%"} value={selectedLogButton}>
 								<VStack w='$full' alignItems='flex-start' space='lg' mb='$2'>
-									{getCreateMenuOptions(AppStore.UserBroadSpecialty).map((option) => {
-										return (
-											<Radio key={option.id} width={"$100%"} value={option.id}>
-												<RadioIndicator bg='#E6E3DB' borderColor='#E6E3DB' mr='$2'>
-													<RadioIcon as={CircleIcon} />
-												</RadioIndicator>
-												<RadioLabel>{option.name}</RadioLabel>
-											</Radio>
-										);
-									})}
+									{renderOptions()}
 								</VStack>
 							</RadioGroup>
 						</VStack>
@@ -272,7 +327,6 @@ const LandingScreen = ({ navigation, route }) => {
 					shadowRadius: 3.84,
 					elevation: 5,
 				},
-
 				headerTitleAlign: "center",
 			}}>
 			<Tab.Screen

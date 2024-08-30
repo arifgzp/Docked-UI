@@ -42,6 +42,28 @@ import {
 	deleteAnaesthesiaCaseLogPayloadModelPrimitives,
 	deleteOrthopaedicsCaseLogPayloadModelPrimitives,
 	deleteOrthopaedicsProcedureLogPayloadModelPrimitives,
+	deleteAdminWorkLogPayloadModelPrimitives,
+	selectFromUpdateAdminWorkLogPayload,
+	UpdateAdminWorkLogPayloadModelSelector,
+	deletePublicationLogPayloadModelPrimitives,
+	adminWorkLogModelPrimitives,
+	updateAdminWorkLogPayloadModelSelector,
+	AdminWorkLogByModelSelector,
+	AcademicLogByModelSelector,
+	selectFromUpdateAcademicLogPayload,
+	updateAcademicLogPayloadModelSelector,
+	deleteAcademicLogPayloadModelPrimitives,
+	PublicationLogByModelSelector,
+	selectFromUpdatePublicationLogPayload,
+	updatePublicationLogPayloadModelSelector,
+	OralMedicineAndRadiologyCaseLogByModelSelector,
+	selectFromUpdateOralMedicineAndRadiologyCaseLogPayload,
+	updateOralMedicineAndRadiologyCaseLogPayloadModelSelector,
+	deleteOralMedicineAndRadiologyCaseLogPayloadModelPrimitives,
+	OralRadiologyByModelSelector,
+	selectFromUpdateOralRadiologyPayload,
+	deleteOralRadiologyPayloadModelPrimitives,
+	updateOralRadiologyPayloadModelSelector,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
@@ -657,6 +679,357 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return self.mutateDeleteOrthopaedicsProcedureLog(filterVariable, resultSelector, optimisticDelete);
 	},
 
+	// New methods for AcademicLog
+	updateUserAcademicLog(userId, updatedAcademicLogInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedAcademicLogInfo);
+		const setDataPatch = updatedAcademicLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(AcademicLogByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserAcademicLog Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserAcademicLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateAcademicLog(academicLogId, updatedAcademicLogInfo) {
+		const dataFilter = {
+			id: academicLogId,
+		};
+		console.log("academicLogId", academicLogId);
+		console.log("updatedAcademicLogInfo", updatedAcademicLogInfo);
+		const setDataPatch = updatedAcademicLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateAcademicLogResultSelector = selectFromUpdateAcademicLogPayload().academicLog(updateAcademicLogPayloadModelSelector).toString();
+		const updateAcademicLogQuery: Query = self.mutateUpdateAcademicLog(inputVariable, updateAcademicLogResultSelector);
+		console.log("********** updateAcademicLog Query STARTS **********");
+		console.log({ query: updateAcademicLogQuery.query });
+		console.log(updateAcademicLogQuery.variables);
+		console.log("********** updateAcademicLog Query ENDS **********");
+		return updateAcademicLogQuery;
+	},
+
+	fetchAcademicLogByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchAcademicLogByUserSelector = AcademicLogByModelSelector.toString();
+		const fetchAcademicLogByUserQuery = self.queryQueryUser(variables, fetchAcademicLogByUserSelector);
+		console.log("********** fetchAcademicLogByUser Query STARTS **********");
+		console.log(fetchAcademicLogByUserQuery.query);
+		console.log(fetchAcademicLogByUserQuery.variables);
+		console.log("********** fetchAcademicLogByUser Query ENDS **********");
+		return fetchAcademicLogByUserQuery;
+	},
+
+	deleteAcademicLog(AcademicLogList: []) {
+		const filterVariable = { filter: { id: AcademicLogList } };
+		const resultSelector = deleteAcademicLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(AcademicLogList, (AcademicLogID: string) => {
+				destroy(self.academicLogs.get(AcademicLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryAcademicLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteAcademicLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteAcademicLog Query ENDS ****");
+		return self.mutateDeleteAcademicLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	// New methods for PublicationLog
+	updateUserPublicationLog(userId, updatedPublicationLogInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedPublicationLogInfo);
+		const setDataPatch = updatedPublicationLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(PublicationLogByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserPublicationLog Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserPublicationLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updatePublicationLog(publicationLogId, updatedPublicationLogInfo) {
+		const dataFilter = {
+			id: publicationLogId,
+		};
+		console.log("publicationLogId", publicationLogId);
+		console.log("updatedPublicationLogInfo", updatedPublicationLogInfo);
+		const setDataPatch = updatedPublicationLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updatePublicationLogResultSelector = selectFromUpdatePublicationLogPayload()
+			.publicationLog(updatePublicationLogPayloadModelSelector)
+			.toString();
+		const updatePublicationLogQuery: Query = self.mutateUpdatePublicationLog(inputVariable, updatePublicationLogResultSelector);
+		console.log("********** updatePublicationLog Query STARTS **********");
+		console.log({ query: updatePublicationLogQuery.query });
+		console.log(updatePublicationLogQuery.variables);
+		console.log("********** updatePublicationLog Query ENDS **********");
+		return updatePublicationLogQuery;
+	},
+
+	fetchPublicationLogByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchPublicationLogByUserSelector = PublicationLogByModelSelector.toString();
+		const fetchPublicationLogByUserQuery = self.queryQueryUser(variables, fetchPublicationLogByUserSelector);
+		console.log("********** fetchPublicationLogByUser Query STARTS **********");
+		console.log(fetchPublicationLogByUserQuery.query);
+		console.log(fetchPublicationLogByUserQuery.variables);
+		console.log("********** fetchPublicationLogByUser Query ENDS **********");
+		return fetchPublicationLogByUserQuery;
+	},
+
+	deletePublicationLog(PublicationLogList: []) {
+		const filterVariable = { filter: { id: PublicationLogList } };
+		const resultSelector = deletePublicationLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(PublicationLogList, (PublicationLogID: string) => {
+				destroy(self.publicationLogs.get(PublicationLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryPublicationLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deletePublicationLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deletePublicationLog Query ENDS ****");
+		return self.mutateDeletePublicationLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	// New methods for AdminWorkLog
+	updateUserAdminWorkLog(userId, updatedAdminWorkLogInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedAdminWorkLogInfo);
+		const setDataPatch = updatedAdminWorkLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(AdminWorkLogByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserAdminWorkLog Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserAdminWorkLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateAdminWorkLog(adminWorkLogId, updatedAdminWorkLogInfo) {
+		const dataFilter = {
+			id: adminWorkLogId,
+		};
+		console.log("adminWorkLogId", adminWorkLogId);
+		console.log("updatedAdminWorkLogInfo", updatedAdminWorkLogInfo);
+		const setDataPatch = updatedAdminWorkLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateAdminWorkLogResultSelector = selectFromUpdateAdminWorkLogPayload().adminWorkLog(updateAdminWorkLogPayloadModelSelector).toString();
+		const updateAdminWorkLogQuery: Query = self.mutateUpdateAdminWorkLog(inputVariable, updateAdminWorkLogResultSelector);
+		console.log("********** updateAdminWorkLog Query STARTS **********");
+		console.log({ query: updateAdminWorkLogQuery.query });
+		console.log(updateAdminWorkLogQuery.variables);
+		console.log("********** updateAdminWorkLog Query ENDS **********");
+		return updateAdminWorkLogQuery;
+	},
+
+	fetchAdminWorkLogByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchAdminWorkLogByUserSelector = AdminWorkLogByModelSelector.toString();
+		const fetchAdminWorkLogByUserQuery = self.queryQueryUser(variables, fetchAdminWorkLogByUserSelector);
+		console.log("********** fetchAdminWorkLogByUser Query STARTS **********");
+		console.log(fetchAdminWorkLogByUserQuery.query);
+		console.log(fetchAdminWorkLogByUserQuery.variables);
+		console.log("********** fetchAdminWorkLogByUser Query ENDS **********");
+		return fetchAdminWorkLogByUserQuery;
+	},
+
+	deleteAdminWorkLog(AdminWorkLogList: []) {
+		const filterVariable = { filter: { id: AdminWorkLogList } };
+		const resultSelector = deleteAdminWorkLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(AdminWorkLogList, (AdminWorkLogID: string) => {
+				destroy(self.adminWorkLogs.get(AdminWorkLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryAdminWorkLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteAdminWorkLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteAdminWorkLog Query ENDS ****");
+		return self.mutateDeleteAdminWorkLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	// OralMedicineAndRadiologyCaseLog queries
+	updateUserOralMedicineAndRadiologyCaseLog(userId, updatedCaseLogInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedCaseLogInfo);
+		const setDataPatch = updatedCaseLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(OralMedicineAndRadiologyCaseLogByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserOralMedicineAndRadiologyCaseLog Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserOralMedicineAndRadiologyCaseLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateOralMedicineAndRadiologyCaseLog(caseLogId, updatedCaseLogInfo) {
+		const dataFilter = {
+			id: caseLogId,
+		};
+		console.log("caseLogId", caseLogId);
+		console.log("updatedCaseLogInfo", updatedCaseLogInfo);
+		const setDataPatch = updatedCaseLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateCaseLogResultSelector = selectFromUpdateOralMedicineAndRadiologyCaseLogPayload()
+			.oralMedicineAndRadiologyCaseLog(updateOralMedicineAndRadiologyCaseLogPayloadModelSelector)
+			.toString();
+		const updateCaseLogQuery: Query = self.mutateUpdateOralMedicineAndRadiologyCaseLog(inputVariable, updateCaseLogResultSelector);
+		console.log("********** updateOralMedicineAndRadiologyCaseLog Query STARTS **********");
+		console.log({ query: updateCaseLogQuery.query });
+		console.log(updateCaseLogQuery.variables);
+		console.log("********** updateOralMedicineAndRadiologyCaseLog Query ENDS **********");
+		return updateCaseLogQuery;
+	},
+
+	fetchOralMedicineAndRadiologyCaseLogByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchCaseLogByUserSelector = OralMedicineAndRadiologyCaseLogByModelSelector.toString();
+		const fetchCaseLogByUserQuery = self.queryQueryUser(variables, fetchCaseLogByUserSelector);
+		console.log("********** fetchOralMedicineAndRadiologyCaseLogByUser Query STARTS **********");
+		console.log(fetchCaseLogByUserQuery.query);
+		console.log(fetchCaseLogByUserQuery.variables);
+		console.log("********** fetchOralMedicineAndRadiologyCaseLogByUser Query ENDS **********");
+		return fetchCaseLogByUserQuery;
+	},
+
+	deleteOralMedicineAndRadiologyCaseLog(CaseLogList: []) {
+		const filterVariable = { filter: { id: CaseLogList } };
+		const resultSelector = deleteOralMedicineAndRadiologyCaseLogPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(CaseLogList, (CaseLogID: string) => {
+				destroy(self.oralMedicineAndRadiologyCaseLogs.get(CaseLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryOralMedicineAndRadiologyCaseLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteOralMedicineAndRadiologyCaseLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteOralMedicineAndRadiologyCaseLog Query ENDS ****");
+		return self.mutateDeleteOralMedicineAndRadiologyCaseLog(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	// OralRadiology queries
+	updateUserOralRadiology(userId, updatedOralRadiologyInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedOralRadiologyInfo);
+		const setDataPatch = updatedOralRadiologyInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(OralRadiologyByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserOralRadiology Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserOralRadiology Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateOralRadiology(oralRadiologyId, updatedOralRadiologyInfo) {
+		const dataFilter = {
+			id: oralRadiologyId,
+		};
+		console.log("oralRadiologyId", oralRadiologyId);
+		console.log("updatedOralRadiologyInfo", updatedOralRadiologyInfo);
+		const setDataPatch = updatedOralRadiologyInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateOralRadiologyResultSelector = selectFromUpdateOralRadiologyPayload()
+			.oralRadiology(updateOralRadiologyPayloadModelSelector)
+			.toString();
+		const updateOralRadiologyQuery: Query = self.mutateUpdateOralRadiology(inputVariable, updateOralRadiologyResultSelector);
+		console.log("********** updateOralRadiology Query STARTS **********");
+		console.log({ query: updateOralRadiologyQuery.query });
+		console.log(updateOralRadiologyQuery.variables);
+		console.log("********** updateOralRadiology Query ENDS **********");
+		return updateOralRadiologyQuery;
+	},
+
+	fetchOralRadiologyByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchOralRadiologyByUserSelector = OralRadiologyByModelSelector.toString();
+		const fetchOralRadiologyByUserQuery = self.queryQueryUser(variables, fetchOralRadiologyByUserSelector);
+		console.log("********** fetchOralRadiologyByUser Query STARTS **********");
+		console.log(fetchOralRadiologyByUserQuery.query);
+		console.log(fetchOralRadiologyByUserQuery.variables);
+		console.log("********** fetchOralRadiologyByUser Query ENDS **********");
+		return fetchOralRadiologyByUserQuery;
+	},
+
+	deleteOralRadiology(OralRadiologyList: []) {
+		const filterVariable = { filter: { id: OralRadiologyList } };
+		const resultSelector = deleteOralRadiologyPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(OralRadiologyList, (OralRadiologyID: string) => {
+				destroy(self.oralRadiologies.get(OralRadiologyID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryOralRadiology")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteOralRadiology Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteOralRadiology Query ENDS ****");
+		return self.mutateDeleteOralRadiology(filterVariable, resultSelector, optimisticDelete);
+	},
+
 	resetAllData() {
 		self.users.clear();
 		self.faculties.clear();
@@ -669,6 +1042,9 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		self.orthopaedicsProcedureLogs.clear();
 		self.orthodonticsClinicalCaseLogs.clear();
 		self.orthodonticsPreClinicals.clear();
+		self.academicLogs.clear();
+		self.adminWorkLogs.clear();
+		self.publicationLogs.clear();
 	},
 })).views((self) => ({
 	get AnaesthesiaCaseLogList() {
@@ -725,5 +1101,45 @@ export const RootStore = RootStoreBase.actions((self) => ({
 
 	getOrthodonticsPreClinicalById(id) {
 		return values(self.orthodonticsPreClinicals).filter((obj) => obj.id == id);
+	},
+
+	get OralMedicineAndRadiologyCaseLogsList() {
+		return values(self.oralMedicineAndRadiologyCaseLogs);
+	},
+
+	getOralMedicineAndRadiologyCaseLogsById(id) {
+		return values(self.oralMedicineAndRadiologyCaseLogs).filter((obj) => obj.id == id);
+	},
+
+	get OralRadiologiesList() {
+		return values(self.oralRadiologies);
+	},
+
+	getOralRadiologiesById(id) {
+		return values(self.oralRadiologies).filter((obj) => obj.id == id);
+	},
+
+	get AcademicLogList() {
+		return values(self.academicLogs);
+	},
+
+	getAcademicLogById(id) {
+		return values(self.academicLogs).filter((obj) => obj.id == id);
+	},
+
+	get PublicationLogList() {
+		return values(self.publicationLogs);
+	},
+
+	getPublicationLogById(id) {
+		return values(self.publicationLogs).filter((obj) => obj.id == id);
+	},
+
+	get AdminWorkLogList() {
+		return values(self.adminWorkLogs);
+	},
+
+	getAdminWorkLogById(id) {
+		return values(self.adminWorkLogs).filter((obj) => obj.id == id);
 	},
 }));

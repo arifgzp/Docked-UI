@@ -76,7 +76,7 @@ import { useQuery } from "../../../models";
 import useIsReady from "../../../hooks/useIsReady";
 import { SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
-import { rotationForAnesthesiology, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
+import { rotationForAnesthesiology, rotationForORM, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
 import { designation } from "../../../data/entity/DesignationConfig";
 
 const LogProfilePage = ({ navigation, route }) => {
@@ -689,6 +689,17 @@ const LogProfilePage = ({ navigation, route }) => {
 																		<SelectScrollView p='$0'>
 																			{appStoreInstance.UserBroadSpecialty === "Orthopaedics"
 																				? rotationForOrthopaedics.map((rotation, index) => {
+																						return (
+																							<SelectItem
+																								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																								key={index}
+																								label={rotation.label}
+																								value={rotation.value}
+																							/>
+																						);
+																				  })
+																				: appStoreInstance.UserBroadSpecialty === "OralMedicineAndRadiology"
+																				? rotationForORM.map((rotation, index) => {
 																						return (
 																							<SelectItem
 																								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}

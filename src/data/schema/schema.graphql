@@ -55,6 +55,11 @@ type User @secret(field: "password") {
     orthodonticsPreClinical: [OrthodonticsPreClinical] @dgraph(pred:"orthodonticsPreClinical")
     orthopaedicsCaseLog: [OrthopaedicsCaseLog] @dgraph(pred:"orthopaedicsCaseLog")
     orthopaedicsProcedureLog: [OrthopaedicsProcedureLog] @dgraph(pred:"orthopaedicsProcedureLog")
+    oralMedicineAndRadiologyCaseLog: [OralMedicineAndRadiologyCaseLog] @dgraph(pred:"oralMedicineAndRadiologyCaseLog")
+    oralRadiology: [OralRadiology] @dgraph(pred:"oralRadiology")
+    academicLog: [AcademicLog] @dgraph(pred:"academicLog")
+    publicationLog: [PublicationLog] @dgraph(pred:"publicationLog")
+    adminWorkLog: [AdminWorkLog] @dgraph(pred:"adminWorkLog")
     logProfile: LogProfile @dgraph(pred:"logProfile")
     imagePath: String @dgraph(pred:"imagePath")
 }
@@ -228,6 +233,84 @@ type OrthopaedicsProcedureLog  {
     diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
     caseType : String @dgraph(pred:"caseType")
     remarks: String @dgraph(pred:"remarks")
+}
+
+type OralMedicineAndRadiologyCaseLog  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    hospital: String @search(by:[term]) @dgraph(pred:"hospital")
+    faculty: String @dgraph(pred:"faculty")
+    complete: Boolean @dgraph(pred:"complete")
+    patientAge: String @dgraph(pred:"patientAge")
+    patientSex: String @dgraph(pred:"patientSex")
+    rotation: String @search(by:[term]) @dgraph(pred:"rotation")
+    procedure: [String] @search(by:[term]) @dgraph(pred:"procedure")
+    comorbidities: [String] @search(by:[term]) @dgraph(pred:"comorbidities")
+    lesion: [String] @search(by:[term]) @dgraph(pred:"lesion")
+    drugAllergyReaction: [String] @search(by:[term]) @dgraph(pred:"drugAllergyReaction")
+    habitHistory: [String] @search(by:[term]) @dgraph(pred:"habitHistory")
+    treatment: String @search(by:[term]) @dgraph(pred:"treatment")
+    diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
+    caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
+}
+
+type OralRadiology  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    hospital: String @search(by:[term]) @dgraph(pred:"hospital")
+    faculty: String @dgraph(pred:"faculty")
+    complete: Boolean @dgraph(pred:"complete")
+    patientAge: String @dgraph(pred:"patientAge")
+    patientSex: String @dgraph(pred:"patientSex")
+    rotation: String @search(by:[term]) @dgraph(pred:"rotation")
+    procedure: [String] @search(by:[term]) @dgraph(pred:"procedure")
+    report: String @search(by:[term]) @dgraph(pred:"report")
+    diagnosis: String @search(by:[term]) @dgraph(pred:"diagnosis")
+    chiefComplaint: String @search(by:[term]) @dgraph(pred:"chiefComplaint")
+    caseType : String @dgraph(pred:"caseType")
+    remarks: String @dgraph(pred:"remarks")
+}
+
+type AcademicLog  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    position : String @dgraph(pred:"position")
+    activities : [String] @dgraph(pred:"activities")
+    title : String @dgraph(pred:"title")
+    organiser : String @dgraph(pred:"organiser")
+    supervision : [String] @dgraph(pred:"supervision")
+    academicLogType : String @dgraph(pred:"academicLogType")
+}
+
+type PublicationLog  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    type : String @dgraph(pred:"type") 
+    title : String @dgraph(pred:"title")
+    journalName : String @dgraph(pred:"journalName")
+    status : String @dgraph(pred:"status")
+    academicLogType : String @dgraph(pred:"academicLogType")
+}
+
+type AdminWorkLog  {
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    date: DateTime @search @dgraph(pred:"date")
+    activity : String @dgraph(pred:"activity")
+    otherActivity: String @dgraph(pred:"otherActivity")
+    position : String @dgraph(pred:"position") 
+    organisation : String @dgraph(pred:"organisation")
+    academicLogType : String @dgraph(pred:"academicLogType")
 }
 
 type LogProfile{

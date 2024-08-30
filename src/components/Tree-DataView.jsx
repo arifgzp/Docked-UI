@@ -171,6 +171,7 @@ function TreeDataView(props) {
 	};
 
 	const renderNodeLevel = (node, level = 0) => {
+		console.log("nodes at this level is what??", node);
 		return (
 			<HStack key={node.key} justifyContent='flex-start' alignItems='flex-start' gap='$0.5' flexWrap='wrap'>
 				{node.children ? (
@@ -193,7 +194,7 @@ function TreeDataView(props) {
 					<HStack gap='$0.5' justifyContent='center'>
 						{getArrowIcon(level)}
 						<Text fontSize='$xs' color='$textColor400' mt='$0.5' flex={1}>
-							{node.label} {node.key.includes("cm") ? node.key.split("#").pop() : ""}
+							{node.label} {["cm", "mm", "years"].some((unit) => node.key.includes(unit)) ? node.key.split("#").pop() : ""}
 						</Text>
 					</HStack>
 				)}
@@ -208,11 +209,12 @@ function TreeDataView(props) {
 	return (
 		<VStack gap='$2' pl='$8' py='$2' pr='$2'>
 			{map(compactViewData.selectionList, (selection) => {
+				// TODO: included a hack here to display years for the duration in habit history in the ORM specialty
 				return (
 					<HStack key={selection.key} flex={1} gap='$1'>
 						<Pressable onPress={onShowTreeSelector.bind(null, predicate, selection.key)}>
 							<Text fontWeight='$semibold' fontSize='$xs' underline={true} color='$textDark950' mt='$0.5'>
-								{selection.label}
+								{selection.label} {selection.key === "DurationYears" && "years"}
 							</Text>
 						</Pressable>
 						{selection.children && (

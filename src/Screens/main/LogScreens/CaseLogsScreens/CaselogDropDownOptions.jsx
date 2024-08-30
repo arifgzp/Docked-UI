@@ -86,6 +86,7 @@ const CaselogDropDownOptions = ({
 	const [showActionSheet, setShowActionsheet] = useState(false);
 	const [date, setDate] = useState(caseLogData?.date ? format(new Date(caseLogData.date), "dd / MM / yyyy") : "--/--/--");
 	const [dateForModal, setDateForModal] = useState(caseLogData?.date ? new Date(caseLogData?.date) : new Date());
+
 	const handleSelectPress = useCallback(
 		(fieldUid) => {
 			// Open the Select first

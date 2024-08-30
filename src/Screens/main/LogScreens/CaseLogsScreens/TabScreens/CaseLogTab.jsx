@@ -46,10 +46,14 @@ import {
 	AnesthesiaCaseLogCardViewConfig,
 	AnesthesiaChronicPainCardLogViewConfig,
 	AnesthesiaCriticalCareCardLogViewConfig,
+	OralMedicineCaseLogCardLogViewConfig,
+	OralRadiologyCardLogViewConfig,
 	OrthopaedicsCaseLogCardViewConfig,
 	OrthopaedicsProcedureLogCardViewConfig,
 } from "../../../../../data/CardViewConfig/CaseLogCardViewConfig";
 import { Badge } from "@gluestack-ui/themed";
+import OralRadiologySpecialConfig from "../../../../../data/SpecialtyConfigs/OralMedicineAndRadiologyConfigs/OralRadiologySpecialConfig";
+import OralMedicineAndRadiologySpecialCaseLogConfig from "../../../../../data/SpecialtyConfigs/OralMedicineAndRadiologyConfigs/OralMedicineAndRadiologySpecialCaseLogConfig";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
@@ -135,6 +139,16 @@ const CaseLogTab = () => {
 
 						break;
 
+					case "OralMedicineAndRadiology":
+						const fetchQuery9 = store.fetchOralMedicineAndRadiologyCaseLogByUser(AppStore.UserName);
+						setQuery(fetchQuery9);
+						await fetchQuery9;
+
+						const fetchQuery8 = store.fetchOralRadiologyByUser(AppStore.UserName);
+						setQuery(fetchQuery8);
+						await fetchQuery8;
+
+						break;
 					default:
 						await fetchAnaesthesiaData();
 				}
@@ -151,27 +165,6 @@ const CaseLogTab = () => {
 			return () => clearTimeout(timer); // Cleanup to prevent memory leaks if component unmounts
 		}
 	}, [AppStore.UserBroadSpecialty, isFocused]);
-
-	if (!isReady) {
-		return <IsReadyLoader />;
-	}
-
-	let cardDetails = [];
-	switch (AppStore.UserBroadSpecialty) {
-		case "Orthodontics":
-			cardDetails.push(...store.OrthodonticsClinicalCaseLogList, ...store.OrthodonticsPreClinicalList);
-			break;
-
-		case "Orthopaedics":
-			cardDetails.push(...store.OrthopaedicsCaseLogList, ...store.OrthopaedicsProcedureLogList);
-			break;
-
-		default:
-			cardDetails.push(...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList);
-			break;
-	}
-	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
-	console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", cardDetails);
 
 	const handleDeleteCaseLog = (card) => {
 		console.log("what is this card", card);
@@ -231,6 +224,8 @@ const CaseLogTab = () => {
 		AnaesthesiaCaseLog: AnesthesiaCaseLogCardViewConfig,
 		AnaesthesiaChronicPainLog: AnesthesiaChronicPainCardLogViewConfig,
 		AnaesthesiaCriticalCareCaseLog: AnesthesiaCriticalCareCardLogViewConfig,
+		OralRadiology: OralRadiologyCardLogViewConfig,
+		OralMedicineAndRadiologyCaseLog: OralMedicineCaseLogCardLogViewConfig,
 	};
 
 	const configMappingForDataStrcuture = {
@@ -239,12 +234,13 @@ const CaseLogTab = () => {
 		AnaesthesiaCaseLog: CaseLogAnaesthesiaConfig,
 		AnaesthesiaChronicPainLog: ChronicPainAnesthesiaCaseLogConfig,
 		AnaesthesiaCriticalCareCaseLog: CriticalCareLAnesthesiaCaseLogConfig,
+		OralRadiology: OralRadiologySpecialConfig,
+		OralMedicineAndRadiologyCaseLog: OralMedicineAndRadiologySpecialCaseLogConfig,
 		// Add more mappings as needed
 		// caseTypeName: CorrespondingConfigFile,
 	};
 
 	const firstParentOptionToDisplay = (caseData, item) => {
-		console.log("item.value", item.value);
 		const config = configMappingForDataStrcuture[caseData.__typename];
 
 		if (!config) {
@@ -254,24 +250,19 @@ const CaseLogTab = () => {
 		const categoryConfig = config[item.value];
 
 		if (caseData[item.value] && caseData[item.value].length > 0) {
-			console.log("caseData[item.value", caseData[item.value]);
 			const selectedNodes = compact(
 				map(caseData[item.value], (selector) => {
-					console.log("what is slectors", selector);
 					const treeLevels = selector.split("/");
-					console.log("treelevels", treeLevels);
 
 					return getTreeNodeLabel(treeLevels[1], categoryConfig);
 				})
 			);
-			console.log("selectNodes", selectedNodes);
 
 			return selectedNodes[0];
 		}
 	};
 
 	const getonlySpecificOptionsValuesForAnesthesiaCaseLogCard = (caseData, item) => {
-		console.log("item.options", item.options);
 		const config = configMappingForDataStrcuture[caseData.__typename];
 
 		if (!config) {
@@ -283,14 +274,11 @@ const CaseLogTab = () => {
 		if (caseData[item.value] && caseData[item.value].length > 0) {
 			const selectedNodes = compact(
 				map(caseData[item.value], (selector) => {
-					console.log("caselog options selectors", selector);
 					const treeLevels = selector.split("/");
-					console.log("treeLevels", treeLevels);
 
 					// Check if treeLevels has any item from item.options
 					if (intersection(treeLevels, item.options).length > 0) {
 						if (treeLevels.includes("NeuraxialBlock")) {
-							console.log("treeLevels inside the neuraxialBlock", treeLevels);
 							if (treeLevels.length > 3) {
 								return getTreeNodeLabel(treeLevels[treeLevels.length - 2], categoryConfig);
 							} else {
@@ -372,8 +360,77 @@ const CaseLogTab = () => {
 				})
 			);
 
-			const replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
+			const replacedNodes = selectedNodes.map((node) => {
+				const removedFirstLayerOfSharpVSharp = node.replace("#V#", ": ");
+				if (removedFirstLayerOfSharpVSharp.includes("#V#")) {
+					return removedFirstLayerOfSharpVSharp.replace("#V#", " ");
+				} else {
+					return removedFirstLayerOfSharpVSharp;
+				}
+			});
 			return replacedNodes.join(", ");
+		}
+	};
+
+	const getPreciseValuesForOralMedicineCaseLogProcedure = (caseData, item) => {
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			const selectedNodes = compact(
+				map(caseData[item.value], (selector) => {
+					const treeLevels = selector.split("/");
+					if (treeLevels[2] === "type") {
+						if (treeLevels.length === 4) {
+							return getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig);
+						} else {
+							return getTreeNodeLabel(treeLevels[treeLevels.length - 2], categoryConfig);
+						}
+					} else if (treeLevels[2] === "Therapeuticlasertherapy") {
+						return `Therapeutic Laser Therapy: ${getTreeNodeLabel(treeLevels[3], categoryConfig)};`;
+					} else if (treeLevels[2] === "Hemostasis") {
+						return getTreeNodeLabel(treeLevels[2], categoryConfig);
+					} else if (treeLevels[2] === "SurgicalExcision") {
+						if (treeLevels.length > 4) {
+							return getTreeNodeLabel(treeLevels[3], categoryConfig);
+						}
+					} else if (treeLevels[treeLevels.length - 1].includes("IntralesionaltherapyDiagnosis")) {
+						const IntralesionaltherapyDiagnosis = getTreeNodeLabel(treeLevels[treeLevels.length - 1], categoryConfig).replace("#V#", ": ");
+
+						const IntralesionalTherapy = IntralesionaltherapyDiagnosis.replace("IntralesionaltherapyDiagnosis : ", "");
+						return `Intralesional Therapy: ${IntralesionalTherapy}`;
+					}
+				})
+			);
+			const replacedNodes = selectedNodes.map((node) => {
+				const removedFirstLayerOfSharpVSharp = node.replace("#V#", ": ");
+				if (removedFirstLayerOfSharpVSharp.includes("#V#")) {
+					return removedFirstLayerOfSharpVSharp.replace("#V#", " ");
+				} else {
+					return removedFirstLayerOfSharpVSharp;
+				}
+			});
+			const therapeuticItems = replacedNodes.filter((item) => item.startsWith("Therapeutic Laser Therapy"));
+			const otherItems = replacedNodes.filter((item) => !item.startsWith("Therapeutic Laser Therapy"));
+
+			// Remove duplicates from both arrays
+			const uniqueTherapeuticItems = [...new Set(therapeuticItems)];
+			const uniqueOtherItems = [...new Set(otherItems)];
+
+			// Consolidate the "Therapeutic Laser Therapy" items
+			const consolidatedTherapeuticItems = uniqueTherapeuticItems
+				.map((item) => item.replace("Therapeutic Laser Therapy: ", "").replace(";", ""))
+				.join(", ");
+
+			// Combine the consolidated "Therapeutic Laser Therapy" string with the other unique items
+			const finalResult = [`Therapeutic Laser Therapy: ${consolidatedTherapeuticItems}`, ...uniqueOtherItems].join(", ");
+
+			return finalResult;
 		}
 	};
 
@@ -400,6 +457,49 @@ const CaseLogTab = () => {
 
 			const replacedNodes = selectedNodes.map((node) => node.replace("#V#", ": "));
 
+			return replacedNodes.join(", ");
+		}
+	};
+
+	const getpreciseValuesForOralRadiology = (caseData, item) => {
+		const config = configMappingForDataStrcuture[caseData.__typename];
+
+		if (!config) {
+			throw new Error(`Configuration for caseType "${caseData.__typename}" not found.`);
+		}
+
+		const categoryConfig = config[item.value];
+
+		if (caseData[item.value] && caseData[item.value].length > 0) {
+			const selectedNodes = compact(
+				map(caseData[item.value], (selector) => {
+					const treeLevels = selector.split("/");
+					if (treeLevels[1] === "X-Ray") {
+						if (treeLevels.length === 4) {
+							const levels = `X-Ray – ${getTreeNodeLabel(treeLevels[2], categoryConfig)} – ${getTreeNodeLabel(treeLevels[3], categoryConfig)
+								.replace("#V#", " ") // Replace #V# with space
+								.replace("ViewOcclusal", "") // Remove ViewOcclusal
+								.replace("ViewIOPA", "") // Remove ViewIOPA
+								.replace("ViewPanorex|OPG", "") // Remove ViewPanorex|OPG
+								.trim()}`;
+							return levels;
+						} else if (treeLevels.length === 5) {
+							return `X-Ray – ${getTreeNodeLabel(treeLevels[2], categoryConfig)} – ${getTreeNodeLabel(treeLevels[4], categoryConfig)} `;
+						}
+					} else if (treeLevels[2] === "Region" || "region") {
+						return getTreeNodeLabel(treeLevels[3], categoryConfig);
+					}
+				})
+			);
+
+			const replacedNodes = selectedNodes.map((node) => {
+				const removedFirstLayerOfSharpVSharp = node.replace("#V#", ": ");
+				if (removedFirstLayerOfSharpVSharp.includes("#V#")) {
+					return removedFirstLayerOfSharpVSharp.replace("#V#", " ");
+				} else {
+					return removedFirstLayerOfSharpVSharp;
+				}
+			});
 			return replacedNodes.join(", ");
 		}
 	};
@@ -502,6 +602,14 @@ const CaseLogTab = () => {
 								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
 									{getParentofSelectedValues(card, item) || "--"}
 								</Text>
+							) : item.preciseValuesForOralMedicineCaseLogProcedure ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{getPreciseValuesForOralMedicineCaseLogProcedure(card, item) || "--"}
+								</Text>
+							) : item.preciseValuesForOralRadiology ? (
+								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
+									{getpreciseValuesForOralRadiology(card, item) || "--"}
+								</Text>
 							) : (
 								<Text size='xs' fontFamily='Inter_Bold'>
 									{card[item.value] || "--"}
@@ -518,6 +626,30 @@ const CaseLogTab = () => {
 			</Card>
 		);
 	};
+
+	let cardDetails = [];
+	switch (AppStore.UserBroadSpecialty) {
+		case "Orthodontics":
+			cardDetails.push(...store.OrthodonticsClinicalCaseLogList, ...store.OrthodonticsPreClinicalList);
+			break;
+
+		case "Orthopaedics":
+			cardDetails.push(...store.OrthopaedicsCaseLogList, ...store.OrthopaedicsProcedureLogList);
+			break;
+
+		case "OralMedicineAndRadiology":
+			cardDetails.push(...store.OralMedicineAndRadiologyCaseLogsList, ...store.OralRadiologiesList);
+			break;
+		default:
+			cardDetails.push(...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList);
+			break;
+	}
+	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
+	console.log("!!!!!!!!!!!!!!!!! BP >>>>>>>>>>>>> ", cardDetails);
+
+	if (!isReady) {
+		return <IsReadyLoader />;
+	}
 
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>

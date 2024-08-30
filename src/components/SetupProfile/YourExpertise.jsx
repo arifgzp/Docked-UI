@@ -111,6 +111,10 @@ const specialtyList = {
 		],
 		SubSpeciality: [],
 	},
+	OralMedicineAndRadiology: {
+		SuperSpeciality: [],
+		SubSpeciality: [],
+	},
 };
 
 const YourExpertise = ({ control, formState, formFields, reset, watch }) => {

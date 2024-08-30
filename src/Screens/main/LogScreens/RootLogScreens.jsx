@@ -7,6 +7,7 @@ import CaseLogEditScreen from "./CaseLogsScreens/CaseLogEditScreen";
 import LogProfileReadPage from "./LogProfileReadPage";
 import { Button } from "@gluestack-ui/themed";
 import { ButtonText } from "@gluestack-ui/themed";
+import AcademicLogFormScreen from "./Academic Log/AcademicLogFormScreen";
 
 const EditProfileButon = ({ navigation }) => {
 	return (
@@ -72,6 +73,19 @@ export default function RootLogScreens({ navigation }) {
 						fontSize: 16, // You can adjust the font size as needed
 					},
 					headerRight: () => <EditProfileButon navigation={navigation} />,
+				}}
+			/>
+			<Stack.Screen
+				name='AcademicLogEditScreen'
+				component={AcademicLogFormScreen}
+				options={{
+					title: "Academic",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
 				}}
 			/>
 		</Stack.Navigator>

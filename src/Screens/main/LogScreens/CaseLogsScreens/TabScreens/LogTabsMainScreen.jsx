@@ -6,6 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { ButtonText } from "@gluestack-ui/themed";
 import { SearchBar } from "react-native-elements";
+import IsReadyLoader from "../../../../../components/IsReadyLoader";
+import useIsReady from "../../../../../hooks/useIsReady";
 
 const FirstRoute = require("./CaseLogTab").default;
 const SecondRoute = require("./AcademicLogTab").default;
@@ -34,14 +36,17 @@ const renderTabBar = (props) => (
 	/>
 );
 
-export default function LogTabsMainScreen({ navigation }) {
+export default function LogTabsMainScreen({ navigation, route }) {
+	const isReady = useIsReady();
 	const layout = useWindowDimensions();
 	const [search, setSearch] = React.useState("");
+	const initialTabIndex = route?.params?.initialTabIndex ?? 0;
 
-	const [index, setIndex] = React.useState(0);
+	const [index, setIndex] = React.useState(initialTabIndex);
+
 	const [routes] = React.useState([
 		{ key: "first", title: "Cases" },
-		{ key: "second", title: "Academic" },
+		{ key: "second", title: "Academics" },
 		{ key: "third", title: "Thesis" },
 		{ key: "fourth", title: "Special Case" },
 		{ key: "fifth", title: "Custom" },
@@ -50,6 +55,19 @@ export default function LogTabsMainScreen({ navigation }) {
 	const updateSearch = (search) => {
 		setSearch(search);
 	};
+
+	React.useEffect(() => {
+		// Update index when initialTabIndex changes
+		setIndex(initialTabIndex);
+	}, [initialTabIndex]);
+
+	if (!isReady) {
+		return (
+			<Box pt={20}>
+				<IsReadyLoader />
+			</Box>
+		);
+	}
 
 	return (
 		<Box p='$4' w='$full' h='$full' bg='$primaryBackground' pt='$10'>

@@ -164,7 +164,11 @@ const HomeScreenPage = ({ navigation }) => {
 								<Text fontFamily='Inter_Bold' color='#000' size='xl'>
 									Hello Dr. {appStoreInstance.Name ? appStoreInstance.Name : "User"}
 								</Text>
-								<Text>{appStoreInstance.UserBroadSpecialty}</Text>
+								<Text>
+									{appStoreInstance.UserBroadSpecialty === "OralMedicineAndRadiology"
+										? "Oral Medicine & Radiology"
+										: appStoreInstance.UserBroadSpecialty}
+								</Text>
 							</VStack>
 							<Pressable onPress={() => navigation.navigate("ProfilePage")}>
 								<Image

@@ -13,8 +13,10 @@ import OrthodonticsSpecialClinicalCaseLogConfig from "../../../../data/Specialty
 import { FontAwesome6 } from "@expo/vector-icons";
 import OrthopeadicProcedureLogSpecialConfig from "../../../../data/SpecialtyConfigs/OrthopaedicsConfigs/OrthopeadicProcedureLogSpecialConfig";
 import OrthodonticsPreClinicalSpecialConfig from "../../../../data/SpecialtyConfigs/OrthodonticConfigs/OrthodonticsPreClinicalSpecialConfig";
+import OralMedicineAndRadiologySpecialCaseLogConfig from "../../../../data/SpecialtyConfigs/OralMedicineAndRadiologyConfigs/OralMedicineAndRadiologySpecialCaseLogConfig";
 import appStoreInstance from "../../../../stores/AppStore";
-
+import AcademicLogSpecialOptions from "../../../../data/entity/Academic/AcademicLogSpecialOptions";
+import OralRadiologySpecialConfig from "../../../../data/SpecialtyConfigs/OralMedicineAndRadiologyConfigs/OralRadiologySpecialConfig";
 const getSelectType = (key, configData) => {
 	//console.log("key", key);
 	//console.log("configData", configData);
@@ -98,7 +100,7 @@ const SpecialCaseLogSelectOptions = ({
 	caseLogData,
 	setValue,
 	getValues,
-	specialCaseLogsOption,
+	specialOptions,
 	refernceToGetSpecialOptions,
 }) => {
 	const [showModal, setShowModal] = useState(false);
@@ -151,6 +153,12 @@ const SpecialCaseLogSelectOptions = ({
 				return OrthodonticsSpecialClinicalCaseLogConfig[key];
 			case "OrthodonticsPreClinical":
 				return OrthodonticsPreClinicalSpecialConfig[key];
+			case "AcademicLog":
+				return AcademicLogSpecialOptions[key];
+			case "OralMedicineCaseLog":
+				return OralMedicineAndRadiologySpecialCaseLogConfig[key];
+			case "OralRadiology":
+				return OralRadiologySpecialConfig[key];
 			default:
 				return [];
 		}
@@ -158,19 +166,18 @@ const SpecialCaseLogSelectOptions = ({
 
 	useEffect(() => {
 		console.log("SpecialCaseLogSelectOptions useEffect");
-		specialCaseLogsOption.forEach((option) => {
+		specialOptions.forEach((option) => {
 			const data = caseLogData[option.id];
 			const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(data, getTreeConfigData(option.id));
 			console.log("SpecialCaseLogSelectOptions >> treeSelectorValue_Formatted", treeSelectorValue_Formatted);
 			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [option.id]: treeSelectorValue_Formatted }));
 		});
-	}, [caseLogData, specialCaseLogsOption]);
+	}, [caseLogData, specialOptions]);
 
-	//console.log("SpecialCaseLogSelectOptions >> specialCaseLogsOption", specialCaseLogsOption);
 	console.log("SpecialCaseLogSelectOptions >> caseLogData", caseLogData);
 	return (
 		<VStack alignItems='center' gap='$4' px='$4'>
-			{specialCaseLogsOption.map((option) => {
+			{specialOptions.map((option) => {
 				console.log(activeTreeSelectorValue[option.id]);
 				if (!isEmpty(activeTreeSelectorValue[option.id])) {
 					return (

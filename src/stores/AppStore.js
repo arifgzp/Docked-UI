@@ -174,10 +174,20 @@ const AppStore = types
 		_isFormDirty: types.maybeNull(types.boolean),
 		_imagePath: types.maybeNull(types.string),
 		_caseLogFormToGet: types.maybeNull(types.string),
+		_userStatus: types.maybeNull(types.string),
+		_resetDate: types.maybeNull(types.boolean),
 	})
 	.views((self) => ({
 		get UserId() {
 			return self._userId;
+		},
+
+		get ResetDate() {
+			return self._resetDate;
+		},
+
+		get UserStatus() {
+			return self._userStatus;
 		},
 
 		get CaseLogFormToGet() {
@@ -333,6 +343,14 @@ const AppStore = types
 			self._userId = userId;
 		},
 
+		setResetDate(resetDate) {
+			self._resetDate = resetDate;
+		},
+
+		setUserStatus(userStatus) {
+			self._userStatus = userStatus;
+		},
+
 		setCaseLogFormToGet(caseLogFormToGet) {
 			self._caseLogFormToGet = caseLogFormToGet;
 		},
@@ -484,6 +502,7 @@ const AppStore = types
 			self._medicalRegistrationNumber = null;
 			self._verifiedMedicalRegistrationNumber = null;
 			self._logProfile = null;
+			self._userStatus = null;
 		},
 
 		validateUserToken: flow(function* validateUserToken() {
@@ -765,13 +784,14 @@ const AppStore = types
 			}
 		}),
 
-		SignOut: flow(function* SignOut() {
+		SignOut: flow(function* SignOut(navigation) {
 			try {
 				self._isLoading = true;
 				yield SecureStore.deleteItemAsync(SecureStoreEnum.TOKEN.description);
 				yield SecureStore.deleteItemAsync(SecureStoreEnum.USER.description);
 				self.markUserSignedOut();
 				rootStore.resetAllData();
+				navigation.navigate("Login Page");
 			} catch (error) {
 				console.error("AppStore > SignOut ", error);
 			} finally {

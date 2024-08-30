@@ -35,7 +35,7 @@ const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelec
 		<>
 			<TouchableOpacity onPress={onOpen}>
 				<HStack h='$9' borderWidth={0.2} px={10} borderRadius={2} justifyContent='space-between' alignItems='center'>
-					<Text fontSize={14}>{value ? field.options.find((opt) => opt.value === value)?.label : ""}</Text>
+					<Text fontSize={14}>{value ? field?.options?.find((opt) => opt.value === value)?.label : ""}</Text>
 					<Icon color='#367B71' as={ChevronDown} w='$4' h='$4' />
 				</HStack>
 			</TouchableOpacity>
@@ -47,7 +47,7 @@ const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelec
 					</Text>
 					<Divider borderWidth={0.1} />
 					<ScrollView w='$full'>
-						{field.options.map((option, index) => (
+						{field?.options?.map((option, index) => (
 							<ActionsheetItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={option.value} onPress={() => handleOptionSelect(option.value)}>
 								<Text>{option.label}</Text>
 							</ActionsheetItem>

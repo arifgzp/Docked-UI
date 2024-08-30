@@ -49,7 +49,7 @@ const ProfilePage = ({ navigation }) => {
 		console.log("User logged out");
 		// For example, you might want to navigate to a login screen or clear user data
 		//props.navigation.navigate("Login Page"); // Assuming you have a LoginScreen in your navigator
-		appStoreInstance.SignOut();
+		appStoreInstance.SignOut(navigation);
 	};
 
 	useEffect(() => {

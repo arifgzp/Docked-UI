@@ -48,6 +48,14 @@ import {
 } from "../../../../data/entity/OrthodonticCaseLogConfigs/OrthodonticsPreClinicalConfig";
 import appStoreInstance from "../../../../stores/AppStore";
 import { Keyboard } from "react-native";
+import {
+	OralMedicineAndRadiologyConfigTextAndSingleSelectOption,
+	OralMedicineAndRadiologySpecialOptions,
+} from "../../../../data/entity/OralMedicineAndRadiology/OralMedicineAndRadiologyConfig";
+import {
+	OralRadiologyConfigTextAndSingleSelectOption,
+	OralRadiologySpecialOptions,
+} from "../../../../data/entity/OralMedicineAndRadiology/OralRadiologyConfig";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -65,6 +73,10 @@ const getCaseLogFields = (key) => {
 			return OrthodonticsClinicalCaseLogConfigTextAndSingleSelectOptions;
 		case "OrthodonticsPreClinical":
 			return OrthodonticsPreClinicalTextAndSingleSelectOptions;
+		case "OralMedicineCaseLog":
+			return OralMedicineAndRadiologyConfigTextAndSingleSelectOption;
+		case "OralRadiology":
+			return OralRadiologyConfigTextAndSingleSelectOption;
 		default:
 			return [];
 	}
@@ -86,6 +98,10 @@ const getSpecialCaseLogOptions = (key) => {
 			return specialOrthodonticsClinicalCaseLog;
 		case "OrthodonticsPreClinical":
 			return specialOrthodonticsPreClinical;
+		case "OralMedicineCaseLog":
+			return OralMedicineAndRadiologySpecialOptions;
+		case "OralRadiology":
+			return OralRadiologySpecialOptions;
 		default:
 			return [];
 	}
@@ -227,6 +243,12 @@ const CaseLogEditScreen = ({ navigation }) => {
 			case "OrthodonticsPreClinical":
 				queryToRun = "updateOrthodonticsPreClinical";
 				break;
+			case "OralMedicineCaseLog":
+				queryToRun = "updateOralMedicineAndRadiologyCaseLog";
+				break;
+			case "OralRadiology":
+				queryToRun = "updateOralRadiology";
+				break;
 			default:
 				throw new Error("Invalid case log type");
 		}
@@ -272,6 +294,12 @@ const CaseLogEditScreen = ({ navigation }) => {
 				break;
 			case "OrthodonticsPreClinical":
 				queryToRun = "updateOrthodonticsPreClinical";
+				break;
+			case "OralMedicineCaseLog":
+				queryToRun = "updateOralMedicineAndRadiologyCaseLog";
+				break;
+			case "OralRadiology":
+				queryToRun = "updateOralRadiology";
 				break;
 			default:
 				throw new Error("Invalid case log type");
@@ -327,6 +355,12 @@ const CaseLogEditScreen = ({ navigation }) => {
 
 				case "OrthodonticsPreClinical":
 					caseLogData = store.getOrthodonticsPreClinicalById(routes.params.id)[0];
+					break;
+				case "OralMedicineCaseLog":
+					caseLogData = store.getOralMedicineAndRadiologyCaseLogsById(routes.params.id)[0];
+					break;
+				case "OralRadiology":
+					caseLogData = store.getOralRadiologiesById(routes.params.id)[0];
 					break;
 			}
 			reset({ ...caseLogData });
@@ -414,6 +448,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
+	console.log("what is case log data here????", caseLogData);
 
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
@@ -451,7 +486,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 											getValues={getValues}
 											formState={formState}
 											caseLogData={caseLogData}
-											specialCaseLogsOption={getSpecialCaseLogOptions(routes.params.caseType)}
+											specialOptions={getSpecialCaseLogOptions(routes.params.caseType)}
 											refernceToGetSpecialOptions={routes.params.caseType}
 										/>
 									</Box>

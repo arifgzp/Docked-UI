@@ -143,10 +143,116 @@ const AnesthesiaCriticalCareCardLogViewConfig = [
 	},
 ];
 
+const OralRadiologyCardLogViewConfig = [
+	{
+		label: "Diagnosis",
+		value: "diagnosis",
+	},
+	{
+		label: "Procedure",
+		value: "procedure",
+		preciseValuesForOralRadiology: true,
+	},
+	{
+		label: "Report",
+		value: "report",
+	},
+];
+
+const OralMedicineCaseLogCardLogViewConfig = [
+	{
+		label: "Comorbidities",
+		value: "comorbidities",
+		multipleSelectValues: true,
+	},
+	{
+		label: "Habit History",
+		value: "habitHistory",
+		multipleSelectValues: true,
+	},
+	{
+		label: "Diagnosis",
+		value: "diagnosis",
+	},
+	{
+		label: "Procedure",
+		value: "procedure",
+		preciseValuesForOralMedicineCaseLogProcedure: true,
+	},
+];
+
+const AcademicLogCardLogViewConfig = [
+	{
+		label: "Position",
+		value: "position",
+	},
+	{
+		label: "Activity",
+		value: "activities",
+		parentFollowedByFirstChild: true,
+	},
+	{
+		label: "Title",
+		value: "title",
+	},
+	{
+		label: "Supervision",
+		value: "supervision",
+		multipleSelectValues: true,
+	},
+];
+
+const PublicationLogCardLogViewConfig = [
+	{
+		label: "Type",
+		value: "type",
+	},
+	{
+		label: "Title",
+		value: "title",
+	},
+	{
+		label: "Title",
+		value: "title",
+	},
+	{
+		label: "Journal Name",
+		value: "journalName",
+	},
+	{
+		label: "Status",
+		value: "status",
+	},
+	{
+		label: "Publication Date",
+		value: "date",
+	},
+];
+
+const AdminWorkLogCardLogViewConfig = [
+	{
+		label: "Activity",
+		value: "activity",
+	},
+	{
+		label: "Position",
+		value: "position",
+	},
+	{
+		label: "Organization",
+		value: "organization",
+	},
+];
+
 export {
 	OrthopaedicsProcedureLogCardViewConfig,
 	OrthopaedicsCaseLogCardViewConfig,
 	AnesthesiaCaseLogCardViewConfig,
 	AnesthesiaChronicPainCardLogViewConfig,
 	AnesthesiaCriticalCareCardLogViewConfig,
+	OralRadiologyCardLogViewConfig,
+	OralMedicineCaseLogCardLogViewConfig,
+	AcademicLogCardLogViewConfig,
+	PublicationLogCardLogViewConfig,
+	AdminWorkLogCardLogViewConfig,
 };
