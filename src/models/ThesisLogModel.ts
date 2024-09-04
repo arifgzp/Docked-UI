@@ -1,6 +1,7 @@
 import { Instance } from "mobx-state-tree";
 import { selectFromThesisLog, ThesisLogModelBase } from "./ThesisLogModel.base";
 import { fieldsModelPrimitives } from "./FieldsModel.base";
+import { updateFieldsModelPrimitives } from "./FieldsModel";
 
 /* The TypeScript type of an instance of ThesisLogModel */
 export interface ThesisLogModelType extends Instance<typeof ThesisLogModel.Type> {}
@@ -18,4 +19,4 @@ export const ThesisLogModel = ThesisLogModelBase.actions((self) => ({
 	},
 }));
 
-export const updateThesisLogPrimitive = selectFromThesisLog().createdOn.updatedOn.thesisName.fields(fieldsModelPrimitives);
+export const updateThesisLogPrimitive = selectFromThesisLog().createdOn.updatedOn.thesisName.fields(updateFieldsModelPrimitives);

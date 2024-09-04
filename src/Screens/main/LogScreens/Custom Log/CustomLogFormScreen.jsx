@@ -38,6 +38,11 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 	const handleOnSave = async (formData) => {
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		console.log(formData);
+		if (Array.isArray(formData.fields)) {
+			formData.fields.forEach((field) => {
+				field.createdOn = field.updatedOn = formatRFC3339(new Date());
+			});
+		}
 
 		try {
 			const query = store.updateUserCustomLog(appStoreInstance.UserId, { set: { customLog: formData } });
@@ -103,6 +108,8 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 		if (Array.isArray(formData.fields)) {
 			formData.fields.forEach((field) => {
 				delete field.__typename;
+				delete field.id;
+				field.updatedOn = formatRFC3339(new Date());
 			});
 		}
 		formData.updatedOn = formatRFC3339(new Date());

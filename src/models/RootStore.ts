@@ -1061,17 +1061,17 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		const dataFilter = {
 			id: thesisLogId,
 		};
-		console.log("oralRadiologyId", thesisLogId);
+		console.log("ThesisLogIId", thesisLogId);
 		console.log("updateThesisLogInfo", updateThesisLogInfo);
 		const setDataPatch = updateThesisLogInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
 		const updateThesisLogResultSelector = selectFromUpdateThesisLogPayload().thesisLog(updateThesisLogPrimitive).toString();
-		const updateOralRadiologyQuery: Query = self.mutateUpdateThesisLog(inputVariable, updateThesisLogResultSelector);
+		const updateThesisLogQuery: Query = self.mutateUpdateThesisLog(inputVariable, updateThesisLogResultSelector);
 		console.log("********** updateThesisLog Query STARTS **********");
-		console.log({ query: updateOralRadiologyQuery.query });
-		console.log(updateOralRadiologyQuery.variables);
+		console.log({ query: updateThesisLogQuery.query });
+		console.log(updateThesisLogQuery.variables);
 		console.log("********** updateThesisLog Query ENDS **********");
-		return updateOralRadiologyQuery;
+		return updateThesisLogQuery;
 	},
 
 	fetchThesisLogByUser(userName: string) {
