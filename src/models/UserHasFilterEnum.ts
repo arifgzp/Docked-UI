@@ -47,6 +47,8 @@ oralRadiology="oralRadiology",
 academicLog="academicLog",
 publicationLog="publicationLog",
 adminWorkLog="adminWorkLog",
+thesisLog="thesisLog",
+customLog="customLog",
 logProfile="logProfile",
 imagePath="imagePath"
 }
@@ -94,6 +96,8 @@ export const UserHasFilterEnumType = types.enumeration("UserHasFilter", [
   "academicLog",
   "publicationLog",
   "adminWorkLog",
+  "thesisLog",
+  "customLog",
   "logProfile",
   "imagePath",
       ])

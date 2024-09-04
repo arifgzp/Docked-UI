@@ -13,6 +13,8 @@ import { publicationLogModelPrimitives } from "./PublicationLogModel.base";
 import { academicLogModelPrimitives } from "./AcademicLogModel.base";
 import { oralMedicineAndRadiologyCaseLogModelPrimitives } from "./OralMedicineAndRadiologyCaseLogModel.base";
 import { oralRadiologyModelPrimitives, selectFromOralRadiology } from "./OralRadiologyModel.base";
+import { updateThesisLogPrimitive } from "./ThesisLogModel";
+import { updateCustomLogPrimitive } from "./CustomLogModel";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -47,4 +49,6 @@ export const PublicationLogByModelSelector = selectFromUser().publicationLog(pub
 export const OralMedicineAndRadiologyCaseLogByModelSelector = selectFromUser().oralMedicineAndRadiologyCaseLog(
 	oralMedicineAndRadiologyCaseLogModelPrimitives
 );
+export const ThesisLogByModelSelector = selectFromUser().thesisLog(updateThesisLogPrimitive);
+export const CustomLogByModelSelector = selectFromUser().customLog(updateCustomLogPrimitive);
 export const OralRadiologyByModelSelector = selectFromUser().oralRadiology(oralRadiologyModelPrimitives);

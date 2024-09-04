@@ -47,8 +47,8 @@ const Tab = createBottomTabNavigator();
 const getCreateMenuOptions = (specialty) => {
 	const commonOptions = [
 		{ id: "Academic", name: "Academic", nested: true },
-		// { id: "ThesisLog", name: "Thesis Log" },
-		// { id: "CustomLog", name: "Custom Log" },
+		{ id: "ThesisLog", name: "Thesis Log" },
+		{ id: "CustomLog", name: "Custom Log" },
 	];
 
 	const specialtyOptions = {

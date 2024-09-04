@@ -7,6 +7,8 @@ import appStoreInstance from "../../../stores/AppStore";
 import { observer } from "mobx-react";
 import LogProfileEditForFormStack from "./LogProfileEditForFormStack";
 import AcademicLogFormScreen from "./Academic Log/AcademicLogFormScreen";
+import ThesisLogFormScreen from "./ThesisLogs/ThesisLogFormScreen";
+import CustomLogFormScreen from "./Custom Log/CustomLogFormScreen";
 
 const LogProfileButton = () => {
 	const navigation = useNavigation();
@@ -66,6 +68,32 @@ const CreateLogScreen = ({ navigation }) => {
 				component={AcademicLogFormScreen}
 				options={{
 					title: "Academic Log",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='ThesisLogFormScreen'
+				component={ThesisLogFormScreen}
+				options={{
+					title: "Thesis Log",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='CustomLogFormScreen'
+				component={CustomLogFormScreen}
+				options={{
+					title: "Custom Log",
 					headerShown: true,
 					headerStyle: { backgroundColor: "#FFF" },
 					headerTitleStyle: {

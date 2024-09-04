@@ -8,6 +8,7 @@ enum Gender {
 enum UserRole {
     DOCTOR
     RESIDENTS
+    ADMIN
 }
 
 enum UserStatus {
@@ -60,8 +61,34 @@ type User @secret(field: "password") {
     academicLog: [AcademicLog] @dgraph(pred:"academicLog")
     publicationLog: [PublicationLog] @dgraph(pred:"publicationLog")
     adminWorkLog: [AdminWorkLog] @dgraph(pred:"adminWorkLog")
+    thesisLog: [ThesisLog] @dgraph(pred:"thesisLog")
+    customLog: [CustomLog] @dgraph(pred:"customLog")
     logProfile: LogProfile @dgraph(pred:"logProfile")
     imagePath: String @dgraph(pred:"imagePath")
+}
+
+type ThesisLog{
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    thesisName: String @search @dgraph(pred:"thesisName")
+    fields: [Fields] @dgraph(pred:"fields")
+}
+
+type CustomLog{
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    customName: String @search @dgraph(pred:"customName")
+    fields: [Fields] @dgraph(pred:"fields")
+}
+
+type Fields{
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    label: String @search @dgraph(pred:"label")
+    value: String @search @dgraph(pred:"value")
 }
 
 type AnaesthesiaCaseLog  {

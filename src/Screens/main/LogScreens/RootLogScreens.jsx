@@ -8,6 +8,8 @@ import LogProfileReadPage from "./LogProfileReadPage";
 import { Button } from "@gluestack-ui/themed";
 import { ButtonText } from "@gluestack-ui/themed";
 import AcademicLogFormScreen from "./Academic Log/AcademicLogFormScreen";
+import ThesisLogFormScreen from "./ThesisLogs/ThesisLogFormScreen";
+import CustomLogFormScreen from "./Custom Log/CustomLogFormScreen";
 
 const EditProfileButon = ({ navigation }) => {
 	return (
@@ -80,6 +82,32 @@ export default function RootLogScreens({ navigation }) {
 				component={AcademicLogFormScreen}
 				options={{
 					title: "Academic",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='ThesisLogFormScreenEdit'
+				component={ThesisLogFormScreen}
+				options={{
+					title: "Thesis Log",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='CustomLogFormScreenEdit'
+				component={CustomLogFormScreen}
+				options={{
+					title: "Custom Log",
 					headerShown: true,
 					headerStyle: { backgroundColor: "#FFF" },
 					headerTitleStyle: {

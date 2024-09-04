@@ -12,8 +12,8 @@ import useIsReady from "../../../../../hooks/useIsReady";
 const FirstRoute = require("./CaseLogTab").default;
 const SecondRoute = require("./AcademicLogTab").default;
 const ThirdRoute = require("./ThesisLogTab").default;
-const FourthRoute = require("./SpecialCaseLogTab").default;
-const FifthRoute = require("./CustomLogTab").default;
+const FourthRoute = require("./CustomLogTab").default;
+const FifthRoute = require("./SpecialCaseLogTab").default;
 
 const renderScene = SceneMap({
 	first: FirstRoute,
@@ -48,8 +48,8 @@ export default function LogTabsMainScreen({ navigation, route }) {
 		{ key: "first", title: "Cases" },
 		{ key: "second", title: "Academics" },
 		{ key: "third", title: "Thesis" },
-		{ key: "fourth", title: "Special Case" },
-		{ key: "fifth", title: "Custom" },
+		{ key: "fourth", title: "Custom" },
+		{ key: "fifth", title: "Special Case" },
 	]);
 
 	const updateSearch = (search) => {
