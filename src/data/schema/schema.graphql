@@ -321,7 +321,7 @@ type PublicationLog  {
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
     date: DateTime @search @dgraph(pred:"date")
-    type : String @dgraph(pred:"type") 
+    publicationType : String @dgraph(pred:"publicationType") 
     title : String @dgraph(pred:"title")
     journalName : String @dgraph(pred:"journalName")
     status : String @dgraph(pred:"status")

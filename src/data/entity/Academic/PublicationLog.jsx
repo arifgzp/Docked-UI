@@ -22,7 +22,7 @@ const Options = {
 };
 
 const PublicationLogConfigTextAndSingleSelectOptions = [
-	{ name: "Type", uid: "type", type: "select-single", options: Options.Type, isRequire: true },
+	{ name: "Type", uid: "publicationType", type: "select-single", options: Options.Type, isRequire: true },
 	{ name: "Title", uid: "title", type: "text", isRequire: true },
 	{ name: "Journal Name", uid: "journalName", type: "text", isRequire: true },
 	{ name: "Status", uid: "status", type: "select-single", options: Options.Status, isRequire: true },

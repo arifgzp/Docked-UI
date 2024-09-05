@@ -18,4 +18,4 @@ export const PublicationLogModel = PublicationLogModelBase.actions((self) => ({
 }));
 
 export const updatePublicationLogPayloadModelSelector =
-	selectFromPublicationLog().createdOn.updatedOn.date.type.title.journalName.status.academicLogType;
+	selectFromPublicationLog().createdOn.updatedOn.date.publicationType.title.journalName.status.academicLogType;

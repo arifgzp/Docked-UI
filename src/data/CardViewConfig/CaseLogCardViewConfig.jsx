@@ -205,7 +205,7 @@ const AcademicLogCardLogViewConfig = [
 const PublicationLogCardLogViewConfig = [
 	{
 		label: "Type",
-		value: "type",
+		value: "publicationType",
 	},
 	{
 		label: "Title",

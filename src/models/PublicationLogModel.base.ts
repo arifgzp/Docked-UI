@@ -20,7 +20,7 @@ export const PublicationLogModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
-    type: types.union(types.undefined, types.null, types.string),
+    publicationType: types.union(types.undefined, types.null, types.string),
     title: types.union(types.undefined, types.null, types.string),
     journalName: types.union(types.undefined, types.null, types.string),
     status: types.union(types.undefined, types.null, types.string),
@@ -37,7 +37,7 @@ export class PublicationLogModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
-  get type() { return this.__attr(`type`) }
+  get publicationType() { return this.__attr(`publicationType`) }
   get title() { return this.__attr(`title`) }
   get journalName() { return this.__attr(`journalName`) }
   get status() { return this.__attr(`status`) }
@@ -47,4 +47,4 @@ export function selectFromPublicationLog() {
   return new PublicationLogModelSelector()
 }
 
-export const publicationLogModelPrimitives = selectFromPublicationLog().createdOn.updatedOn.date.type.title.journalName.status.academicLogType
+export const publicationLogModelPrimitives = selectFromPublicationLog().createdOn.updatedOn.date.publicationType.title.journalName.status.academicLogType

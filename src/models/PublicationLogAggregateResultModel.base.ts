@@ -23,8 +23,8 @@ export const PublicationLogAggregateResultModelBase = ModelBase
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
     dateMin: types.union(types.undefined, types.null, types.frozen()),
     dateMax: types.union(types.undefined, types.null, types.frozen()),
-    typeMin: types.union(types.undefined, types.null, types.string),
-    typeMax: types.union(types.undefined, types.null, types.string),
+    publicationTypeMin: types.union(types.undefined, types.null, types.string),
+    publicationTypeMax: types.union(types.undefined, types.null, types.string),
     titleMin: types.union(types.undefined, types.null, types.string),
     titleMax: types.union(types.undefined, types.null, types.string),
     journalNameMin: types.union(types.undefined, types.null, types.string),
@@ -48,8 +48,8 @@ export class PublicationLogAggregateResultModelSelector extends QueryBuilder {
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
   get dateMin() { return this.__attr(`dateMin`) }
   get dateMax() { return this.__attr(`dateMax`) }
-  get typeMin() { return this.__attr(`typeMin`) }
-  get typeMax() { return this.__attr(`typeMax`) }
+  get publicationTypeMin() { return this.__attr(`publicationTypeMin`) }
+  get publicationTypeMax() { return this.__attr(`publicationTypeMax`) }
   get titleMin() { return this.__attr(`titleMin`) }
   get titleMax() { return this.__attr(`titleMax`) }
   get journalNameMin() { return this.__attr(`journalNameMin`) }
@@ -63,4 +63,4 @@ export function selectFromPublicationLogAggregateResult() {
   return new PublicationLogAggregateResultModelSelector()
 }
 
-export const publicationLogAggregateResultModelPrimitives = selectFromPublicationLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.typeMin.typeMax.titleMin.titleMax.journalNameMin.journalNameMax.statusMin.statusMax.academicLogTypeMin.academicLogTypeMax
+export const publicationLogAggregateResultModelPrimitives = selectFromPublicationLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.publicationTypeMin.publicationTypeMax.titleMin.titleMax.journalNameMin.journalNameMax.statusMin.statusMax.academicLogTypeMin.academicLogTypeMax
