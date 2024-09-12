@@ -1,0 +1,29 @@
+{
+	"project_info": {
+		"project_number": "155852758210",
+		"project_id": "docked-pushnotifications",
+		"storage_bucket": "docked-pushnotifications.appspot.com"
+	},
+	"client": [
+		{
+			"client_info": {
+				"mobilesdk_app_id": "1:155852758210:android:b7106b3b1b0ce4f62baf5b",
+				"android_client_info": {
+					"package_name": "com.betic.docked"
+				}
+			},
+			"oauth_client": [],
+			"api_key": [
+				{
+					"current_key": "AIzaSyAFaKMvMpJqbiNJKkjdDTv2J7PlRtccaaw"
+				}
+			],
+			"services": {
+				"appinvite_service": {
+					"other_platform_oauth_client": []
+				}
+			}
+		}
+	],
+	"configuration_version": "1"
+}

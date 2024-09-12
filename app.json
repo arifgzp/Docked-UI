@@ -20,11 +20,17 @@
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#E6E3DB"
 			},
+			"googleServicesFile": "./android/app/google-services.json",
 			"package": "com.betic.docked"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
 		},
+		"extra": {
+			"eas": {
+			  "projectId": "4827f8a3-8107-41fd-bb72-efde89c6c906"
+			}
+		  },
 		"plugins": ["expo-font"]
 	}
 }
