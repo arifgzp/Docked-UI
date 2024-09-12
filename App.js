@@ -13,12 +13,16 @@ import { enableFreeze, enableScreens } from "react-native-screens";
 import AppWrapper from "./app/AppWrapper";
 import appStoreInstance from "./src/stores/AppStore";
 import { fonts } from "react-native-elements/dist/config";
+import { usePushNotifications } from "./usePushNotifications";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs();
 
 enableScreens(true);
 
 function App() {
+	const { expoPushToken, notification } = usePushNotifications();
+  const data = JSON.stringify(notification, undefined, 2);
+  console.log('expoPushToken?.data', expoPushToken?.data)
 	const [fontsLoaded] = useFonts({
 		Inter: require("./assets/fonts/Inter.ttf"),
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),

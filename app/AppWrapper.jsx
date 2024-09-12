@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "@gluestack-ui/themed";
+import { ButtonText, HStack, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalHeader, StatusBar } from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "../src/models";
@@ -25,6 +25,13 @@ import DockedProfile from "../src/Screens/auth/DockedProfile";
 import NotificationsScreen from "../src/Screens/main/NotificationsScreen";
 import SetupProfile from "../src/components/SetupProfile/SetupProfile";
 import LandingScreen from "../src/Screens/main/LandingScreen";
+import { Box } from "@gluestack-ui/themed";
+import { Text } from "@gluestack-ui/themed";
+import { Heading } from "@gluestack-ui/themed";
+import { Icon } from "@gluestack-ui/themed";
+import { CloseIcon } from "@gluestack-ui/themed";
+import { Button } from "@gluestack-ui/themed";
+import { ModalFooter } from "@gluestack-ui/themed";
 
 const Stack = createNativeStackNavigator();
 
@@ -160,6 +167,10 @@ const AppWrapper = () => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
 	const [navKey, setNavKey] = useState(0); // To force re-creation of the stack navigator
+	const [showCongratulationModal, setShowCongratulationModal] = useState(false);
+	const [showInfoModal, setShowInfoModal] = useState(false);
+	const congratulationRef = useRef(null);
+	const infoRef = useRef(null);
 
 	useEffect(() => {
 		// Whenever `isUserSignedIn` or `UserStatus` changes, update the `navKey`
@@ -175,6 +186,7 @@ const AppWrapper = () => {
 					const finishFetchingUserProfile = await userQuery;
 					if (finishFetchingUserProfile) {
 						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+						console.log("finishFetchingUserProfile.queryUser[0]", finishFetchingUserProfile.queryUser[0]);
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
 						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
 						appStoreInstance.setDesignation(fetchProfileData.designation);
@@ -186,6 +198,8 @@ const AppWrapper = () => {
 						appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 						appStoreInstance.setImagePath(fetchProfileData.imagePath);
 						appStoreInstance.setUserStatus(fetchProfileData.userStatus);
+						appStoreInstance.setCaseLogNumbers(fetchProfileData.targetedCaseLogNumber);
+						appStoreInstance.setLastCaseLogged(fetchProfileData.dateOfBirth);
 					}
 				} catch (error) {
 					console.log(error);
@@ -212,11 +226,89 @@ const AppWrapper = () => {
 		}
 	};
 
+	useEffect(() => {
+		console.log("the latest number of Case Log Numbers", appStoreInstance.CaseLogNumbers);
+		if (appStoreInstance.CaseLogNumbers && appStoreInstance.CaseLogNumbers % 2 === 0) {
+			setShowCongratulationModal(true);
+		}
+	}, [appStoreInstance.CaseLogNumbers]);
+
+	useEffect(() => {
+		console.log("the latest Last Logged Date", appStoreInstance.LastCaseLogged);
+		// if (appStoreInstance.LastCaseLogged && appStoreInstance.LastCaseLogged % 2 === 0) {
+		// 	setShowCongratulationModal(true);
+		// }
+	}, [appStoreInstance.LastCaseLogged]);
+
+	console.log("appStoreInstance.CaseLogNumbers", appStoreInstance.CaseLogNumbers);
+
 	console.log("appStoreInstance.isUserSignedIn, appStoreInstance.UserStatus", appStoreInstance.isUserSignedIn, appStoreInstance.UserStatus);
 	return (
 		<>
 			<StatusBar translucent backgroundColor='$transparent' barStyle='dark-content' />
 			<NavigationContainer key={navKey}>{renderStack()}</NavigationContainer>
+			{/* <HStack space='md' justifyContent='center' p='$4'>
+				<Button onPress={openCongratulationModal} ref={congratulationRef}>
+					<ButtonText>Congratulations</ButtonText>
+				</Button>
+				<Button onPress={openInfoModal} ref={infoRef} variant='outline'>
+					<ButtonText>Information</ButtonText>
+				</Button>
+			</HStack> */}
+
+			{/* Congratulation Modal */}
+			<Modal isOpen={showCongratulationModal} onClose={() => setShowCongratulationModal(false)} finalFocusRef={congratulationRef} size='lg'>
+				<ModalBackdrop />
+				<ModalContent>
+					<ModalHeader>
+						<Heading size='xl' color='$357A71'>
+							Congratulations!
+						</Heading>
+						<ModalCloseButton>
+							<Icon as={CloseIcon} size='sm' color='$gray400' />
+						</ModalCloseButton>
+					</ModalHeader>
+					<ModalBody>
+						<Box bg='$green100' p='$4' borderRadius='$lg'>
+							<Text size='md' color='$green800'>
+								You have made this number of logs. Keep Logging{" "}
+							</Text>
+						</Box>
+					</ModalBody>
+					<ModalFooter>
+						<Button onPress={() => setShowCongratulationModal(false)} variant='primary'>
+							<ButtonText>Keep Logging</ButtonText>
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+
+			{/* Information Modal */}
+			<Modal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} finalFocusRef={infoRef} size='lg'>
+				<ModalBackdrop />
+				<ModalContent>
+					<ModalHeader>
+						<Heading size='xl' color='#CC3F0C'>
+							Not Logged In!
+						</Heading>
+						<ModalCloseButton>
+							<Icon as={CloseIcon} size='sm' color='$gray400' />
+						</ModalCloseButton>
+					</ModalHeader>
+					<ModalBody>
+						<Box p='$4' borderRadius='$lg'>
+							<Text size='md' color='#CC3F0C'>
+								You haven't logged in for more than 48 hours now!
+							</Text>
+						</Box>
+					</ModalBody>
+					<ModalFooter>
+						<Button onPress={() => setShowInfoModal(false)} variant='primary'>
+							<ButtonText>Create a log now</ButtonText>
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
 		</>
 	);
 };

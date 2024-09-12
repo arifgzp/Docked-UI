@@ -16,7 +16,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { formatRFC3339 } from "date-fns";
-import { toJS } from "mobx";
+import { set, toJS } from "mobx";
 import { observer } from "mobx-react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -257,7 +257,18 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		try {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
-			await query;
+			const data = await query;
+			if (data) {
+				const updateUserQuery = store.updateUser(AppStore.UserId, {
+					set: { targetedCaseLogNumber: appStoreInstance.CaseLogNumbers + 1, dateOfBirth: formatRFC3339(new Date()) },
+				});
+				setQuery(updateUserQuery);
+				const updateUser = await updateUserQuery;
+				if (updateUser) {
+					appStoreInstance.setCaseLogNumbers(appStoreInstance.CaseLogNumbers + 1);
+					appStoreInstance.setLastCaseLogged(formatRFC3339(new Date()));
+				}
+			}
 			reset();
 		} catch (error) {
 			console.log(error);
@@ -321,7 +332,18 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		try {
 			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
 			setQuery(query);
-			await query;
+			const data = await query;
+			if (data) {
+				const updateUserQuery = store.updateUser(AppStore.UserId, {
+					set: { targetedCaseLogNumber: appStoreInstance.CaseLogNumbers + 1, dateOfBirth: formatRFC3339(new Date()) },
+				});
+				setQuery(updateUserQuery);
+				const updateUser = await updateUserQuery;
+				if (updateUser) {
+					appStoreInstance.setCaseLogNumbers(appStoreInstance.CaseLogNumbers + 1);
+					appStoreInstance.setLastCaseLogged(formatRFC3339(new Date()));
+				}
+			}
 			reset();
 		} catch (error) {
 			console.log(error);
