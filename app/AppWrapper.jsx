@@ -32,6 +32,7 @@ import { Icon } from "@gluestack-ui/themed";
 import { CloseIcon } from "@gluestack-ui/themed";
 import { Button } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
+import { formatRFC3339, parseISO, differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
 
 const Stack = createNativeStackNavigator();
 
@@ -227,17 +228,43 @@ const AppWrapper = () => {
 	};
 
 	useEffect(() => {
-		console.log("the latest number of Case Log Numbers", appStoreInstance.CaseLogNumbers);
+		console.log("the latest number of Case Log Numbers", appStoreInstance.CaseLogNumbers, appStoreInstance.LastCaseLogged);
 		if (appStoreInstance.CaseLogNumbers && appStoreInstance.CaseLogNumbers % 2 === 0) {
 			setShowCongratulationModal(true);
 		}
 	}, [appStoreInstance.CaseLogNumbers]);
 
 	useEffect(() => {
-		console.log("the latest Last Logged Date", appStoreInstance.LastCaseLogged);
-		// if (appStoreInstance.LastCaseLogged && appStoreInstance.LastCaseLogged % 2 === 0) {
-		// 	setShowCongratulationModal(true);
-		// }
+		const checkTimeDifference = () => {
+			if (appStoreInstance.LastCaseLogged) {
+				const lastLoggedDate = parseISO(appStoreInstance.LastCaseLogged);
+				const currentDate = new Date();
+
+				console.log("Last Logged Date:", formatRFC3339(lastLoggedDate));
+				console.log("Current Date:", formatRFC3339(currentDate));
+
+				const minutesDiff = differenceInMinutes(currentDate, lastLoggedDate);
+				const hoursDiff = differenceInHours(currentDate, lastLoggedDate);
+				const daysDiff = differenceInDays(currentDate, lastLoggedDate);
+
+				if (daysDiff >= 7) {
+					console.log("7 days have passed since last case logged");
+					setShowInfoModal(true);
+				} else if (hoursDiff >= 48) {
+					console.log("48 hours have passed since last case logged");
+					setShowInfoModal(true);
+				} else if (minutesDiff >= 2) {
+					console.log("2 minutes have passed since last case logged");
+					setShowInfoModal(true);
+				} else {
+					console.log("Not enough time has passed to trigger congratulation modal");
+				}
+			} else {
+				console.log("No last logged date available");
+			}
+		};
+
+		checkTimeDifference();
 	}, [appStoreInstance.LastCaseLogged]);
 
 	console.log("appStoreInstance.CaseLogNumbers", appStoreInstance.CaseLogNumbers);

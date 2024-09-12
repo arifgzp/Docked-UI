@@ -176,6 +176,8 @@ const AppStore = types
 		_caseLogFormToGet: types.maybeNull(types.string),
 		_userStatus: types.maybeNull(types.string),
 		_resetDate: types.maybeNull(types.boolean),
+		_caseLogNumbers: types.maybeNull(types.integer),
+		_lastCaseLogged: types.maybeNull(types.string),
 	})
 	.views((self) => ({
 		get UserId() {
@@ -184,6 +186,14 @@ const AppStore = types
 
 		get ResetDate() {
 			return self._resetDate;
+		},
+
+		get LastCaseLogged() {
+			return self._lastCaseLogged;
+		},
+
+		get CaseLogNumbers() {
+			return self._caseLogNumbers;
 		},
 
 		get UserStatus() {
@@ -345,6 +355,14 @@ const AppStore = types
 
 		setResetDate(resetDate) {
 			self._resetDate = resetDate;
+		},
+
+		setLastCaseLogged(lastCaseLogged) {
+			self._lastCaseLogged = lastCaseLogged;
+		},
+
+		setCaseLogNumbers(caseLogNumbers) {
+			self._caseLogNumbers = caseLogNumbers;
 		},
 
 		setUserStatus(userStatus) {
