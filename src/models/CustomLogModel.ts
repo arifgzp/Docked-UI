@@ -2,6 +2,7 @@ import { Instance } from "mobx-state-tree";
 import { CustomLogModelBase, selectFromCustomLog } from "./CustomLogModel.base";
 import { fieldsModelPrimitives } from "./FieldsModel.base";
 import { updateFieldsModelPrimitives } from "./FieldsModel";
+import { formLabelsModelPrimitives } from "./FormLabelsModel.base";
 
 /* The TypeScript type of an instance of CustomLogModel */
 export interface CustomLogModelType extends Instance<typeof CustomLogModel.Type> {}
@@ -19,4 +20,4 @@ export const CustomLogModel = CustomLogModelBase.actions((self) => ({
 	},
 }));
 
-export const updateCustomLogPrimitive = selectFromCustomLog().createdOn.updatedOn.customName.fields(updateFieldsModelPrimitives);
+export const updateCustomLogPrimitive = selectFromCustomLog().createdOn.updatedOn.customName.formLabels(formLabelsModelPrimitives);

@@ -20,26 +20,26 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 	const { control, handleSubmit, reset } = useForm({
 		defaultValues: {
 			customName: "",
-			fields: [],
+			formLabels: [],
 		},
 	});
 
 	const { fields, append, remove } = useFieldArray({
 		control,
-		name: "fields",
+		name: "formLabels",
 	});
 
 	const [customLogData, setCustomLogData] = useState({});
 
 	const addField = () => {
-		append({ label: "", value: "" });
+		append({ label: "" });
 	};
 
 	const handleOnSave = async (formData) => {
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		console.log(formData);
-		if (Array.isArray(formData.fields)) {
-			formData.fields.forEach((field) => {
+		if (Array.isArray(formData.formLabels)) {
+			formData.formLabels.forEach((field) => {
 				field.createdOn = field.updatedOn = formatRFC3339(new Date());
 			});
 		}
@@ -64,9 +64,9 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 		let missingValues = {};
 
 		// Handle the fields separately
-		if (dbData.fields && uiData.fields) {
-			const dbFields = dbData.fields;
-			const uiFields = uiData.fields;
+		if (dbData.formLabels && uiData.formLabels) {
+			const dbFields = dbData.formLabels;
+			const uiFields = uiData.formLabels;
 
 			// Convert dbFields object to array
 			const dbFieldsArray = Object.values(dbFields);
@@ -81,7 +81,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 
 		// Handle other top-level properties
 		Object.keys(dbData).forEach((key) => {
-			if (key !== "fields") {
+			if (key !== "formLabels") {
 				const dbValue = dbData[key];
 				const uiValue = uiData[key];
 
@@ -105,8 +105,8 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 		console.log("formData is being edited", formData);
 		delete formData.id;
 		delete formData.__typename;
-		if (Array.isArray(formData.fields)) {
-			formData.fields.forEach((field) => {
+		if (Array.isArray(formData.formLabels)) {
+			formData.formLabels.forEach((field) => {
 				delete field.__typename;
 				delete field.id;
 				field.updatedOn = formatRFC3339(new Date());
@@ -121,7 +121,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 			// Handle field removal
 			if (dataToBeDeleted.fields && dataToBeDeleted.fields.length > 0) {
 				updateInput.remove = {
-					fields: dataToBeDeleted.fields.map((id) => ({ id })),
+					formLabels: dataToBeDeleted.fields.map((id) => ({ id })),
 				};
 			}
 
@@ -145,7 +145,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 				setCustomLogData(logData[0]);
 			};
 			fetchData();
-			console.log("logData", logData[0]);
+			console.log("logData", logData);
 		}
 	}, []);
 
@@ -187,7 +187,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 												</Text>
 												<Controller
 													control={control}
-													name={`fields.${index}.label`}
+													name={`formLabels.${index}.label`}
 													render={({ field: { onChange, onBlur, value } }) => (
 														<Input variant='outline' size='sm'>
 															<InputField onBlur={onBlur} onChangeText={onChange} value={value} />
@@ -195,7 +195,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 													)}
 												/>
 											</VStack>
-											<VStack space='sm'>
+											{/* <VStack space='sm'>
 												<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
 													Value
 												</Text>
@@ -208,7 +208,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 														</Input>
 													)}
 												/>
-											</VStack>
+											</VStack> */}
 										</Box>
 									</Box>
 								</Box>

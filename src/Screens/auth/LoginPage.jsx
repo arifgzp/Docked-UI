@@ -96,8 +96,17 @@ const LoginPage = ({ navigation }) => {
 						setQuery(userQuery);
 						const finishFetchingUserProfile = await userQuery;
 						if (finishFetchingUserProfile) {
-							console.log("finishFetchingUserProfile", finishFetchingUserProfile);
 							const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+							// console.log("appStoreInstance.NotificationToken", appStoreInstance.NotificationToken);
+							// const notificationData = {
+							// 	userId: appStoreInstance.UserId,
+							// 	userName: appStoreInstance.UserName,
+							// 	name: appStoreInstance.Name,
+							// 	token: appStoreInstance.NotificationToken,
+							// };
+							// console.log("notificationData", notificationData);
+							// await appStoreInstance.notificationTokenCall(notificationData);
+							console.log("finishFetchingUserProfile", finishFetchingUserProfile);
 							console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
 							AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
 							AppStore.setSubSpecialty(fetchProfileData.subSpecialty);

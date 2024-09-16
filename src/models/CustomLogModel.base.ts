@@ -6,17 +6,17 @@ import { IObservableArray } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { FieldsAggregateResultModel, FieldsAggregateResultModelType } from "./FieldsAggregateResultModel"
-import { FieldsAggregateResultModelSelector } from "./FieldsAggregateResultModel.base"
-import { FieldsModel, FieldsModelType } from "./FieldsModel"
-import { FieldsModelSelector } from "./FieldsModel.base"
-import { FieldsFilter, FieldsOrder } from "./RootStore.base"
+import { FormLabelsAggregateResultModel, FormLabelsAggregateResultModelType } from "./FormLabelsAggregateResultModel"
+import { FormLabelsAggregateResultModelSelector } from "./FormLabelsAggregateResultModel.base"
+import { FormLabelsModel, FormLabelsModelType } from "./FormLabelsModel"
+import { FormLabelsModelSelector } from "./FormLabelsModel.base"
+import { FormLabelsFilter, FormLabelsOrder } from "./RootStore.base"
 import { RootStoreType } from "./index"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  fields: IObservableArray<FieldsModelType>;
+  formLabels: IObservableArray<FormLabelsModelType>;
 }
 
 /**
@@ -31,8 +31,8 @@ export const CustomLogModelBase = withTypedRefs<Refs>()(ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     customName: types.union(types.undefined, types.null, types.string),
-    fields: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => FieldsModel))))),
-    fieldsAggregate: types.union(types.undefined, types.null, types.late((): any => FieldsAggregateResultModel)),
+    formLabels: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => FormLabelsModel))))),
+    formLabelsAggregate: types.union(types.undefined, types.null, types.late((): any => FormLabelsAggregateResultModel)),
   })
   .views(self => ({
     get store() {
@@ -45,8 +45,8 @@ export class CustomLogModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get customName() { return this.__attr(`customName`) }
-  fields(builder: string | FieldsModelSelector | ((selector: FieldsModelSelector) => FieldsModelSelector) | undefined, args?: { filter?: (FieldsFilter | null), order?: (FieldsOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`fields`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), FieldsModelSelector, builder) }
-  fieldsAggregate(builder: string | FieldsAggregateResultModelSelector | ((selector: FieldsAggregateResultModelSelector) => FieldsAggregateResultModelSelector) | undefined, args?: { filter?: (FieldsFilter | null) }) { return this.__child(`fieldsAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), FieldsAggregateResultModelSelector, builder) }
+  formLabels(builder: string | FormLabelsModelSelector | ((selector: FormLabelsModelSelector) => FormLabelsModelSelector) | undefined, args?: { filter?: (FormLabelsFilter | null), order?: (FormLabelsOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`formLabels`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), FormLabelsModelSelector, builder) }
+  formLabelsAggregate(builder: string | FormLabelsAggregateResultModelSelector | ((selector: FormLabelsAggregateResultModelSelector) => FormLabelsAggregateResultModelSelector) | undefined, args?: { filter?: (FormLabelsFilter | null) }) { return this.__child(`formLabelsAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), FormLabelsAggregateResultModelSelector, builder) }
 }
 export function selectFromCustomLog() {
   return new CustomLogModelSelector()

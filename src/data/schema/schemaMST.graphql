@@ -63,6 +63,8 @@ type User @secret(field: "password") {
     adminWorkLog: [AdminWorkLog] @dgraph(pred:"adminWorkLog")
     thesisLog: [ThesisLog] @dgraph(pred:"thesisLog")
     customLog: [CustomLog] @dgraph(pred:"customLog")
+    thesisCases: [ThesisCase] @dgraph(pred:"thesisCases")
+    customCases: [CustomCase] @dgraph(pred:"customCases")
     logProfile: LogProfile @dgraph(pred:"logProfile")
     imagePath: String @dgraph(pred:"imagePath")
 }
@@ -72,7 +74,7 @@ type ThesisLog{
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
     thesisName: String @search @dgraph(pred:"thesisName")
-    fields: [Fields] @dgraph(pred:"fields")
+    formLabels: [FormLabels] @dgraph(pred:"formLabels")
 }
 
 type CustomLog{
@@ -80,7 +82,14 @@ type CustomLog{
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
     customName: String @search @dgraph(pred:"customName")
-    fields: [Fields] @dgraph(pred:"fields")
+    formLabels: [FormLabels] @dgraph(pred:"formLabels")
+}
+
+type FormLabels{
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    label: String @search @dgraph(pred:"label")
 }
 
 type Fields{
@@ -89,6 +98,22 @@ type Fields{
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
     label: String @search @dgraph(pred:"label")
     value: String @search @dgraph(pred:"value")
+}
+
+type ThesisCase{
+    id: ID!
+    caseName: String @search @dgraph(pred:"caseName")
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    fields: [Fields] @dgraph(pred:"fields")
+}
+
+type CustomCase{
+    id: ID!
+    caseName: String @search @dgraph(pred:"caseName")
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    fields: [Fields] @dgraph(pred:"fields")
 }
 
 type AnaesthesiaCaseLog  {

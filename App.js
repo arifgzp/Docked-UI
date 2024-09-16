@@ -21,8 +21,8 @@ enableScreens(true);
 
 function App() {
 	const { expoPushToken, notification } = usePushNotifications();
-  const data = JSON.stringify(notification, undefined, 2);
-  console.log('expoPushToken?.data', expoPushToken?.data)
+	const data = JSON.stringify(notification, undefined, 2);
+	console.log("expoPushToken?.data", expoPushToken?.data);
 	const [fontsLoaded] = useFonts({
 		Inter: require("./assets/fonts/Inter.ttf"),
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),

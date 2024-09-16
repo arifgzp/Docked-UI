@@ -15,6 +15,9 @@ import { oralMedicineAndRadiologyCaseLogModelPrimitives } from "./OralMedicineAn
 import { oralRadiologyModelPrimitives, selectFromOralRadiology } from "./OralRadiologyModel.base";
 import { updateThesisLogPrimitive } from "./ThesisLogModel";
 import { updateCustomLogPrimitive } from "./CustomLogModel";
+import { UpdateCaseModelPrimitives } from "./CaseModel";
+import { updateCustomCaseModelPrimitives } from "./CustomCaseModel";
+import { updateThesisCaseModelPrimitives } from "./ThesisCaseModel";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -52,3 +55,5 @@ export const OralMedicineAndRadiologyCaseLogByModelSelector = selectFromUser().o
 export const ThesisLogByModelSelector = selectFromUser().thesisLog(updateThesisLogPrimitive);
 export const CustomLogByModelSelector = selectFromUser().customLog(updateCustomLogPrimitive);
 export const OralRadiologyByModelSelector = selectFromUser().oralRadiology(oralRadiologyModelPrimitives);
+export const ThesisCaseByModelSelector = selectFromUser().thesisCases(updateThesisCaseModelPrimitives);
+export const CustomCaseByModelSelector = selectFromUser().customCases(updateCustomCaseModelPrimitives);

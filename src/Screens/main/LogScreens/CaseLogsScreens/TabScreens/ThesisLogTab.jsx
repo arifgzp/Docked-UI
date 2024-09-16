@@ -59,12 +59,12 @@ const ThesisLogTab = () => {
 	const navigation = useNavigation();
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
-	const [thesisLogToBeDeleted, setThesisLogToBeDeleted] = useState();
+	const [thesisCaseToBeDeleted, setThesisCaseToBeDeleted] = useState();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const fetchThesisLog = store.fetchThesisLogByUser(appStoreInstance.UserName);
+				const fetchThesisLog = store.fetchThesisCaseByUser(appStoreInstance.UserName);
 				setQuery(fetchThesisLog);
 				await fetchThesisLog;
 				// Updating the cardDetails state with fetched data
@@ -83,39 +83,60 @@ const ThesisLogTab = () => {
 		}
 	}, [isFocused]);
 
+	useEffect(() => {
+		const fetchThesisLogData = async () => {
+			try {
+				const fetchThesisLogData = store.fetchThesisLogByUser(appStoreInstance.UserName);
+				setQuery(fetchThesisLogData);
+				await fetchThesisLogData;
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		if (isFocused) {
+			fetchThesisLogData();
+		}
+	}, [isFocused]);
+
 	const handleButtonPress = (id) => {
+		navigation.navigate("Edit A Case", { id: id, edit: true, fieldsToGetFrom: "Thesis" });
+		// console.log("Navigating to AcademicLogEditScreen Log");
+		console.log("id for press", id);
+	};
+
+	const handleEditThesisLog = (id) => {
 		navigation.navigate("ThesisLogFormScreenEdit", { id: id, edit: true });
-		console.log("Navigating to AcademicLogEditScreen Log");
 	};
 
 	const handleDeleteLog = (card) => {
 		console.log("what is this card", card);
 		setShowModal(true);
-		setThesisLogToBeDeleted(card);
+		setThesisCaseToBeDeleted(card);
 	};
 
 	const handleOnConfirmDeleteLog = async () => {
 		try {
-			let typename = thesisLogToBeDeleted.__typename;
+			let typename = thesisCaseToBeDeleted.__typename;
 			let modifiedTypename = typename.charAt(0).toLowerCase() + typename.slice(1);
 			console.log("modifiedTypename", modifiedTypename);
 			setShowModal(false);
-			const updateUserQuery = store.updateUser(appStoreInstance.UserId, { remove: { [modifiedTypename]: { id: thesisLogToBeDeleted.id } } });
+			const updateUserQuery = store.updateUser(appStoreInstance.UserId, { remove: { [`${modifiedTypename}s`]: { id: thesisCaseToBeDeleted.id } } });
 			setQuery(updateUserQuery);
 			const data = await updateUserQuery;
 			if (data) {
-				const rootStoreAPIName = `delete${thesisLogToBeDeleted.__typename}`;
+				const rootStoreAPIName = `delete${thesisCaseToBeDeleted.__typename}`;
 				const rootStoreAPIRef = store[rootStoreAPIName];
 				if (!rootStoreAPIRef) {
 					const message = `please check rootStoreAPIRef. not found in root store trying to find=>message ${rootStoreAPIName}`;
 					console.error(message);
 					throw new Error(message);
 				}
-				let query = rootStoreAPIRef([thesisLogToBeDeleted.id]);
+				let query = rootStoreAPIRef([thesisCaseToBeDeleted.id]);
 				if (query) {
-					console.log("Query from query delete with academicLogToBeDeleted ID", thesisLogToBeDeleted.id, query);
+					console.log("Query from query delete with academicLogToBeDeleted ID", thesisCaseToBeDeleted.id, query);
 					setQuery(query);
-					setThesisLogToBeDeleted(null);
+					setThesisCaseToBeDeleted(null);
 					await query;
 				}
 			}
@@ -132,10 +153,10 @@ const ThesisLogTab = () => {
 					<HStack width='$100%' pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
 						<HStack space='sm'>
 							<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-								Thesis Name:
+								From Thesis
 							</Text>
 							<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-								{card.thesisName ? card.thesisName : "--"}
+								{card.caseName ? card.caseName : "--"}
 							</Text>
 						</HStack>
 						<HStack alignItems='center'>
@@ -147,27 +168,32 @@ const ThesisLogTab = () => {
 							</Button>
 						</HStack>
 					</HStack>
-					{card.fields.map((field, index) => {
-						return (
-							<HStack width='$100%' pt='$3' pl='$5' pr='$1' space='sm'>
-								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-									{field.label ? field.label : "--"}:
-								</Text>
-								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-									{field.value ? field.value : "--"}
-								</Text>
-							</HStack>
-						);
-					})}
+					<HStack width='$100%' pt='$3' pl='$5' pr='$1' space='sm'>
+						<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+							Case No:
+						</Text>
+						<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+							{card.id ? card.id : "--"}
+						</Text>
+					</HStack>
 				</VStack>
 			</Card>
 		);
 	};
 
+	const handleOnAddCase = () => {
+		navigation.navigate("Create New Case", { fieldsToGetFrom: "Thesis" });
+	};
+
 	let cardDetails = [];
-	cardDetails.push(...store.ThesisLogList);
+	cardDetails.push(...store.ThesisCaseList);
 	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
 	//TODO : optimize the performance using useMemo
+
+	let thesisLog = [];
+	thesisLog.push(...store.ThesisLogList);
+
+	console.log("thesisLog lost", thesisLog);
 
 	if (!isReady) {
 		return <IsReadyLoader />;
@@ -179,6 +205,24 @@ const ThesisLogTab = () => {
 			<Box pt={20} flex={1} backgroundColor='$primaryBackground' alignItems='center'>
 				<ScrollView width={"$100%"} keyboardShouldPersistTaps='handled'>
 					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
+						<HStack width={"$100%"} justifyContent='space-between'>
+							<Box>
+								<Button onPress={handleEditThesisLog.bind(null, thesisLog[0]?.id)} size='sm' variant='link'>
+									<HStack space='sm' alignItems='center'>
+										<ButtonIcon as={Ionicons} size={15} name='create' color='#367B71' />
+										<ButtonText color='#000'>Edit Thesis Log</ButtonText>
+									</HStack>
+								</Button>
+							</Box>
+							<Box>
+								<Button onPress={handleOnAddCase} size='sm' variant='link'>
+									<HStack space='sm' alignItems='center'>
+										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
+										<ButtonText color='#000'>Add a new case</ButtonText>
+									</HStack>
+								</Button>
+							</Box>
+						</HStack>
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
 								return <CardToRender card={card} index={index} />;

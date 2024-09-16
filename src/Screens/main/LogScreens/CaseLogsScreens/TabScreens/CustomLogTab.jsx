@@ -50,6 +50,7 @@ import { observer } from "mobx-react";
 import { format } from "date-fns";
 import { ScrollView } from "@gluestack-ui/themed";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
+import { Pressable } from "@gluestack-ui/themed";
 
 const CustomLogTab = () => {
 	const isReady = useIsReady();
@@ -59,20 +60,26 @@ const CustomLogTab = () => {
 	const navigation = useNavigation();
 	const [showModal, setShowModal] = useState(false);
 	const ref = useRef(null);
-	const [customLogToBeDeleted, setCustomLogToBeDeleted] = useState();
+	const [customCaseToBeDeleted, setCustomCaseToBeDeleted] = useState();
+	const [showCustomCasesModal, setCustomCasesModal] = useState(false);
+	const [showCustomLogsModal, setCustomLogsModal] = useState(false);
+
+	const handleOnAddCase = () => {
+		//
+		setCustomCasesModal(true);
+	};
+
+	const handleOnSelectCustomLog = (id) => {
+		setCustomCasesModal(false);
+		navigation.navigate("Create New Case", { fieldsToGetFrom: "Custom", id: id });
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const fetchCustomLog = store.fetchCustomLogByUser(appStoreInstance.UserName);
-				setQuery(fetchCustomLog);
-				await fetchCustomLog;
-				// Updating the cardDetails state with fetched data
-				// let updatedCardDetails = [];
-				// updatedCardDetails.push(...store.AcademicLogList, ...store.AdminWorkLogList, ...store.PublicationLogList);
-				// updatedCardDetails = orderBy(updatedCardDetails, ["updatedOn"], ["desc"]);
-				// setCardDetails(updatedCardDetails);
-				// console.log("cardDetails is on the Academic Tab", updatedCardDetails);
+				const fetchCustomCase = store.fetchCustomCaseByUser(appStoreInstance.UserName);
+				setQuery(fetchCustomCase);
+				await fetchCustomCase;
 			} catch (error) {
 				console.log(error);
 			}
@@ -83,39 +90,71 @@ const CustomLogTab = () => {
 		}
 	}, [isFocused]);
 
+	useEffect(() => {
+		const fetchCustomLogData = async () => {
+			try {
+				const fetchCustomLogData = store.fetchCustomLogByUser(appStoreInstance.UserName);
+				setQuery(fetchCustomLogData);
+				await fetchCustomLogData;
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		if (isFocused) {
+			fetchCustomLogData();
+		}
+	}, [isFocused]);
+
 	const handleButtonPress = (id) => {
+		navigation.navigate("Edit A Case", { id: id, edit: true, fieldsToGetFrom: "Custom" });
+		console.log("id for press", id);
+	};
+
+	const handleOnPressEditCustomLogs = () => {
+		setCustomLogsModal(true);
+	};
+
+	const handleEditCustomLog = (id) => {
 		navigation.navigate("CustomLogFormScreenEdit", { id: id, edit: true });
-		console.log("Navigating to CustomLogEditScreen Log");
+		setCustomLogsModal(false);
 	};
 
 	const handleDeleteLog = (card) => {
 		console.log("what is this card", card);
 		setShowModal(true);
-		setCustomLogToBeDeleted(card);
+		setCustomCaseToBeDeleted(card);
+		setCustomLogsModal(false);
 	};
 
 	const handleOnConfirmDeleteLog = async () => {
 		try {
-			let typename = customLogToBeDeleted.__typename;
+			let typename = customCaseToBeDeleted.__typename;
 			let modifiedTypename = typename.charAt(0).toLowerCase() + typename.slice(1);
 			console.log("modifiedTypename", modifiedTypename);
 			setShowModal(false);
-			const updateUserQuery = store.updateUser(appStoreInstance.UserId, { remove: { [modifiedTypename]: { id: customLogToBeDeleted.id } } });
+			const updateUserQuery = store.updateUser(appStoreInstance.UserId, {
+				remove: {
+					[modifiedTypename === "customLog" ? modifiedTypename : `${modifiedTypename}s`]: {
+						id: customCaseToBeDeleted.id,
+					},
+				},
+			});
 			setQuery(updateUserQuery);
 			const data = await updateUserQuery;
 			if (data) {
-				const rootStoreAPIName = `delete${customLogToBeDeleted.__typename}`;
+				const rootStoreAPIName = `delete${customCaseToBeDeleted.__typename}`;
 				const rootStoreAPIRef = store[rootStoreAPIName];
 				if (!rootStoreAPIRef) {
 					const message = `please check rootStoreAPIRef. not found in root store trying to find=>message ${rootStoreAPIName}`;
 					console.error(message);
 					throw new Error(message);
 				}
-				let query = rootStoreAPIRef([customLogToBeDeleted.id]);
+				let query = rootStoreAPIRef([customCaseToBeDeleted.id]);
 				if (query) {
-					console.log("Query from query delete with academicLogToBeDeleted ID", customLogToBeDeleted.id, query);
+					console.log("Query from query delete with academicLogToBeDeleted ID", customCaseToBeDeleted.id, query);
 					setQuery(query);
-					setCustomLogToBeDeleted(null);
+					setCustomCaseToBeDeleted(null);
 					await query;
 				}
 			}
@@ -124,7 +163,7 @@ const CustomLogTab = () => {
 		}
 	};
 
-	const CardToRender = ({ card, index }) => {
+	const CardToRender = ({ config, card, index }) => {
 		return (
 			<Card key={card.id || index} variant='filled' m='$3' width='$100%' borderRadius='$3xl' p='$0'>
 				{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute' />}
@@ -132,10 +171,10 @@ const CustomLogTab = () => {
 					<HStack width='$100%' pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
 						<HStack space='sm'>
 							<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-								Custom Name:
+								From Custom Log:
 							</Text>
 							<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-								{card.customName ? card.customName : "--"}
+								{card.caseName ? card.caseName : "--"}
 							</Text>
 						</HStack>
 						<HStack alignItems='center'>
@@ -147,38 +186,57 @@ const CustomLogTab = () => {
 							</Button>
 						</HStack>
 					</HStack>
-					{card.fields.map((field, index) => {
-						return (
-							<HStack width='$100%' pt='$3' pl='$5' pr='$1' space='sm'>
-								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-									{field.label ? field.label : "--"}:
-								</Text>
-								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-									{field.value ? field.value : "--"}
-								</Text>
-							</HStack>
-						);
-					})}
+					<HStack width='$100%' pt='$3' pl='$5' pr='$1' space='sm'>
+						<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+							Case No:
+						</Text>
+						<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+							{card.id ? card.id : "--"}
+						</Text>
+					</HStack>
 				</VStack>
 			</Card>
 		);
 	};
 
 	let cardDetails = [];
-	cardDetails.push(...store.CustomLogList);
+	cardDetails.push(...store.CustomCaseList);
 	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
 	//TODO : optimize the performance using useMemo
+
+	let customLogs = [];
+	customLogs.push(...store.CustomLogList);
+
+	console.log("Custom LOG LIST", customLogs);
 
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
 
-	console.log("THIS IS THE CARD DETAILS FOR CARDS", cardDetails);
+	console.log("THIS IS THE CARD DETAILS FOR CARDS OF CUSTOM LOGS", cardDetails);
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 			<Box pt={20} flex={1} backgroundColor='$primaryBackground' alignItems='center'>
 				<ScrollView width={"$100%"} keyboardShouldPersistTaps='handled'>
 					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
+						<HStack width={"$100%"} justifyContent='space-between'>
+							<Box>
+								<Button onPress={handleOnPressEditCustomLogs} size='sm' variant='link'>
+									<HStack space='sm' alignItems='center'>
+										<ButtonIcon as={Ionicons} size={15} name='create' color='#367B71' />
+										<ButtonText color='#000'>Edit Custom Logs</ButtonText>
+									</HStack>
+								</Button>
+							</Box>
+							<Box>
+								<Button onPress={handleOnAddCase} size='sm' variant='link'>
+									<HStack space='sm' alignItems='center'>
+										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
+										<ButtonText color='#000'>Add a new case</ButtonText>
+									</HStack>
+								</Button>
+							</Box>
+						</HStack>
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
 								return <CardToRender card={card} index={index} />;
@@ -229,6 +287,96 @@ const CustomLogTab = () => {
 										</Button>
 									</HStack>
 								</ModalFooter>
+							</ModalContent>
+						</Modal>
+						<Modal isOpen={showCustomCasesModal} onClose={() => setCustomCasesModal(false)} size='lg'>
+							<ModalBackdrop />
+							<ModalContent pb='$4'>
+								<ModalHeader>
+									<Heading size='lg'>Select a Custom Log</Heading>
+									<ModalCloseButton>
+										<Icon
+											as={CloseIcon}
+											size='md'
+											className='stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900'
+										/>
+									</ModalCloseButton>
+								</ModalHeader>
+								<ModalBody pt='$2'>
+									<ScrollView>
+										<VStack space='md'>
+											{customLogs.map((customlog, index) => {
+												console.log("customlog, ", customlog);
+												return (
+													<Pressable
+														key={customlog.id}
+														onPress={handleOnSelectCustomLog.bind(null, customlog.id)}
+														bg='$backgroundLight100'
+														borderColor='$borderLight300'
+														borderWidth={1}
+														borderRadius='$md'
+														p='$3'
+														_hover={{ bg: "$backgroundLight200" }}
+														_pressed={{ bg: "$backgroundLight300" }}>
+														<Text>{customlog.customName}</Text>
+													</Pressable>
+												);
+											})}
+										</VStack>
+									</ScrollView>
+								</ModalBody>
+							</ModalContent>
+						</Modal>
+						<Modal isOpen={showCustomLogsModal} onClose={() => setCustomLogsModal(false)} size='lg'>
+							<ModalBackdrop />
+							<ModalContent pb='$4'>
+								<ModalHeader>
+									<Heading size='lg'>Custom Logs</Heading>
+									<ModalCloseButton>
+										<Icon
+											as={CloseIcon}
+											size='md'
+											className='stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900'
+										/>
+									</ModalCloseButton>
+								</ModalHeader>
+								<ModalBody pt='$2'>
+									<ScrollView>
+										<VStack space='md'>
+											{customLogs.map((customlog, index) => {
+												console.log("customlog, ", customlog);
+												return (
+													<HStack width='$100%' pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
+														<HStack space='sm'>
+															<Text size='xs' fontFamily='Inter_Bold' color='#000'>
+																{customlog.customName ? customlog.customName : "--"}
+															</Text>
+														</HStack>
+														<HStack alignItems='center'>
+															<Button
+																bg='transparent'
+																height={30}
+																borderRadius='$full'
+																size='xs'
+																onPress={() => handleDeleteLog(customlog)}
+																ref={ref}>
+																<ButtonIcon as={Ionicons} size={20} name='trash' color='#367B71' />
+															</Button>
+															<Button
+																bg='transparent'
+																onPress={handleEditCustomLog.bind(null, customlog.id)}
+																height={30}
+																borderRadius='$full'
+																size='xs'>
+																<ButtonIcon as={Ionicons} size={20} name='create' color='#367B71' />
+															</Button>
+														</HStack>
+													</HStack>
+												);
+											})}
+										</VStack>
+									</ScrollView>
+								</ModalBody>
 							</ModalContent>
 						</Modal>
 					</VStack>

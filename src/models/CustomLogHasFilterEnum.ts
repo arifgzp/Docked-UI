@@ -11,7 +11,7 @@ export enum CustomLogHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
 customName="customName",
-fields="fields"
+formLabels="formLabels"
 }
 
 /**
@@ -21,5 +21,5 @@ export const CustomLogHasFilterEnumType = types.enumeration("CustomLogHasFilter"
         "createdOn",
   "updatedOn",
   "customName",
-  "fields",
+  "formLabels",
       ])

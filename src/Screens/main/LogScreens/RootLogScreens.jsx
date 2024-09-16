@@ -10,6 +10,7 @@ import { ButtonText } from "@gluestack-ui/themed";
 import AcademicLogFormScreen from "./Academic Log/AcademicLogFormScreen";
 import ThesisLogFormScreen from "./ThesisLogs/ThesisLogFormScreen";
 import CustomLogFormScreen from "./Custom Log/CustomLogFormScreen";
+import CreateNewCase from "./CreateNewCase";
 
 const EditProfileButon = ({ navigation }) => {
 	return (
@@ -108,6 +109,32 @@ export default function RootLogScreens({ navigation }) {
 				component={CustomLogFormScreen}
 				options={{
 					title: "Custom Log",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='Create New Case'
+				component={CreateNewCase}
+				options={{
+					title: "Create New Case",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='Edit A Case'
+				component={CreateNewCase}
+				options={{
+					title: "Edit Case",
 					headerShown: true,
 					headerStyle: { backgroundColor: "#FFF" },
 					headerTitleStyle: {

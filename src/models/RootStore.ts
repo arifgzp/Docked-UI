@@ -72,6 +72,14 @@ import {
 	selectFromUpdateCustomLogPayload,
 	updateCustomLogPrimitive,
 	deleteCustomLogPayloadModelPrimitives,
+	ThesisCaseByModelSelector,
+	CustomCaseByModelSelector,
+	selectFromUpdateThesisCasePayload,
+	updateThesisCaseModelPrimitives,
+	deleteThesisCasePayloadModelPrimitives,
+	selectFromUpdateCustomCasePayload,
+	updateCustomCaseModelPrimitives,
+	deleteCustomCasePayloadModelPrimitives,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
@@ -1178,6 +1186,144 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return self.mutateDeleteCustomLog(filterVariable, resultSelector, optimisticDelete);
 	},
 
+	// ThesisCase Queries
+	updateUserThesisCase(userId, updateUserThesisCaseInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updateUserThesisCaseInfo);
+		const setDataPatch = updateUserThesisCaseInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(ThesisCaseByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserThesisCase Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserThesisCase Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateThesisCase(thesisCaseId, updateThesisCaseInfo) {
+		const dataFilter = {
+			id: thesisCaseId,
+		};
+		console.log("thesisCaseId", thesisCaseId);
+		console.log("updateThesisCaseInfo", updateThesisCaseInfo);
+		const setDataPatch = updateThesisCaseInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateThesisCaseResultSelector = selectFromUpdateThesisCasePayload().thesisCase(updateThesisCaseModelPrimitives).toString();
+		const updateThesisCaseQuery: Query = self.mutateUpdateThesisCase(inputVariable, updateThesisCaseResultSelector);
+		console.log("********** updateThesisCase Query STARTS **********");
+		console.log({ query: updateThesisCaseQuery.query });
+		console.log(updateThesisCaseQuery.variables);
+		console.log("********** updateThesisCase Query ENDS **********");
+		return updateThesisCaseQuery;
+	},
+
+	fetchThesisCaseByUser(userName) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchThesisCaseByUserSelector = ThesisCaseByModelSelector.toString();
+		const fetchThesisCaseByUserQuery = self.queryQueryUser(variables, fetchThesisCaseByUserSelector);
+		console.log("********** fetchThesisCaseByUser Query STARTS **********");
+		console.log(fetchThesisCaseByUserQuery.query);
+		console.log(fetchThesisCaseByUserQuery.variables);
+		console.log("********** fetchThesisCaseByUser Query ENDS **********");
+		return fetchThesisCaseByUserQuery;
+	},
+
+	deleteThesisCase(thesisCaseList = []) {
+		const filterVariable = { filter: { id: thesisCaseList } };
+		const resultSelector = deleteThesisCasePayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(thesisCaseList, (thesisCaseID) => {
+				destroy(self.thesisCases.get(thesisCaseID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryThesisCase")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteThesisCase Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteThesisCase Query ENDS ****");
+		return self.mutateDeleteThesisCase(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	// CustomCase Queries
+	updateUserCustomCase(userId, updateUserCustomCaseInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updateUserCustomCaseInfo);
+		const setDataPatch = updateUserCustomCaseInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(CustomCaseByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserCustomCase Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserCustomCase Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateCustomCase(customCaseId, updateCustomCaseInfo) {
+		const dataFilter = {
+			id: customCaseId,
+		};
+		console.log("customCaseId", customCaseId);
+		console.log("updateCustomCaseInfo", updateCustomCaseInfo);
+		const setDataPatch = updateCustomCaseInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateCustomCaseResultSelector = selectFromUpdateCustomCasePayload().customCase(updateCustomCaseModelPrimitives).toString();
+		const updateCustomCaseQuery: Query = self.mutateUpdateCustomCase(inputVariable, updateCustomCaseResultSelector);
+		console.log("********** updateCustomCase Query STARTS **********");
+		console.log({ query: updateCustomCaseQuery.query });
+		console.log(updateCustomCaseQuery.variables);
+		console.log("********** updateCustomCase Query ENDS **********");
+		return updateCustomCaseQuery;
+	},
+
+	fetchCustomCaseByUser(userName) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchCustomCaseByUserSelector = CustomCaseByModelSelector.toString();
+		const fetchCustomCaseByUserQuery = self.queryQueryUser(variables, fetchCustomCaseByUserSelector);
+		console.log("********** fetchCustomCaseByUser Query STARTS **********");
+		console.log(fetchCustomCaseByUserQuery.query);
+		console.log(fetchCustomCaseByUserQuery.variables);
+		console.log("********** fetchCustomCaseByUser Query ENDS **********");
+		return fetchCustomCaseByUserQuery;
+	},
+
+	deleteCustomCase(customCaseList = []) {
+		const filterVariable = { filter: { id: customCaseList } };
+		const resultSelector = deleteCustomCasePayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(customCaseList, (customCaseID) => {
+				destroy(self.customCases.get(customCaseID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryCustomCase")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteCustomCase Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteCustomCase Query ENDS ****");
+		return self.mutateDeleteCustomCase(filterVariable, resultSelector, optimisticDelete);
+	},
+
 	resetAllData() {
 		self.users.clear();
 		self.faculties.clear();
@@ -1307,5 +1453,20 @@ export const RootStore = RootStoreBase.actions((self) => ({
 
 	getCustomLogById(id) {
 		return values(self.customLogs).filter((obj) => obj.id == id);
+	},
+
+	get ThesisCaseList() {
+		return values(self.thesisCases);
+	},
+
+	getThesisCaseListById(id) {
+		return values(self.thesisCases).filter((obj) => obj.id == id);
+	},
+	get CustomCaseList() {
+		return values(self.customCases);
+	},
+
+	getCustomCaseListById(id) {
+		return values(self.customCases).filter((obj) => obj.id == id);
 	},
 }));

@@ -178,6 +178,7 @@ const AppStore = types
 		_resetDate: types.maybeNull(types.boolean),
 		_caseLogNumbers: types.maybeNull(types.integer),
 		_lastCaseLogged: types.maybeNull(types.string),
+		_notificationToken: types.maybeNull(types.string),
 	})
 	.views((self) => ({
 		get UserId() {
@@ -347,8 +348,16 @@ const AppStore = types
 		get APIError() {
 			return self._apiError;
 		},
+
+		get NotificationToken() {
+			return self._notificationToken;
+		},
 	}))
 	.actions((self) => ({
+		setNotificationToken(notificationToken) {
+			self._notificationToken = notificationToken;
+		},
+
 		setUserId(userId) {
 			self._userId = userId;
 		},
@@ -445,6 +454,17 @@ const AppStore = types
 			self._logProfile = logProfile;
 		},
 
+		notificationTokenCall: flow(function* notificationTokenCall(formData) {
+			try {
+				self._isLoading = true;
+				yield execute("/createSignInSchedule", formData, self._userToken);
+				return true;
+			} catch (error) {
+				console.error("AppStore > notificationTokenCall ", error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
 		markUserSignedIn(
 			token,
 			id,

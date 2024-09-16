@@ -17,4 +17,4 @@ export const FieldsModel = FieldsModelBase.actions((self) => ({
 	},
 }));
 
-export const updateFieldsModelPrimitives = selectFromFields().createdOn.updatedOn.label.value;
+export const updateFieldsModelPrimitives = selectFromFields().createdOn.updatedOn.label;
