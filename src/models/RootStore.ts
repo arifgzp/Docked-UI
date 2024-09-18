@@ -80,6 +80,10 @@ import {
 	selectFromUpdateCustomCasePayload,
 	updateCustomCaseModelPrimitives,
 	deleteCustomCasePayloadModelPrimitives,
+	UserFeedbackByModelSelector,
+	selectFromUpdateUserFeedbackPayload,
+	updateUserFeedbackModelPrimitives,
+	deleteUserFeedbackPayloadModelPrimitives,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
@@ -1324,6 +1328,76 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return self.mutateDeleteCustomCase(filterVariable, resultSelector, optimisticDelete);
 	},
 
+	// UserFeedack Queries
+
+	updateUserUserFeedback(userId, updateUserUserFeedbackInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updateUserUserFeedbackInfo);
+		const setDataPatch = updateUserUserFeedbackInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(UserFeedbackByModelSelector).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserUserFeedback Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserUserFeedback Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	updateUserFeedback(userFeedbackId, updateUserFeedbackInfo) {
+		const dataFilter = {
+			id: userFeedbackId,
+		};
+		console.log("userFeedbackId", userFeedbackId);
+		console.log("updateUserFeedbackInfo", updateUserFeedbackInfo);
+		const setDataPatch = updateUserFeedbackInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserFeedbackResultSelector = selectFromUpdateUserFeedbackPayload().userFeedback(updateUserFeedbackModelPrimitives).toString();
+		const updateUserFeedbackQuery: Query = self.mutateUpdateUserFeedback(inputVariable, updateUserFeedbackResultSelector);
+		console.log("********** updateUserFeedback Query STARTS **********");
+		console.log({ query: updateUserFeedbackQuery.query });
+		console.log(updateUserFeedbackQuery.variables);
+		console.log("********** updateUserFeedback Query ENDS **********");
+		return updateUserFeedbackQuery;
+	},
+
+	fetchUserFeedbackByUser(userName) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchUserFeedbackByUserSelector = UserFeedbackByModelSelector.toString();
+		const fetchUserFeedbackByUserQuery = self.queryQueryUser(variables, fetchUserFeedbackByUserSelector);
+		console.log("********** fetchUserFeedbackByUser Query STARTS **********");
+		console.log(fetchUserFeedbackByUserQuery.query);
+		console.log(fetchUserFeedbackByUserQuery.variables);
+		console.log("********** fetchUserFeedbackByUser Query ENDS **********");
+		return fetchUserFeedbackByUserQuery;
+	},
+
+	deleteUserFeedback(userFeedbackList = []) {
+		const filterVariable = { filter: { id: userFeedbackList } };
+		const resultSelector = deleteUserFeedbackPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(userFeedbackList, (userFeedbackID) => {
+				destroy(self.userFeedbacks.get(userFeedbackID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryUserFeedback")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteUserFeedback Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteUserFeedback Query ENDS ****");
+		return self.mutateDeleteUserFeedback(filterVariable, resultSelector, optimisticDelete);
+	},
+
 	resetAllData() {
 		self.users.clear();
 		self.faculties.clear();
@@ -1341,6 +1415,9 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		self.publicationLogs.clear();
 		self.thesisLogs.clear();
 		self.customLogs.clear();
+		self.thesisCases.clear();
+		self.customCases.clear();
+		self.userFeedbacks.clear();
 	},
 })).views((self) => ({
 	get AnaesthesiaCaseLogList() {

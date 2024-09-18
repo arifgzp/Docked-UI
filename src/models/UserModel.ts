@@ -18,6 +18,7 @@ import { updateCustomLogPrimitive } from "./CustomLogModel";
 import { UpdateCaseModelPrimitives } from "./CaseModel";
 import { updateCustomCaseModelPrimitives } from "./CustomCaseModel";
 import { updateThesisCaseModelPrimitives } from "./ThesisCaseModel";
+import { userFeedbackModelPrimitives } from "./UserFeedbackModel.base";
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
@@ -57,3 +58,4 @@ export const CustomLogByModelSelector = selectFromUser().customLog(updateCustomL
 export const OralRadiologyByModelSelector = selectFromUser().oralRadiology(oralRadiologyModelPrimitives);
 export const ThesisCaseByModelSelector = selectFromUser().thesisCases(updateThesisCaseModelPrimitives);
 export const CustomCaseByModelSelector = selectFromUser().customCases(updateCustomCaseModelPrimitives);
+export const UserFeedbackByModelSelector = selectFromUser().userFeedback(userFeedbackModelPrimitives);

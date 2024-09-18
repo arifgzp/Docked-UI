@@ -52,7 +52,8 @@ customLog="customLog",
 thesisCases="thesisCases",
 customCases="customCases",
 logProfile="logProfile",
-imagePath="imagePath"
+imagePath="imagePath",
+userFeedback="userFeedback"
 }
 
 /**
@@ -104,4 +105,5 @@ export const UserHasFilterEnumType = types.enumeration("UserHasFilter", [
   "customCases",
   "logProfile",
   "imagePath",
+  "userFeedback",
       ])

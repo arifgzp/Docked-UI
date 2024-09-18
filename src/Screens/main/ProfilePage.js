@@ -52,6 +52,10 @@ const ProfilePage = ({ navigation }) => {
 		appStoreInstance.SignOut(navigation);
 	};
 
+	const handleOnNavigateUserFeedback = () => {
+		navigation.navigate("UserFeedback");
+	};
+
 	useEffect(() => {
 		if (!appStoreInstance.SuperSpecialty) {
 			const fetchUserProfile = async () => {
@@ -211,6 +215,13 @@ const ProfilePage = ({ navigation }) => {
 								<Button onPress={handleLogout} size='sm' variant='secondary'>
 									<ButtonText pr={2} pl={2}>
 										Logout
+									</ButtonText>
+								</Button>
+							</Box>
+							<Box>
+								<Button onPress={handleOnNavigateUserFeedback} size='sm' variant='secondary'>
+									<ButtonText pr={2} pl={2}>
+										User Feedback
 									</ButtonText>
 								</Button>
 							</Box>

@@ -67,6 +67,16 @@ type User @secret(field: "password") {
     customCases: [CustomCase] @dgraph(pred:"customCases")
     logProfile: LogProfile @dgraph(pred:"logProfile")
     imagePath: String @dgraph(pred:"imagePath")
+    userFeedback: [UserFeedback] @dgraph(pred:"userFeedback")
+}
+
+type UserFeedback{
+    id: ID!
+    createdOn: DateTime @search @dgraph(pred:"createdOn")
+    updatedOn: DateTime @search @dgraph(pred:"updatedOn")
+    title: String @search @dgraph(pred:"title")
+    description: String @search @dgraph(pred:"description")
+    userEmail: String @search @dgraph(pred:"userEmail")
 }
 
 type ThesisLog{

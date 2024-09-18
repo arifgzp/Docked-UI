@@ -3,6 +3,7 @@ import HomeScreenPage from "./HomeScreen";
 import ProfilePage from "./ProfilePage";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ProfilePageEdit from "./ProfilePageEdit";
+import UserFeedback from "./UserFeedback";
 
 const EditProfileButon = ({ navigation }) => {
 	return (
@@ -49,6 +50,19 @@ export default function LandingScreenPages({ navigation }) {
 				component={ProfilePageEdit}
 				options={{
 					title: "Your Profile",
+					headerShown: true,
+					headerStyle: { backgroundColor: "#FFF" },
+					headerTitleStyle: {
+						color: "#979797",
+						fontSize: 16, // You can adjust the font size as needed
+					},
+				}}
+			/>
+			<Stack.Screen
+				name='UserFeedback'
+				component={UserFeedback}
+				options={{
+					title: "Send Feedback",
 					headerShown: true,
 					headerStyle: { backgroundColor: "#FFF" },
 					headerTitleStyle: {

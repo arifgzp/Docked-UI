@@ -65,7 +65,7 @@ import { PublicationLogAggregateResultModel, PublicationLogAggregateResultModelT
 import { PublicationLogAggregateResultModelSelector } from "./PublicationLogAggregateResultModel.base"
 import { PublicationLogModel, PublicationLogModelType } from "./PublicationLogModel"
 import { PublicationLogModelSelector } from "./PublicationLogModel.base"
-import { AcademicLogFilter, AcademicLogOrder, AdminWorkLogFilter, AdminWorkLogOrder, AnaesthesiaCaseLogFilter, AnaesthesiaCaseLogOrder, AnaesthesiaChronicPainLogFilter, AnaesthesiaChronicPainLogOrder, AnaesthesiaCriticalCareCaseLogFilter, AnaesthesiaCriticalCareCaseLogOrder, CustomCaseFilter, CustomCaseOrder, CustomLogFilter, CustomLogOrder, LogProfileFilter, OralMedicineAndRadiologyCaseLogFilter, OralMedicineAndRadiologyCaseLogOrder, OralRadiologyFilter, OralRadiologyOrder, OrthodonticsClinicalCaseLogFilter, OrthodonticsClinicalCaseLogOrder, OrthodonticsPreClinicalFilter, OrthodonticsPreClinicalOrder, OrthopaedicsCaseLogFilter, OrthopaedicsCaseLogOrder, OrthopaedicsProcedureLogFilter, OrthopaedicsProcedureLogOrder, PublicationLogFilter, PublicationLogOrder, ThesisCaseFilter, ThesisCaseOrder, ThesisLogFilter, ThesisLogOrder } from "./RootStore.base"
+import { AcademicLogFilter, AcademicLogOrder, AdminWorkLogFilter, AdminWorkLogOrder, AnaesthesiaCaseLogFilter, AnaesthesiaCaseLogOrder, AnaesthesiaChronicPainLogFilter, AnaesthesiaChronicPainLogOrder, AnaesthesiaCriticalCareCaseLogFilter, AnaesthesiaCriticalCareCaseLogOrder, CustomCaseFilter, CustomCaseOrder, CustomLogFilter, CustomLogOrder, LogProfileFilter, OralMedicineAndRadiologyCaseLogFilter, OralMedicineAndRadiologyCaseLogOrder, OralRadiologyFilter, OralRadiologyOrder, OrthodonticsClinicalCaseLogFilter, OrthodonticsClinicalCaseLogOrder, OrthodonticsPreClinicalFilter, OrthodonticsPreClinicalOrder, OrthopaedicsCaseLogFilter, OrthopaedicsCaseLogOrder, OrthopaedicsProcedureLogFilter, OrthopaedicsProcedureLogOrder, PublicationLogFilter, PublicationLogOrder, ThesisCaseFilter, ThesisCaseOrder, ThesisLogFilter, ThesisLogOrder, UserFeedbackFilter, UserFeedbackOrder } from "./RootStore.base"
 import { ThesisCaseAggregateResultModel, ThesisCaseAggregateResultModelType } from "./ThesisCaseAggregateResultModel"
 import { ThesisCaseAggregateResultModelSelector } from "./ThesisCaseAggregateResultModel.base"
 import { ThesisCaseModel, ThesisCaseModelType } from "./ThesisCaseModel"
@@ -74,6 +74,10 @@ import { ThesisLogAggregateResultModel, ThesisLogAggregateResultModelType } from
 import { ThesisLogAggregateResultModelSelector } from "./ThesisLogAggregateResultModel.base"
 import { ThesisLogModel, ThesisLogModelType } from "./ThesisLogModel"
 import { ThesisLogModelSelector } from "./ThesisLogModel.base"
+import { UserFeedbackAggregateResultModel, UserFeedbackAggregateResultModelType } from "./UserFeedbackAggregateResultModel"
+import { UserFeedbackAggregateResultModelSelector } from "./UserFeedbackAggregateResultModel.base"
+import { UserFeedbackModel, UserFeedbackModelType } from "./UserFeedbackModel"
+import { UserFeedbackModelSelector } from "./UserFeedbackModel.base"
 import { UserRoleEnumType } from "./UserRoleEnum"
 import { UserStatusEnumType } from "./UserStatusEnum"
 import { RootStoreType } from "./index"
@@ -98,6 +102,7 @@ type Refs = {
   thesisCases: IObservableArray<ThesisCaseModelType>;
   customCases: IObservableArray<CustomCaseModelType>;
   logProfile: LogProfileModelType;
+  userFeedback: IObservableArray<UserFeedbackModelType>;
 }
 
 /**
@@ -154,6 +159,7 @@ export const UserModelBase = withTypedRefs<Refs>()(ModelBase
     customCases: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => CustomCaseModel))))),
     logProfile: types.union(types.undefined, types.null, MSTGQLRef(types.late((): any => LogProfileModel))),
     imagePath: types.union(types.undefined, types.null, types.string),
+    userFeedback: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => UserFeedbackModel))))),
     anaesthesiaCaseLogAggregate: types.union(types.undefined, types.null, types.late((): any => AnaesthesiaCaseLogAggregateResultModel)),
     anaesthesiaChronicPainLogAggregate: types.union(types.undefined, types.null, types.late((): any => AnaesthesiaChronicPainLogAggregateResultModel)),
     anaesthesiaCriticalCareCaseLogAggregate: types.union(types.undefined, types.null, types.late((): any => AnaesthesiaCriticalCareCaseLogAggregateResultModel)),
@@ -170,6 +176,7 @@ export const UserModelBase = withTypedRefs<Refs>()(ModelBase
     customLogAggregate: types.union(types.undefined, types.null, types.late((): any => CustomLogAggregateResultModel)),
     thesisCasesAggregate: types.union(types.undefined, types.null, types.late((): any => ThesisCaseAggregateResultModel)),
     customCasesAggregate: types.union(types.undefined, types.null, types.late((): any => CustomCaseAggregateResultModel)),
+    userFeedbackAggregate: types.union(types.undefined, types.null, types.late((): any => UserFeedbackAggregateResultModel)),
   })
   .views(self => ({
     get store() {
@@ -224,6 +231,7 @@ export class UserModelSelector extends QueryBuilder {
   thesisCases(builder: string | ThesisCaseModelSelector | ((selector: ThesisCaseModelSelector) => ThesisCaseModelSelector) | undefined, args?: { filter?: (ThesisCaseFilter | null), order?: (ThesisCaseOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`thesisCases`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), ThesisCaseModelSelector, builder) }
   customCases(builder: string | CustomCaseModelSelector | ((selector: CustomCaseModelSelector) => CustomCaseModelSelector) | undefined, args?: { filter?: (CustomCaseFilter | null), order?: (CustomCaseOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`customCases`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), CustomCaseModelSelector, builder) }
   logProfile(builder: string | LogProfileModelSelector | ((selector: LogProfileModelSelector) => LogProfileModelSelector) | undefined, args?: { filter?: (LogProfileFilter | null) }) { return this.__child(`logProfile`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), LogProfileModelSelector, builder) }
+  userFeedback(builder: string | UserFeedbackModelSelector | ((selector: UserFeedbackModelSelector) => UserFeedbackModelSelector) | undefined, args?: { filter?: (UserFeedbackFilter | null), order?: (UserFeedbackOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`userFeedback`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), UserFeedbackModelSelector, builder) }
   anaesthesiaCaseLogAggregate(builder: string | AnaesthesiaCaseLogAggregateResultModelSelector | ((selector: AnaesthesiaCaseLogAggregateResultModelSelector) => AnaesthesiaCaseLogAggregateResultModelSelector) | undefined, args?: { filter?: (AnaesthesiaCaseLogFilter | null) }) { return this.__child(`anaesthesiaCaseLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), AnaesthesiaCaseLogAggregateResultModelSelector, builder) }
   anaesthesiaChronicPainLogAggregate(builder: string | AnaesthesiaChronicPainLogAggregateResultModelSelector | ((selector: AnaesthesiaChronicPainLogAggregateResultModelSelector) => AnaesthesiaChronicPainLogAggregateResultModelSelector) | undefined, args?: { filter?: (AnaesthesiaChronicPainLogFilter | null) }) { return this.__child(`anaesthesiaChronicPainLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), AnaesthesiaChronicPainLogAggregateResultModelSelector, builder) }
   anaesthesiaCriticalCareCaseLogAggregate(builder: string | AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector | ((selector: AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector) => AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector) | undefined, args?: { filter?: (AnaesthesiaCriticalCareCaseLogFilter | null) }) { return this.__child(`anaesthesiaCriticalCareCaseLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector, builder) }
@@ -240,6 +248,7 @@ export class UserModelSelector extends QueryBuilder {
   customLogAggregate(builder: string | CustomLogAggregateResultModelSelector | ((selector: CustomLogAggregateResultModelSelector) => CustomLogAggregateResultModelSelector) | undefined, args?: { filter?: (CustomLogFilter | null) }) { return this.__child(`customLogAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), CustomLogAggregateResultModelSelector, builder) }
   thesisCasesAggregate(builder: string | ThesisCaseAggregateResultModelSelector | ((selector: ThesisCaseAggregateResultModelSelector) => ThesisCaseAggregateResultModelSelector) | undefined, args?: { filter?: (ThesisCaseFilter | null) }) { return this.__child(`thesisCasesAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), ThesisCaseAggregateResultModelSelector, builder) }
   customCasesAggregate(builder: string | CustomCaseAggregateResultModelSelector | ((selector: CustomCaseAggregateResultModelSelector) => CustomCaseAggregateResultModelSelector) | undefined, args?: { filter?: (CustomCaseFilter | null) }) { return this.__child(`customCasesAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), CustomCaseAggregateResultModelSelector, builder) }
+  userFeedbackAggregate(builder: string | UserFeedbackAggregateResultModelSelector | ((selector: UserFeedbackAggregateResultModelSelector) => UserFeedbackAggregateResultModelSelector) | undefined, args?: { filter?: (UserFeedbackFilter | null) }) { return this.__child(`userFeedbackAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), UserFeedbackAggregateResultModelSelector, builder) }
 }
 export function selectFromUser() {
   return new UserModelSelector()
