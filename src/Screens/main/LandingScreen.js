@@ -34,7 +34,7 @@ import {
 import { Box } from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
 import AppStore from "../../stores/AppStore";
-import HomeScreenPage from "./HomeScreen";
+import HomeScreenPage from "./HomePage/HomeScreen";
 import RootLogScreens from "./LogScreens/RootLogScreens";
 import ResourcesMainPage from "./Resources/ResourcesMainPage";
 import CommunityMainPage from "./Community/CommunityMainPage";

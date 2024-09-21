@@ -28,8 +28,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, Platform, useWindowDimensions, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView, Image } from "@gluestack-ui/themed";
-import { ImageAssets } from "../../../assets/Assets";
-import appStoreInstance from "../../stores/AppStore";
+import { ImageAssets } from "../../../../assets/Assets";
+import appStoreInstance from "../../../stores/AppStore";
 import { ButtonIcon } from "@gluestack-ui/themed";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { Card } from "@gluestack-ui/themed";
@@ -39,33 +39,14 @@ import { Dimensions } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { observer } from "mobx-react";
-import NetworkUtils from "../../utils/NetworkUtils";
-import { useQuery } from "../../models";
+import NetworkUtils from "../../../utils/NetworkUtils";
+import { useQuery } from "../../../models";
+import DynamicBarGraph from "../../../components/DynamicBarGraph";
 
-const HomeScreenPage = ({ navigation }) => {
+const AnesthesiologyDashboard = ({ navigation }) => {
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
-	const { height: screenHeight, width: screenWidth } = useWindowDimensions();
-
-	// const screenWidth = Dimensions.get("window").width;
-	const data = {
-		labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-		datasets: [
-			{
-				data: [20, 12, 16, 8, 24, 10],
-			},
-		],
-	};
-
-	const chartConfig = {
-		backgroundGradientFrom: "#D6D4CD",
-		backgroundGradientTo: "#D6D4CD",
-		color: (opacity = 1) => `rgba(54, 123, 113, ${opacity})`,
-		strokeWidth: 2, // optional, default 3
-		barPercentage: 0.2,
-		useShadowColorFromDataset: false, // optional
-	};
 
 	const mockData = {
 		progressData: [
@@ -128,16 +109,34 @@ const HomeScreenPage = ({ navigation }) => {
 		maxValue: 240,
 	};
 
+	const casesLoggedData = {
+		title: "Cases Logged",
+		periods: {
+			Weekly: {
+				labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+				durations: [10, 14, 17.5, 13, 8.5, 13, 8],
+			},
+			Monthly: {
+				labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+				durations: [45, 52, 49, 53],
+			},
+			Yearly: {
+				labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+				durations: [200, 180, 220, 205, 195, 230, 210, 200, 215, 225, 205, 190],
+			},
+		},
+	};
+
 	const [activeIndex, setActiveIndex] = useState(0);
 
 	const scrollViewRef = useRef(null);
 
 	const renderCard = (item) => (
 		<Box bg='white' borderRadius='$sm' p='$3' flex={1} mr='$2' mb='$2' alignItems='center' justifyContent='space-between'>
-			<Text fontSize='$xs' textAlign='center' mb='$2'>
+			<Text fontSize={12} fontWeight='bold' textAlign='center' mb='$2'>
 				{item.title}
 			</Text>
-			<Text fontSize='$xl' fontWeight='bold' color='#006466'>
+			<Text fontSize={16} fontWeight='bold' color='#006466'>
 				{item.value}
 			</Text>
 		</Box>
@@ -151,45 +150,6 @@ const HomeScreenPage = ({ navigation }) => {
 
 	const scrollToIndex = (index) => {
 		scrollViewRef.current?.scrollTo({ x: index * 60, animated: true });
-	};
-
-	const durationTimePeriods = ["Yearly", "Monthly", "Weekly"];
-	const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-	const durations = [10, 14, 17.5, 13, 8.5, 13, 8];
-	const maxDuration = Math.max(...durations);
-
-	const { width } = Dimensions.get("window");
-	const chartWidth = width - 40; // Subtracting padding
-
-	const renderBar = (duration, index) => {
-		const barHeight = (duration / activeData.maxValue) * 150; // 150 is the max height of the bar
-		return (
-			<VStack key={index} alignItems='center' width={chartWidth / 7}>
-				<View
-					style={{
-						width: 15,
-						height: barHeight,
-						backgroundColor: index === 2 ? "#333" : "#006466",
-						borderRadius: 10,
-						marginBottom: 5,
-					}}
-				/>
-				<Text fontSize='$xs' color='#666'>
-					{daysOfWeek[index]}
-				</Text>
-			</VStack>
-		);
-	};
-
-	const getActiveData = () => {
-		switch (selectedDurationPeriod) {
-			case "Yearly":
-				return yearlyData;
-			case "Monthly":
-				return monthlyData;
-			default:
-				return weeklyData;
-		}
 	};
 
 	useEffect(() => {
@@ -227,8 +187,7 @@ const HomeScreenPage = ({ navigation }) => {
 
 	const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
 	const [selectedTop3Period, setSelectedTop3Period] = useState("Weekly");
-	const [selectedDurationPeriod, setSelectedDurationPeriod] = useState("Weekly");
-	const activeData = getActiveData();
+
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Box h='$full' backgroundColor='$primaryBackground' pt='$8'>
@@ -259,42 +218,50 @@ const HomeScreenPage = ({ navigation }) => {
 					<Box h={3} width={"$full"} backgroundColor='#367B71'></Box>
 
 					<Box p='$4'>
-						<VStack space='lg'>
-							<HStack justifyContent='space-between'>
+						<VStack space='xl'>
+							<HStack gap={48} justifyContent='center'>
 								{mockData.progressData.map((item, index) => (
 									<VStack key={index} alignItems='center'>
-										<Text fontSize='$md' fontWeight='$bold' color='#333' mb='$2'>
+										<Text fontSize={12} fontWeight='$bold' color='#333' mb='$2'>
 											{item.title}
 										</Text>
-										<CircularProgress
-											value={item.value}
-											maxValue={item.value}
-											radius={45}
-											duration={0.5}
-											progressValueColor='#000'
-											activeStrokeColor='#006466'
-											inActiveStrokeColor='#E0E0E0'
-											inActiveStrokeWidth={8}
-											activeStrokeWidth={8}
-											progressValueStyle={{ fontWeight: "bold", fontSize: 20 }}
-											valueSuffix={""}
-											clockwise={false}
-										/>
+										<Box
+											borderRadius='$full'
+											justifyContent='center'
+											alignItems='center'
+											borderWidth={8}
+											borderColor='#D9D9D9'
+											width={60}
+											height={60}>
+											<CircularProgress
+												value={item.value}
+												maxValue={item.value}
+												radius={25}
+												duration={0.5}
+												progressValueColor='#000'
+												activeStrokeColor='#367B71'
+												inActiveStrokeColor='#367B71'
+												inActiveStrokeWidth={4}
+												activeStrokeWidth={4}
+												progressValueStyle={{ fontWeight: "bold", fontSize: 16 }}
+												valueSuffix={""}
+												clockwise={false}
+											/>
+										</Box>
 									</VStack>
 								))}
 							</HStack>
-
 							<VStack>
 								<ScrollView horizontal showsHorizontalScrollIndicator={false} ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={16}>
 									<HStack space='md'>
 										{mockData.anaesthesiaTypes.map((item, index) => (
-											<Box key={index} borderColor='#367B71' borderWidth={1} p='$3' borderRadius='$lg' width={140}>
-												<VStack flex={1} justifyContent='space-between'>
-													<Text fontSize='$sm' textAlign='center' fontWeight='$bold' color='#333'>
+											<Box key={index} borderColor='#367B71' borderWidth={1} p='$3' borderRadius={16} width={107}>
+												<VStack space='sm' flex={1} justifyContent='space-between'>
+													<Text fontSize={12} textAlign='center' fontWeight='$bold' color='#333'>
 														{item.title}
 													</Text>
 													<Center>
-														<Text fontSize='$xl' fontWeight='bold' color='#006466'>
+														<Text fontSize={16} fontWeight='bold' color='#006466'>
 															{item.count ?? ""}
 														</Text>
 													</Center>
@@ -322,51 +289,11 @@ const HomeScreenPage = ({ navigation }) => {
 							</VStack>
 						</VStack>
 					</Box>
-					<Box bg='rgba(151, 151, 151, 0.2)' p='$4' borderRadius='$xl' m='$4'>
-						<VStack space='md'>
-							<HStack justifyContent='space-between' alignItems='center'>
-								<Text fontSize='$lg' fontWeight='bold'>
-									Cases Logged
-								</Text>
-								<HStack space='xs'>
-									{durationTimePeriods.map((period) => (
-										<Pressable
-											key={period}
-											onPress={() => setSelectedDurationPeriod(period)}
-											style={{
-												backgroundColor: selectedDurationPeriod === period ? "#006466" : "transparent",
-												borderColor: "#006466",
-												borderWidth: 1,
-												borderRadius: 20,
-												paddingHorizontal: 12,
-												paddingVertical: 4,
-											}}>
-											<Text color={selectedDurationPeriod === period ? "white" : "#006466"} fontSize='$xs'>
-												{period}
-											</Text>
-										</Pressable>
-									))}
-								</HStack>
-							</HStack>
-
-							<Box height={200} justifyContent='flex-end'>
-								<HStack justifyContent='space-between' alignItems='flex-end' height={180}>
-									{durations.map((duration, index) => renderBar(duration, index))}
-								</HStack>
-								<HStack justifyContent='space-between' position='absolute' top={0} left={0} right={0}>
-									{[24, 20, 16, 12, 8, 4].map((value, index) => (
-										<Text key={index} fontSize='$xs' color='#666' style={{ position: "absolute", top: index * 30, left: -5 }}>
-											{value}
-										</Text>
-									))}
-								</HStack>
-							</Box>
-						</VStack>
-					</Box>
+					<DynamicBarGraph data={casesLoggedData} />
 					<Box bg='#1E1E1E' p='$6'>
 						<VStack space='md'>
 							<HStack justifyContent='space-between' alignItems='center'>
-								<Text color='white' fontSize='$md' fontWeight='bold'>
+								<Text color='white' fontSize={12} fontWeight='bold'>
 									ASA Grades
 								</Text>
 								<HStack space='sm'>
@@ -389,18 +316,15 @@ const HomeScreenPage = ({ navigation }) => {
 									))}
 								</HStack>
 							</HStack>
-
 							<VStack space='md'>
 								<HStack justifyContent='space-between'>
 									{grades.map((item) => (
-										<Text key={item.grade} color='white' fontSize='$sm'>
+										<Text key={item.grade} color='white' fontSize={12}>
 											{item.grade}
 										</Text>
 									))}
 								</HStack>
-
 								<View style={{ height: 1, backgroundColor: "white", marginVertical: 2 }} />
-
 								<HStack justifyContent='space-between'>
 									{grades.map((item) => (
 										<View
@@ -423,10 +347,10 @@ const HomeScreenPage = ({ navigation }) => {
 						</VStack>
 					</Box>
 
-					<Box bg='#F5F5F5' p='$4' borderRadius='$lg'>
+					<Box p='$4' borderRadius='$lg'>
 						<VStack space='md'>
 							<HStack justifyContent='space-between' alignItems='center'>
-								<Text fontSize='$lg' fontWeight='bold'>
+								<Text fontSize={16} fontWeight='bold'>
 									Top 3
 								</Text>
 								<HStack space='xs'>
@@ -452,7 +376,7 @@ const HomeScreenPage = ({ navigation }) => {
 
 							<VStack space='md'>
 								<VStack>
-									<Text fontSize='$sm' color='#666' mb='$2'>
+									<Text fontSize={12} color='#979797' mb='$2'>
 										Regional techniques
 									</Text>
 									<View style={{ height: 1, backgroundColor: "#666", marginBottom: 8 }} />
@@ -462,7 +386,7 @@ const HomeScreenPage = ({ navigation }) => {
 								</VStack>
 
 								<VStack>
-									<Text fontSize='$sm' color='#666' mb='$2'>
+									<Text fontSize={12} color='#979797' mb='$2'>
 										Chronic Pain log
 									</Text>
 									<View style={{ height: 1, backgroundColor: "#666", marginBottom: 8 }} />
@@ -472,7 +396,7 @@ const HomeScreenPage = ({ navigation }) => {
 								</VStack>
 
 								<VStack>
-									<Text fontSize='$sm' color='#666' mb='$2'>
+									<Text fontSize={12} color='#979797' mb='$2'>
 										Critical Care Procedures
 									</Text>
 									<View style={{ height: 1, backgroundColor: "#666", marginBottom: 8 }} />
@@ -489,4 +413,4 @@ const HomeScreenPage = ({ navigation }) => {
 	);
 };
 
-export default observer(HomeScreenPage);
+export default observer(AnesthesiologyDashboard);

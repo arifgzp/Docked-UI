@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import HomeScreenPage from "../Screens/main/HomeScreen";
+import HomeScreenPage from "../Screens/main/HomePage/HomeScreen";
 import { Divider, Image, MenuItem, Modal, ModalBackdrop, ModalBody, ModalCloseButton, RadioGroup } from "@gluestack-ui/themed";
 import ResourcesMainPage from "../Screens/main/Resources/ResourcesMainPage";
 import CommunityMainPage from "../Screens/main/Community/CommunityMainPage";

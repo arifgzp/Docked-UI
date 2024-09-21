@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreenPage from "./HomeScreen";
+import HomeScreenPage from "./HomePage/HomeScreen";
 import ProfilePage from "./ProfilePage";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ProfilePageEdit from "./ProfilePageEdit";
