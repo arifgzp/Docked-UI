@@ -163,18 +163,24 @@ const CustomLogTab = () => {
 		}
 	};
 
+	const formatNumber = (num) => {
+		if (num < 10) return `00${num}`;
+		if (num < 100) return `0${num}`;
+		return `${num}`;
+	};
+
 	const CardToRender = ({ config, card, index }) => {
 		return (
-			<Card key={card.id || index} variant='filled' m='$3' width='$100%' borderRadius='$3xl' p='$0'>
+			<Card key={card.id || index} bg='#E6E3DB' elevation={4} borderWidth={1} variant='filled' m='$3' width='$100%' borderRadius='$2xl' p='$0'>
 				{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute' />}
-				<VStack width='$100%' space='xs' pb='$3'>
+				<VStack width='$100%' pb='$3'>
 					<HStack width='$100%' pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
-						<HStack space='sm'>
-							<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-								From Custom Log:
+						<HStack space='sm' alignItems='center'>
+							<Text fontSize={14} fontFamily='Inter' color='#000'>
+								Case number :
 							</Text>
-							<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-								{card.caseName ? card.caseName : "--"}
+							<Text fontSize={16} fontFamily='Inter_Bold' color='#000'>
+								{formatNumber(index + 1)}
 							</Text>
 						</HStack>
 						<HStack alignItems='center'>
@@ -186,12 +192,9 @@ const CustomLogTab = () => {
 							</Button>
 						</HStack>
 					</HStack>
-					<HStack width='$100%' pt='$3' pl='$5' pr='$1' space='sm'>
-						<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-							Case No:
-						</Text>
-						<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-							{card.id ? card.id : "--"}
+					<HStack width='$100%' pb='$2' pl='$5' pr='$1' space='sm'>
+						<Text fontFamily='Inter_Bold' fontSize={12} color='#979797'>
+							{card.createdOn && format(new Date(card.createdOn), "dd/MM/yyyy")}
 						</Text>
 					</HStack>
 				</VStack>
@@ -216,10 +219,10 @@ const CustomLogTab = () => {
 	console.log("THIS IS THE CARD DETAILS FOR CARDS OF CUSTOM LOGS", cardDetails);
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
-			<Box pt={20} flex={1} backgroundColor='$primaryBackground' alignItems='center'>
+			<Box px='$4' pt={20} flex={1} backgroundColor='$primaryBackground' alignItems='center'>
 				<ScrollView width={"$100%"} keyboardShouldPersistTaps='handled'>
 					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
-						<HStack width={"$100%"} justifyContent='space-between'>
+						{/* <HStack width={"$100%"} justifyContent='space-between'>
 							<Box>
 								<Button onPress={handleOnPressEditCustomLogs} size='sm' variant='link'>
 									<HStack space='sm' alignItems='center'>
@@ -236,7 +239,7 @@ const CustomLogTab = () => {
 									</HStack>
 								</Button>
 							</Box>
-						</HStack>
+						</HStack> */}
 						{cardDetails.length > 0 ? (
 							cardDetails.map((card, index) => {
 								return <CardToRender card={card} index={index} />;

@@ -3,6 +3,7 @@ import { UserRole, UserStatus, useQuery } from "../models";
 import NetworkUtils from "../utils/NetworkUtils";
 import rootStore from "./MobXRootStore";
 import * as SecureStore from "expo-secure-store";
+import { sendUserSessionDataToBigQueryForAdminAnalytics } from "../components/BigQueryFunctions/AdminDashboardAnalyticalQueries";
 
 export const SecureStoreEnum = Object.freeze({
 	TOKEN: Symbol("token"),
@@ -132,6 +133,12 @@ const APIErrorType = types.model("APIError", {
 	message: types.string,
 });
 
+const ConductEntry = types.model("ConductEntry", {
+	table_name: types.string,
+	conduct: types.string,
+	count: types.number,
+});
+
 const AppStore = types
 	.model("AppStore", {
 		_isLoading: false,
@@ -179,10 +186,65 @@ const AppStore = types
 		_caseLogNumbers: types.maybeNull(types.integer),
 		_lastCaseLogged: types.maybeNull(types.string),
 		_notificationToken: types.maybeNull(types.string),
+		_startTimeOfApp: types.maybeNull(types.string),
+		_isTabBarVisible: false,
+		_conduct: types.array(ConductEntry),
+		_observedAnalyticsCount: types.maybeNull(types.integer),
+		_assistedAnalyticsCount: types.maybeNull(types.integer),
+		_performedAnalyticsCount: types.maybeNull(types.integer),
+		_generalAnesthesiaAnalyticsCount: types.maybeNull(types.integer),
+		_regionalAnesthesiaAnalyticsCount: types.maybeNull(types.integer),
+		_TIVAAnalyticsCount: types.maybeNull(types.integer),
+		_montioredAnesthesiaCareAnalyticsCount: types.maybeNull(types.integer),
+		_totalHoursOfSurgeriesPerformed: "0 hours",
 	})
 	.views((self) => ({
+		get IsTabBarVisible() {
+			return self._isTabBarVisible;
+		},
+
+		get TotalHoursOfSurgeriesPerformed() {
+			return self.__totalHoursOfSurgeriesPerformed;
+		},
+
+		get GeneralAnesthesiaAnalyticsCount() {
+			return self._generalAnesthesiaAnalyticsCount;
+		},
+
+		get RegionalAnesthesiaAnalyticsCount() {
+			return self._regionalAnesthesiaAnalyticsCount;
+		},
+
+		get TIVAAnalyticsCount() {
+			return self._TIVAAnalyticsCount;
+		},
+
+		get MontioredAnesthesiaCareAnalyticsCount() {
+			return self._montioredAnesthesiaCareAnalyticsCount;
+		},
+
+		get ObservedAnalyticsCount() {
+			return self._observedAnalyticsCount;
+		},
+
+		get AssistedAnalyticsCount() {
+			return self._assistedAnalyticsCount;
+		},
+
+		get PerformedAnalyticsCount() {
+			return self._performedAnalyticsCount;
+		},
+
+		get ConductValues() {
+			return self._conduct;
+		},
+
 		get UserId() {
 			return self._userId;
+		},
+
+		get StartTimeOfTheApp() {
+			return self._startTimeOfApp;
 		},
 
 		get ResetDate() {
@@ -354,8 +416,52 @@ const AppStore = types
 		},
 	}))
 	.actions((self) => ({
+		setIsTabBarVisble(isTabBarVisble) {
+			self._isTabBarVisible = isTabBarVisble;
+		},
+
+		setTotalHoursOfSurgeriesPerformed(totalHoursOfSurgeriesPerformed) {
+			self._totalHoursOfSurgeriesPerformed = totalHoursOfSurgeriesPerformed;
+		},
+
+		setGeneralAnesthesiaAnalyticsCount(GeneralAnesthesiaAnalyticsCount) {
+			self._generalAnesthesiaAnalyticsCount = GeneralAnesthesiaAnalyticsCount;
+		},
+
+		setRegionalAnesthesiaAnalyticsCount(RegionalAnesthesiaAnalyticsCount) {
+			self._regionalAnesthesiaAnalyticsCount = RegionalAnesthesiaAnalyticsCount;
+		},
+
+		setTIVAAnalyticsCount(TIVAAnalyticsCount) {
+			self._TIVAAnalyticsCount = TIVAAnalyticsCount;
+		},
+
+		setMontioredAnesthesiaCareAnalyticsCount(MontioredAnesthesiaCareAnalyticsCount) {
+			self._montioredAnesthesiaCareAnalyticsCount = MontioredAnesthesiaCareAnalyticsCount;
+		},
+
+		setObservedAnalyticsCount(ObservedAnalyticsCount) {
+			self._observedAnalyticsCount = ObservedAnalyticsCount;
+		},
+
+		setAssistedAnalyticsCount(AssistedAnalyticsCount) {
+			self._assistedAnalyticsCount = AssistedAnalyticsCount;
+		},
+
+		setPerformedAnalyticsCount(PerformedAnalyticsCount) {
+			self._performedAnalyticsCount = PerformedAnalyticsCount;
+		},
+
+		setConductValues(conduct) {
+			self._conduct = conduct;
+		},
+
 		setNotificationToken(notificationToken) {
 			self._notificationToken = notificationToken;
+		},
+
+		setStartTimeOfApp(startTime) {
+			self._startTimeOfApp = startTime;
 		},
 
 		setUserId(userId) {
@@ -519,16 +625,22 @@ const AppStore = types
 		},
 
 		markUserSignedOut() {
+			self._isLoading = false;
+			self._isLoading_concludeCamp = false;
+			self._isLoading_approveCampReport = false;
+			self._isLoading_denyCampReport = false;
+			self._isLoading_Camp = false;
+			self._isLoading_deleteCamp = false;
+			self._isLoading_deleteDoctor = false;
+			self._isLoading_deleteUser = false;
+			self._isLoading_addUser = false;
+			self._isLoading_uploadCampImage = false;
 			self._isSignedIn = false;
 			self._userToken = null;
 			self._selectionMode = null;
+			self._selectedCampImage = null;
 			self._userName = null;
 			self._name = null;
-			self._userRole = null;
-			self._alert = false;
-			self._silentNotification = false;
-			self._userId = null;
-			self._broadSpecialty = null;
 			self._superSpecialty = null;
 			self._subSpecialty = null;
 			self._designation = null;
@@ -539,8 +651,35 @@ const AppStore = types
 			self._yearOfRegistration = null;
 			self._medicalRegistrationNumber = null;
 			self._verifiedMedicalRegistrationNumber = null;
-			self._logProfile = null;
+			self._userRole = null;
+			self._pharmaID = null;
+			self._campAdminID = null;
+			self._alert = null;
+			self._silentNotification = null;
+			self._isPasswordResetRequired = false;
+			self._broadSpecialty = null;
+			self._apiError = null;
 			self._userStatus = null;
+			self._userPassword = null;
+			self._buttonPressed = null;
+			self._isFormDirty = null;
+			self._imagePath = null;
+			self._caseLogFormToGet = null;
+			self._resetDate = null;
+			self._caseLogNumbers = null;
+			self._lastCaseLogged = null;
+			self._notificationToken = null;
+			self._startTimeOfApp = null;
+			self._isTabBarVisible = false;
+			self._conduct = [];
+			self._observedAnalyticsCount = null;
+			self._assistedAnalyticsCount = null;
+			self._performedAnalyticsCount = null;
+			self._generalAnesthesiaAnalyticsCount = null;
+			self._regionalAnesthesiaAnalyticsCount = null;
+			self._TIVAAnalyticsCount = null;
+			self._montioredAnesthesiaCareAnalyticsCount = null;
+			self._totalHoursOfSurgeriesPerformed = null;
 		},
 
 		validateUserToken: flow(function* validateUserToken() {
@@ -591,6 +730,43 @@ const AppStore = types
 				}
 			} catch (error) {
 				console.log(error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
+
+		sendDataToBigQuery: flow(function* sendDataToBigQuery(data) {
+			try {
+				self._isLoading = true;
+				const response = yield execute("sendDataToBigQuery", data, self._userToken);
+				if (response) {
+					console.log("is this the response for the bigQuery API", response);
+					return response;
+				} else {
+					console.log(response.error);
+				}
+			} catch (error) {
+				console.log(error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
+
+		requestDataFromBigQuery: flow(function* requestDataFromBigQuery(data) {
+			try {
+				self._isLoading = true;
+				const response = yield execute("callStoredProcedure", data, self._userToken);
+
+				if (response && !response.error) {
+					console.log("Response from bigQuery API for requesting data:", response);
+					return response;
+				} else {
+					console.error("Error in bigQuery API response:", response?.error || "Unknown error");
+					throw new Error(response?.error || "Unknown error");
+				}
+			} catch (error) {
+				console.error("Error in requestDataFromBigQuery:", error);
+				throw error; // Re-throw the error so it can be handled by the caller
 			} finally {
 				self._isLoading = false;
 			}
@@ -825,6 +1001,9 @@ const AppStore = types
 		SignOut: flow(function* SignOut(navigation) {
 			try {
 				self._isLoading = true;
+				const sendUserSessionData = sendUserSessionDataToBigQueryForAdminAnalytics(this._startTimeOfApp, new Date().toISOString());
+				console.log("sendUserSessionData", sendUserSessionData);
+
 				yield SecureStore.deleteItemAsync(SecureStoreEnum.TOKEN.description);
 				yield SecureStore.deleteItemAsync(SecureStoreEnum.USER.description);
 				self.markUserSignedOut();

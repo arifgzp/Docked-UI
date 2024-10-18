@@ -41,14 +41,15 @@ import CommunityMainPage from "./Community/CommunityMainPage";
 import LandingScreenPages from "./LandingScreenPages";
 import CreateLogScreen from "./LogScreens/CreateLogScreen";
 import { ImageAssets } from "../../../assets/Assets";
+import appStoreInstance from "../../stores/AppStore";
 
 const Tab = createBottomTabNavigator();
 
 const getCreateMenuOptions = (specialty) => {
 	const commonOptions = [
 		{ id: "Academic", name: "Academic", nested: true },
-		{ id: "ThesisLog", name: "Thesis Log" },
-		{ id: "CustomLog", name: "Custom Log" },
+		// { id: "ThesisLog", name: "Thesis Log" },
+		// { id: "CustomLog", name: "Custom Log" },
 	];
 
 	const specialtyOptions = {
@@ -107,46 +108,46 @@ const CreateMenuList = () => {
 			switch (currentLogButton) {
 				case "AcademicLog":
 					console.log("what is currentLogButton", currentLogButton);
-					navigation.navigate("Plus", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AcademicLog" } });
+					navigation.navigate("Home", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AcademicLog" } });
 					break;
 				case "PublicationLog":
-					navigation.navigate("Plus", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "PublicationLog" } });
+					navigation.navigate("Home", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "PublicationLog" } });
 					break;
 				case "AdminWorkLog":
-					navigation.navigate("Plus", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AdminWorkLog" } });
+					navigation.navigate("Home", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AdminWorkLog" } });
 					break;
 				case "ThesisLog":
-					navigation.navigate("Plus", { screen: "ThesisLogFormScreen" });
+					navigation.navigate("Home", { screen: "ThesisLogFormScreen" });
 					break;
 				case "CustomLog":
-					navigation.navigate("Plus", { screen: "CustomLogFormScreen" });
+					navigation.navigate("Home", { screen: "CustomLogFormScreen" });
 					break;
 				case "CaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
 					break;
 				case "ChronicPainLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "ChronicPain" } });
 					break;
 				case "CriticalCareCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CriticalCareCaseLog" } });
 					break;
 				case "OrthopaedicsCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsCaseLog" } });
 					break;
 				case "OrthopaedicsProcedureLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsProcedureLog" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthopaedicsProcedureLog" } });
 					break;
 				case "OrthodonticsClinicalCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsClinicalCaseLog" } });
 					break;
 				case "OrthodonticsPreClinical":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsPreClinical" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OrthodonticsPreClinical" } });
 					break;
 				case "OralMedicineCaseLog":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OralMedicineCaseLog" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OralMedicineCaseLog" } });
 					break;
 				case "OralRadiology":
-					navigation.navigate("Plus", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OralRadiology" } });
+					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "OralRadiology" } });
 					break;
 				default:
 					console.log("Key not recognized");
@@ -183,9 +184,9 @@ const CreateMenuList = () => {
 
 	return (
 		<Pressable w='$full' h='$full' justifyContent='center' alignItems='center' onPress={toggleCreateMenu}>
-			<Box position='absolute' bottom='$10'>
-				<Button onPress={toggleCreateMenu} borderRadius={"$full"} backgroundColor='#CC3F0C' width={45} height={45}>
-					<ButtonText w='$400%' pt='$1.5' fontSize={32} fontFamily='Jua' textAlign='center'>
+			<Box>
+				<Button onPress={toggleCreateMenu} borderRadius={"$full"} borderWidth={1.5} borderColor='#367B71' bg='transparent' width={48} height={48}>
+					<ButtonText color='#367B71' w='$400%' pt='$1.5' fontSize={32} fontFamily='Jua' textAlign='center'>
 						+
 					</ButtonText>
 				</Button>
@@ -221,9 +222,21 @@ const CreateMenuList = () => {
 	);
 };
 
-const CustomTabBar = ({ state, descriptors, navigation }) => {
+const CustomTabBar = observer(({ state, descriptors, navigation }) => {
+	if (appStoreInstance.IsTabBarVisible === false) return null;
 	return (
-		<Box style={{ flexDirection: "row", height: 60, backgroundColor: "#FFF", elevation: 0, padding: 0, gap: -20 }}>
+		<Box
+			style={{
+				flexDirection: "row",
+				height: 60,
+				backgroundColor: "#E6E3DB",
+				elevation: 0,
+				padding: 0,
+				gap: -20,
+				borderTopWidth: 1,
+				borderTopColor: "#97979733",
+				display: appStoreInstance.IsTabBarVisible ? "flex" : "none",
+			}}>
 			{state.routes.map((route, index) => {
 				const { options } = descriptors[route.key];
 				const isFocused = state.index === index;
@@ -301,7 +314,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 			})}
 		</Box>
 	);
-};
+});
 
 const LandingScreen = ({ navigation, route }) => {
 	return (
@@ -334,17 +347,9 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarIcon: ({ color, size }) => <Ionicons name='home' size={size} color={color} />,
 					headerShown: false,
 				}}
-				name='Home'
-				component={LandingScreenPages}
-			/>
-			<Tab.Screen
-				options={{
-					tabBarIcon: ({ color, size }) => <Ionicons name='document-text' size={size} color={color} />,
-					headerShown: false,
-				}}
-				name='Logbook'
-				component={RootLogScreens}
-			/>
+				name='Home'>
+				{(props) => <LandingScreenPages {...props} />}
+			</Tab.Screen>
 			<Tab.Screen
 				options={{
 					tabBarIcon: ({ color, size }) => <Ionicons name='add-circle' size={65} color='#CC3F0C' />,
@@ -352,9 +357,17 @@ const LandingScreen = ({ navigation, route }) => {
 					tabBarButton: (props) => <CreateMenuList {...props} />,
 				}}
 				name='Plus'
-				component={CreateLogScreen} // dummy component, since it's not used
+				component={LandingScreenPages} // dummy component, since it's not used
 			/>
 			<Tab.Screen
+				options={{
+					tabBarIcon: ({ color, size }) => <Ionicons name='document-text' size={size} color={color} />,
+					headerShown: false,
+				}}
+				name='Logbook'>
+				{(props) => <RootLogScreens {...props} />}
+			</Tab.Screen>
+			{/* <Tab.Screen
 				options={{
 					tabBarIcon: ({ color, size }) => <Ionicons name='play-circle' size={size} color={color} />,
 					headerShown: false,
@@ -369,7 +382,7 @@ const LandingScreen = ({ navigation, route }) => {
 				}}
 				name='Community'
 				component={CommunityMainPage}
-			/>
+			/> */}
 		</Tab.Navigator>
 	);
 };

@@ -5,7 +5,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 
 import { Platform } from "react-native";
-import appStoreInstance from "./src/stores/AppStore";
+import appStoreInstance from "../stores/AppStore";
 
 export interface PushNotificationState {
 	expoPushToken?: Notifications.ExpoPushToken;

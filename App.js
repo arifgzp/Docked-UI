@@ -1,28 +1,24 @@
-import { config } from "./config/gluestack-ui.config";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import React, { useEffect, useState } from "react";
+import { AppState } from "react-native";
+import { observer } from "mobx-react";
+import { StoreContext } from "./src/models";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { StoreContext } from "./src/models";
-import rootStore from "./src/stores/MobXRootStore";
-import { LogBox } from "react-native";
-import { useEffect } from "react";
-import { observer } from "mobx-react";
-import { enableFreeze, enableScreens } from "react-native-screens";
+import { usePushNotifications } from "./src/hooks/usePushNotifications";
+import {
+	captureLiveUserData,
+	captureSessionDuration,
+	sendLiveUserStatusDataToBigQueryForAdminAnalytics,
+	sendUserSessionDataToBigQueryForAdminAnalytics,
+} from "./src/components/BigQueryFunctions/AdminDashboardAnalyticalQueries";
 import AppWrapper from "./app/AppWrapper";
+import rootStore from "./src/stores/MobXRootStore";
 import appStoreInstance from "./src/stores/AppStore";
-import { fonts } from "react-native-elements/dist/config";
-import { usePushNotifications } from "./usePushNotifications";
-LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
-LogBox.ignoreAllLogs();
-
-enableScreens(true);
+import { config } from "./config/gluestack-ui.config";
 
 function App() {
 	const { expoPushToken, notification } = usePushNotifications();
-	const data = JSON.stringify(notification, undefined, 2);
-	console.log("expoPushToken?.data", expoPushToken?.data);
 	const [fontsLoaded] = useFonts({
 		Inter: require("./assets/fonts/Inter.ttf"),
 		Inter_Regular: require("./assets/fonts/Inter-Regular.ttf"),
@@ -32,9 +28,42 @@ function App() {
 		Jua: require("./assets/fonts/Jua-Regular.ttf"),
 	});
 
-	SplashScreen.preventAutoHideAsync().catch(() => {
-		/* reloading the app might trigger some race conditions, ignore them */
-	});
+	useEffect(() => {
+		if (appStoreInstance.UserId) {
+			console.log("UserId is now available:", appStoreInstance.UserId);
+			appStoreInstance.setStartTimeOfApp(new Date().toISOString());
+			const sendLiveStatusOfUser = sendLiveUserStatusDataToBigQueryForAdminAnalytics();
+			console.log("sendLiveStatusOfUser", sendLiveStatusOfUser);
+			//appStoreInstance.sendDataToBigQuery(sendLiveStatusOfUser);
+		}
+	}, [appStoreInstance.UserId]);
+
+	const handleAppStateChange = (nextAppState) => {
+		if (nextAppState === "background") {
+			console.log("App is going to background");
+			if (appStoreInstance.UserId) {
+				const sendUserSessionData = sendUserSessionDataToBigQueryForAdminAnalytics(appStoreInstance.StartTimeOfTheApp, new Date().toISOString());
+				console.log("sendUserSessionData", sendUserSessionData);
+				appStoreInstance.setStartTimeOfApp(null);
+				appStoreInstance.sendDataToBigQuery(sendUserSessionData);
+			}
+		} else if (nextAppState === "active") {
+			console.log("App is now active");
+			if (appStoreInstance.UserId) {
+				const sendLiveStatusOfUser = sendLiveUserStatusDataToBigQueryForAdminAnalytics();
+				console.log("sendLiveStatusOfUser", sendLiveStatusOfUser);
+				appStoreInstance.setStartTimeOfApp(new Date().toISOString());
+				appStoreInstance.sendDataToBigQuery(sendLiveStatusOfUser);
+			}
+		}
+	};
+
+	useEffect(() => {
+		const subscription = AppState.addEventListener("change", handleAppStateChange);
+		return () => {
+			subscription.remove();
+		};
+	}, [appStoreInstance.UserId]);
 
 	useEffect(() => {
 		const runPreChecks = async () => {
@@ -49,6 +78,7 @@ function App() {
 	if (!fontsLoaded) {
 		return null;
 	}
+
 	return (
 		<StoreContext.Provider value={rootStore}>
 			<GluestackUIProvider config={config}>

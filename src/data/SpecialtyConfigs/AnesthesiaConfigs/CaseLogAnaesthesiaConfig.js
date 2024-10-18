@@ -400,12 +400,12 @@ const typeOfAnaesthesia = [
 		nodeType: "parent",
 		children: [
 			{
-				id: "GA",
+				id: "General Anesthesia",
 				name: "General Anesthesia",
 				nodeType: "leaf",
 			},
 			{
-				id: "REGIONAL",
+				id: "Regional",
 				name: "Regional",
 				selectType: "single",
 				nodeType: "parent",
@@ -428,13 +428,13 @@ const typeOfAnaesthesia = [
 				],
 			},
 			{
-				id: "MAC",
+				id: "Monitored Anesthesia Care",
 				name: "Monitored Anesthesia Care",
 				nodeType: "leaf",
 			},
 			{
-				id: "LA",
-				name: "Local Anesthesia",
+				id: "TIVA",
+				name: "TIVA",
 				nodeType: "leaf",
 			},
 		],
@@ -877,7 +877,7 @@ const regionalTechniques = [
 						nodeType: "leaf",
 					},
 					{
-						id: "Adjuvants2",
+						id: "Adjuvants",
 						name: "Adjuvants",
 						selectType: "multiple",
 						nodeType: "parent",
@@ -914,6 +914,55 @@ const regionalTechniques = [
 							},
 						],
 					},
+					{
+						id: "Strength",
+						name: "Strength",
+						selectType: "single",
+						nodeType: "parent",
+						children: [
+							{
+								id: "0.1%",
+								name: "0.1%",
+								nodeType: "leaf",
+							},
+							{
+								id: "0.2%",
+								name: "0.2%",
+								nodeType: "leaf",
+							},
+							{
+								id: "0.25%",
+								name: "0.25%",
+								nodeType: "leaf",
+							},
+							{
+								id: "0.5%",
+								name: "0.5%",
+								nodeType: "leaf",
+							},
+							{
+								id: "0.75%",
+								name: "0.75%",
+								nodeType: "leaf",
+							},
+							{
+								id: "1%",
+								name: "1%",
+								nodeType: "leaf",
+							},
+							{
+								id: "2%",
+								name: "2%",
+								nodeType: "leaf",
+							},
+						],
+					},
+					{
+						id: "Volume",
+						name: "Volume",
+						nodeType: "leaf",
+						inputType: "text",
+					},
 				],
 			},
 			{
@@ -923,7 +972,7 @@ const regionalTechniques = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Ultrasound	Guided",
+						id: "UltrasoundGuided",
 						name: "Ultrasound Guided",
 						nodeType: "leaf",
 					},
@@ -946,34 +995,50 @@ const regionalTechniques = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Interscalene",
-						name: "Interscalene",
+						id: "SuperficialCervicalPlexusblock",
+						name: "Superficial Cervical Plexus Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "Supraclavicular",
-						name: "Supraclavicular",
+						id: "Interscalene BP Block",
+						name: "Interscalene BP Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "Infraclavicular",
-						name: "Infraclavicular",
+						id: "SCUT Block",
+						name: "SCUT Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "Axillary",
-						name: "Axillary",
+						id: "Supraclavicular BP Block",
+						name: "Supraclavicular BP Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "WristBlock",
-						name: "Wrist block",
+						id: "SubclavianPerivascularBlock",
+						name: "Subclavian Perivascular Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "IntravenousRegional",
-						name: "Intravenous Regional",
+						id: "Lateral Infraclavicular Block",
+						name: "Lateral Infraclavicular Block",
 						nodeType: "leaf",
+					},
+					{
+						id: "Supra-Scapular Nerve Block",
+						name: "Supra-Scapular Nerve Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Axillary BP Block",
+						name: "Axillary BP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "OtherUpperExtremityBlock",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
 					},
 				],
 			},
@@ -984,34 +1049,267 @@ const regionalTechniques = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "LumbarPlexus",
-						name: "Lumbar Plexus",
+						id: "LumbarPlexus Block",
+						name: "Lumbar Plexus Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "Sciatic",
-						name: "Sciatic",
+						id: "Sacral Plexus Block",
+						name: "Sacral Plexus Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "Femoral",
-						name: "Femoral",
+						id: "Fascia Iliaca Supra-inguinal Block",
+						name: "Fascia Iliaca Supra-inguinal Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "LateralFemoralCutaneous",
-						name: "Lateral Femoral Cutaneous",
+						id: "Fascia Iliaca Infra-inguinal Block",
+						name: "Fascia Iliaca Infra-inguinal Block",
 						nodeType: "leaf",
 					},
 					{
-						id: "PoplitealSaphenous",
-						name: "Popliteal Saphenous",
+						id: "Sciatic Nerve Block (transgluteal)",
+						name: "Sciatic Nerve Block (transgluteal)",
+						nodeType: "leaf",
+					},
+					{
+						id: "Sciatic Nerve Block (infragluteal)",
+						name: "Sciatic Nerve Block (infragluteal)",
+						nodeType: "leaf",
+					},
+					{
+						id: "Sciatic Nerve Block (anterior)",
+						name: "Sciatic Nerve Block (anterior)",
+						nodeType: "leaf",
+					},
+					{
+						id: "Femoral Nerve Block",
+						name: "Femoral Nerve Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "PENG Block",
+						name: "PENG Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Pudendal Nerve Block",
+						name: "Pudendal Nerve Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Femoral Triangle Block",
+						name: "Femoral Triangle Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Adductor Canal Block",
+						name: "Adductor Canal Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Dual Sub-sartorial Block",
+						name: "Dual Sub-sartorial Vlock",
+						nodeType: "leaf",
+					},
+					{
+						id: "iPACK",
+						name: "iPACK",
+						nodeType: "leaf",
+					},
+					{
+						id: "Popliteal Sciatic Block",
+						name: "Popliteal Sciatic Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Nerve to VMM Block",
+						name: "Nerve to VMM Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Common Peroneal Nerve Block",
+						name: "Common Peroneal Nerve Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Lateral Femoral Cutaneous Nerve Block",
+						name: "Lateral Femoral Cutaneous Nerve Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Saphenous Nerve Block",
+						name: "Saphenous Nerve Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "CAPS Block",
+						name: "CAPS Block",
 						nodeType: "leaf",
 					},
 					{
 						id: "Ankle",
 						name: "Ankle",
 						nodeType: "leaf",
+					},
+					{
+						id: "MAYO Block",
+						name: "MAYO Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Reverse MAYO Block",
+						name: "Reverse MAYO Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Other Lower Block",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+				],
+			},
+			{
+				id: "Abdominal Wall Blocks",
+				name: "Abdominal Wall Blocks",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "Rectus Sheath Block",
+						name: "Rectus Sheath Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "IIN-IHN Block",
+						name: "IIN-IHN Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Transverse Abdominis Plane (TAP) Block",
+						name: "Transverse Abdominis Plane (TAP) Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Mid-Axillary TAP Block",
+						name: "Mid-Axillary TAP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Subcostal TAP Block",
+						name: "Subcostal TAP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Anterior QL Block",
+						name: "Anterior QL Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Lateral QL Block",
+						name: "Lateral QL Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Posterior QL Block",
+						name: "Posterior QL Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Transversalis Fascia Plane (TFP) Block",
+						name: "Transversalis Fascia Plane (TFP) Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Rhomboid Intercostal Plane Block",
+						name: "Rhomboid Intercostal Plane Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Other Abdominal Wall Blocks",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+				],
+			},
+			{
+				id: "Chest Wall Blocks",
+				name: "Chest Wall Blocks",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "Superficial SAP Block",
+						name: "Superficial SAP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Deep SAP Block",
+						name: "Superficial SAP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Superficial PIP Block",
+						name: "Superficial PIP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Deep PIP Block",
+						name: "Deep PIP Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Interpectoral Plane Block",
+						name: "Interpectoral Plane Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Pecto-serratus Block",
+						name: "Pecto-serratus Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Other Chest Walls Block",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
+					},
+				],
+			},
+			{
+				id: "Paraspinal Blocks",
+				name: "Paraspinal Blocks",
+				selectType: "multiple",
+				nodeType: "parent",
+				children: [
+					{
+						id: "Paravertebral Block",
+						name: "Paravertebral Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Intertransverse Process Block",
+						name: "Intertransverse Process Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Erector Spinae Plane Block",
+						name: "Erector Spinae Plane Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Retrolaminar Block",
+						name: "Retrolaminar Block",
+						nodeType: "leaf",
+					},
+					{
+						id: "Other Chest Walls Block",
+						name: "Other",
+						nodeType: "leaf",
+						inputType: "text",
 					},
 				],
 			},
@@ -1103,7 +1401,7 @@ const regionalTechniques = [
 				nodeType: "parent",
 				children: [
 					{
-						id: "Spinal1",
+						id: "Spinal",
 						name: "Spinal",
 						selectType: "none",
 						nodeType: "parent",

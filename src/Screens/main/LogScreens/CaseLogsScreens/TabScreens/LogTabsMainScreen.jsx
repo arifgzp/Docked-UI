@@ -8,6 +8,9 @@ import { ButtonText } from "@gluestack-ui/themed";
 import { SearchBar } from "react-native-elements";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
 import useIsReady from "../../../../../hooks/useIsReady";
+import appStoreInstance from "../../../../../stores/AppStore";
+import { useFocusEffect } from "@react-navigation/native";
+import { useEffect, useCallback } from "react";
 
 const FirstRoute = require("./CaseLogTab").default;
 const SecondRoute = require("./AcademicLogTab").default;
@@ -37,6 +40,19 @@ const renderTabBar = (props) => (
 );
 
 export default function LogTabsMainScreen({ navigation, route }) {
+	useFocusEffect(
+		useCallback(() => {
+			setTimeout(() => {
+				console.log("this is happening or not?");
+				appStoreInstance.setIsTabBarVisble(true);
+			}, 1); // 500 milliseconds = 0.5 seconds
+
+			return () => {
+				console.log("this should out of focus now");
+				appStoreInstance.setIsTabBarVisble(false);
+			};
+		}, [])
+	);
 	const isReady = useIsReady();
 	const layout = useWindowDimensions();
 	const [search, setSearch] = React.useState("");
@@ -70,8 +86,8 @@ export default function LogTabsMainScreen({ navigation, route }) {
 	}
 
 	return (
-		<Box p='$4' w='$full' h='$full' bg='$primaryBackground' pt='$10'>
-			<HStack alignItems='center' w='$100%' justifyContent='space-between'>
+		<Box py='$4' w='$full' h='$full' bg='$primaryBackground' pt='$10'>
+			<HStack px='$4' alignItems='center' w='$100%' justifyContent='space-between'>
 				<Text size='xl' fontFamily='Inter_Bold'>
 					Logbook
 				</Text>
