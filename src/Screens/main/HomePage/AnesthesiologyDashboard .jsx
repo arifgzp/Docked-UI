@@ -285,7 +285,7 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 					const finishFetchingUserProfile = await userQuery;
 					if (finishFetchingUserProfile) {
 						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-						console.log("user data in dashboard", fetchProfileData);
+
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
 						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
 						appStoreInstance.setDesignation(fetchProfileData.designation);
@@ -311,12 +311,10 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchData = async () => {
 			try {
 				const conductData = requestConductDataFromBigQuery();
-				console.log("Conduct data query:", conductData);
 
 				const conductResponse = await appStoreInstance.requestDataFromBigQuery(conductData);
 				if (conductResponse && conductResponse.data) {
 					const responseData = conductResponse.data;
-					console.log("Conduct data response:", responseData);
 					filterCouductData(responseData);
 				}
 			} catch (error) {
@@ -333,13 +331,11 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchTypeOfAnesthesiaData = async () => {
 			try {
 				const typeOfAnaesthesiaData = requestTypesOfAnesthesiaDataFromBigQuery();
-				console.log("typeOfAnaesthesiaData query:", typeOfAnaesthesiaData);
 
 				const typeOfAnaesthesiaResponse = await appStoreInstance.requestDataFromBigQuery(typeOfAnaesthesiaData);
 				if (typeOfAnaesthesiaResponse && typeOfAnaesthesiaResponse.data) {
 					const typeOfAnaesthesiaDataData = typeOfAnaesthesiaResponse.data;
 
-					console.log("typeOfAnaesthesiaData response:", typeOfAnaesthesiaDataData);
 					typeOfAnaesthesiaDataData.forEach((item) => {
 						switch (item.type) {
 							case "Monitored Anesthesia Care":
@@ -373,11 +369,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForAggereateCaseLogData = async () => {
 			try {
 				const aggerateCaseLogDataForDaily = requestAggerateCaseLogDataOfDailyForAnesthesia();
-				console.log("Aggerate data query", aggerateCaseLogDataForDaily);
 				const aggerateCaseLogDataForDailyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateCaseLogDataForDaily);
 				if (aggerateCaseLogDataForDailyResponse) {
 					const aggerateCaseLogDataForDailyResponseData = aggerateCaseLogDataForDailyResponse.data;
-					console.log("aggerateCaseLogDataForDailyResponseData", aggerateCaseLogDataForDailyResponseData);
 					setAggerateDailyCaseLogData(aggerateCaseLogDataForDailyResponseData);
 				}
 			} catch (error) {
@@ -387,11 +381,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForAggereateCaseLogDataWeek = async () => {
 			try {
 				const aggerateCaseLogDataForWeekly = requestAggerateCaseLogDataOfWeeklyForAnesthesia();
-				console.log("Aggerate data query", aggerateCaseLogDataForWeekly);
 				const aggerateCaseLogDataForWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateCaseLogDataForWeekly);
 				if (aggerateCaseLogDataForWeeklyResponse) {
 					const aggerateCaseLogDataForWeeklyResponseData = aggerateCaseLogDataForWeeklyResponse.data;
-					console.log("aggerateCaseLogDataForWeeklyResponseData", aggerateCaseLogDataForWeeklyResponseData);
 					setAggerateWeeklyCaseLogData(aggerateCaseLogDataForWeeklyResponseData);
 				}
 			} catch (error) {
@@ -401,11 +393,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForAggereateCaseLogDataMonth = async () => {
 			try {
 				const aggerateCaseLogDataForMonthly = requestAggerateCaseLogDataOfMonthlyForAnesthesia();
-				console.log("Aggerate data query", aggerateCaseLogDataForMonthly);
 				const aggerateCaseLogDataForMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateCaseLogDataForMonthly);
 				if (aggerateCaseLogDataForMonthlyResponse) {
 					const aggerateCaseLogDataForMonthlyResponseData = aggerateCaseLogDataForMonthlyResponse.data;
-					console.log("aggerateCaseLogDataForMonthlyResponseData", aggerateCaseLogDataForMonthlyResponseData);
 					setAggerateMonthlyCaseLogData(aggerateCaseLogDataForMonthlyResponseData);
 				}
 			} catch (error) {
@@ -423,11 +413,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForASAGradeDaily = async () => {
 			try {
 				const asaGradeDailyQuery = requestASAGradeDailyDataFromBigQuery();
-				console.log("ASA Grade Daily query", asaGradeDailyQuery);
 				const asaGradeDailyResponse = await appStoreInstance.requestDataFromBigQuery(asaGradeDailyQuery);
 				if (asaGradeDailyResponse) {
 					const asaGradeDailyResponseData = asaGradeDailyResponse.data;
-					console.log("asaGradeDailyResponseData", asaGradeDailyResponseData);
 					setASAGradeDailyData(asaGradeDailyResponseData);
 				}
 			} catch (error) {
@@ -438,11 +426,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForASAGradeWeekly = async () => {
 			try {
 				const asaGradeWeeklyQuery = requestASAGradeWeeklyDataFromBigQuery();
-				console.log("ASA Grade Weekly query", asaGradeWeeklyQuery);
 				const asaGradeWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(asaGradeWeeklyQuery);
 				if (asaGradeWeeklyResponse) {
 					const asaGradeWeeklyResponseData = asaGradeWeeklyResponse.data;
-					console.log("asaGradeWeeklyResponseData", asaGradeWeeklyResponseData);
 					setASAGradeWeeklyData(asaGradeWeeklyResponseData);
 				}
 			} catch (error) {
@@ -453,11 +439,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForASAGradeMonthly = async () => {
 			try {
 				const asaGradeMonthlyQuery = requestASAGradeMonthlyDataFromBigQuery();
-				console.log("ASA Grade Monthly query", asaGradeMonthlyQuery);
 				const asaGradeMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(asaGradeMonthlyQuery);
 				if (asaGradeMonthlyResponse) {
 					const asaGradeMonthlyResponseData = asaGradeMonthlyResponse.data;
-					console.log("asaGradeMonthlyResponseData", asaGradeMonthlyResponseData);
 					setASAGradeMonthlyData(asaGradeMonthlyResponseData);
 				}
 			} catch (error) {
@@ -476,11 +460,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForRegionalTechniquesDaily = async () => {
 			try {
 				const regionalTechniquesDailyQuery = requestReginoalTechniquesDailyDataFromBigQuery();
-				console.log("Regional Techniques Daily query", regionalTechniquesDailyQuery);
 				const regionalTechniquesDailyResponse = await appStoreInstance.requestDataFromBigQuery(regionalTechniquesDailyQuery);
 				if (regionalTechniquesDailyResponse) {
 					const regionalTechniquesDailyResponseData = regionalTechniquesDailyResponse.data;
-					console.log("regionalTechniquesDailyResponseData", regionalTechniquesDailyResponseData);
 					setRegionalTechniquesDailyData(regionalTechniquesDailyResponseData);
 				}
 			} catch (error) {
@@ -491,11 +473,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForRegionalTechniquesWeekly = async () => {
 			try {
 				const regionalTechniquesWeeklyQuery = requestReginoalTechniquesWeeklyDataFromBigQuery();
-				console.log("Regional Techniques Weekly query", regionalTechniquesWeeklyQuery);
 				const regionalTechniquesWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(regionalTechniquesWeeklyQuery);
 				if (regionalTechniquesWeeklyResponse) {
 					const regionalTechniquesWeeklyResponseData = regionalTechniquesWeeklyResponse.data;
-					console.log("regionalTechniquesWeeklyResponseData", regionalTechniquesWeeklyResponseData);
 					setRegionalTechniquesWeeklyData(regionalTechniquesWeeklyResponseData);
 				}
 			} catch (error) {
@@ -506,11 +486,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForRegionalTechniquesMonthly = async () => {
 			try {
 				const regionalTechniquesMonthlyQuery = requestReginoalTechniquesMonthlyDataFromBigQuery();
-				console.log("Regional Techniques Monthly query", regionalTechniquesMonthlyQuery);
 				const regionalTechniquesMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(regionalTechniquesMonthlyQuery);
 				if (regionalTechniquesMonthlyResponse) {
 					const regionalTechniquesMonthlyResponseData = regionalTechniquesMonthlyResponse.data;
-					console.log("regionalTechniquesMonthlyResponseData", regionalTechniquesMonthlyResponseData);
 					setRegionalTechniquesMonthlyData(regionalTechniquesMonthlyResponseData);
 				}
 			} catch (error) {
@@ -529,11 +507,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForInterventionsDaily = async () => {
 			try {
 				const interventionsDailyQuery = requestInterventionsDailyDataFromBigQuery();
-				console.log("Interventions Daily query", interventionsDailyQuery);
 				const interventionsDailyResponse = await appStoreInstance.requestDataFromBigQuery(interventionsDailyQuery);
 				if (interventionsDailyResponse) {
 					const interventionsDailyResponseData = interventionsDailyResponse.data;
-					console.log("interventionsDailyResponseData", interventionsDailyResponseData);
 					setInterventionsDailyData(interventionsDailyResponseData);
 				}
 			} catch (error) {
@@ -544,11 +520,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForInterventionsWeekly = async () => {
 			try {
 				const interventionsWeeklyQuery = requestInterventionsWeeklyDataFromBigQuery();
-				console.log("Interventions Weekly query", interventionsWeeklyQuery);
 				const interventionsWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(interventionsWeeklyQuery);
 				if (interventionsWeeklyResponse) {
 					const interventionsWeeklyResponseData = interventionsWeeklyResponse.data;
-					console.log("interventionsWeeklyResponseData", interventionsWeeklyResponseData);
 					setInterventionsWeeklyData(interventionsWeeklyResponseData);
 				}
 			} catch (error) {
@@ -559,11 +533,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForInterventionsMonthly = async () => {
 			try {
 				const interventionsMonthlyQuery = requestInterventionsMonthlyDataFromBigQuery();
-				console.log("Interventions Monthly query", interventionsMonthlyQuery);
 				const interventionsMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(interventionsMonthlyQuery);
 				if (interventionsMonthlyResponse) {
 					const interventionsMonthlyResponseData = interventionsMonthlyResponse.data;
-					console.log("interventionsMonthlyResponseData", interventionsMonthlyResponseData);
 					setInterventionsMonthlyData(interventionsMonthlyResponseData);
 				}
 			} catch (error) {
@@ -582,11 +554,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForProceduresDaily = async () => {
 			try {
 				const proceduresDailyQuery = requestProceduresDailyDataFromBigQuery();
-				console.log("Procedures Daily query", proceduresDailyQuery);
 				const proceduresDailyResponse = await appStoreInstance.requestDataFromBigQuery(proceduresDailyQuery);
 				if (proceduresDailyResponse) {
 					const proceduresDailyResponseData = proceduresDailyResponse.data;
-					console.log("proceduresDailyResponseData", proceduresDailyResponseData);
 					setProceduresDailyData(proceduresDailyResponseData);
 				}
 			} catch (error) {
@@ -597,11 +567,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForProceduresWeekly = async () => {
 			try {
 				const proceduresWeeklyQuery = requestProceduresWeeklyDataFromBigQuery();
-				console.log("Procedures Weekly query", proceduresWeeklyQuery);
 				const proceduresWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(proceduresWeeklyQuery);
 				if (proceduresWeeklyResponse) {
 					const proceduresWeeklyResponseData = proceduresWeeklyResponse.data;
-					console.log("proceduresWeeklyResponseData", proceduresWeeklyResponseData);
 					setProceduresWeeklyData(proceduresWeeklyResponseData);
 				}
 			} catch (error) {
@@ -612,11 +580,9 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		const fetchDataForProceduresMonthly = async () => {
 			try {
 				const proceduresMonthlyQuery = requestProceduresMonthlyDataFromBigQuery();
-				console.log("Procedures Monthly query", proceduresMonthlyQuery);
 				const proceduresMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(proceduresMonthlyQuery);
 				if (proceduresMonthlyResponse) {
 					const proceduresMonthlyResponseData = proceduresMonthlyResponse.data;
-					console.log("proceduresMonthlyResponseData", proceduresMonthlyResponseData);
 					setProceduresMonthlyData(proceduresMonthlyResponseData);
 				}
 			} catch (error) {
@@ -631,9 +597,6 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		}
 	}, [isFocused]);
 
-	console.log("asaGradeDailyData", asaGradeDailyData);
-	console.log("asaGradeWeeklyData", asaGradeWeeklyData);
-	console.log("asaGradeMonthlyData", asaGradeMonthlyData);
 	useEffect(() => {
 		const setDefaultASAGradeData = () => [
 			{ grade: "I", value: "0" },

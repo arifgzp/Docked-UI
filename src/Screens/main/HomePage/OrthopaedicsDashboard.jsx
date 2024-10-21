@@ -164,7 +164,6 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 					const finishFetchingUserProfile = await userQuery;
 					if (finishFetchingUserProfile) {
 						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-						console.log("user data in dashboard", fetchProfileData);
 						// Update appStoreInstance with fetched data
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
 						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
@@ -189,11 +188,9 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchData = async () => {
 			try {
 				const conductData = requestOrthopaedicsConductDataFromBigQuery();
-				console.log("Conduct data query:", conductData);
 
 				const conductResponse = await appStoreInstance.requestDataFromBigQuery(conductData);
 				const responseData = conductResponse.data;
-				console.log("Conduct data response:", responseData);
 				processConductData(responseData);
 			} catch (error) {
 				console.error("Error fetching data from BigQuery:", error);
@@ -209,11 +206,9 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchTotalHoursData = async () => {
 			try {
 				const totalHoursData = requestAggerateTotalHoursOfSurgeryForOrthopaedics();
-				console.log("Total hours data query:", totalHoursData);
 
 				const totalHoursDataResponse = await appStoreInstance.requestDataFromBigQuery(totalHoursData);
 				const responseData = totalHoursDataResponse.data;
-				console.log("Total hours data response:", responseData[0]);
 				if (responseData[0].total_duration) {
 					setTotalHoursOfSurgeries(responseData[0].total_duration);
 				}
@@ -231,10 +226,8 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForAggereateCaseLogData = async () => {
 			try {
 				const aggerateCaseLogDataForDaily = requestAggerateCaseLogDataOfDailyForOrthopaedics();
-				console.log("Aggerate data query", aggerateCaseLogDataForDaily);
 				const aggerateCaseLogDataForDailyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateCaseLogDataForDaily);
 				const aggerateCaseLogDataForDailyResponseData = aggerateCaseLogDataForDailyResponse.data;
-				console.log("aggerateCaseLogDataForDailyResponseData", aggerateCaseLogDataForDailyResponseData);
 				setAggerateDailyCaseLogData(aggerateCaseLogDataForDailyResponseData);
 			} catch (error) {
 				console.log("error", error);
@@ -243,10 +236,8 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForAggereateCaseLogDataWeek = async () => {
 			try {
 				const aggerateCaseLogDataForWeekly = requestAggerateCaseLogDataOfWeeklyForOrthopaedics();
-				console.log("Aggerate data query", aggerateCaseLogDataForWeekly);
 				const aggerateCaseLogDataForWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateCaseLogDataForWeekly);
 				const aggerateCaseLogDataForWeeklyResponseData = aggerateCaseLogDataForWeeklyResponse.data;
-				console.log("aggerateCaseLogDataForWeeklyResponseData", aggerateCaseLogDataForWeeklyResponseData);
 				setAggerateWeeklyCaseLogData(aggerateCaseLogDataForWeeklyResponseData);
 			} catch (error) {
 				console.log("error", error);
@@ -255,10 +246,8 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForAggereateCaseLogDataMonth = async () => {
 			try {
 				const aggerateCaseLogDataForMonthly = requestAggerateCaseLogDataOfMonthlyForOrthopaedics();
-				console.log("Aggerate data query", aggerateCaseLogDataForMonthly);
 				const aggerateCaseLogDataForMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateCaseLogDataForMonthly);
 				const aggerateCaseLogDataForMonthlyResponseData = aggerateCaseLogDataForMonthlyResponse.data;
-				console.log("aggerateCaseLogDataForMonthlyResponseData", aggerateCaseLogDataForMonthlyResponseData);
 				setAggerateMonthlyCaseLogData(aggerateCaseLogDataForMonthlyResponseData);
 			} catch (error) {
 				console.log("error", error);
@@ -284,10 +273,8 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForAggerateProcedureLogData = async () => {
 			try {
 				const aggerateProcedureLogDataForDaily = requestAggerateProcedureLogDataOfDailyForOrthopaedics();
-				console.log("Aggerate data query", aggerateProcedureLogDataForDaily);
 				const aggerateProcedureLogDataForDailyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateProcedureLogDataForDaily);
 				const aggerateProcedureLogDataForDailyResponseData = aggerateProcedureLogDataForDailyResponse.data;
-				console.log("aggerateProcedureLogDataForDailyResponseData", aggerateProcedureLogDataForDailyResponseData);
 				setAggerateDailyProcedureLogData(aggerateProcedureLogDataForDailyResponseData);
 			} catch (error) {
 				console.log("error", error);
@@ -297,10 +284,8 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForAggerateProcedureLogDataWeek = async () => {
 			try {
 				const aggerateProcedureLogDataForWeekly = requestAggerateProcedureLogDataOfWeeklyForOrthopaedics();
-				console.log("Aggerate data query", aggerateProcedureLogDataForWeekly);
 				const aggerateProcedureLogDataForWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateProcedureLogDataForWeekly);
 				const aggerateProcedureLogDataForWeeklyResponseData = aggerateProcedureLogDataForWeeklyResponse.data;
-				console.log("aggerateProcedureLogDataForWeeklyResponseData", aggerateProcedureLogDataForWeeklyResponseData);
 				setAggerateWeeklyProcedureLogData(aggerateProcedureLogDataForWeeklyResponseData);
 			} catch (error) {
 				console.log("error", error);
@@ -310,10 +295,8 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForAggerateProcedureLogDataMonth = async () => {
 			try {
 				const aggerateProcedureLogDataForMonthly = requestAggerateProcedureLogDataOfMonthlyForOrthopaedics();
-				console.log("Aggerate data query", aggerateProcedureLogDataForMonthly);
 				const aggerateProcedureLogDataForMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(aggerateProcedureLogDataForMonthly);
 				const aggerateProcedureLogDataForMonthlyResponseData = aggerateProcedureLogDataForMonthlyResponse.data;
-				console.log("aggerateProcedureLogDataForMonthlyResponseData", aggerateProcedureLogDataForMonthlyResponseData);
 				setAggerateMonthlyProcedureLogData(aggerateProcedureLogDataForMonthlyResponseData);
 			} catch (error) {
 				console.log("error", error);
@@ -338,11 +321,9 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForProcedureDurationDaily = async () => {
 			try {
 				const procedureDurationDailyQuery = requestAggeratProcedureDurationDataOfDailyForOrthopaedics();
-				console.log("Procedure Duration Daily query", procedureDurationDailyQuery);
 				const procedureDurationDailyResponse = await appStoreInstance.requestDataFromBigQuery(procedureDurationDailyQuery);
 				if (procedureDurationDailyResponse) {
 					const procedureDurationDailyResponseData = procedureDurationDailyResponse.data;
-					console.log("procedureDurationDailyResponseData", procedureDurationDailyResponseData);
 					setProcedureDurationDailyData(procedureDurationDailyResponseData);
 				}
 			} catch (error) {
@@ -353,11 +334,9 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForProcedureDurationWeekly = async () => {
 			try {
 				const procedureDurationWeeklyQuery = requestAggerateProcedureDurationDataOfWeeklyForOrthopaedics();
-				console.log("Procedure Duration Weekly query", procedureDurationWeeklyQuery);
 				const procedureDurationWeeklyResponse = await appStoreInstance.requestDataFromBigQuery(procedureDurationWeeklyQuery);
 				if (procedureDurationWeeklyResponse) {
 					const procedureDurationWeeklyResponseData = procedureDurationWeeklyResponse.data;
-					console.log("procedureDurationWeeklyResponseData", procedureDurationWeeklyResponseData);
 					setProcedureDurationWeeklyData(procedureDurationWeeklyResponseData);
 				}
 			} catch (error) {
@@ -368,11 +347,9 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		const fetchDataForProcedureDurationMonthly = async () => {
 			try {
 				const procedureDurationMonthlyQuery = requestAggerateProcedureDurationDataOfMonthlyForOrthopaedics();
-				console.log("Procedure Duration Monthly query", procedureDurationMonthlyQuery);
 				const procedureDurationMonthlyResponse = await appStoreInstance.requestDataFromBigQuery(procedureDurationMonthlyQuery);
 				if (procedureDurationMonthlyResponse) {
 					const procedureDurationMonthlyResponseData = procedureDurationMonthlyResponse.data;
-					console.log("procedureDurationMonthlyResponseData", procedureDurationMonthlyResponseData);
 					setProcedureDurationMonthlyData(procedureDurationMonthlyResponseData);
 				}
 			} catch (error) {
@@ -394,7 +371,6 @@ const OrthopaedicsDashboard = ({ navigation }) => {
 		"Durations"
 	);
 
-	console.log("procedureLogGraphData", procedureLogGraphData);
 	// const casesLoggedData = transformBigQueryDataIntoGraphFormat(aggerateDailyCaseLogData, aggerateMonthlyCaseLogData, aggerateWeeklyCaseLogData);
 	// console.log("graph data for orthopasdices", casesLoggedData);
 

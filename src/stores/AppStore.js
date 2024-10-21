@@ -758,7 +758,6 @@ const AppStore = types
 				const response = yield execute("callStoredProcedure", data, self._userToken);
 
 				if (response && !response.error) {
-					console.log("Response from bigQuery API for requesting data:", response);
 					return response;
 				} else {
 					console.error("Error in bigQuery API response:", response?.error || "Unknown error");

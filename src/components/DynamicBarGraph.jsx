@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import { Box, VStack, HStack, Text, Pressable } from "@gluestack-ui/themed";
 
 const DynamicBarGraph = ({ data }) => {
-	console.log("this is data inside the graph component", data);
 	const [selectedBar, setSelectedBar] = useState(null);
 	const [selectedPeriod, setSelectedPeriod] = useState("Daily");
 
