@@ -33,17 +33,28 @@ const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelec
 		}
 	};
 
+	const getText = () => {
+		if (typeof value === "string") {
+			return value;
+		}
+
+		if (Array.isArray(value) && value[0] && typeof value[0] === "object") {
+			return `${value[0].firstName || ""} ${value[0].lastName || ""}`.trim();
+		}
+
+		if (value && field?.options) {
+			const option = field.options.find((opt) => opt.value === value);
+			return option ? option.label : value;
+		}
+
+		return "";
+	};
+
 	return (
 		<>
 			<TouchableOpacity onPress={readOnly ? null : onOpen}>
 				<HStack h='$9' borderWidth={0.2} px={10} borderRadius={2} justifyContent='space-between' alignItems='center' opacity={readOnly ? 0.5 : 1}>
-					<Text fontSize={14}>
-						{Array.isArray(value) && value[0] && typeof value[0] === "object"
-							? `${value[0].firstName || ""} ${value[0].lastName || ""}`.trim()
-							: value
-							? field?.options?.find((opt) => opt.value === value)?.label
-							: ""}
-					</Text>
+					<Text fontSize={14}>{getText()}</Text>
 					{!readOnly && <Icon color='#367B71' as={ChevronDown} w='$4' h='$4' />}
 				</HStack>
 			</TouchableOpacity>

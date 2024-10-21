@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
-import { Box, VStack, Text, Input, Button, ButtonText, ButtonIcon, HStack, InputField, ScrollView, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import {
+	Box,
+	VStack,
+	Text,
+	Input,
+	Button,
+	ButtonText,
+	ButtonIcon,
+	HStack,
+	InputField,
+	ScrollView,
+	KeyboardAvoidingView,
+	Textarea,
+	TextareaInput,
+} from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
 import { Ionicons } from "@expo/vector-icons";
 import { formatRFC3339 } from "date-fns";
@@ -261,16 +275,16 @@ const CreateNewCase = ({ navigation, route }) => {
 					<ScrollView keyboardShouldPersistTaps='handled'>
 						<VStack space='lg'>
 							<VStack space='sm' px='$5'>
-								<Text size='md' fontFamily='Inter_Bold'>
-									{CaseHolder} Name
+								<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+									Title
 								</Text>
 								<Controller
 									control={control}
 									name='caseName'
 									render={({ field: { onChange, value } }) => (
-										<Input isDisabled variant='outline' size='sm'>
-											<InputField value={value} onChangeText={onChange} />
-										</Input>
+										<Textarea variant='outline' size='sm'>
+											<TextareaInput value={value} onChangeText={onChange} />
+										</Textarea>
 									)}
 								/>
 							</VStack>
