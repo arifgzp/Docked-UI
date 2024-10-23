@@ -124,6 +124,7 @@ type CustomCase{
     createdOn: DateTime @search @dgraph(pred:"createdOn")
     updatedOn: DateTime @search @dgraph(pred:"updatedOn")
     fields: [Fields] @dgraph(pred:"fields")
+    customLogIdReference: String @search @dgraph(pred:"customLogIdReference")
 }
 
 type AnaesthesiaCaseLog  {

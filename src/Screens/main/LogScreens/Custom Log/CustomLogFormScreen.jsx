@@ -25,6 +25,18 @@ import { Platform } from "react-native";
 import IsReadyLoader from "../../../../components/IsReadyLoader";
 import useIsReady from "../../../../hooks/useIsReady";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
+import {
+	Modal,
+	ModalBackdrop,
+	ModalContent,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	ModalCloseButton,
+	Icon,
+	CloseIcon,
+	Heading,
+} from "@gluestack-ui/themed";
 
 const CustomLogFormScreen = ({ navigation, route }) => {
 	const isReady = useIsReady();
@@ -53,6 +65,17 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 
 	const addField = () => {
 		append({ label: "" });
+	};
+
+	const [showChangeModal, setShowChangeModal] = useState(false);
+	const [changes, setChanges] = useState({ added: [], removed: [] });
+
+	const compareFields = (oldFields, newFields) => {
+		const added = newFields.filter((newField) => !oldFields.some((oldField) => oldField.label === newField.label)).map((field) => field.label);
+
+		const removed = oldFields.filter((oldField) => !newFields.some((newField) => newField.label === oldField.label)).map((field) => field.label);
+
+		return { added, removed };
 	};
 
 	const handleOnSave = async (formData) => {
@@ -120,6 +143,22 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 	}
 
 	const handleOnUpdate = async (formData) => {
+		// Calculate changes first
+		const fieldChanges = compareFields(customLogData.formLabels || [], formData.formLabels || []);
+
+		setChanges(fieldChanges);
+
+		// Only show modal if there are changes
+		if (fieldChanges.added.length > 0 || fieldChanges.removed.length > 0) {
+			setShowChangeModal(true);
+			return; // Stop here and wait for modal confirmation
+		}
+
+		// If no changes, proceed with update
+		await processUpdate(formData);
+	};
+
+	const processUpdate = async (formData) => {
 		delete formData.id;
 		delete formData.__typename;
 		if (Array.isArray(formData.formLabels)) {
@@ -131,6 +170,7 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 		}
 		formData.updatedOn = formatRFC3339(new Date());
 		const dataToBeDeleted = findMissingValues(customLogData, formData);
+
 		try {
 			let updateInput = { set: formData };
 
@@ -251,6 +291,63 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 						</Button>
 					</Box>
 				</Box>
+				<Modal isOpen={showChangeModal} onClose={() => setShowChangeModal(false)} size='md'>
+					<ModalBackdrop />
+					<ModalContent>
+						<ModalHeader>
+							<Heading size='lg'>Confirm Changes</Heading>
+							<ModalCloseButton>
+								<Icon as={CloseIcon} />
+							</ModalCloseButton>
+						</ModalHeader>
+						<ModalBody>
+							<VStack space='md'>
+								<Text>This changes will be reflected in all the cases created using this log</Text>
+								{changes.added.length > 0 && (
+									<VStack space='sm'>
+										<Text color='$success700' fontWeight='$bold'>
+											New Fields to be Added:
+										</Text>
+										{changes.added.map((field, index) => (
+											<Text key={index} pl='$2'>
+												• {field}
+											</Text>
+										))}
+									</VStack>
+								)}
+
+								{changes.removed.length > 0 && (
+									<VStack space='sm'>
+										<Text color='$error700' fontWeight='$bold'>
+											Fields to be Removed:
+										</Text>
+										{changes.removed.map((field, index) => (
+											<Text key={index} pl='$2'>
+												• {field}
+											</Text>
+										))}
+									</VStack>
+								)}
+							</VStack>
+						</ModalBody>
+						<ModalFooter>
+							<HStack w='$90%' justifyContent='space-between'>
+								<Button size='sm' variant='secondary' onPress={() => setShowChangeModal(false)}>
+									<ButtonText>Cancel</ButtonText>
+								</Button>
+								<Button
+									size='sm'
+									variant='primary'
+									onPress={() => {
+										setShowChangeModal(false);
+										processUpdate(control._formValues);
+									}}>
+									<ButtonText>Confirm Changes</ButtonText>
+								</Button>
+							</HStack>
+						</ModalFooter>
+					</ModalContent>
+				</Modal>
 			</Loader>
 		</KeyboardAvoidingView>
 	);

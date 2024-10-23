@@ -197,10 +197,15 @@ const AppStore = types
 		_TIVAAnalyticsCount: types.maybeNull(types.integer),
 		_montioredAnesthesiaCareAnalyticsCount: types.maybeNull(types.integer),
 		_totalHoursOfSurgeriesPerformed: "0 hours",
+		_selectedCustomLogId: types.maybeNull(types.string),
 	})
 	.views((self) => ({
 		get IsTabBarVisible() {
 			return self._isTabBarVisible;
+		},
+
+		get SelectedCustomLogId() {
+			return self._selectedCustomLogId;
 		},
 
 		get TotalHoursOfSurgeriesPerformed() {
@@ -418,6 +423,10 @@ const AppStore = types
 	.actions((self) => ({
 		setIsTabBarVisble(isTabBarVisble) {
 			self._isTabBarVisible = isTabBarVisble;
+		},
+
+		setSelectedCustomLogId(selectedCustomLogId) {
+			self._selectedCustomLogId = selectedCustomLogId;
 		},
 
 		setTotalHoursOfSurgeriesPerformed(totalHoursOfSurgeriesPerformed) {

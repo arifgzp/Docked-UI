@@ -23,6 +23,8 @@ export const CustomCaseAggregateResultModelBase = ModelBase
     createdOnMax: types.union(types.undefined, types.null, types.frozen()),
     updatedOnMin: types.union(types.undefined, types.null, types.frozen()),
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
+    customLogIdReferenceMin: types.union(types.undefined, types.null, types.string),
+    customLogIdReferenceMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -38,9 +40,11 @@ export class CustomCaseAggregateResultModelSelector extends QueryBuilder {
   get createdOnMax() { return this.__attr(`createdOnMax`) }
   get updatedOnMin() { return this.__attr(`updatedOnMin`) }
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
+  get customLogIdReferenceMin() { return this.__attr(`customLogIdReferenceMin`) }
+  get customLogIdReferenceMax() { return this.__attr(`customLogIdReferenceMax`) }
 }
 export function selectFromCustomCaseAggregateResult() {
   return new CustomCaseAggregateResultModelSelector()
 }
 
-export const customCaseAggregateResultModelPrimitives = selectFromCustomCaseAggregateResult().count.caseNameMin.caseNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax
+export const customCaseAggregateResultModelPrimitives = selectFromCustomCaseAggregateResult().count.caseNameMin.caseNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.customLogIdReferenceMin.customLogIdReferenceMax

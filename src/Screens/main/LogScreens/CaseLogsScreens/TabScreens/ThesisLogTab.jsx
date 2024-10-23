@@ -99,7 +99,7 @@ const ThesisLogTab = () => {
 		}
 	}, [isFocused]);
 
-	const handleButtonPress = (id) => {
+	const handleEditACase = (id) => {
 		navigation.navigate("Edit A Case", { id: id, edit: true, fieldsToGetFrom: "Thesis" });
 		// console.log("Navigating to AcademicLogEditScreen Log");
 		console.log("id for press", id);
@@ -145,6 +145,10 @@ const ThesisLogTab = () => {
 		}
 	};
 
+	const handleCreatingThesisLog = () => {
+		navigation.navigate("ThesisLogFormScreenEdit");
+	};
+
 	const formatNumber = (num) => {
 		if (num < 10) return `00${num}`;
 		if (num < 100) return `0${num}`;
@@ -162,14 +166,14 @@ const ThesisLogTab = () => {
 								Case number :
 							</Text>
 							<Text fontSize={16} fontFamily='Inter_Bold' color='#000'>
-								{formatNumber(index + 1)}
+								{formatNumber(store.ThesisCaseList.length - index)}
 							</Text>
 						</HStack>
 						<HStack alignItems='center'>
 							<Button bg='transparent' height={30} borderRadius='$full' size='xs' onPress={() => handleDeleteLog(card)} ref={ref}>
 								<ButtonIcon as={Ionicons} size={20} name='trash' color='#367B71' />
 							</Button>
-							<Button bg='transparent' onPress={() => handleButtonPress(card?.id)} height={30} borderRadius='$full' size='xs'>
+							<Button bg='transparent' onPress={() => handleEditACase(card?.id)} height={30} borderRadius='$full' size='xs'>
 								<ButtonIcon as={Ionicons} size={20} name='create' color='#367B71' />
 							</Button>
 						</HStack>
@@ -185,7 +189,7 @@ const ThesisLogTab = () => {
 	};
 
 	const handleOnAddCase = () => {
-		navigation.navigate("Create New Case", { fieldsToGetFrom: "Thesis" });
+		navigation.navigate("Create New Case For Thesis", { fieldsToGetFrom: "Thesis" });
 	};
 
 	let cardDetails = [];
@@ -202,39 +206,56 @@ const ThesisLogTab = () => {
 		return <IsReadyLoader />;
 	}
 
-	console.log("THIS IS THE CARD DETAILS FOR CARDS", cardDetails);
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 			<Box px='$4' pt={20} flex={1} backgroundColor='$primaryBackground' alignItems='center'>
 				<ScrollView width={"$100%"} keyboardShouldPersistTaps='handled'>
 					<VStack width={"$100%"} alignItems='center' paddingBottom={"$15%"}>
-						{/* <HStack width={"$100%"} justifyContent='space-between'>
-							<Box>
-								<Button onPress={handleEditThesisLog.bind(null, thesisLog[0]?.id)} size='sm' variant='link'>
-									<HStack space='sm' alignItems='center'>
-										<ButtonIcon as={Ionicons} size={15} name='create' color='#367B71' />
-										<ButtonText color='#000'>Edit Thesis Log</ButtonText>
-									</HStack>
-								</Button>
-							</Box>
-							<Box>
-								<Button onPress={handleOnAddCase} size='sm' variant='link'>
-									<HStack space='sm' alignItems='center'>
-										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
-										<ButtonText color='#000'>Add a new case</ButtonText>
-									</HStack>
-								</Button>
-							</Box>
-						</HStack> */}
-						{cardDetails.length > 0 ? (
-							cardDetails.map((card, index) => {
-								return <CardToRender card={card} index={index} />;
-							})
-						) : (
-							<Box justifyContent='center' alignItems='center'>
-								<Text>No Cases found</Text>
-							</Box>
+						{store.ThesisLogList[0]?.thesisName && (
+							<HStack pb='$2' width={"$100%"} justifyContent='space-between'>
+								<Text fontSize={16} fontFamily='Inter_Bold' color='#979797'>
+									{store.ThesisLogList[0]?.thesisName}
+								</Text>
+							</HStack>
 						)}
+						{store.ThesisLogList[0] && (
+							<HStack width={"$100%"} justifyContent='space-between'>
+								<Box>
+									<Button onPress={handleEditThesisLog.bind(null, thesisLog[0]?.id)} size='sm' variant='link'>
+										<HStack space='sm' alignItems='center'>
+											<ButtonIcon as={Ionicons} size={15} name='create' color='#367B71' />
+											<ButtonText color='#000'>Edit Thesis Log</ButtonText>
+										</HStack>
+									</Button>
+								</Box>
+								<Box>
+									<Button onPress={handleOnAddCase} size='sm' variant='link'>
+										<HStack space='sm' alignItems='center'>
+											<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
+											<ButtonText color='#000'>Add a new case</ButtonText>
+										</HStack>
+									</Button>
+								</Box>
+							</HStack>
+						)}
+						{cardDetails.length > 0
+							? cardDetails.map((card, index) => <CardToRender card={card} index={index} />)
+							: !store.ThesisLogList[0] && (
+									<Button
+										onPress={handleCreatingThesisLog}
+										borderRadius={16}
+										borderWidth={1}
+										borderColor='#1e1e1e'
+										bg='#E6E3DB'
+										elevation={4}
+										w='$100%'
+										h={88}>
+										<ButtonIcon w='$20%' as={Ionicons} size={35} name='add-circle' color='#CC3F0C' />
+										<ButtonText color='#1e1e1e' w='$80%'>
+											Create and customise your entries for your thesis log
+										</ButtonText>
+									</Button>
+							  )}
 						<Modal
 							isOpen={showModal}
 							onClose={() => {

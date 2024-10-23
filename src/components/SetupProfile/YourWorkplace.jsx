@@ -102,7 +102,13 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 										/>
 									</Box>
 									<Box px='$5' pt='$1' justifyContent='flex-start' alignItems='flex-start'>
-										<Box>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+										<Box>
+											{formState.errors[field.uid] && (
+												<Text fontSize='$xs' color='#DE2E2E'>
+													This is required.
+												</Text>
+											)}
+										</Box>
 									</Box>
 									{field.uid === "designation" && watch("designation") === "Others" && (
 										<Box pt='$5' width={"$100%"}>

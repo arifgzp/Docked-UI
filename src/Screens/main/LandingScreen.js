@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,7 @@ import { CloseIcon, GlobeIcon, PlusIcon } from "@gluestack-ui/themed";
 import { Menu } from "@gluestack-ui/themed";
 import { MenuItemLabel } from "@gluestack-ui/themed";
 import { ButtonIcon, Text } from "@gluestack-ui/themed";
-import { useNavigation, useNavigationState } from "@react-navigation/native";
+import { useIsFocused, useNavigation, useNavigationState } from "@react-navigation/native";
 import { Radio } from "@gluestack-ui/themed";
 import { RadioIndicator } from "@gluestack-ui/themed";
 import { RadioIcon } from "@gluestack-ui/themed";
@@ -42,14 +42,15 @@ import LandingScreenPages from "./LandingScreenPages";
 import CreateLogScreen from "./LogScreens/CreateLogScreen";
 import { ImageAssets } from "../../../assets/Assets";
 import appStoreInstance from "../../stores/AppStore";
+import { useQuery } from "../../models";
 
 const Tab = createBottomTabNavigator();
 
 const getCreateMenuOptions = (specialty) => {
 	const commonOptions = [
 		{ id: "Academic", name: "Academic", nested: true },
-		// { id: "ThesisLog", name: "Thesis Log" },
-		// { id: "CustomLog", name: "Custom Log" },
+		{ id: "ThesisLog", name: "Thesis Log" },
+		{ id: "CustomLog", name: "Custom Log" },
 	];
 
 	const specialtyOptions = {
@@ -84,7 +85,10 @@ const academicOptions = [
 const CreateMenuList = () => {
 	const [selectedLogButton, setSelectedLogButton] = useState("");
 	const [showActionsheet, setShowActionsheet] = useState(false);
+	const isFocused = useIsFocused();
 	const navigation = useNavigation();
+	const queryInfo = useQuery();
+	const { store, setQuery } = queryInfo;
 
 	const toggleCreateMenu = () => {
 		setShowActionsheet(!showActionsheet);
@@ -96,8 +100,70 @@ const CreateMenuList = () => {
 			setSelectedLogButton(optionId);
 		} else if (["AcademicLog", "PublicationLog", "AdminWorkLog"].includes(optionId)) {
 			setSelectedLogButton(optionId);
+		} else if (optionId === "CustomLog") {
+			setSelectedLogButton(optionId);
+		} else if (optionId.startsWith("custom_")) {
+			setSelectedLogButton(optionId);
 		} else {
 			setSelectedLogButton(optionId);
+		}
+	};
+
+	useEffect(() => {
+		const fetchThesisLogData = async () => {
+			try {
+				const fetchThesisLogData = store.fetchThesisLogByUser(appStoreInstance.UserName);
+				setQuery(fetchThesisLogData);
+				await fetchThesisLogData;
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		if (isFocused) {
+			fetchThesisLogData();
+		}
+	}, [isFocused]);
+
+	const [customLogs, setCustomLogs] = useState([]);
+
+	useEffect(() => {
+		const fetchCustomLogData = async () => {
+			try {
+				const fetchCustomLogData = store.fetchCustomLogByUser(appStoreInstance.UserName);
+				setQuery(fetchCustomLogData);
+				await fetchCustomLogData;
+				setCustomLogs(store.CustomLogList);
+			} catch (error) {
+				console.error("Error fetching custom log:", error);
+			}
+		};
+
+		if (isFocused) {
+			fetchCustomLogData();
+		}
+	}, [isFocused, store, setQuery]);
+
+	const handleOnSelectCustomLog = (id) => {
+		appStoreInstance.setSelectedCustomLogId(id);
+		navigation.navigate("Create New Case For Custom", {
+			fieldsToGetFrom: "Custom",
+			id: id,
+			fromHome: true,
+		});
+	};
+
+	const handleProceedForEntryForThesisLogButton = () => {
+		if (store.ThesisLogList[0]) {
+			navigation.navigate("Create New Case For Thesis", { fieldsToGetFrom: "Thesis", fromHome: true });
+		} else if (!store.ThesisLogList[0]) {
+			navigation.navigate("Logbook", { screen: "RootLogBook", params: { initialTabIndex: 2 } });
+		}
+	};
+
+	const handleProceedForEntryForCustomLogButton = () => {
+		if (!store.CustomLogList[0]) {
+			navigation.navigate("Logbook", { screen: "RootLogBook", params: { initialTabIndex: 3 } });
 		}
 	};
 
@@ -105,9 +171,14 @@ const CreateMenuList = () => {
 		const currentLogButton = selectedLogButton;
 		toggleCreateMenu();
 		setTimeout(() => {
+			if (currentLogButton.startsWith("custom_")) {
+				const customId = currentLogButton.split("_")[1];
+				handleOnSelectCustomLog(customId);
+				return;
+			}
+
 			switch (currentLogButton) {
 				case "AcademicLog":
-					console.log("what is currentLogButton", currentLogButton);
 					navigation.navigate("Home", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AcademicLog" } });
 					break;
 				case "PublicationLog":
@@ -117,10 +188,10 @@ const CreateMenuList = () => {
 					navigation.navigate("Home", { screen: "AcademicLogFormScreen", params: { AcademicLogToGet: "AdminWorkLog" } });
 					break;
 				case "ThesisLog":
-					navigation.navigate("Home", { screen: "ThesisLogFormScreen" });
+					handleProceedForEntryForThesisLogButton();
 					break;
 				case "CustomLog":
-					navigation.navigate("Home", { screen: "CustomLogFormScreen" });
+					handleProceedForEntryForCustomLogButton();
 					break;
 				case "CaseLog":
 					navigation.navigate("Home", { screen: "CaseLogFormScreen", params: { caseLogFormToGet: "CaseLog" } });
@@ -174,6 +245,22 @@ const CreateMenuList = () => {
 									<RadioIcon as={CircleIcon} />
 								</RadioIndicator>
 								<RadioLabel>{academicOption.name}</RadioLabel>
+							</Radio>
+						))}
+					</VStack>
+				)}
+				{option.id === "CustomLog" && customLogs.length > 0 && (selectedLogButton === "CustomLog" || selectedLogButton.startsWith("custom_")) && (
+					<VStack w='$full' alignItems='flex-start' space='lg' ml='$6'>
+						{customLogs.map((customLog) => (
+							<Radio
+								key={`custom_${customLog.id}`}
+								width={"$100%"}
+								value={`custom_${customLog.id}`}
+								onPress={() => handleOptionSelect(`custom_${customLog.id}`)}>
+								<RadioIndicator bg='#E6E3DB' borderColor='#E6E3DB' mr='$2'>
+									<RadioIcon as={CircleIcon} />
+								</RadioIndicator>
+								<RadioLabel>{customLog.customName}</RadioLabel>
 							</Radio>
 						))}
 					</VStack>
