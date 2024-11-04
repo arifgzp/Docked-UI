@@ -13,24 +13,27 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true
+			"infoPlist": {
+				"NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true }
+			},
+			"supportsTablet": true,
+			"bundleIdentifier": "com.docked"
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#E6E3DB"
 			},
-			"googleServicesFile": "./android/app/google-services.json",
 			"package": "com.betic.docked"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
 		},
+		"plugins": ["expo-font"],
 		"extra": {
 			"eas": {
-			  "projectId": "4827f8a3-8107-41fd-bb72-efde89c6c906"
+				"projectId": "e8b21daf-b132-4376-bcde-e6645e1e17e7"
 			}
-		  },
-		"plugins": ["expo-font"]
+		}
 	}
 }

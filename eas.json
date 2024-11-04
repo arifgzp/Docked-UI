@@ -1,0 +1,30 @@
+{
+	"cli": {
+		"version": ">= 5.9.0"
+	},
+	"build": {
+		"development": {
+			"distribution": "internal",
+			"android": {
+				"gradleCommand": ":app:assembleDebug"
+			},
+			"ios": {
+				"buildConfiguration": "Debug"
+			},
+			"yarn": "1.22.19"
+		},
+		"preview": {
+			"distribution": "internal",
+			"yarn": "1.22.19",
+			"ios": {
+				"credentialsSource": "local"
+			}
+		},
+		"production": {
+			"yarn": "1.22.19"
+		}
+	},
+	"submit": {
+		"production": {}
+	}
+}

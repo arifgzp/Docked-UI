@@ -1,0 +1,9 @@
+For ios dev
+1. npx expo start
+2. npm run ios
+
+For ios Prod
+1. eas build --platform ios --local
+
+For exporting code to pdf
+> npx repo2pdf
