@@ -2,17 +2,17 @@ import { createHttpClient } from "mst-gql";
 import Constants from "expo-constants";
 
 // const DEV_SERVER_URL = "164.52.218.115:6062";
-const DEV_SERVER_URL = "164.52.218.115:6062";
-const PROD_SERVER_URL = "164.52.218.115:6062";
+const DEV_SERVER_URL = "app.docked.in";
+const PROD_SERVER_URL = "app.docked.in";
 //const PROD_SERVER_URL = "164.52.218.115:6062";
 
 let _gqlHttpClient = null;
 
 function getProtocol() {
 	if (process.env.REACT_NATIVE_MODE === "PRODUCTION") {
-		return `http`;
+		return `https`;
 	} else {
-		return `http`;
+		return `https`;
 	}
 }
 
