@@ -2,3 +2,4 @@ node_modules
 .expo
 .vscode/settings.json
 package-lock.json
+ios/certs/*
