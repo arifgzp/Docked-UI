@@ -8,6 +8,7 @@ import { observer } from "mobx-react";
 import { Ionicons } from "@expo/vector-icons";
 import appStoreInstance from "../../stores/AppStore";
 import AppStore from "../../stores/AppStore";
+import { sendRegistrationDataToBigQueryForAdminAnalytics } from "../BigQueryFunctions/AdminDashboardAnalyticalQueries";
 const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	const [image, setImage] = useState(null);
 	const queryInfo = useQuery();
@@ -69,9 +70,24 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				setQuery(query);
 				const finishWizardProcessData = await query;
 				if (finishWizardProcessData) {
-					console.log("finishWizardProcessData FADTEWS AHSJKBFBJKB", finishWizardProcessData);
-					const finishWizardData = finishWizardProcessData.updateUser.user[0];
-					console.log("finishWizardProcessData FADTEWS", finishWizardProcessData.updateUser.user[0]);
+					console.log("what is this, finishWizardProcessData,", finishWizardProcessData);
+					const updatedUser = finishWizardProcessData.updateUser.user[0];
+					console.log("data for userName", updatedUser.userName, updatedUser.designation, updatedUser.broadSpecialty);
+
+					const registrationDataForAdminDashboard = {
+						userName: updatedUser.userName,
+						designation: updatedUser.designation,
+						specialty: updatedUser.broadSpecialty,
+						workplace: updatedUser.workplace,
+						city: updatedUser.city,
+						createdOn: updatedUser.createdOn,
+						link: "fromPlayStore",
+					};
+
+					console.log("registrationDataForAdminDashboard", registrationDataForAdminDashboard);
+					const sendRegistrationDataToBigQueryForAdmin = sendRegistrationDataToBigQueryForAdminAnalytics(registrationDataForAdminDashboard);
+					console.log("sendRegistrationDataToBigQueryForAdmin", sendRegistrationDataToBigQueryForAdmin);
+
 					navigation.navigate("Main Landing Page", { UserSpecialty: finishWizardProcessData.updateUser.user[0].broadSpecialty });
 					AppStore.setBroadSpecialty(finishWizardProcessData.updateUser.user[0].broadSpecialty);
 					AppStore.setUserId(finishWizardProcessData.updateUser.user[0].id);
@@ -154,9 +170,24 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 			setQuery(query);
 			const finishWizardProcessData = await query;
 			if (finishWizardProcessData) {
-				console.log("finishWizardProcessData FADTEWS AHSJKBFBJKB", finishWizardProcessData);
-				const finishWizardData = finishWizardProcessData.updateUser.user[0];
-				console.log("finishWizardProcessData FADTEWS", finishWizardProcessData.updateUser.user[0]);
+				console.log("what is this, finishWizardProcessData,", finishWizardProcessData);
+				const updatedUser = finishWizardProcessData.updateUser.user[0];
+				console.log("data for userName", updatedUser.userName, updatedUser.designation, updatedUser.broadSpecialty);
+
+				const registrationDataForAdminDashboard = {
+					userName: updatedUser.userName,
+					designation: updatedUser.designation,
+					specialty: updatedUser.broadSpecialty,
+					workplace: updatedUser.workplace,
+					city: updatedUser.city,
+					createdOn: updatedUser.createdOn,
+					link: "fromPlayStore",
+				};
+
+				console.log("registrationDataForAdminDashboard", registrationDataForAdminDashboard);
+				const sendRegistrationDataToBigQueryForAdmin = sendRegistrationDataToBigQueryForAdminAnalytics(registrationDataForAdminDashboard);
+				console.log("sendRegistrationDataToBigQueryForAdmin", sendRegistrationDataToBigQueryForAdmin);
+
 				navigation.navigate("Main Landing Page", { UserSpecialty: finishWizardProcessData.updateUser.user[0].broadSpecialty });
 				AppStore.setBroadSpecialty(finishWizardProcessData.updateUser.user[0].broadSpecialty);
 				AppStore.setUserId(finishWizardProcessData.updateUser.user[0].id);
@@ -237,7 +268,7 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 										<Text bold italic color='#CC3F0C'>
 											Before you start...
 										</Text>
-										{startingStep > 1 ? (
+										{startingStep > 2 ? (
 											<Box justifycontent='center' alignItems='center'>
 												<Button width={"$40%"} onPress={handleSubmit(handleSkip)} size='sm' variant='link'>
 													<ButtonText underline fontFamily='Inter_Bold' textAlign='center'>

@@ -18,4 +18,4 @@ export const CustomCaseModel = CustomCaseModelBase.actions((self) => ({
 	},
 }));
 
-export const updateCustomCaseModelPrimitives = selectFromCustomCase().caseName.createdOn.updatedOn.fields(fieldsModelPrimitives);
+export const updateCustomCaseModelPrimitives = selectFromCustomCase().caseName.createdOn.updatedOn.fields(fieldsModelPrimitives).customLogIdReference;

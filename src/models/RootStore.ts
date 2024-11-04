@@ -1536,14 +1536,14 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return values(self.thesisCases);
 	},
 
-	getThesisCaseListById(id) {
+	getThesisCaseById(id) {
 		return values(self.thesisCases).filter((obj) => obj.id == id);
 	},
 	get CustomCaseList() {
 		return values(self.customCases);
 	},
 
-	getCustomCaseListById(id) {
+	getCustomCaseById(id) {
 		return values(self.customCases).filter((obj) => obj.id == id);
 	},
 }));

@@ -32,6 +32,7 @@ export const CustomCaseModelBase = withTypedRefs<Refs>()(ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     fields: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => FieldsModel))))),
+    customLogIdReference: types.union(types.undefined, types.null, types.string),
     fieldsAggregate: types.union(types.undefined, types.null, types.late((): any => FieldsAggregateResultModel)),
   })
   .views(self => ({
@@ -45,6 +46,7 @@ export class CustomCaseModelSelector extends QueryBuilder {
   get caseName() { return this.__attr(`caseName`) }
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
+  get customLogIdReference() { return this.__attr(`customLogIdReference`) }
   fields(builder: string | FieldsModelSelector | ((selector: FieldsModelSelector) => FieldsModelSelector) | undefined, args?: { filter?: (FieldsFilter | null), order?: (FieldsOrder | null), first?: (number | null), offset?: (number | null) }) { return this.__child(`fields`+ (args ? '('+['filter', 'order', 'first', 'offset'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), FieldsModelSelector, builder) }
   fieldsAggregate(builder: string | FieldsAggregateResultModelSelector | ((selector: FieldsAggregateResultModelSelector) => FieldsAggregateResultModelSelector) | undefined, args?: { filter?: (FieldsFilter | null) }) { return this.__child(`fieldsAggregate`+ (args ? '('+['filter'].map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) ).filter((v) => v!=null).join(', ') + ')': ''), FieldsAggregateResultModelSelector, builder) }
 }
@@ -52,4 +54,4 @@ export function selectFromCustomCase() {
   return new CustomCaseModelSelector()
 }
 
-export const customCaseModelPrimitives = selectFromCustomCase().caseName.createdOn.updatedOn
+export const customCaseModelPrimitives = selectFromCustomCase().caseName.createdOn.updatedOn.customLogIdReference

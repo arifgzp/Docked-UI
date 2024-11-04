@@ -1,5 +1,19 @@
 const OrthopaedicsProcedureLogCardViewConfig = [
 	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
+	{
 		label: "Diagnosis",
 		value: "diagnosis",
 	},
@@ -35,6 +49,20 @@ const OrthopaedicsProcedureLogCardViewConfig = [
 
 const OrthopaedicsCaseLogCardViewConfig = [
 	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
+	{
 		label: "Diagnosis",
 		value: "diagnosis",
 	},
@@ -51,6 +79,20 @@ const OrthopaedicsCaseLogCardViewConfig = [
 ];
 
 const AnesthesiaCaseLogCardViewConfig = [
+	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
 	{
 		label: "Diagnosis",
 		value: "diagnosis",
@@ -91,6 +133,20 @@ const AnesthesiaCaseLogCardViewConfig = [
 
 const AnesthesiaChronicPainCardLogViewConfig = [
 	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
+	{
 		label: "Diagnosis",
 		value: "diagnosis",
 	},
@@ -121,6 +177,20 @@ const AnesthesiaChronicPainCardLogViewConfig = [
 
 const AnesthesiaCriticalCareCardLogViewConfig = [
 	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
+	{
 		label: "Diagnosis",
 		value: "diagnosis",
 	},
@@ -145,6 +215,20 @@ const AnesthesiaCriticalCareCardLogViewConfig = [
 
 const OralRadiologyCardLogViewConfig = [
 	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
+	{
 		label: "Diagnosis",
 		value: "diagnosis",
 	},
@@ -161,6 +245,24 @@ const OralRadiologyCardLogViewConfig = [
 
 const OralMedicineCaseLogCardLogViewConfig = [
 	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Patient Age",
+		value: "patientAge",
+		isAge: true,
+	},
+	{
+		label: "Patient Sex",
+		value: "patientSex",
+	},
+	{
+		label: "Diagnosis",
+		value: "diagnosis",
+	},
+	{
 		label: "Comorbidities",
 		value: "comorbidities",
 		multipleSelectValues: true,
@@ -170,10 +272,7 @@ const OralMedicineCaseLogCardLogViewConfig = [
 		value: "habitHistory",
 		multipleSelectValues: true,
 	},
-	{
-		label: "Diagnosis",
-		value: "diagnosis",
-	},
+
 	{
 		label: "Procedure",
 		value: "procedure",
@@ -183,14 +282,20 @@ const OralMedicineCaseLogCardLogViewConfig = [
 
 const AcademicLogCardLogViewConfig = [
 	{
-		label: "Position",
-		value: "position",
-	},
-	{
 		label: "Activity",
 		value: "activities",
 		parentFollowedByFirstChild: true,
 	},
+	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Position",
+		value: "position",
+	},
+
 	{
 		label: "Title",
 		value: "title",
@@ -201,11 +306,19 @@ const AcademicLogCardLogViewConfig = [
 		multipleSelectValues: true,
 	},
 ];
-
 const PublicationLogCardLogViewConfig = [
 	{
 		label: "Type",
 		value: "publicationType",
+	},
+	{
+		label: "Date",
+		value: "date",
+		isDate: true,
+	},
+	{
+		label: "Status",
+		value: "status",
 	},
 	{
 		label: "Title",
@@ -215,20 +328,17 @@ const PublicationLogCardLogViewConfig = [
 		label: "Journal Name",
 		value: "journalName",
 	},
-	{
-		label: "Status",
-		value: "status",
-	},
-	{
-		label: "Publication Date",
-		value: "date",
-	},
 ];
 
 const AdminWorkLogCardLogViewConfig = [
 	{
 		label: "Activity",
 		value: "activity",
+	},
+	{
+		label: "Date",
+		value: "date",
+		isDate: true,
 	},
 	{
 		label: "Position",

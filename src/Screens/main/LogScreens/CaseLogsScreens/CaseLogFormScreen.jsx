@@ -69,6 +69,12 @@ import {
 	OralRadiologyConfigTextAndSingleSelectOption,
 	OralRadiologySpecialOptions,
 } from "../../../../data/entity/OralMedicineAndRadiology/OralRadiologyConfig";
+import {
+	sendCaseLogDataToBigQueryForAdminAnalytics,
+	sendFeatureUsageDataToBigQueryForAdminAnalytics,
+} from "../../../../components/BigQueryFunctions/AdminDashboardAnalyticalQueries";
+import { sendCaseLogDataToBigQueryForUserDashboard } from "../../../../components/BigQueryFunctions/UserDashboardAnalyticalQueries";
+import { CommonActions } from "@react-navigation/native";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -125,6 +131,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
+	const startTime = new Date().toISOString();
 
 	const { caseLogFormToGet } = route.params;
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
@@ -201,6 +208,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 
 	const handleSaveClick = async (formData) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
+		buttonPressedRef.current = { active: true, screenName: "RootLogBook" };
 		console.log("FormData for Case Logs to be manual saving added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
 		formData.complete = true;
@@ -259,6 +267,41 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 			setQuery(query);
 			const data = await query;
 			if (data) {
+				console.log("data after making a case log", data);
+				let dataOfLog;
+				switch (caseLogFormToGet) {
+					case "CaseLog":
+						dataOfLog = data.updateUser.user[0].anaesthesiaCaseLog[data.updateUser.user[0].anaesthesiaCaseLog.length - 1];
+						break;
+					case "ChronicPain":
+						dataOfLog = data.updateUser.user[0].anaesthesiaChronicPainLog[data.updateUser.user[0].anaesthesiaChronicPainLog.length - 1];
+						break;
+					case "CriticalCareCaseLog":
+						dataOfLog = data.updateUser.user[0].anaesthesiaCriticalCareCaseLog[data.updateUser.user[0].anaesthesiaCriticalCareCaseLog.length - 1];
+						break;
+					case "OrthopaedicsCaseLog":
+						dataOfLog = data.updateUser.user[0].orthopaedicsCaseLog[data.updateUser.user[0].orthopaedicsCaseLog.length - 1];
+						break;
+					case "OrthopaedicsProcedureLog":
+						dataOfLog = data.updateUser.user[0].orthopaedicsProcedureLog[data.updateUser.user[0].orthopaedicsProcedureLog.length - 1];
+						break;
+					default:
+						break;
+				}
+				console.log("what is the dataogLog", dataOfLog);
+
+				const analyticsDataForAdminDashboard = sendCaseLogDataToBigQueryForAdminAnalytics(dataOfLog, startTime, new Date().toISOString());
+				console.log("analyticsDataForAdminDashboard", analyticsDataForAdminDashboard);
+				appStoreInstance.sendDataToBigQuery(analyticsDataForAdminDashboard);
+
+				const analyticsDataForUserDashobard = sendCaseLogDataToBigQueryForUserDashboard(caseLogFormToGet, dataOfLog);
+				console.log("analyticsDataForUserDashobard", analyticsDataForUserDashobard);
+				appStoreInstance.sendDataToBigQuery(analyticsDataForUserDashobard);
+
+				const appFeatureUsageForAdminDashboard = sendFeatureUsageDataToBigQueryForAdminAnalytics("Case Log", startTime, new Date().toISOString());
+				console.log("appFeatureUsageForAdminDashboard", appFeatureUsageForAdminDashboard);
+				appStoreInstance.sendDataToBigQuery(appFeatureUsageForAdminDashboard);
+
 				const updateUserQuery = store.updateUser(AppStore.UserId, {
 					set: { targetedCaseLogNumber: appStoreInstance.CaseLogNumbers + 1, dateOfBirth: formatRFC3339(new Date()) },
 				});
@@ -429,8 +472,25 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				navigation.navigate("LogProfileEditForFormStack", { caseLogFormToGet: caseLogFormToGet });
 			}
 		}
-	}, [buttonPressed]);
 
+		return () => {
+			console.log("when is this occuring");
+			console.log("buttonPressed.screenName is wahat", buttonPressedRef.current);
+			if (buttonPressedRef.current.active == true && buttonPressedRef.current.screenName == "RootLogBook") {
+				console.log("is this pressed or not?");
+				navigation.dispatch((state) => {
+					// Remove the current screen from the stack
+					const routes = state.routes.filter((r) => r.key !== route.key);
+
+					return CommonActions.reset({
+						...state,
+						routes,
+						index: routes.length - 1,
+					});
+				});
+			}
+		};
+	}, [buttonPressed, navigation, route.key, caseLogFormToGet]);
 	useEffect(() => {
 		console.log("THIS SHOULD WORK BROOOOO!!!!", key);
 		reset();

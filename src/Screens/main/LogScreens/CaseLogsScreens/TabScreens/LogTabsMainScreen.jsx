@@ -1,27 +1,30 @@
 import { Button, ButtonIcon, HStack } from "@gluestack-ui/themed";
-import { Box, Text } from "@gluestack-ui/themed";
+import { Box, Text, Spinner } from "@gluestack-ui/themed";
 import * as React from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { TabView, TabBar } from "react-native-tab-view";
 import { ButtonText } from "@gluestack-ui/themed";
-import { SearchBar } from "react-native-elements";
 import IsReadyLoader from "../../../../../components/IsReadyLoader";
 import useIsReady from "../../../../../hooks/useIsReady";
+import appStoreInstance from "../../../../../stores/AppStore";
+import { useFocusEffect } from "@react-navigation/native";
+import { useEffect, useCallback, useState } from "react";
 
-const FirstRoute = require("./CaseLogTab").default;
-const SecondRoute = require("./AcademicLogTab").default;
-const ThirdRoute = require("./ThesisLogTab").default;
-const FourthRoute = require("./CustomLogTab").default;
-const FifthRoute = require("./SpecialCaseLogTab").default;
+// Import components normally at the top
+const CasesLogTabRoute = require("./CaseLogTab").default;
+const AcademicLogTabRoute = require("./AcademicLogTab").default;
+const ThesisLogTabRoute = require("./ThesisLogTab").default;
+const CustomLogTabRoute = require("./CustomLogTab").default;
 
-const renderScene = SceneMap({
-	first: FirstRoute,
-	second: SecondRoute,
-	third: ThirdRoute,
-	fourth: FourthRoute,
-	fifth: FifthRoute,
-});
+// Lazy placeholder component
+const LazyPlaceholder = ({ route }) => (
+	<Box flex={1} justifyContent='center' alignItems='center'>
+		<Spinner size='large' color='#367B71' />
+		<Text mt='$2' color='$textLight'>
+			Loading {route.title}...
+		</Text>
+	</Box>
+);
 
 const renderTabBar = (props) => (
 	<TabBar
@@ -41,25 +44,63 @@ export default function LogTabsMainScreen({ navigation, route }) {
 	const layout = useWindowDimensions();
 	const [search, setSearch] = React.useState("");
 	const initialTabIndex = route?.params?.initialTabIndex ?? 0;
-
 	const [index, setIndex] = React.useState(initialTabIndex);
+
+	// Track which tabs have been loaded
+	const [loadedTabs, setLoadedTabs] = useState({});
 
 	const [routes] = React.useState([
 		{ key: "first", title: "Cases" },
 		{ key: "second", title: "Academics" },
 		{ key: "third", title: "Thesis" },
 		{ key: "fourth", title: "Custom" },
-		{ key: "fifth", title: "Special Case" },
 	]);
 
-	const updateSearch = (search) => {
-		setSearch(search);
-	};
+	useFocusEffect(
+		useCallback(() => {
+			setTimeout(() => {
+				appStoreInstance.setIsTabBarVisble(true);
+			}, 1);
+
+			return () => {
+				appStoreInstance.setIsTabBarVisble(false);
+			};
+		}, [])
+	);
 
 	React.useEffect(() => {
-		// Update index when initialTabIndex changes
 		setIndex(initialTabIndex);
 	}, [initialTabIndex]);
+
+	// Handle tab loading
+	const handleTabLoad = useCallback((tabKey) => {
+		setLoadedTabs((prev) => ({ ...prev, [tabKey]: true }));
+	}, []);
+
+	const renderScene = ({ route }) => {
+		// If the tab hasn't been loaded yet and isn't the current tab, show placeholder
+		if (!loadedTabs[route.key] && route.key !== routes[index].key) {
+			return <LazyPlaceholder route={route} />;
+		}
+
+		// Mark the tab as loaded when it's rendered
+		if (!loadedTabs[route.key]) {
+			handleTabLoad(route.key);
+		}
+
+		switch (route.key) {
+			case "first":
+				return <CasesLogTabRoute />;
+			case "second":
+				return <AcademicLogTabRoute />;
+			case "third":
+				return <ThesisLogTabRoute />;
+			case "fourth":
+				return <CustomLogTabRoute />;
+			default:
+				return null;
+		}
+	};
 
 	if (!isReady) {
 		return (
@@ -70,22 +111,12 @@ export default function LogTabsMainScreen({ navigation, route }) {
 	}
 
 	return (
-		<Box p='$4' w='$full' h='$full' bg='$primaryBackground' pt='$10'>
-			<HStack alignItems='center' w='$100%' justifyContent='space-between'>
+		<Box py='$4' w='$full' h='$full' bg='$primaryBackground' pt='$10'>
+			<HStack px='$4' alignItems='center' w='$100%' justifyContent='space-between'>
 				<Text size='xl' fontFamily='Inter_Bold'>
 					Logbook
 				</Text>
 				<HStack space='sm' alignItems='center'>
-					{/* <Box>
-						<SearchBar
-							inputContainerStyle={styles.inputContainer}
-							containerStyle={styles.container}
-							inputStyle={styles.input}
-							placeholder='Type Here...'
-							onChangeText={updateSearch}
-							value={search}
-						/>
-					</Box> */}
 					<Button
 						onPress={() => navigation.navigate("LogProfileReadPage", { caseLogFormToGet: "" })}
 						backgroundColor='#367B71'
@@ -96,6 +127,9 @@ export default function LogTabsMainScreen({ navigation, route }) {
 				</HStack>
 			</HStack>
 			<TabView
+				lazy
+				lazyPreloadDistance={0}
+				renderLazyPlaceholder={LazyPlaceholder}
 				renderTabBar={renderTabBar}
 				navigationState={{ index, routes }}
 				renderScene={renderScene}
@@ -117,7 +151,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#ffffff",
 		borderTopWidth: 0,
 		borderBottomWidth: 0,
-		height: 45, // Adjust the height to include padding, etc.
+		height: 45,
 		width: 120,
 	},
 	input: {

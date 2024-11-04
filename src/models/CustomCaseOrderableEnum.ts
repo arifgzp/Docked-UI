@@ -10,7 +10,8 @@ import { types } from "mobx-state-tree"
 export enum CustomCaseOrderable {
   caseName="caseName",
 createdOn="createdOn",
-updatedOn="updatedOn"
+updatedOn="updatedOn",
+customLogIdReference="customLogIdReference"
 }
 
 /**
@@ -20,4 +21,5 @@ export const CustomCaseOrderableEnumType = types.enumeration("CustomCaseOrderabl
         "caseName",
   "createdOn",
   "updatedOn",
+  "customLogIdReference",
       ])

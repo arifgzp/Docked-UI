@@ -34,13 +34,14 @@ import { formatRFC3339 } from "date-fns";
 import { AcademicLogConfigTextAndSingleSelectOptions, specialAcademicLogsOption } from "../../../../data/entity/Academic/AcademicLogConfig";
 import { PublicationLogConfigTextAndSingleSelectOptions } from "../../../../data/entity/Academic/PublicationLog";
 import { AdminWorkLogConfigTextAndSingleSelectOptions } from "../../../../data/entity/Academic/AdminWorkLogConfig";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import appStoreInstance from "../../../../stores/AppStore";
 import { useQuery } from "../../../../models";
 import Loader from "../../../../components/Loader";
 import useIsReady from "../../../../hooks/useIsReady";
 import IsReadyLoader from "../../../../components/IsReadyLoader";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 
 const getAcademicLogsFields = (key) => {
 	switch (key) {
@@ -76,7 +77,6 @@ const AcademicLogFormScreen = ({ navigation, route }) => {
 	const [academicLogData, setAcademicLogData] = useState({});
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
-
 	const handleOnSave = async (formData) => {
 		formData.date = formatRFC3339(formData.date ? formData.date : new Date());
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
@@ -202,6 +202,26 @@ const AcademicLogFormScreen = ({ navigation, route }) => {
 		reset();
 		appStoreInstance.setResetDate(true);
 	}, [AcademicLogToGet]);
+
+	useFocusEffect(
+		useCallback(() => {
+			console.log("Screen is focused in academic log form screen");
+			return () => {
+				console.log("did this occur?");
+
+				navigation.dispatch((state) => {
+					// Remove the current screen from the stack
+					const routes = state.routes.filter((r) => r.key !== route.key);
+
+					return CommonActions.reset({
+						...state,
+						routes,
+						index: routes.length - 1,
+					});
+				});
+			};
+		}, [navigation, route.key])
+	);
 
 	console.log("academicLogData is what", academicLogData);
 	if (!isReady) {

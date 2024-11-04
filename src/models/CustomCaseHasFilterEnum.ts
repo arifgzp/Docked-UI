@@ -11,7 +11,8 @@ export enum CustomCaseHasFilter {
   caseName="caseName",
 createdOn="createdOn",
 updatedOn="updatedOn",
-fields="fields"
+fields="fields",
+customLogIdReference="customLogIdReference"
 }
 
 /**
@@ -22,4 +23,5 @@ export const CustomCaseHasFilterEnumType = types.enumeration("CustomCaseHasFilte
   "createdOn",
   "updatedOn",
   "fields",
+  "customLogIdReference",
       ])

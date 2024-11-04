@@ -42,7 +42,7 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 											control={control}
 											key={index}
 											rules={{
-												required: false,
+												required: true,
 											}}
 											render={({ field: { onChange, onBlur, value } }) => {
 												if (field.type === "select-single") {
@@ -101,8 +101,14 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 											name={field.uid}
 										/>
 									</Box>
-									<Box alignItems='center'>
-										<Box>{formState.errors[field.uid] && <Text color='#DE2E2E'>This is required.</Text>}</Box>
+									<Box px='$5' pt='$1' justifyContent='flex-start' alignItems='flex-start'>
+										<Box>
+											{formState.errors[field.uid] && (
+												<Text fontSize='$xs' color='#DE2E2E'>
+													This is required.
+												</Text>
+											)}
+										</Box>
 									</Box>
 									{field.uid === "designation" && watch("designation") === "Others" && (
 										<Box pt='$5' width={"$100%"}>
@@ -115,7 +121,7 @@ const YourWorkplace = ({ control, formState, formFields, watch, setValue }) => {
 													key={"designationOthers"}
 													name={"designationOthers"}
 													rules={{
-														required: false,
+														required: true,
 													}}
 													render={({ field: { onChange, onBlur, value } }) => {
 														return (

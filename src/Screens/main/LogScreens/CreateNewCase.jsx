@@ -1,6 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
-import { Box, VStack, Text, Input, Button, ButtonText, ButtonIcon, HStack, InputField, ScrollView, KeyboardAvoidingView } from "@gluestack-ui/themed";
+import {
+	Box,
+	VStack,
+	Text,
+	Input,
+	Button,
+	ButtonText,
+	ButtonIcon,
+	HStack,
+	InputField,
+	ScrollView,
+	KeyboardAvoidingView,
+	Textarea,
+	TextareaInput,
+} from "@gluestack-ui/themed";
 import { observer } from "mobx-react";
 import { Ionicons } from "@expo/vector-icons";
 import { formatRFC3339 } from "date-fns";
@@ -10,11 +24,12 @@ import { useQuery } from "../../../models";
 import IsReadyLoader from "../../../components/IsReadyLoader";
 import Loader from "../../../components/Loader";
 import appStoreInstance from "../../../stores/AppStore";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 
 const CreateNewCase = ({ navigation, route }) => {
 	const isReady = useIsReady();
-	const { id = null, edit = false } = route?.params || {};
-	console.log("id", id, "edit", edit, "fields to get from", route?.params?.fieldsToGetFrom);
+	const { id = null, edit = false, fromHome = false } = route?.params || {};
+	console.log("id", id, "edit", edit, "fromHome", fromHome, "fields to get from", route?.params?.fieldsToGetFrom);
 	const CaseHolder = route?.params?.fieldsToGetFrom;
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -45,10 +60,6 @@ const CreateNewCase = ({ navigation, route }) => {
 
 	const [caseData, setCaseData] = useState({});
 
-	const addField = () => {
-		append({ label: "", value: "" });
-	};
-
 	const handleOnSave = async (formData) => {
 		const combinedFields = [...formData.thesisFields, ...formData.customFields];
 
@@ -58,6 +69,9 @@ const CreateNewCase = ({ navigation, route }) => {
 			createdOn: formatRFC3339(new Date()),
 			updatedOn: formatRFC3339(new Date()),
 		};
+		if (CaseHolder === "Custom") {
+			dataToSave.customLogIdReference = id;
+		}
 		if (Array.isArray(dataToSave.fields)) {
 			dataToSave.fields.forEach((field) => {
 				field.createdOn = field.updatedOn = formatRFC3339(new Date());
@@ -87,8 +101,27 @@ const CreateNewCase = ({ navigation, route }) => {
 			setQuery(query);
 			const data = await query;
 			if (data) {
+				switch (CaseHolder) {
+					case "Thesis":
+						if (fromHome) {
+							navigation.navigate("Logbook", { screen: "RootLogBook", params: { initialTabIndex: 2 } });
+						} else {
+							navigation.goBack();
+						}
+						break;
+
+					case "Custom":
+						if (fromHome) {
+							navigation.navigate("Logbook", { screen: "RootLogBook", params: { initialTabIndex: 3 } });
+						} else {
+							navigation.goBack();
+						}
+						break;
+
+					default:
+						break;
+				}
 				console.log("Success ha brooooo");
-				navigation.goBack();
 			}
 		} catch (error) {
 			console.log(error);
@@ -133,6 +166,7 @@ const CreateNewCase = ({ navigation, route }) => {
 			combinedFields.forEach((field) => {
 				delete field.__typename;
 				delete field.id;
+				delete field.isCustom;
 				field.updatedOn = formatRFC3339(new Date());
 			});
 		}
@@ -186,22 +220,86 @@ const CreateNewCase = ({ navigation, route }) => {
 			const fetchData = async () => {
 				let logData;
 				if (CaseHolder === "Thesis") {
-					logData = store.getThesisCaseListById(id);
-				} else if (CaseHolder === "Custom") {
-					logData = store.getCustomCaseListById(id);
-				}
+					// Get the case being edited
+					logData = store.getThesisCaseById(id);
 
-				if (logData && logData.length > 0) {
-					console.log("log data", logData[0]);
-					const { caseName, fields } = logData[0];
-					reset({
-						caseName,
-						thesisFields: fields.filter((f) => !f.isCustom),
-						customFields: fields.filter((f) => f.isCustom),
-					});
-					setCaseData(logData[0]);
-				} else {
-					console.error("No data found for the given id");
+					// Fetch thesis template
+					const userQuery = store.fetchThesisLogByUser(appStoreInstance.UserName);
+					setQuery(userQuery);
+					const finishFetchingUserProfile = await userQuery;
+
+					if (finishFetchingUserProfile && logData && logData.length > 0) {
+						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
+						const thesisTemplateFields = fetchProfileData.thesisLog[0].formLabels;
+						const existingCaseFields = logData[0].fields;
+
+						// Create a map of existing fields for easier lookup
+						const existingFieldsMap = existingCaseFields.reduce((acc, field) => {
+							acc[field.label] = field;
+							return acc;
+						}, {});
+
+						// Merge template fields with existing values
+						const mergedFields = thesisTemplateFields.map((templateField) => {
+							const existingField = existingFieldsMap[templateField.label];
+							return {
+								label: templateField.label,
+								value: existingField ? existingField.value : "",
+								isCustom: false,
+								...(existingField || {}),
+								createdOn: existingField?.createdOn || formatRFC3339(new Date()),
+								updatedOn: formatRFC3339(new Date()),
+							};
+						});
+
+						// Set the form values
+						reset({
+							caseName: logData[0].caseName,
+							thesisFields: mergedFields,
+							customFields: existingCaseFields.filter((f) => f.isCustom),
+						});
+
+						setCaseData(logData[0]);
+					}
+				} else if (CaseHolder === "Custom") {
+					// Get the case being edited
+					logData = store.getCustomCaseById(id);
+
+					// Fetch custom log template
+					const customLog = store.getCustomLogById(logData[0].customLogIdReference);
+
+					if (customLog && logData && logData.length > 0) {
+						const customTemplateFields = customLog[0].formLabels;
+						const existingCaseFields = logData[0].fields;
+
+						// Create a map of existing fields for easier lookup
+						const existingFieldsMap = existingCaseFields.reduce((acc, field) => {
+							acc[field.label] = field;
+							return acc;
+						}, {});
+
+						// Merge template fields with existing values
+						const mergedFields = customTemplateFields.map((templateField) => {
+							const existingField = existingFieldsMap[templateField.label];
+							return {
+								label: templateField.label,
+								value: existingField ? existingField.value : "",
+								isCustom: false,
+								...(existingField || {}),
+								createdOn: existingField?.createdOn || formatRFC3339(new Date()),
+								updatedOn: formatRFC3339(new Date()),
+							};
+						});
+
+						// Set the form values
+						reset({
+							caseName: logData[0].caseName,
+							thesisFields: mergedFields,
+							customFields: existingCaseFields.filter((f) => f.isCustom),
+						});
+
+						setCaseData(logData[0]);
+					}
 				}
 			};
 
@@ -250,6 +348,21 @@ const CreateNewCase = ({ navigation, route }) => {
 
 	console.log("here is your,", fieldsFromThesisOrCustom, caseNameFromThesisOrCustom);
 
+	useFocusEffect(
+		useCallback(() => {
+			return () => {
+				navigation.dispatch((state) => {
+					const routes = state.routes.filter((r) => r.key !== route.key);
+					return CommonActions.reset({
+						...state,
+						routes,
+						index: routes.length - 1,
+					});
+				});
+			};
+		}, [navigation, route.key])
+	);
+
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
@@ -261,16 +374,16 @@ const CreateNewCase = ({ navigation, route }) => {
 					<ScrollView keyboardShouldPersistTaps='handled'>
 						<VStack space='lg'>
 							<VStack space='sm' px='$5'>
-								<Text size='md' fontFamily='Inter_Bold'>
-									{CaseHolder} Name
+								<Text size='xs' color='rgba(81, 81, 81, 0.7)'>
+									Title
 								</Text>
 								<Controller
 									control={control}
 									name='caseName'
 									render={({ field: { onChange, value } }) => (
-										<Input isDisabled variant='outline' size='sm'>
-											<InputField value={value} onChangeText={onChange} />
-										</Input>
+										<Textarea variant='outline' size='sm'>
+											<TextareaInput value={value} onChangeText={onChange} />
+										</Textarea>
 									)}
 								/>
 							</VStack>
@@ -333,15 +446,6 @@ const CreateNewCase = ({ navigation, route }) => {
 									</Box>
 								</Box>
 							))}
-
-							<Box px='$5'>
-								<Button onPress={addField} alignSelf='flex-start' size='sm' variant='link'>
-									<HStack space='sm' alignItems='center'>
-										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
-										<ButtonText color='#000'>Add a new field</ButtonText>
-									</HStack>
-								</Button>
-							</Box>
 						</VStack>
 					</ScrollView>
 					<Box px='$5' pb='$5%' paddingTop={5} width='$100%'>

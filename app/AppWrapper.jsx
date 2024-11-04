@@ -33,6 +33,11 @@ import { CloseIcon } from "@gluestack-ui/themed";
 import { Button } from "@gluestack-ui/themed";
 import { ModalFooter } from "@gluestack-ui/themed";
 import { formatRFC3339, parseISO, differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
+import {
+	captureCurrentActiveUsers,
+	captureRetentionRateDate,
+	captureReturningUserDate,
+} from "../src/components/BigQueryFunctions/AdminDashboardAnalyticalQueries";
 
 const Stack = createNativeStackNavigator();
 
@@ -174,7 +179,7 @@ const AppWrapper = () => {
 	const infoRef = useRef(null);
 
 	useEffect(() => {
-		// Whenever `isUserSignedIn` or `UserStatus` changes, update the `navKey`
+		// Whenever `isUsesrSignedIn` or `UserStatus` changes, update the `navKey`
 		setNavKey((prevKey) => prevKey + 1);
 	}, [appStoreInstance.isUserSignedIn, appStoreInstance.UserStatus]);
 
@@ -187,7 +192,7 @@ const AppWrapper = () => {
 					const finishFetchingUserProfile = await userQuery;
 					if (finishFetchingUserProfile) {
 						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-						console.log("finishFetchingUserProfile.queryUser[0]", finishFetchingUserProfile.queryUser[0]);
+						console.log("finishFetchingUserProfile.queryUser[0] for the firt time", finishFetchingUserProfile.queryUser[0]);
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
 						appStoreInstance.setSubSpecialty(fetchProfileData.subSpecialty);
 						appStoreInstance.setDesignation(fetchProfileData.designation);
@@ -201,6 +206,25 @@ const AppWrapper = () => {
 						appStoreInstance.setUserStatus(fetchProfileData.userStatus);
 						appStoreInstance.setCaseLogNumbers(fetchProfileData.targetedCaseLogNumber);
 						appStoreInstance.setLastCaseLogged(fetchProfileData.dateOfBirth);
+
+						// const currentActiveUserData = captureCurrentActiveUsers(
+						// 	"CurrentActiveUserData",
+						// 	finishFetchingUserProfile.queryUser[0].id,
+						// 	new Date().toISOString()
+						// );
+						// const retentionRateData = captureRetentionRateDate(
+						// 	"RetentionRateDate",
+						// 	finishFetchingUserProfile.queryUser[0].id,
+						// 	new Date().toISOString()
+						// );
+						// const captureReturningUserDateData = captureReturningUserDate(
+						// 	"ReturningUserDat",
+						// 	finishFetchingUserProfile.queryUser[0].id,
+						// 	new Date().toISOString()
+						// );
+						// console.log("currentActiveUserData", currentActiveUserData);
+						// console.log("captureRetentionRateDate", retentionRateData);
+						// console.log("captureReturningUserDateData", captureReturningUserDateData);
 					}
 				} catch (error) {
 					console.log(error);

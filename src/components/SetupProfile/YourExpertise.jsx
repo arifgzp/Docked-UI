@@ -275,7 +275,7 @@ const YourExpertise = ({ control, formState, formFields, reset, watch }) => {
 									<Box px='$5'>
 										<Box width={"$80%"}>
 											{formState.errors[field.uid] && (
-												<Text size='xs' color='#CC3F0C'>
+												<Text fontSize='$xs' color='#CC3F0C'>
 													This is required.
 												</Text>
 											)}
