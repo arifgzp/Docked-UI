@@ -274,13 +274,6 @@ const AppWrapper = () => {
 	};
 
 	useEffect(() => {
-		console.log("the latest number of Case Log Numbers", appStoreInstance.CaseLogNumbers, appStoreInstance.LastCaseLogged);
-		if (appStoreInstance.CaseLogNumbers && appStoreInstance.CaseLogNumbers % 2 === 0) {
-			setShowCongratulationModal(true);
-		}
-	}, [appStoreInstance.CaseLogNumbers]);
-
-	useEffect(() => {
 		const checkTimeDifference = () => {
 			if (appStoreInstance.LastCaseLogged) {
 				const lastLoggedDate = parseISO(appStoreInstance.LastCaseLogged);
@@ -298,9 +291,6 @@ const AppWrapper = () => {
 					setShowInfoModal(true);
 				} else if (hoursDiff >= 48) {
 					console.log("48 hours have passed since last case logged");
-					setShowInfoModal(true);
-				} else if (minutesDiff >= 2) {
-					console.log("2 minutes have passed since last case logged");
 					setShowInfoModal(true);
 				} else {
 					console.log("Not enough time has passed to trigger congratulation modal");
@@ -320,32 +310,6 @@ const AppWrapper = () => {
 		<>
 			<StatusBar translucent backgroundColor='$transparent' barStyle='dark-content' />
 			<NavigationContainer key={navKey}>{renderStack()}</NavigationContainer>
-			<Modal isOpen={showCongratulationModal} onClose={() => setShowCongratulationModal(false)} finalFocusRef={congratulationRef} size='lg'>
-				<ModalBackdrop />
-				<ModalContent>
-					<ModalHeader>
-						<Heading size='xl' color='$357A71'>
-							Congratulations!
-						</Heading>
-						<ModalCloseButton>
-							<Icon as={CloseIcon} size='sm' color='$gray400' />
-						</ModalCloseButton>
-					</ModalHeader>
-					<ModalBody>
-						<Box bg='$green100' p='$4' borderRadius='$lg'>
-							<Text size='md' color='$green800'>
-								You have made this number of logs. Keep Logging{" "}
-							</Text>
-						</Box>
-					</ModalBody>
-					<ModalFooter>
-						<Button onPress={() => setShowCongratulationModal(false)} variant='primary'>
-							<ButtonText>Keep Logging</ButtonText>
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-
 			{/* Information Modal */}
 			<Modal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} finalFocusRef={infoRef} size='sm'>
 				<ModalBackdrop />

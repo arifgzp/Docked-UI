@@ -757,6 +757,7 @@ const AppStore = types
 			try {
 				self._isLoading = true;
 				const response = yield execute("createSignInSchedule", data, self._userToken);
+				console.log("what is the data in the createSignInSchedule", data);
 				if (response) {
 					console.log("is this the response for the createSignInSchedule API", response);
 					return response;
@@ -774,8 +775,9 @@ const AppStore = types
 			try {
 				self._isLoading = true;
 				const response = yield execute("createLastCaseLogCreatedSchedule", data, self._userToken);
+				console.log("what is the data in the createLastCaseLogCreatedSchedule", data);
 				if (response) {
-					console.log("is this the response for the bigQuery API", response);
+					console.log("is this the response for the createLastCaseLogCreatedSchedule", response);
 					return response;
 				} else {
 					console.log(response.error);

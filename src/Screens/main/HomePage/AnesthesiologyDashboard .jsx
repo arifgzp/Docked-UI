@@ -142,6 +142,7 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 	const [aggerateDailyCaseLogData, setAggerateDailyCaseLogData] = useState([]);
 	const [aggerateWeeklyCaseLogData, setAggerateWeeklyCaseLogData] = useState([]);
 	const [aggerateMonthlyCaseLogData, setAggerateMonthlyCaseLogData] = useState([]);
+	const [showCongrats, setShowCongrats] = useState(true);
 
 	const [asaGradeDailyData, setASAGradeDailyData] = useState([]);
 	const [asaGradeWeeklyData, setASAGradeWeeklyData] = useState([]);
@@ -699,6 +700,58 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 								</Pressable>
 							</HStack>
 						</Box>
+						{appStoreInstance.CaseLogNumbers &&
+							showCongrats && // Add this condition
+							(appStoreInstance.CaseLogNumbers === 10 ||
+								appStoreInstance.CaseLogNumbers === 50 ||
+								(appStoreInstance.CaseLogNumbers >= 100 && appStoreInstance.CaseLogNumbers % 100 === 0)) && (
+								<Box
+									bg='#E6E3DB'
+									borderRadius='$xl'
+									p='$4'
+									mx='$4'
+									my='$2'
+									borderWidth={1}
+									borderColor='#367B71'
+									shadowColor='$gray300'
+									shadowOffset={{ width: 0, height: 2 }}
+									shadowOpacity={0.25}
+									shadowRadius={3.84}
+									elevation={5}>
+									<VStack space='sm'>
+										<HStack justifyContent='space-between' alignItems='center'>
+											<Text color='$black' fontWeight='$bold' size={14}>
+												Congratulations !!!!
+											</Text>
+											<Pressable onPress={() => setShowCongrats(false)}>
+												<Text color='$gray700' size={14} fontWeight='$bold'>
+													✕
+												</Text>
+											</Pressable>
+										</HStack>
+
+										<Text color='$gray700' size='sm'>
+											You have made a total of {appStoreInstance.CaseLogNumbers} case logs now!
+										</Text>
+
+										<Button
+											alignSelf='flex-start'
+											variant='solid'
+											borderWidth={1}
+											borderColor='$black'
+											bg='#367B71'
+											borderRadius='$3xl'
+											size='sm'
+											mt='$1'
+											px='$6'>
+											<ButtonText color='$white' fontWeight='$light'>
+												Keep logging
+											</ButtonText>
+										</Button>
+									</VStack>
+								</Box>
+							)}
+
 						{appStoreInstance.UserRole === "FACULTY" && cardDetails.length > 0 && <ApprovalListInTheDashboard card={cardDetails} />}
 
 						<Box p='$4'>

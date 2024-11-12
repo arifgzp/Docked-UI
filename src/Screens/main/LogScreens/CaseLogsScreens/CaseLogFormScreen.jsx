@@ -318,6 +318,16 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				}
 				console.log("what is the dataogLog", dataOfLog);
 
+				let caseLogDataForPushNotification = {
+					userId: appStoreInstance.UserId,
+					userName: appStoreInstance.UserName,
+					event: "CASE_LOG_CREATE",
+					name: appStoreInstance.Name,
+					token: appStoreInstance.NotificationToken,
+				};
+
+				appStoreInstance.createLastCaseLogCreatedSchedule(caseLogDataForPushNotification);
+
 				const analyticsDataForAdminDashboard = sendCaseLogDataToBigQueryForAdminAnalytics(dataOfLog, startTime, new Date().toISOString());
 				console.log("analyticsDataForAdminDashboard", analyticsDataForAdminDashboard);
 				appStoreInstance.sendDataToBigQuery(analyticsDataForAdminDashboard);
@@ -455,6 +465,16 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 						break;
 				}
 				console.log("what is the dataogLog", dataOfLog);
+
+				let caseLogDataForPushNotification = {
+					userId: appStoreInstance.UserId,
+					userName: appStoreInstance.UserName,
+					event: "CASE_LOG_CREATE",
+					name: appStoreInstance.Name,
+					token: appStoreInstance.NotificationToken,
+				};
+
+				appStoreInstance.createLastCaseLogCreatedSchedule(caseLogDataForPushNotification);
 
 				const analyticsDataForAdminDashboard = sendCaseLogDataToBigQueryForAdminAnalytics(dataOfLog, startTime, new Date().toISOString());
 				console.log("analyticsDataForAdminDashboard", analyticsDataForAdminDashboard);

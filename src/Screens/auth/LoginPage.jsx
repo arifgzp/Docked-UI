@@ -96,16 +96,8 @@ const LoginPage = ({ navigation }) => {
 						setQuery(userQuery);
 						const finishFetchingUserProfile = await userQuery;
 						if (finishFetchingUserProfile) {
+							let data = {};
 							const fetchProfileData = finishFetchingUserProfile.queryUser[0];
-							// console.log("appStoreInstance.NotificationToken", appStoreInstance.NotificationToken);
-							// const notificationData = {
-							// 	userId: appStoreInstance.UserId,
-							// 	userName: appStoreInstance.UserName,
-							// 	name: appStoreInstance.Name,
-							// 	token: appStoreInstance.NotificationToken,
-							// };
-							// console.log("notificationData", notificationData);
-							// await appStoreInstance.notificationTokenCall(notificationData);
 							console.log("finishFetchingUserProfile", finishFetchingUserProfile);
 							console.log("finishFetchingUserProfile     CITY", fetchProfileData.city);
 							AppStore.setSuperSpecialty(fetchProfileData.superSpecialty);
@@ -119,6 +111,13 @@ const LoginPage = ({ navigation }) => {
 							AppStore.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 							AppStore.setImagePath(fetchProfileData.imagePath);
 							AppStore.setButtonPressed(false);
+
+							data.userId = appStoreInstance.UserId;
+							data.userName = appStoreInstance.UserName;
+							data.event = "SIGN_IN";
+							data.name = fetchProfileData.name || "User";
+							data.token = appStoreInstance.NotificationToken;
+							appStoreInstance.createSignInSchedule(data);
 						}
 
 						const logQuery = store.fetchUserLogProfile(response.userName);
