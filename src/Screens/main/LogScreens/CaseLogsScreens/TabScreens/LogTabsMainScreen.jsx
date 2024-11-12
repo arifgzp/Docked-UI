@@ -82,7 +82,6 @@ export default function LogTabsMainScreen({ navigation, route }) {
 		if (!loadedTabs[route.key] && route.key !== routes[index].key) {
 			return <LazyPlaceholder route={route} />;
 		}
-
 		// Mark the tab as loaded when it's rendered
 		if (!loadedTabs[route.key]) {
 			handleTabLoad(route.key);

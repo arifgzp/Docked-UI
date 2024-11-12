@@ -11,9 +11,6 @@ export enum AnaesthesiaCaseLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-rotation="rotation",
-hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
 weight="weight",
@@ -25,9 +22,7 @@ asaGrade="asaGrade",
 typeOfSurgery="typeOfSurgery",
 npo="npo",
 conduct="conduct",
-medicalRegistrationNumber="medicalRegistrationNumber",
 outcome="outcome",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -38,9 +33,6 @@ export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("Anaesthesi
         "createdOn",
   "updatedOn",
   "date",
-  "rotation",
-  "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
   "weight",
@@ -52,8 +44,6 @@ export const AnaesthesiaCaseLogOrderableEnumType = types.enumeration("Anaesthesi
   "typeOfSurgery",
   "npo",
   "conduct",
-  "medicalRegistrationNumber",
   "outcome",
-  "caseType",
   "remarks",
       ])

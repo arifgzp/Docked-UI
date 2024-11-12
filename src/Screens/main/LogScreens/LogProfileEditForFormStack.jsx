@@ -41,6 +41,7 @@ import {
 	ToastDescription,
 	InputIcon,
 	InputSlot,
+	SearchIcon,
 } from "@gluestack-ui/themed";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
@@ -55,8 +56,7 @@ import { SelectItem, SelectContent } from "@gluestack-ui/themed";
 import { Icon } from "@gluestack-ui/themed";
 import { ScrollView } from "@gluestack-ui/themed";
 import { format } from "date-fns";
-import appStoreInstance from "../../../stores/AppStore";
-import AppStore from "../../../stores/AppStore";
+
 import { observer } from "mobx-react";
 import { toJS } from "mobx";
 import Loader from "../../../components/Loader";
@@ -76,8 +76,11 @@ import { useQuery } from "../../../models";
 import useIsReady from "../../../hooks/useIsReady";
 import { SelectDragIndicatorWrapper } from "@gluestack-ui/themed";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
-import { rotationForAnesthesiology, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
+import { rotationForAnesthesiology, rotationForORM, rotationForOrthopaedics } from "../../../data/entity/RotationConfig";
 import { designation } from "../../../data/entity/DesignationConfig";
+import { Spinner } from "@gluestack-ui/themed";
+import NewFacultyForm from "../../../components/NewFacultyForm";
+import appStoreInstance from "../../../stores/AppStore";
 
 const LogProfileEditForFormStack = ({ navigation, route }) => {
 	const { caseLogFormToGet } = route.params;
@@ -98,12 +101,40 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 			to: null,
 		},
 	});
+
+	const facultyForm = useForm({
+		defaultValues: {
+			userName: "",
+			firstName: "",
+			lastName: "",
+			designation: "",
+			otherDesignation: "",
+			phoneNumber: "",
+		},
+		mode: "onChange",
+	});
+
+	const {
+		control: facultyControl,
+		handleSubmit: handleFacultySubmit,
+		formState: { errors: facultyErrors },
+		watch: watchFaculty,
+		reset: resetFacultyForm,
+	} = facultyForm;
+
 	const isReady = useIsReady();
 	const [showModal, setShowModal] = useState(false);
 	const [modalView, setModalView] = useState("");
 	const ref = useRef(null);
 	const isFocused = useIsFocused();
 
+	const [showSearchModal, setShowSearchModal] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [searchResults, setSearchResults] = useState([]);
+	const [isSearching, setIsSearching] = useState(false);
+	const isValidPhoneNumber = (number) => {
+		return /^\d{10}$/.test(number);
+	};
 	const {
 		control: controlForFaculty,
 		handleSubmit: handleSubmitForFaculty,
@@ -142,8 +173,124 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 	const [facultyList, setFacultyList] = useState([]);
 	const [hospitalList, setHospitalList] = useState([]);
 	const [editFacultyIndex, setEditFacultyIndex] = useState(null);
-	const currentSpecialty = AppStore.UserBroadSpecialty;
-	const logProfile = AppStore.UserLogProfile;
+	const currentSpecialty = appStoreInstance.UserBroadSpecialty;
+	const logProfile = appStoreInstance.UserLogProfile;
+	const handleSearchQueryChange = (text) => {
+		const numbers = text.replace(/[^0-9]/g, "");
+		console.log("numbers", numbers);
+		setSearchQuery(numbers);
+		if (numbers.length === 10) {
+			handleFacultySearch(numbers);
+		} else {
+			setSearchResults([]);
+		}
+	};
+
+	const clearSearch = () => {
+		setSearchQuery("");
+		setSearchResults([]);
+	};
+
+	const handleCancelNewFaculty = () => {
+		setIsCreatingNewFaculty(false);
+		setNewFacultyData({
+			firstName: "",
+			lastName: "",
+			designation: "",
+			otherDesignation: "",
+			phoneNumber: "",
+			password: "00000000",
+		});
+		setNewFacultyErrors({});
+	};
+
+	const [isCreatingNewFaculty, setIsCreatingNewFaculty] = useState(false);
+	const [newFacultyData, setNewFacultyData] = useState({
+		firstName: "",
+		lastName: "",
+		designation: "",
+		otherDesignation: "",
+		phoneNumber: "",
+		password: "00000000", // Default password for new users
+	});
+	const [newFacultyErrors, setNewFacultyErrors] = useState({});
+
+	const validateNewFacultyData = () => {
+		const errors = {};
+		if (!newFacultyData.firstName.trim()) errors.firstName = "First name is required";
+		if (!newFacultyData.lastName.trim()) errors.lastName = "Last name is required";
+		if (!newFacultyData.designation) errors.designation = "Designation is required";
+		if (newFacultyData.designation === "Others" && !newFacultyData.otherDesignation.trim()) {
+			errors.otherDesignation = "Other designation is required";
+		}
+		if (!newFacultyData.phoneNumber || !isValidPhoneNumber(newFacultyData.phoneNumber)) {
+			errors.phoneNumber = "Valid phone number is required";
+		}
+		return errors;
+	};
+
+	const handleCreateNewFaculty = async (formData) => {
+		console.log("data for handleCreateNewFaculty", formData);
+		try {
+			const registerResponse = await appStoreInstance.register({
+				name: `${formData.firstName} ${formData.lastName}`,
+				userName: formData.userName, // This is the email address
+				password: "00000000",
+				phoneNumber: formData.phoneNumber,
+				specialReferenceIdForFaculty: formData.phoneNumber,
+				userStatus: "VERIFICATION_REQUIRED",
+				broadSpecialty: appStoreInstance.UserBroadSpecialty,
+				role: "FACULTY",
+				workPlace: appStoreInstance.Workplace || "Workplace",
+				designation: formData.designation || "FACULTY",
+				otherDesignation: formData.designation === "Others" ? formData.otherDesignation : undefined,
+				city: appStoreInstance.City,
+			});
+
+			if (registerResponse.status === "SUCCESS") {
+				const newUser = registerResponse.data.addUser.user[0];
+				newUser.phoneNumber = formData.phoneNumber;
+				newUser.designation = formData.designation || "FACULTY";
+				const newFaculty = {
+					user: newUser,
+					createdOn: new Date().toISOString(),
+					updatedOn: new Date().toISOString(),
+				};
+
+				setFacultyList([...facultyList, newFaculty]);
+				setShowSearchModal(false);
+				resetFacultyForm();
+
+				toast.show({
+					placement: "top",
+					render: ({ id }) => (
+						<Toast nativeID={`toast-${id}`} action='success' variant='accent'>
+							<VStack space='xs'>
+								<ToastTitle>Success</ToastTitle>
+								<ToastDescription>New faculty created successfully</ToastDescription>
+							</VStack>
+						</Toast>
+					),
+				});
+			} else {
+				throw new Error(registerResponse.data.reason || "Failed to create new faculty");
+			}
+		} catch (error) {
+			toast.show({
+				placement: "top",
+				render: ({ id }) => (
+					<Toast nativeID={`toast-${id}`} action='error' variant='accent'>
+						<VStack space='xs'>
+							<ToastTitle>Error</ToastTitle>
+							<ToastDescription>{error.message}</ToastDescription>
+						</VStack>
+					</Toast>
+				),
+			});
+		} finally {
+			setShowSearchModal(false);
+		}
+	};
 
 	const handleSetDate = (date, key) => {
 		if (date instanceof Date && !isNaN(date)) {
@@ -153,15 +300,61 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 		}
 	};
 
+	const handleFacultySearch = async (searchNumber) => {
+		console.log("what is number here", searchNumber);
+		setIsSearching(true);
+		try {
+			const searchQuery = store.searchFaculty({
+				searchString: searchNumber,
+			});
+			setQuery(searchQuery);
+			const results = await searchQuery;
+			if (results && results.queryUser) {
+				console.log("results for search", results, results.queryUser);
+				setSearchResults(
+					results.queryUser.map((faculty) => {
+						console.log("faculty object", faculty);
+						return faculty;
+					})
+				);
+			}
+		} catch (error) {
+			console.error("Faculty search error:", error);
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = "toast-" + id;
+					return (
+						<Toast nativeID={toastId} action='error' variant='accent'>
+							<VStack space='xs' mx='$4'>
+								<ToastTitle>Error</ToastTitle>
+								<ToastDescription>Failed to search faculty</ToastDescription>
+							</VStack>
+						</Toast>
+					);
+				},
+			});
+		} finally {
+			setIsSearching(false);
+		}
+	};
+
 	const handleAddFaculty = () => {
-		const newFacultyEntry = {
-			firstName: "",
-			lastName: "",
-			designation: "",
-			otherDesignation: "",
-			phoneNumber: "", // You can modify this as per your requirement
+		setShowSearchModal(true);
+	};
+
+	const handleSelectFaculty = (selectedUser) => {
+		console.log("this is the  selected User", selectedUser);
+		const newFaculty = {
+			user: selectedUser, // This will be used to reference the user
+			createdOn: new Date().toISOString(),
+			updatedOn: new Date().toISOString(),
 		};
-		setFacultyList([...facultyList, newFacultyEntry]);
+
+		setFacultyList([...facultyList, newFaculty]);
+		setShowSearchModal(false);
+		setSearchQuery("");
+		setSearchResults([]);
 	};
 
 	const handleFacultyFirstNameChange = (index, newValue) => {
@@ -240,7 +433,6 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 	const handleOnSave = async () => {
 		// Check if rotationList or facultyList is empty
 		if (facultyList.length === 0 || hospitalList.length === 0) {
-			// Raise an error indicating rotation or faculty cannot be empty
 			toast.show({
 				placement: "top",
 				render: ({ id }) => {
@@ -255,127 +447,141 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 					);
 				},
 			});
-			return; // Exit function early
+			return;
 		}
+		console.log("what is facultyList on saving", facultyList);
+		// Transform facultyList to include user objects
+		const transformedFacultyList = facultyList.map((faculty) => {
+			console.log("transformedFacultyList", faculty);
+			console.log("faculty id here", faculty.user.id);
+			if (faculty.user.specialReferenceIdForFaculty) {
+				console.log("what is faculty when saving transformedFacultyList", faculty);
+				// If faculty was selected from search (existing user)
+				return {
+					user: { id: faculty.user.id },
+					createdOn: faculty.createdOn || new Date().toISOString(),
+					updatedOn: faculty.updatedOn || new Date().toISOString(),
+				};
+			} else {
+				// For newly created faculty
+				return {
+					user: { id: faculty.user.id },
+					createdOn: faculty.createdOn || new Date().toISOString(),
+					updatedOn: faculty.updatedOn || new Date().toISOString(),
+				};
+			}
+		});
+
 		const rotationData = [
 			{
 				department: watch("department"),
 				to: watch("to"),
 				from: watch("from"),
+				createdOn: new Date().toISOString(),
+				updatedOn: new Date().toISOString(),
 			},
 		];
-		console.log("rotationData", rotationData);
-		console.log("faculties", facultyList);
-		console.log("hospitalLists", hospitalList);
+
+		// Transform hospitalList to include timestamps
+		const transformedHospitalList = hospitalList.map((hospital) => ({
+			...hospital,
+			createdOn: hospital.createdOn || new Date().toISOString(),
+			updatedOn: new Date().toISOString(),
+		}));
+
 		let data;
 		if (rotationData[0].department !== null && rotationData[0].from !== null && rotationData[0].to !== null) {
-			console.log("data when there is rotation.....", rotationData);
-			data = { faculties: facultyList, rotations: rotationData, hospitals: hospitalList };
+			data = {
+				faculties: transformedFacultyList,
+				rotations: rotationData,
+				hospitals: transformedHospitalList,
+			};
 		} else {
-			console.log("data when there is no ROTATION.....", rotationData);
-			data = { faculties: facultyList, hospitals: hospitalList };
+			data = {
+				faculties: transformedFacultyList,
+				hospitals: transformedHospitalList,
+			};
 		}
 
-		console.log("caseLogFormToGet", caseLogFormToGet);
+		console.log("final data when saving the log profile", data);
+
 		try {
-			const query = store.updateUserLogProfile(AppStore.UserId, {
+			const query = store.updateUserLogProfile(appStoreInstance.UserId, {
 				set: { logProfile: data },
 			});
 			setQuery(query);
 			const finishUpdatingLogProfile = await query;
 			if (finishUpdatingLogProfile) {
-				console.log("finishUpdatingLogProfile for logprofile", finishUpdatingLogProfile);
-				console.log("finishUpdatingLogProfile.updateUser.user[0].logProfile", finishUpdatingLogProfile.updateUser.user[0].logProfile);
-				AppStore.setLogProfile(finishUpdatingLogProfile.updateUser.user[0].logProfile);
-
-				// console.log("Log Profile Navigating to ", caseLogFormToGet);
-				// if (caseLogFormToGet) {
-				// 	navigation.navigate("Plus", {
-				// 		screen: "CaseLogFormScreen",
-				// 		params: { caseLogFormToGet: caseLogFormToGet },
-				// 	});
-				// } else {
-				// 	navigation.goBack();
-				// }
 				navigation.goBack();
 			}
 		} catch (error) {
 			console.log(error);
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = "toast-" + id;
+					return (
+						<Toast nativeID={toastId} action='error' variant='accent'>
+							<VStack space='xs' mx='$4'>
+								<ToastTitle>Error</ToastTitle>
+								<ToastDescription>Failed to update log profile</ToastDescription>
+							</VStack>
+						</Toast>
+					);
+				},
+			});
 		}
 	};
+
+	const handleFormChanges = useCallback(
+		(field) => (text) => {
+			setNewFacultyData((prev) => ({
+				...prev,
+				[field]: field === "phoneNumber" ? text.replace(/[^0-9]/g, "") : text,
+			}));
+		},
+		[]
+	);
 
 	useEffect(() => {
 		const fetchLogProfile = async () => {
 			try {
-				const logProfileData = toJS(AppStore.UserLogProfile);
-				console.log("logProfileData", logProfileData);
-				if (logProfileData) {
-					const hospitalList = logProfileData.hospitals.map((hospital) => {
+				const query = store.fetchUserLogProfile(appStoreInstance.UserName);
+				setQuery(query);
+				const finishFetchingLogProfile = await query;
+				if (finishFetchingLogProfile) {
+					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					console.log("userData", userData);
+					const hospitalList = userData.logProfile.hospitals.map((hospital) => {
 						delete hospital.id;
 						delete hospital.__typename;
 						return hospital;
 					});
-					const facultiesList = logProfileData.faculties.map((faculty) => {
+					const facultiesList = userData.logProfile.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
 						return faculty;
 					});
-					const rotationsList = logProfileData.rotations.map((rotation) => {
+					const rotationsList = userData.logProfile.rotations.map((rotation) => {
 						delete rotation.id;
 						delete rotation.__typename;
 						return rotation;
 					});
 					reset({
-						hospital: logProfileData.hospital,
-						department: logProfileData.rotations[0]?.department ? logProfileData.rotations[0]?.department : null,
-						rotations: logProfileData.rotations[0],
+						hospital: userData.logProfile.hospital,
+						department: userData.logProfile.rotations[0]?.department ? userData.logProfile.rotations[0]?.department : null,
+						rotations: userData.logProfile.rotations[0],
 					});
 
 					setFacultyList(facultiesList);
-					setFromDate(logProfileData.rotations[0]?.from ? format(new Date(logProfileData.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--");
+					setFromDate(
+						userData.logProfile.rotations[0]?.from ? format(new Date(userData.logProfile.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--"
+					);
 					setHospitalList(hospitalList);
-					setToDate(logProfileData.rotations[0]?.to ? format(new Date(logProfileData.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
-					setValue("from", logProfileData.rotations[0]?.from ? logProfileData.rotations[0]?.from : null);
-					setValue("to", logProfileData.rotations[0]?.to ? logProfileData.rotations[0]?.to : null);
-				} else {
-					const query = store.fetchUserLogProfile(AppStore.UserName);
-					setQuery(query);
-					const finishFetchingLogProfile = await query;
-					if (finishFetchingLogProfile) {
-						console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-						console.log("userData", userData);
-						const hospitalList = userData.logProfile.hospitals.map((hospital) => {
-							delete hospital.id;
-							delete hospital.__typename;
-							return hospital;
-						});
-						const facultiesList = userData.logProfile.faculties.map((faculty) => {
-							delete faculty.id;
-							delete faculty.__typename;
-							return faculty;
-						});
-						const rotationsList = userData.logProfile.rotations.map((rotation) => {
-							delete rotation.id;
-							delete rotation.__typename;
-							return rotation;
-						});
-						reset({
-							hospital: userData.logProfile.hospital,
-							department: userData.logProfile.rotations[0]?.department ? userData.logProfile.rotations[0]?.department : null,
-							rotations: userData.logProfile.rotations[0],
-						});
-
-						setFacultyList(facultiesList);
-						setFromDate(
-							userData.logProfile.rotations[0]?.from ? format(new Date(userData.logProfile.rotations[0]?.from), "dd / MM / yyyy") : "--/--/--"
-						);
-						setHospitalList(hospitalList);
-						setToDate(userData.logProfile.rotations[0]?.to ? format(new Date(userData.logProfile.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
-						setValue("from", userData.logProfile.rotations[0]?.from ? userData.logProfile.rotations[0]?.from : null);
-						setValue("to", userData.logProfile.rotations[0]?.to ? userData.logProfile.rotations[0]?.to : null);
-						AppStore.setLogProfile(finishFetchingLogProfile.queryUser.user[0].logProfile);
-					}
+					setToDate(userData.logProfile.rotations[0]?.to ? format(new Date(userData.logProfile.rotations[0]?.to), "dd / MM / yyyy") : "--/--/--");
+					setValue("from", userData.logProfile.rotations[0]?.from ? userData.logProfile.rotations[0]?.from : null);
+					setValue("to", userData.logProfile.rotations[0]?.to ? userData.logProfile.rotations[0]?.to : null);
 				}
 			} catch (error) {
 				console.log(error);
@@ -384,7 +590,7 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 		if (isFocused) {
 			fetchLogProfile();
 		} else {
-			AppStore.setButtonPressed(false);
+			appStoreInstance.setButtonPressed(false);
 		}
 	}, [isFocused]);
 
@@ -392,11 +598,11 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 		useCallback(() => {
 			// Code to run when the screen is focused
 			console.log("Screen is focused on Log Profile");
-			console.log("AppStore.ButtonPressed after Log Profile is in FOCUSSSS", AppStore.ButtonPressed);
+			console.log("AppStore.ButtonPressed after Log Profile is in FOCUSSSS", appStoreInstance.ButtonPressed);
 			console.log("caseLogFormToGet when in focus", caseLogFormToGet);
 			return () => {
-				AppStore.setButtonPressed(false);
-				console.log("AppStore.ButtonPressed after Log Profile is out of focus", AppStore.ButtonPressed);
+				appStoreInstance.setButtonPressed(false);
+				console.log("AppStore.ButtonPressed after Log Profile is out of focus", appStoreInstance.ButtonPressed);
 				if (caseLogFormToGet === "") {
 					console.log("this line should appear", caseLogFormToGet);
 				}
@@ -404,17 +610,47 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 		}, [caseLogFormToGet])
 	);
 
+	const FacultyListItem = ({ faculty, index }) => {
+		return (
+			<VStack w='$100%' key={index} space='sm'>
+				<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
+					Faculty {index + 1}
+				</Text>
+				<Box rounded='$lg' borderWidth='$1' p='$4' borderColor='$coolGray200'>
+					<HStack justifyContent='space-between' w='$100%'>
+						<VStack space='xs'>
+							<Text fontFamily='Inter_SemiBold' fontSize={14} color='#0F0F10'>
+								Dr. {faculty?.user?.name}
+							</Text>
+							<Text size='xs' color='#4D5356'>
+								{faculty?.user?.designation === "Others" ? faculty?.user?.otherDesignation : faculty?.user?.designation}
+							</Text>
+							<HStack space='sm' alignItems='center'>
+								<Icon as={PhoneIcon} size='sm' color='$coolGray600' />
+								<Text size='xs'>+91 {faculty?.user?.phoneNumber}</Text>
+							</HStack>
+						</VStack>
+					</HStack>
+				</Box>
+			</VStack>
+		);
+	};
+
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={{ flex: 1, zIndex: 999 }}
+			keyboardShouldPersistTaps='handled'>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} backgroundColor='$secondaryBackground' justifyContent='center' alignItems='center'>
-					<ScrollView width={"$100%"}>
+					<ScrollView width={"$100%"} keyboardShouldPersistTaps='handled' keyboardDismissMode='none'>
 						<Box width={"$100%"} flex={3 / 4} alignItems='center' paddingTop={20} paddingBottom={20}>
 							<VStack space='lg' width={"$100%"} p='$3' alignItems='center'>
+								{/* Hospitals Section */}
 								<Box w='$100%'>
 									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
 										Hospital
@@ -426,60 +662,39 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 											<Text>No Records Found</Text>
 										</Box>
 									) : (
-										hospitalList.map((hospital, index) => {
-											return (
-												<VStack key={index} space='sm'>
-													<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-														Hospital - {index + 1}
-													</Text>
-													<Input size='sm' variant='outline'>
-														<InputField
-															type='text'
-															value={hospital.name}
-															onChangeText={(newValue) => handleHospitalChange(index, newValue)}
-															placeholder={`Hospital`}
-														/>
-														{hospital.name !== "" && (
-															<InputSlot pr='$3' onPress={(newValue) => handleClearHospital(index)}>
-																<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
-															</InputSlot>
-														)}
-													</Input>
-												</VStack>
-											);
-										})
+										hospitalList.map((hospital, index) => (
+											<VStack key={index} space='sm'>
+												<Text fontFamily='Inter_SemiBold' fontSize={14} color='#0F0F10'>
+													Hospital - {index + 1}
+												</Text>
+												<Input size='sm' variant='outline'>
+													<InputField
+														value={hospital.name}
+														onChangeText={(newValue) => handleHospitalChange(index, newValue)}
+														placeholder='Hospital'
+													/>
+													{hospital.name && (
+														<InputSlot pr='$3' onPress={() => handleClearHospital(index)}>
+															<InputIcon as={CloseIcon} />
+														</InputSlot>
+													)}
+												</Input>
+											</VStack>
+										))
 									)}
-									{/* <VStack space='md' alignItems='center' paddingBottom={10}>
-										<Text size='sm' alignSelf='flex-start' color='rgba(81, 81, 81, 0.7)'>
-											Hospital <Text color='#DE2E2E'>*</Text>
-										</Text>
-										<Controller
-											control={control}
-											rules={{
-												required: true,
-											}}
-											key='hospital'
-											name='hospital'
-											render={({ field: { onChange, onBlur, value } }) => {
-												return (
-													<Input variant='outline' size='sm'>
-														<InputField onChangeText={onChange} value={value} placeholder='Hospital' />
-													</Input>
-												);
-											}}
-										/>
-									</VStack>
-									<Box alignItems='center'>
-										<Box width={"$100%"}>{errors.hospital && <Text color='#DE2E2E'>This is required.</Text>}</Box>
-									</Box> */}
 								</Box>
+
+								{/* Add Hospital Button */}
 								<Button onPress={handleAddHospital} ref={ref} alignSelf='flex-start' size='sm' variant='link'>
 									<HStack space='sm' alignItems='center'>
-										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
+										<ButtonIcon as={Ionicons} name='add-circle' color='#367B71' />
 										<ButtonText color='#000'>Add a new Hospital</ButtonText>
 									</HStack>
 								</Button>
+
 								<Divider />
+
+								{/* Faculties Section */}
 								<Box w='$100%'>
 									<Text size='sm' alignSelf='flex-start' fontFamily='Inter_Bold'>
 										Faculties
@@ -490,165 +705,19 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 										<Text>No Records Found</Text>
 									</Box>
 								) : (
-									facultyList.map((faculty, index) => {
-										return (
-											<VStack w='$100%' key={index} space='sm'>
-												<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-													Faculty {index + 1}
-												</Text>
-												<HStack justifyContent='space-between' w='$100%'>
-													<VStack w='$48%'>
-														<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
-															First Name
-														</Text>
-														<Input size='sm' variant='outline'>
-															<InputField
-																type='text'
-																value={faculty.firstName}
-																onChangeText={(newValue) => handleFacultyFirstNameChange(index, newValue)}
-																placeholder={`First Name`}
-															/>
-															{faculty.firstName !== "" && (
-																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyFirstNameChange(index)}>
-																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
-																</InputSlot>
-															)}
-														</Input>
-													</VStack>
-													<VStack w='$48%'>
-														<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
-															Last Name
-														</Text>
-														<Input size='sm' variant='outline'>
-															<InputField
-																type='text'
-																value={faculty.lastName}
-																onChangeText={(newValue) => handleFacultyLastNameChange(index, newValue)}
-																placeholder={`Last Name`}
-															/>
-															{faculty.lastName !== "" && (
-																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyLastNameChange(index)}>
-																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
-																</InputSlot>
-															)}
-														</Input>
-													</VStack>
-												</HStack>
-												<VStack>
-													<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
-														Designation
-													</Text>
-													<Select
-														width={"$100%"}
-														onValueChange={(newValue) => handleFacultyDesignationChange(index, newValue)}
-														selectedValue={faculty.designation}>
-														<SelectTrigger variant='outline' size='sm'>
-															<SelectInput placeholder='Designation' />
-															<SelectIcon mr='$3'>
-																<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
-															</SelectIcon>
-														</SelectTrigger>
-														<SelectPortal>
-															<SelectBackdrop />
-															<SelectContent p='$0'>
-																<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-																	Designation
-																</Text>
-																<Divider borderWidth={0.1} />
-																<SelectScrollView>
-																	{designation.map((option, index) => {
-																		return (
-																			<SelectItem
-																				bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
-																				key={index}
-																				label={option.label}
-																				value={option.value}
-																			/>
-																		);
-																	})}
-																</SelectScrollView>
-																<SelectDragIndicatorWrapper>
-																	<SelectDragIndicator />
-																</SelectDragIndicatorWrapper>
-															</SelectContent>
-														</SelectPortal>
-													</Select>
-												</VStack>
-												{faculty.designation === "Others" && (
-													<VStack>
-														<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
-															Other Designation
-														</Text>
-														<Input size='sm' variant='outline'>
-															<InputField
-																type='text'
-																value={faculty.otherDesignation}
-																onChangeText={(newValue) => handleFacultyOtherDesignationChange(index, newValue)}
-																placeholder={`Other Designation`}
-															/>
-															{faculty.otherDesignation !== "" && (
-																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyOtherDesignationChange(index)}>
-																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
-																</InputSlot>
-															)}
-														</Input>
-													</VStack>
-												)}
-												<VStack>
-													<Text pb='$1' fontSize={12} color='rgba(81, 81, 81, 0.7)'>
-														Mobile Number
-													</Text>
-													<HStack w='$100%' justifyContent='space-between'>
-														<Select w='$25%' isReadOnly selectedValue='+91'>
-															<SelectTrigger variant='outline' size='sm'>
-																<SelectInput placeholder={`+91`} />
-																<SelectIcon mr='$3'>
-																	<Icon color='#367B71' as={ChevronDown} m='$2' w='$4' h='$4' />
-																</SelectIcon>
-															</SelectTrigger>
-															<SelectPortal>
-																<SelectBackdrop />
-																<SelectContent p='$0'>
-																	<Text fontFamily='Inter_SemiBold' padding={10} size='xl'>
-																		Phone Number
-																	</Text>
-																	<Divider borderWidth={0.1} />
-																	<SelectScrollView>
-																		<SelectItem key='+91' label='+91' value='+91' />;
-																	</SelectScrollView>
-																</SelectContent>
-																<SelectDragIndicatorWrapper>
-																	<SelectDragIndicator />
-																</SelectDragIndicatorWrapper>
-															</SelectPortal>
-														</Select>
-														<Input w='$70%' size='sm' variant='outline'>
-															<InputField
-																type='text'
-																inputMode='numeric'
-																value={faculty.phoneNumber}
-																onChangeText={(newValue) => handleFacultyPhoneNumberChange(index, newValue)}
-																placeholder={`Mobile Number`}
-															/>
-															{faculty.phoneNumber !== "" && (
-																<InputSlot pr='$3' onPress={(newValue) => handleClearFacultyPhoneNumberChange(index)}>
-																	<InputIcon size={20} as={Ionicons} name='close-circle' color='#E6E3DB' />
-																</InputSlot>
-															)}
-														</Input>
-													</HStack>
-												</VStack>
-											</VStack>
-										);
-									})
+									facultyList.map((faculty, index) => <FacultyListItem key={index} faculty={faculty} index={index} />)
 								)}
+
+								{/* Add Faculty Button */}
 								<Button onPress={handleAddFaculty} ref={ref} alignSelf='flex-start' size='sm' variant='link'>
 									<HStack space='sm' alignItems='center'>
-										<ButtonIcon pl={5} as={Ionicons} size={15} name='add-circle' color='#367B71' />
+										<ButtonIcon as={Ionicons} name='add-circle' color='#367B71' />
 										<ButtonText color='#000'>Add a new Faculty</ButtonText>
 									</HStack>
 								</Button>
+
 								<Divider />
+								{/* Rotation Section (if not Orthodontics) */}
 								{currentSpecialty === "Orthodontics" ? (
 									<Box></Box>
 								) : (
@@ -689,6 +758,17 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 																		<SelectScrollView p='$0'>
 																			{appStoreInstance.UserBroadSpecialty === "Orthopaedics"
 																				? rotationForOrthopaedics.map((rotation, index) => {
+																						return (
+																							<SelectItem
+																								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+																								key={index}
+																								label={rotation.label}
+																								value={rotation.value}
+																							/>
+																						);
+																				  })
+																				: appStoreInstance.UserBroadSpecialty === "OralMedicineAndRadiology"
+																				? rotationForORM.map((rotation, index) => {
 																						return (
 																							<SelectItem
 																								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
@@ -801,12 +881,126 @@ const LogProfileEditForFormStack = ({ navigation, route }) => {
 						</Box>
 						{currentSpecialty === "Anaesthesiology" ? <Divider /> : <Box></Box>}
 					</ScrollView>
+
+					{/* Save Button */}
 					<Box width='$100%' flex={1 / 4} pt={10} p={14} paddingBottom={"$20%"}>
 						<Button onPress={handleSubmit(handleOnSave)} variant='primary'>
 							<ButtonText>Save</ButtonText>
 						</Button>
 					</Box>
 				</Box>
+				{/* Faculty Search/Create Modal */}
+				<Modal isOpen={showSearchModal} onClose={() => setShowSearchModal(false)}>
+					<ModalBackdrop />
+					<ModalContent maxWidth='$96'>
+						<ModalHeader>
+							<Heading size='lg'>Add Faculty</Heading>
+							<ModalCloseButton>
+								<Icon as={CloseIcon} />
+							</ModalCloseButton>
+						</ModalHeader>
+						<ModalBody>
+							<ScrollView keyboardShouldPersistTaps='handled' keyboardDismissMode='none'>
+								<VStack space='md'>
+									{/* Search Section */}
+									<VStack space='xs'>
+										<Text size='sm' color='$coolGray600'>
+											Search Existing Faculty
+										</Text>
+										<HStack space='md' alignItems='center'>
+											<Select w='$25%' isReadOnly selectedValue='+91'>
+												<SelectTrigger>
+													<SelectInput placeholder='+91' />
+												</SelectTrigger>
+											</Select>
+											<Input flex={1} isDisabled={isSearching}>
+												<InputField
+													placeholder='Enter phone number'
+													value={searchQuery}
+													keyboardType='numeric'
+													maxLength={10}
+													onChangeText={handleSearchQueryChange}
+												/>
+												{searchQuery && (
+													<InputSlot pr='$3' onPress={clearSearch}>
+														<InputIcon as={CloseIcon} />
+													</InputSlot>
+												)}
+											</Input>
+										</HStack>
+									</VStack>
+
+									{/* Search Results */}
+									{isSearching ? (
+										<Center p='$4'>
+											<Spinner size='large' />
+										</Center>
+									) : (
+										<ScrollView maxHeight='$64'>
+											<VStack space='sm'>
+												{searchResults.length > 0 ? (
+													searchResults.map((faculty, index) => (
+														<Button key={index} variant='outline' onPress={() => handleSelectFaculty(faculty)}>
+															<VStack space='xs' alignItems='flex-start' width='$full'>
+																<Text fontWeight='$bold'>Dr. {faculty.name}</Text>
+																<HStack space='md' justifyContent='space-between' width='$full'>
+																	<Text size='sm' color='$coolGray600'>
+																		{faculty.designation}
+																	</Text>
+																	<Text size='sm' color='$coolGray600'>
+																		+91 {faculty.phoneNumber}
+																	</Text>
+																</HStack>
+															</VStack>
+														</Button>
+													))
+												) : searchQuery.length === 10 ? (
+													<VStack space='lg' alignItems='center'>
+														<Text textAlign='center' color='$coolGray600'>
+															No faculty found with this phone number
+														</Text>
+														<Button variant='outline' onPress={() => setIsCreatingNewFaculty(true)}>
+															<ButtonText>Create New Faculty</ButtonText>
+														</Button>
+													</VStack>
+												) : null}
+											</VStack>
+										</ScrollView>
+									)}
+
+									{/* New Faculty Form */}
+									{isCreatingNewFaculty && (
+										<>
+											<Divider />
+											<Text size='lg' fontWeight='$bold'>
+												Create New Faculty
+											</Text>
+											<NewFacultyForm control={facultyControl} errors={facultyErrors} watch={watchFaculty} />
+										</>
+									)}
+								</VStack>
+							</ScrollView>
+						</ModalBody>
+						<ModalFooter>
+							<HStack space='md' justifyContent='flex-end'>
+								<Button
+									size='sm'
+									variant='secondary'
+									onPress={() => {
+										resetFacultyForm();
+										setShowSearchModal(false);
+									}}>
+									<ButtonText>Cancel</ButtonText>
+								</Button>
+								{isCreatingNewFaculty && (
+									<Button variant='solid' onPress={handleFacultySubmit(handleCreateNewFaculty)} isDisabled={isSearching}>
+										<ButtonText>Create Faculty</ButtonText>
+									</Button>
+								)}
+							</HStack>
+						</ModalFooter>
+					</ModalContent>
+				</Modal>
 			</Loader>
 		</KeyboardAvoidingView>
 	);

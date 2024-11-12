@@ -11,10 +11,6 @@ export enum OrthodonticsPreClinicalHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-hospital="hospital",
-rotation="rotation",
-faculty="faculty",
-complete="complete",
 conduct="conduct",
 wireBendingRecord="wireBendingRecord",
 roundWireLoopRecord="roundWireLoopRecord",
@@ -25,7 +21,6 @@ claspRecord="claspRecord",
 springsRecord="springsRecord",
 canineRetractorsRecord="canineRetractorsRecord",
 bowsRecord="bowsRecord",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -36,10 +31,6 @@ export const OrthodonticsPreClinicalHasFilterEnumType = types.enumeration("Ortho
         "createdOn",
   "updatedOn",
   "date",
-  "hospital",
-  "rotation",
-  "faculty",
-  "complete",
   "conduct",
   "wireBendingRecord",
   "roundWireLoopRecord",
@@ -50,6 +41,5 @@ export const OrthodonticsPreClinicalHasFilterEnumType = types.enumeration("Ortho
   "springsRecord",
   "canineRetractorsRecord",
   "bowsRecord",
-  "caseType",
   "remarks",
       ])

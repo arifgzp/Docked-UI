@@ -23,16 +23,8 @@ export const OrthodonticsPreClinicalAggregateResultModelBase = ModelBase
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
     dateMin: types.union(types.undefined, types.null, types.frozen()),
     dateMax: types.union(types.undefined, types.null, types.frozen()),
-    hospitalMin: types.union(types.undefined, types.null, types.string),
-    hospitalMax: types.union(types.undefined, types.null, types.string),
-    rotationMin: types.union(types.undefined, types.null, types.string),
-    rotationMax: types.union(types.undefined, types.null, types.string),
-    facultyMin: types.union(types.undefined, types.null, types.string),
-    facultyMax: types.union(types.undefined, types.null, types.string),
     conductMin: types.union(types.undefined, types.null, types.string),
     conductMax: types.union(types.undefined, types.null, types.string),
-    caseTypeMin: types.union(types.undefined, types.null, types.string),
-    caseTypeMax: types.union(types.undefined, types.null, types.string),
     remarksMin: types.union(types.undefined, types.null, types.string),
     remarksMax: types.union(types.undefined, types.null, types.string),
   })
@@ -50,16 +42,8 @@ export class OrthodonticsPreClinicalAggregateResultModelSelector extends QueryBu
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
   get dateMin() { return this.__attr(`dateMin`) }
   get dateMax() { return this.__attr(`dateMax`) }
-  get hospitalMin() { return this.__attr(`hospitalMin`) }
-  get hospitalMax() { return this.__attr(`hospitalMax`) }
-  get rotationMin() { return this.__attr(`rotationMin`) }
-  get rotationMax() { return this.__attr(`rotationMax`) }
-  get facultyMin() { return this.__attr(`facultyMin`) }
-  get facultyMax() { return this.__attr(`facultyMax`) }
   get conductMin() { return this.__attr(`conductMin`) }
   get conductMax() { return this.__attr(`conductMax`) }
-  get caseTypeMin() { return this.__attr(`caseTypeMin`) }
-  get caseTypeMax() { return this.__attr(`caseTypeMax`) }
   get remarksMin() { return this.__attr(`remarksMin`) }
   get remarksMax() { return this.__attr(`remarksMax`) }
 }
@@ -67,4 +51,4 @@ export function selectFromOrthodonticsPreClinicalAggregateResult() {
   return new OrthodonticsPreClinicalAggregateResultModelSelector()
 }
 
-export const orthodonticsPreClinicalAggregateResultModelPrimitives = selectFromOrthodonticsPreClinicalAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.rotationMin.rotationMax.facultyMin.facultyMax.conductMin.conductMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax
+export const orthodonticsPreClinicalAggregateResultModelPrimitives = selectFromOrthodonticsPreClinicalAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.conductMin.conductMax.remarksMin.remarksMax

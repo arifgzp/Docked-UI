@@ -20,10 +20,6 @@ export const OrthodonticsPreClinicalModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
-    hospital: types.union(types.undefined, types.null, types.string),
-    rotation: types.union(types.undefined, types.null, types.string),
-    faculty: types.union(types.undefined, types.null, types.string),
-    complete: types.union(types.undefined, types.null, types.boolean),
     conduct: types.union(types.undefined, types.null, types.string),
     wireBendingRecord: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     roundWireLoopRecord: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
@@ -34,7 +30,6 @@ export const OrthodonticsPreClinicalModelBase = ModelBase
     springsRecord: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     canineRetractorsRecord: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     bowsRecord: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    caseType: types.union(types.undefined, types.null, types.string),
     remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
@@ -48,10 +43,6 @@ export class OrthodonticsPreClinicalModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
-  get hospital() { return this.__attr(`hospital`) }
-  get rotation() { return this.__attr(`rotation`) }
-  get faculty() { return this.__attr(`faculty`) }
-  get complete() { return this.__attr(`complete`) }
   get conduct() { return this.__attr(`conduct`) }
   get wireBendingRecord() { return this.__attr(`wireBendingRecord`) }
   get roundWireLoopRecord() { return this.__attr(`roundWireLoopRecord`) }
@@ -62,11 +53,10 @@ export class OrthodonticsPreClinicalModelSelector extends QueryBuilder {
   get springsRecord() { return this.__attr(`springsRecord`) }
   get canineRetractorsRecord() { return this.__attr(`canineRetractorsRecord`) }
   get bowsRecord() { return this.__attr(`bowsRecord`) }
-  get caseType() { return this.__attr(`caseType`) }
   get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromOrthodonticsPreClinical() {
   return new OrthodonticsPreClinicalModelSelector()
 }
 
-export const orthodonticsPreClinicalModelPrimitives = selectFromOrthodonticsPreClinical().createdOn.updatedOn.date.hospital.rotation.faculty.complete.conduct.wireBendingRecord.roundWireLoopRecord.loopInEdgewiseWireRecord.solderingExerciseRecord.cephalometricTracingRecord.claspRecord.springsRecord.canineRetractorsRecord.bowsRecord.caseType.remarks
+export const orthodonticsPreClinicalModelPrimitives = selectFromOrthodonticsPreClinical().createdOn.updatedOn.date.conduct.wireBendingRecord.roundWireLoopRecord.loopInEdgewiseWireRecord.solderingExerciseRecord.cephalometricTracingRecord.claspRecord.springsRecord.canineRetractorsRecord.bowsRecord.remarks

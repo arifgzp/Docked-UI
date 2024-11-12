@@ -22,5 +22,4 @@ export const OrthodonticsClinicalCaseLogModel = OrthodonticsClinicalCaseLogModel
 }));
 
 export const updateOrthodonticsClinicalCaseLogSelector =
-	selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.patientAge.patientSex.hospital.rotation.faculty.diagnosis.techniqueUsed
-		.applianceUsed.treatmentPlan.outcome.caseType;
+	selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.patientAge.patientSex.diagnosis.techniqueUsed.applianceUsed.treatmentPlan.outcome;

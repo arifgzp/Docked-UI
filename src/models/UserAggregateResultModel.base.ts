@@ -17,6 +17,8 @@ export const UserAggregateResultModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("UserAggregateResult"), "UserAggregateResult"),
     count: types.union(types.undefined, types.null, types.integer),
+    specialReferenceIdForFacultyMin: types.union(types.undefined, types.null, types.string),
+    specialReferenceIdForFacultyMax: types.union(types.undefined, types.null, types.string),
     newUserVerificationCodeMin: types.union(types.undefined, types.null, types.string),
     newUserVerificationCodeMax: types.union(types.undefined, types.null, types.string),
     userNameMin: types.union(types.undefined, types.null, types.string),
@@ -39,6 +41,12 @@ export const UserAggregateResultModelBase = ModelBase
     combinePhoneNumberMax: types.union(types.undefined, types.null, types.string),
     dateOfBirthMin: types.union(types.undefined, types.null, types.frozen()),
     dateOfBirthMax: types.union(types.undefined, types.null, types.frozen()),
+    lastDateOfCaseLogCreationMin: types.union(types.undefined, types.null, types.frozen()),
+    lastDateOfCaseLogCreationMax: types.union(types.undefined, types.null, types.frozen()),
+    numberOfCaseLogsCreatedMin: types.union(types.undefined, types.null, types.integer),
+    numberOfCaseLogsCreatedMax: types.union(types.undefined, types.null, types.integer),
+    numberOfCaseLogsCreatedSum: types.union(types.undefined, types.null, types.integer),
+    numberOfCaseLogsCreatedAvg: types.union(types.undefined, types.null, types.number),
     broadSpecialtyMin: types.union(types.undefined, types.null, types.string),
     broadSpecialtyMax: types.union(types.undefined, types.null, types.string),
     superSpecialtyMin: types.union(types.undefined, types.null, types.string),
@@ -59,10 +67,6 @@ export const UserAggregateResultModelBase = ModelBase
     yearOfRegistrationMax: types.union(types.undefined, types.null, types.frozen()),
     medicalRegistrationNumberMin: types.union(types.undefined, types.null, types.string),
     medicalRegistrationNumberMax: types.union(types.undefined, types.null, types.string),
-    targetedCaseLogNumberMin: types.union(types.undefined, types.null, types.integer),
-    targetedCaseLogNumberMax: types.union(types.undefined, types.null, types.integer),
-    targetedCaseLogNumberSum: types.union(types.undefined, types.null, types.integer),
-    targetedCaseLogNumberAvg: types.union(types.undefined, types.null, types.number),
     imagePathMin: types.union(types.undefined, types.null, types.string),
     imagePathMax: types.union(types.undefined, types.null, types.string),
   })
@@ -74,6 +78,8 @@ export const UserAggregateResultModelBase = ModelBase
 
 export class UserAggregateResultModelSelector extends QueryBuilder {
   get count() { return this.__attr(`count`) }
+  get specialReferenceIdForFacultyMin() { return this.__attr(`specialReferenceIdForFacultyMin`) }
+  get specialReferenceIdForFacultyMax() { return this.__attr(`specialReferenceIdForFacultyMax`) }
   get newUserVerificationCodeMin() { return this.__attr(`newUserVerificationCodeMin`) }
   get newUserVerificationCodeMax() { return this.__attr(`newUserVerificationCodeMax`) }
   get userNameMin() { return this.__attr(`userNameMin`) }
@@ -96,6 +102,12 @@ export class UserAggregateResultModelSelector extends QueryBuilder {
   get combinePhoneNumberMax() { return this.__attr(`combinePhoneNumberMax`) }
   get dateOfBirthMin() { return this.__attr(`dateOfBirthMin`) }
   get dateOfBirthMax() { return this.__attr(`dateOfBirthMax`) }
+  get lastDateOfCaseLogCreationMin() { return this.__attr(`lastDateOfCaseLogCreationMin`) }
+  get lastDateOfCaseLogCreationMax() { return this.__attr(`lastDateOfCaseLogCreationMax`) }
+  get numberOfCaseLogsCreatedMin() { return this.__attr(`numberOfCaseLogsCreatedMin`) }
+  get numberOfCaseLogsCreatedMax() { return this.__attr(`numberOfCaseLogsCreatedMax`) }
+  get numberOfCaseLogsCreatedSum() { return this.__attr(`numberOfCaseLogsCreatedSum`) }
+  get numberOfCaseLogsCreatedAvg() { return this.__attr(`numberOfCaseLogsCreatedAvg`) }
   get broadSpecialtyMin() { return this.__attr(`broadSpecialtyMin`) }
   get broadSpecialtyMax() { return this.__attr(`broadSpecialtyMax`) }
   get superSpecialtyMin() { return this.__attr(`superSpecialtyMin`) }
@@ -116,10 +128,6 @@ export class UserAggregateResultModelSelector extends QueryBuilder {
   get yearOfRegistrationMax() { return this.__attr(`yearOfRegistrationMax`) }
   get medicalRegistrationNumberMin() { return this.__attr(`medicalRegistrationNumberMin`) }
   get medicalRegistrationNumberMax() { return this.__attr(`medicalRegistrationNumberMax`) }
-  get targetedCaseLogNumberMin() { return this.__attr(`targetedCaseLogNumberMin`) }
-  get targetedCaseLogNumberMax() { return this.__attr(`targetedCaseLogNumberMax`) }
-  get targetedCaseLogNumberSum() { return this.__attr(`targetedCaseLogNumberSum`) }
-  get targetedCaseLogNumberAvg() { return this.__attr(`targetedCaseLogNumberAvg`) }
   get imagePathMin() { return this.__attr(`imagePathMin`) }
   get imagePathMax() { return this.__attr(`imagePathMax`) }
 }
@@ -127,4 +135,4 @@ export function selectFromUserAggregateResult() {
   return new UserAggregateResultModelSelector()
 }
 
-export const userAggregateResultModelPrimitives = selectFromUserAggregateResult().count.newUserVerificationCodeMin.newUserVerificationCodeMax.userNameMin.userNameMax.resetPasswordCodeMin.resetPasswordCodeMax.nameMin.nameMax.lastNameMin.lastNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.countryCodeMin.countryCodeMax.phoneNumberMin.phoneNumberMax.combinePhoneNumberMin.combinePhoneNumberMax.dateOfBirthMin.dateOfBirthMax.broadSpecialtyMin.broadSpecialtyMax.superSpecialtyMin.superSpecialtyMax.subSpecialtyMin.subSpecialtyMax.designationMin.designationMax.designationOthersMin.designationOthersMax.workPlaceMin.workPlaceMax.cityMin.cityMax.medicalCouncilNameMin.medicalCouncilNameMax.yearOfRegistrationMin.yearOfRegistrationMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.targetedCaseLogNumberMin.targetedCaseLogNumberMax.targetedCaseLogNumberSum.targetedCaseLogNumberAvg.imagePathMin.imagePathMax
+export const userAggregateResultModelPrimitives = selectFromUserAggregateResult().count.specialReferenceIdForFacultyMin.specialReferenceIdForFacultyMax.newUserVerificationCodeMin.newUserVerificationCodeMax.userNameMin.userNameMax.resetPasswordCodeMin.resetPasswordCodeMax.nameMin.nameMax.lastNameMin.lastNameMax.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.countryCodeMin.countryCodeMax.phoneNumberMin.phoneNumberMax.combinePhoneNumberMin.combinePhoneNumberMax.dateOfBirthMin.dateOfBirthMax.lastDateOfCaseLogCreationMin.lastDateOfCaseLogCreationMax.numberOfCaseLogsCreatedMin.numberOfCaseLogsCreatedMax.numberOfCaseLogsCreatedSum.numberOfCaseLogsCreatedAvg.broadSpecialtyMin.broadSpecialtyMax.superSpecialtyMin.superSpecialtyMax.subSpecialtyMin.subSpecialtyMax.designationMin.designationMax.designationOthersMin.designationOthersMax.workPlaceMin.workPlaceMax.cityMin.cityMax.medicalCouncilNameMin.medicalCouncilNameMax.yearOfRegistrationMin.yearOfRegistrationMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax.imagePathMin.imagePathMax

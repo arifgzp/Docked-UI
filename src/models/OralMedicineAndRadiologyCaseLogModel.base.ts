@@ -21,8 +21,6 @@ export const OralMedicineAndRadiologyCaseLogModelBase = ModelBase
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
     hospital: types.union(types.undefined, types.null, types.string),
-    faculty: types.union(types.undefined, types.null, types.string),
-    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
     rotation: types.union(types.undefined, types.null, types.string),
@@ -33,7 +31,6 @@ export const OralMedicineAndRadiologyCaseLogModelBase = ModelBase
     habitHistory: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     treatment: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
-    caseType: types.union(types.undefined, types.null, types.string),
     remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
@@ -48,8 +45,6 @@ export class OralMedicineAndRadiologyCaseLogModelSelector extends QueryBuilder {
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
   get hospital() { return this.__attr(`hospital`) }
-  get faculty() { return this.__attr(`faculty`) }
-  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
   get rotation() { return this.__attr(`rotation`) }
@@ -60,11 +55,10 @@ export class OralMedicineAndRadiologyCaseLogModelSelector extends QueryBuilder {
   get habitHistory() { return this.__attr(`habitHistory`) }
   get treatment() { return this.__attr(`treatment`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
-  get caseType() { return this.__attr(`caseType`) }
   get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromOralMedicineAndRadiologyCaseLog() {
   return new OralMedicineAndRadiologyCaseLogModelSelector()
 }
 
-export const oralMedicineAndRadiologyCaseLogModelPrimitives = selectFromOralMedicineAndRadiologyCaseLog().createdOn.updatedOn.date.hospital.faculty.complete.patientAge.patientSex.rotation.procedure.comorbidities.lesion.drugAllergyReaction.habitHistory.treatment.diagnosis.caseType.remarks
+export const oralMedicineAndRadiologyCaseLogModelPrimitives = selectFromOralMedicineAndRadiologyCaseLog().createdOn.updatedOn.date.hospital.patientAge.patientSex.rotation.procedure.comorbidities.lesion.drugAllergyReaction.habitHistory.treatment.diagnosis.remarks

@@ -371,7 +371,7 @@ const laboratoryFindings = [
 				inputType: "text",
 			},
 			{
-				id: "2Decho",
+				id: "2D Echo",
 				name: "2D Echo",
 				nodeType: "leaf",
 				inputType: "text",

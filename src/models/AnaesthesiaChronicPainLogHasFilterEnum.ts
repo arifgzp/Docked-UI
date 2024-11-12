@@ -11,10 +11,6 @@ export enum AnaesthesiaChronicPainLogHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-rotation="rotation",
-hospital="hospital",
-faculty="faculty",
-complete="complete",
 patientAge="patientAge",
 patientSex="patientSex",
 diagnosis="diagnosis",
@@ -24,7 +20,6 @@ technique="technique",
 method="method",
 drugsUsed="drugsUsed",
 intervention="intervention",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -35,10 +30,6 @@ export const AnaesthesiaChronicPainLogHasFilterEnumType = types.enumeration("Ana
         "createdOn",
   "updatedOn",
   "date",
-  "rotation",
-  "hospital",
-  "faculty",
-  "complete",
   "patientAge",
   "patientSex",
   "diagnosis",
@@ -48,6 +39,5 @@ export const AnaesthesiaChronicPainLogHasFilterEnumType = types.enumeration("Ana
   "method",
   "drugsUsed",
   "intervention",
-  "caseType",
   "remarks",
       ])

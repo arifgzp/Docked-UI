@@ -188,7 +188,7 @@ const AppStore = types
 		_notificationToken: types.maybeNull(types.string),
 		_startTimeOfApp: types.maybeNull(types.string),
 		_isTabBarVisible: false,
-		_conduct: types.array(ConductEntry),
+		// _conduct: types.array(ConductEntry),
 		_observedAnalyticsCount: types.maybeNull(types.integer),
 		_assistedAnalyticsCount: types.maybeNull(types.integer),
 		_performedAnalyticsCount: types.maybeNull(types.integer),
@@ -238,10 +238,6 @@ const AppStore = types
 
 		get PerformedAnalyticsCount() {
 			return self._performedAnalyticsCount;
-		},
-
-		get ConductValues() {
-			return self._conduct;
 		},
 
 		get UserId() {
@@ -461,10 +457,6 @@ const AppStore = types
 			self._performedAnalyticsCount = PerformedAnalyticsCount;
 		},
 
-		setConductValues(conduct) {
-			self._conduct = conduct;
-		},
-
 		setNotificationToken(notificationToken) {
 			self._notificationToken = notificationToken;
 		},
@@ -680,7 +672,7 @@ const AppStore = types
 			self._notificationToken = null;
 			self._startTimeOfApp = null;
 			self._isTabBarVisible = false;
-			self._conduct = [];
+			// self._conduct = null;
 			self._observedAnalyticsCount = null;
 			self._assistedAnalyticsCount = null;
 			self._performedAnalyticsCount = null;
@@ -748,6 +740,40 @@ const AppStore = types
 			try {
 				self._isLoading = true;
 				const response = yield execute("sendDataToBigQuery", data, self._userToken);
+				if (response) {
+					console.log("is this the response for the bigQuery API", response);
+					return response;
+				} else {
+					console.log(response.error);
+				}
+			} catch (error) {
+				console.log(error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
+
+		createSignInSchedule: flow(function* createSignInSchedule(data) {
+			try {
+				self._isLoading = true;
+				const response = yield execute("createSignInSchedule", data, self._userToken);
+				if (response) {
+					console.log("is this the response for the createSignInSchedule API", response);
+					return response;
+				} else {
+					console.log(response.error);
+				}
+			} catch (error) {
+				console.log(error);
+			} finally {
+				self._isLoading = false;
+			}
+		}),
+
+		createLastCaseLogCreatedSchedule: flow(function* createLastCaseLogCreatedSchedule(data) {
+			try {
+				self._isLoading = true;
+				const response = yield execute("createLastCaseLogCreatedSchedule", data, self._userToken);
 				if (response) {
 					console.log("is this the response for the bigQuery API", response);
 					return response;

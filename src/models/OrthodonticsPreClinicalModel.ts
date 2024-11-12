@@ -22,5 +22,5 @@ export const OrthodonticsPreClinicalModel = OrthodonticsPreClinicalModelBase.act
 }));
 
 export const updateOrthodonticsPreClinicalModelSelector =
-	selectFromOrthodonticsPreClinical().createdOn.updatedOn.date.hospital.rotation.faculty.conduct.wireBendingRecord.roundWireLoopRecord
-		.loopInEdgewiseWireRecord.solderingExerciseRecord.cephalometricTracingRecord.claspRecord.springsRecord.canineRetractorsRecord.bowsRecord.remarks;
+	selectFromOrthodonticsPreClinical().createdOn.updatedOn.date.conduct.wireBendingRecord.roundWireLoopRecord.loopInEdgewiseWireRecord
+		.solderingExerciseRecord.cephalometricTracingRecord.claspRecord.springsRecord.canineRetractorsRecord.bowsRecord.remarks;

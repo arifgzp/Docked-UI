@@ -8,7 +8,8 @@ import { types } from "mobx-state-tree"
  */
 
 export enum UserOrderable {
-  newUserVerificationCode="newUserVerificationCode",
+  specialReferenceIdForFaculty="specialReferenceIdForFaculty",
+newUserVerificationCode="newUserVerificationCode",
 userName="userName",
 resetPasswordCode="resetPasswordCode",
 name="name",
@@ -19,6 +20,8 @@ countryCode="countryCode",
 phoneNumber="phoneNumber",
 combinePhoneNumber="combinePhoneNumber",
 dateOfBirth="dateOfBirth",
+lastDateOfCaseLogCreation="lastDateOfCaseLogCreation",
+numberOfCaseLogsCreated="numberOfCaseLogsCreated",
 broadSpecialty="broadSpecialty",
 superSpecialty="superSpecialty",
 subSpecialty="subSpecialty",
@@ -29,7 +32,6 @@ city="city",
 medicalCouncilName="medicalCouncilName",
 yearOfRegistration="yearOfRegistration",
 medicalRegistrationNumber="medicalRegistrationNumber",
-targetedCaseLogNumber="targetedCaseLogNumber",
 imagePath="imagePath"
 }
 
@@ -37,7 +39,8 @@ imagePath="imagePath"
 * UserOrderable
 */
 export const UserOrderableEnumType = types.enumeration("UserOrderable", [
-        "newUserVerificationCode",
+        "specialReferenceIdForFaculty",
+  "newUserVerificationCode",
   "userName",
   "resetPasswordCode",
   "name",
@@ -48,6 +51,8 @@ export const UserOrderableEnumType = types.enumeration("UserOrderable", [
   "phoneNumber",
   "combinePhoneNumber",
   "dateOfBirth",
+  "lastDateOfCaseLogCreation",
+  "numberOfCaseLogsCreated",
   "broadSpecialty",
   "superSpecialty",
   "subSpecialty",
@@ -58,6 +63,5 @@ export const UserOrderableEnumType = types.enumeration("UserOrderable", [
   "medicalCouncilName",
   "yearOfRegistration",
   "medicalRegistrationNumber",
-  "targetedCaseLogNumber",
   "imagePath",
       ])

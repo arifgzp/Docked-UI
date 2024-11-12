@@ -56,6 +56,7 @@ import {
 	OralRadiologyConfigTextAndSingleSelectOption,
 	OralRadiologySpecialOptions,
 } from "../../../../data/entity/OralMedicineAndRadiology/OralRadiologyConfig";
+import { err } from "react-native-svg";
 
 const getCaseLogFields = (key) => {
 	switch (key) {
@@ -113,22 +114,22 @@ const CaseLogEditScreen = ({ navigation }) => {
 	const isFocused = useIsFocused();
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
-	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const [caseLogData, setCaseLogData] = useState({});
 	const [buttonPressed, setButtonPressed] = useState(false);
 	const buttonPressedRef = useRef();
 	const { control, formState, reset, watch, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
 			hospital: "",
-			faculty: "",
+			approver: "",
 			date: new Date(),
 			remarks: "",
 		},
 	});
 	const [openSelectField, setOpenSelectField] = useState(null);
-	const allFields = ["hospital", "date", "faculty", ...getCaseLogFields(routes.params.caseType).map((field) => field.uid), "outcomeOther"];
+	const allFields = ["hospital", "date", "approver", ...getCaseLogFields(routes.params.logType).map((field) => field.uid), "outcomeOther"];
 	const scrollViewRef = useRef(null);
 	const inputRefs = useRef({});
+	const [caseData, setCaseData] = useState();
 
 	const scrollToInput = (inputName) => {
 		if (inputRefs.current[inputName]) {
@@ -167,8 +168,8 @@ const CaseLogEditScreen = ({ navigation }) => {
 		if (
 			[
 				"hospital",
-				"faculty",
-				...getCaseLogFields(routes.params.caseType)
+				"approver",
+				...getCaseLogFields(routes.params.logType)
 					.filter((f) => f.type === "select-single")
 					.map((f) => f.uid),
 			].includes(fieldName)
@@ -205,23 +206,45 @@ const CaseLogEditScreen = ({ navigation }) => {
 
 		return missingValues;
 	}
+	useEffect(() => {
+		console.log("isDirty side effect", isDirty);
+		appStoreInstance.setIsFormDirty(isDirty);
+	}, [isDirty]);
 
 	const handleOnUpdateClick = async (formData) => {
-		if (!isDirty) {
+		console.log("what is caseLogData", caseData[0], caseLogData);
+		if (!appStoreInstance.IsformDirty) {
 			console.log("No changes detected, save operation aborted.");
 			navigation.goBack();
+			appStoreInstance.setIsFormDirty(false);
 		}
 		setButtonPressed(true);
 		console.log("this is the auto update query >>>>>>>>", formData);
+		let data = {};
 		delete formData.id;
 		delete formData.__typename;
-		formData.complete = true;
-		formData.updatedOn = formatRFC3339(new Date());
-		formData.faculty = caseLogData.faculty;
+		data.complete = true;
+		data.updatedOn = formatRFC3339(new Date());
+		if (formData.approver.id) {
+			data.approver = { id: formData.approver.id };
+			delete formData.approver;
+			delete formData.faculty;
+		}
 
+		if (formData.rotation) {
+			data.rotation = formData.rotation;
+			delete formData.rotation;
+		}
+
+		if (formData.hospital) {
+			data.hospital = formData.hospital;
+			delete formData.hospital;
+		}
+
+		formData.updatedOn = formatRFC3339(new Date());
 		let queryToRun;
 
-		switch (routes.params.caseType) {
+		switch (routes.params.logType) {
 			case "CaseLog":
 				queryToRun = "updateAnaesthesiaCaseLog";
 				break;
@@ -244,7 +267,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 				queryToRun = "updateOrthodonticsPreClinical";
 				break;
 			case "OralMedicineCaseLog":
-				queryToRun = "updateOralMedicineAndRadiologyCaseLog";
+				queryToRun = "updateOralMedicineCaseLog";
 				break;
 			case "OralRadiology":
 				queryToRun = "updateOralRadiology";
@@ -252,13 +275,17 @@ const CaseLogEditScreen = ({ navigation }) => {
 			default:
 				throw new Error("Invalid case log type");
 		}
-		console.log("form Data For Update", formData);
-		const dataToBeDeleted = findMissingValues(caseLogData, formData);
+		console.log("form Data For Update", data);
+		let dataToBeDeleted = findMissingValues(caseLogData, formData);
 		console.log("dataToBeDeleted", dataToBeDeleted);
 		try {
-			const query = store[queryToRun](routes.params.id, { set: formData, remove: dataToBeDeleted });
+			const query = store[queryToRun](routes.params.logTypeID, { set: formData, remove: dataToBeDeleted });
 			setQuery(query);
-			const data = await query;
+			const dataQuery = await query;
+			if (dataQuery) {
+				const caseQuery = store.updateCaseLog(routes.params.id, { set: data });
+				setQuery(caseQuery);
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -266,14 +293,31 @@ const CaseLogEditScreen = ({ navigation }) => {
 
 	const handleOnAutoUpdateClick = async (formData) => {
 		console.log("this is the update query", formData);
+		let data = {};
 		delete formData.id;
 		delete formData.__typename;
-		formData.updatedOn = formatRFC3339(new Date());
-		formData.faculty = caseLogData.faculty;
+		data.complete = true;
+		data.updatedOn = formatRFC3339(new Date());
+		if (formData.approver.id) {
+			data.approver = { id: formData.approver.id };
+			delete formData.approver;
+			delete formData.faculty;
+		}
 
+		if (formData.rotation) {
+			data.rotation = formData.rotation;
+			delete formData.rotation;
+		}
+
+		if (formData.hospital) {
+			data.hospital = formData.hospital;
+			delete formData.hospital;
+		}
+
+		formData.updatedOn = formatRFC3339(new Date());
 		let queryToRun;
 
-		switch (routes.params.caseType) {
+		switch (routes.params.logType) {
 			case "CaseLog":
 				queryToRun = "updateAnaesthesiaCaseLog";
 				break;
@@ -296,7 +340,7 @@ const CaseLogEditScreen = ({ navigation }) => {
 				queryToRun = "updateOrthodonticsPreClinical";
 				break;
 			case "OralMedicineCaseLog":
-				queryToRun = "updateOralMedicineAndRadiologyCaseLog";
+				queryToRun = "updateOralMedicineCaseLog";
 				break;
 			case "OralRadiology":
 				queryToRun = "updateOralRadiology";
@@ -304,13 +348,17 @@ const CaseLogEditScreen = ({ navigation }) => {
 			default:
 				throw new Error("Invalid case log type");
 		}
-		console.log("form Data For auto Update", formData);
-		const dataToBeDeleted = findMissingValues(caseLogData, formData);
+		console.log("form Data For Update", data);
+		let dataToBeDeleted = findMissingValues(caseLogData, formData);
 		console.log("dataToBeDeleted", dataToBeDeleted);
 		try {
-			const query = store[queryToRun](routes.params.id, { set: formData, remove: dataToBeDeleted });
+			const query = store[queryToRun](routes.params.logTypeID, { set: formData, remove: dataToBeDeleted });
 			setQuery(query);
-			const data = await query;
+			const dataQuery = await query;
+			if (dataQuery) {
+				const caseQuery = store.updateCaseLog(routes.params.id, { set: data });
+				setQuery(caseQuery);
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -325,89 +373,90 @@ const CaseLogEditScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		const fetchData = () => {
-			console.log(store.getAnaesthesiaCaseLogById(routes.params.id));
+			let data = store.getCaseLogsById(routes.params.id);
+			setCaseData(data);
 			let caseLogData = {};
 
-			switch (routes.params.caseType) {
+			switch (routes.params.logType) {
 				case "CaseLog":
-					caseLogData = store.getAnaesthesiaCaseLogById(routes.params.id)[0];
+					caseLogData = store.getAnaesthesiaCaseLogById(routes.params.logTypeID)[0];
 					break;
 
 				case "ChronicPain":
-					caseLogData = store.getAnaesthesiaChronicPainLogById(routes.params.id)[0];
+					caseLogData = store.getAnaesthesiaChronicPainLogById(routes.params.logTypeID)[0];
 					break;
 
 				case "CriticalCareCaseLog":
-					caseLogData = store.getAnaesthesiaCriticalCareCaseLogById(routes.params.id)[0];
+					caseLogData = store.getAnaesthesiaCriticalCareCaseLogById(routes.params.logTypeID)[0];
 					break;
 
 				case "OrthopaedicsCaseLog":
-					caseLogData = store.getOrthopaedicsCaseLogById(routes.params.id)[0];
+					caseLogData = store.getOrthopaedicsCaseLogById(routes.params.logTypeID)[0];
 					break;
 
 				case "OrthopaedicsProcedureLog":
-					caseLogData = store.getOrthopaedicsProcedureLogById(routes.params.id)[0];
+					caseLogData = store.getOrthopaedicsProcedureLogById(routes.params.logTypeID)[0];
 					break;
 
 				case "OrthodonticsClinicalCaseLog":
-					caseLogData = store.getOrthodonticsClinicalCaseLogById(routes.params.id)[0];
+					caseLogData = store.getOrthodonticsClinicalCaseLogById(routes.params.logTypeID)[0];
 					break;
 
 				case "OrthodonticsPreClinical":
-					caseLogData = store.getOrthodonticsPreClinicalById(routes.params.id)[0];
+					caseLogData = store.getOrthodonticsPreClinicalById(routes.params.logTypeID)[0];
 					break;
 				case "OralMedicineCaseLog":
-					caseLogData = store.getOralMedicineAndRadiologyCaseLogsById(routes.params.id)[0];
+					caseLogData = store.getOralMedicineCaseLogsById(routes.params.logTypeID)[0];
 					break;
 				case "OralRadiology":
-					caseLogData = store.getOralRadiologiesById(routes.params.id)[0];
+					caseLogData = store.getOralRadiologiesById(routes.params.logTypeID)[0];
 					break;
 			}
-			reset({ ...caseLogData });
+
+			const approverData = { approver: data[0]?.approver } || {};
+			console.log("approverData", approverData);
+			const hospitalData = { hospital: data[0]?.hospital };
+			const rotationData = { rotation: data[0]?.rotation };
+			console.log("necessary logs for hospital and oration", hospitalData, rotationData);
+			const formData = {
+				...caseLogData,
+				...approverData,
+				...hospitalData,
+				...rotationData,
+			};
+			console.log("what is data as well here?", data);
+			console.log("what  form Data", formData);
+			reset(formData);
+			console.log("Formsatate", formState);
+			console.log("what is caseLogData.hospital", caseLogData.hospital);
+			setValue("hospital", data.hospital);
+			setValue("rotation", data.rotation);
 			setCaseLogData(caseLogData);
 		};
 
 		fetchData();
-	}, [routes.params.caseType]);
+	}, [routes.params.logType]);
 
 	useEffect(() => {
 		const fetchLogProfilePrefilledData = async () => {
 			try {
-				const caseLogData = caseLogData;
-				console.log("caseLogData", caseLogData);
-				const logProfileData = toJS(appStoreInstance.UserLogProfile);
-				console.log("logProfileData", logProfileData);
-				if (logProfileData) {
-					const facultiesList = logProfileData.faculties;
-					const rotationsList = logProfileData.rotations;
-					const hospitalData = logProfileData.hospitals;
-					console.log("facultiesListfromappStoreInstance", facultiesList);
-					console.log("rotationsListfromappStoreInstance", rotationsList);
-					console.log("hospitalDatafromappStoreInstance", hospitalData);
-					console.log("rotations[0].departmentfromappStoreInstance", rotationsList[0].department);
-					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-					setValue("faculty", facultiesList);
+				const query = store.fetchUserLogProfile(appStoreInstance.UserName);
+				setQuery(query);
+				const finishFetchingLogProfile = await query;
+				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+				if (finishFetchingLogProfile) {
+					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
+					const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
+					appStoreInstance.setLogProfile(userDataForLogProfile);
+					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					const facultiesList = userData.logProfile.faculties;
+					const rotationsList = userData.logProfile.rotations;
+					const hospitalData = userData.logProfile.hospitals;
+					console.log("facultiesList", facultiesList);
+					console.log("rotationsList", rotationsList);
+					console.log("hospitalData", hospitalData);
+					console.log("rotations[0].department", rotationsList[0].department);
 					setValue("rotation", rotationsList[0].department);
-				} else {
-					const query = store.fetchUserLogProfile(appStoreInstance.UserName);
-					setQuery(query);
-					const finishFetchingLogProfile = await query;
-					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-					if (finishFetchingLogProfile) {
-						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
-						const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
-						appStoreInstance.setLogProfile(userDataForLogProfile);
-						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-						const facultiesList = userData.logProfile.faculties;
-						const rotationsList = userData.logProfile.rotations;
-						const hospitalData = userData.logProfile.hospitals;
-						console.log("facultiesList", facultiesList);
-						console.log("rotationsList", rotationsList);
-						console.log("hospitalData", hospitalData);
-						console.log("rotations[0].department", rotationsList[0].department);
-						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-						setValue("rotation", rotationsList[0].department);
-					}
 				}
 			} catch (error) {
 				console.log(error);
@@ -448,8 +497,14 @@ const CaseLogEditScreen = ({ navigation }) => {
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
-	console.log("what is case log data here????", caseLogData);
+	let logprofileData = {};
 
+	console.log("what is log profile", store.LogProfileList[0]);
+	logprofileData.faculty = store.LogProfileList[0].faculties;
+	logprofileData.hospital = store.LogProfileList[0].hospitals;
+	logprofileData.rotation = store.LogProfileList[0].rotations;
+	console.log("what is case log data here????", caseLogData, caseData, "and what is caseLogPrefilledData", logprofileData);
+	console.log("Formsatate outside ", formState);
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
@@ -459,14 +514,14 @@ const CaseLogEditScreen = ({ navigation }) => {
 							<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 								<Box width={"$100%"}>
 									<CaselogDropDownOptions
-										formFields={getCaseLogFields(routes.params.caseType)}
-										prefilledData={caseLogPrefilledData}
+										formFields={getCaseLogFields(routes.params.logType)}
+										prefilledData={logprofileData}
 										control={control}
 										readOnly={false}
 										caseLogData={caseLogData}
 										setValue={setValue}
 										formState={formState}
-										readOnlyFaculty={true}
+										readOnlyapprover={false}
 										watch={watch}
 										inputRefs={inputRefs}
 										scrollToInput={scrollToInput}
@@ -486,8 +541,8 @@ const CaseLogEditScreen = ({ navigation }) => {
 											getValues={getValues}
 											formState={formState}
 											caseLogData={caseLogData}
-											specialOptions={getSpecialCaseLogOptions(routes.params.caseType)}
-											refernceToGetSpecialOptions={routes.params.caseType}
+											specialOptions={getSpecialCaseLogOptions(routes.params.logType)}
+											refernceToGetSpecialOptions={routes.params.logType}
 										/>
 									</Box>
 								</Box>

@@ -5,315 +5,1875 @@ import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
-import { LogProfileModel, LogProfileModelType } from "./LogProfileModel"
-import { logProfileModelPrimitives, LogProfileModelSelector } from "./LogProfileModel.base"
-import { FormLabelsAggregateResultModel, FormLabelsAggregateResultModelType } from "./FormLabelsAggregateResultModel"
-import { formLabelsAggregateResultModelPrimitives, FormLabelsAggregateResultModelSelector } from "./FormLabelsAggregateResultModel.base"
-import { UpdateOrthopaedicsCaseLogPayloadModel, UpdateOrthopaedicsCaseLogPayloadModelType } from "./UpdateOrthopaedicsCaseLogPayloadModel"
-import { updateOrthopaedicsCaseLogPayloadModelPrimitives, UpdateOrthopaedicsCaseLogPayloadModelSelector } from "./UpdateOrthopaedicsCaseLogPayloadModel.base"
-import { ThesisLogAggregateResultModel, ThesisLogAggregateResultModelType } from "./ThesisLogAggregateResultModel"
-import { thesisLogAggregateResultModelPrimitives, ThesisLogAggregateResultModelSelector } from "./ThesisLogAggregateResultModel.base"
-import { DeleteOrthopaedicsProcedureLogPayloadModel, DeleteOrthopaedicsProcedureLogPayloadModelType } from "./DeleteOrthopaedicsProcedureLogPayloadModel"
-import { deleteOrthopaedicsProcedureLogPayloadModelPrimitives, DeleteOrthopaedicsProcedureLogPayloadModelSelector } from "./DeleteOrthopaedicsProcedureLogPayloadModel.base"
-import { UpdateOralMedicineAndRadiologyCaseLogPayloadModel, UpdateOralMedicineAndRadiologyCaseLogPayloadModelType } from "./UpdateOralMedicineAndRadiologyCaseLogPayloadModel"
-import { updateOralMedicineAndRadiologyCaseLogPayloadModelPrimitives, UpdateOralMedicineAndRadiologyCaseLogPayloadModelSelector } from "./UpdateOralMedicineAndRadiologyCaseLogPayloadModel.base"
-import { OrthopaedicsCaseLogAggregateResultModel, OrthopaedicsCaseLogAggregateResultModelType } from "./OrthopaedicsCaseLogAggregateResultModel"
-import { orthopaedicsCaseLogAggregateResultModelPrimitives, OrthopaedicsCaseLogAggregateResultModelSelector } from "./OrthopaedicsCaseLogAggregateResultModel.base"
-import { UserFeedbackAggregateResultModel, UserFeedbackAggregateResultModelType } from "./UserFeedbackAggregateResultModel"
-import { userFeedbackAggregateResultModelPrimitives, UserFeedbackAggregateResultModelSelector } from "./UserFeedbackAggregateResultModel.base"
-import { HospitalsModel, HospitalsModelType } from "./HospitalsModel"
-import { hospitalsModelPrimitives, HospitalsModelSelector } from "./HospitalsModel.base"
-import { AnaesthesiaChronicPainLogAggregateResultModel, AnaesthesiaChronicPainLogAggregateResultModelType } from "./AnaesthesiaChronicPainLogAggregateResultModel"
-import { anaesthesiaChronicPainLogAggregateResultModelPrimitives, AnaesthesiaChronicPainLogAggregateResultModelSelector } from "./AnaesthesiaChronicPainLogAggregateResultModel.base"
-import { DeleteAnaesthesiaCriticalCareCaseLogPayloadModel, DeleteAnaesthesiaCriticalCareCaseLogPayloadModelType } from "./DeleteAnaesthesiaCriticalCareCaseLogPayloadModel"
-import { deleteAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives, DeleteAnaesthesiaCriticalCareCaseLogPayloadModelSelector } from "./DeleteAnaesthesiaCriticalCareCaseLogPayloadModel.base"
-import { UpdateHospitalsPayloadModel, UpdateHospitalsPayloadModelType } from "./UpdateHospitalsPayloadModel"
-import { updateHospitalsPayloadModelPrimitives, UpdateHospitalsPayloadModelSelector } from "./UpdateHospitalsPayloadModel.base"
-import { FormLabelsModel, FormLabelsModelType } from "./FormLabelsModel"
-import { formLabelsModelPrimitives, FormLabelsModelSelector } from "./FormLabelsModel.base"
-import { FieldsAggregateResultModel, FieldsAggregateResultModelType } from "./FieldsAggregateResultModel"
-import { fieldsAggregateResultModelPrimitives, FieldsAggregateResultModelSelector } from "./FieldsAggregateResultModel.base"
-import { UpdateUserPayloadModel, UpdateUserPayloadModelType } from "./UpdateUserPayloadModel"
-import { updateUserPayloadModelPrimitives, UpdateUserPayloadModelSelector } from "./UpdateUserPayloadModel.base"
-import { AddOrthodonticsClinicalCaseLogPayloadModel, AddOrthodonticsClinicalCaseLogPayloadModelType } from "./AddOrthodonticsClinicalCaseLogPayloadModel"
-import { addOrthodonticsClinicalCaseLogPayloadModelPrimitives, AddOrthodonticsClinicalCaseLogPayloadModelSelector } from "./AddOrthodonticsClinicalCaseLogPayloadModel.base"
-import { UpdateFacultyPayloadModel, UpdateFacultyPayloadModelType } from "./UpdateFacultyPayloadModel"
-import { updateFacultyPayloadModelPrimitives, UpdateFacultyPayloadModelSelector } from "./UpdateFacultyPayloadModel.base"
-import { PublicationLogAggregateResultModel, PublicationLogAggregateResultModelType } from "./PublicationLogAggregateResultModel"
-import { publicationLogAggregateResultModelPrimitives, PublicationLogAggregateResultModelSelector } from "./PublicationLogAggregateResultModel.base"
-import { UpdateOrthodonticsPreClinicalPayloadModel, UpdateOrthodonticsPreClinicalPayloadModelType } from "./UpdateOrthodonticsPreClinicalPayloadModel"
-import { updateOrthodonticsPreClinicalPayloadModelPrimitives, UpdateOrthodonticsPreClinicalPayloadModelSelector } from "./UpdateOrthodonticsPreClinicalPayloadModel.base"
-import { AnaesthesiaCaseLogModel, AnaesthesiaCaseLogModelType } from "./AnaesthesiaCaseLogModel"
-import { anaesthesiaCaseLogModelPrimitives, AnaesthesiaCaseLogModelSelector } from "./AnaesthesiaCaseLogModel.base"
-import { LogProfileAggregateResultModel, LogProfileAggregateResultModelType } from "./LogProfileAggregateResultModel"
-import { logProfileAggregateResultModelPrimitives, LogProfileAggregateResultModelSelector } from "./LogProfileAggregateResultModel.base"
-import { AddOrthopaedicsProcedureLogPayloadModel, AddOrthopaedicsProcedureLogPayloadModelType } from "./AddOrthopaedicsProcedureLogPayloadModel"
-import { addOrthopaedicsProcedureLogPayloadModelPrimitives, AddOrthopaedicsProcedureLogPayloadModelSelector } from "./AddOrthopaedicsProcedureLogPayloadModel.base"
-import { UpdateAnaesthesiaChronicPainLogPayloadModel, UpdateAnaesthesiaChronicPainLogPayloadModelType } from "./UpdateAnaesthesiaChronicPainLogPayloadModel"
-import { updateAnaesthesiaChronicPainLogPayloadModelPrimitives, UpdateAnaesthesiaChronicPainLogPayloadModelSelector } from "./UpdateAnaesthesiaChronicPainLogPayloadModel.base"
-import { AddAnaesthesiaChronicPainLogPayloadModel, AddAnaesthesiaChronicPainLogPayloadModelType } from "./AddAnaesthesiaChronicPainLogPayloadModel"
-import { addAnaesthesiaChronicPainLogPayloadModelPrimitives, AddAnaesthesiaChronicPainLogPayloadModelSelector } from "./AddAnaesthesiaChronicPainLogPayloadModel.base"
-import { AddOralRadiologyPayloadModel, AddOralRadiologyPayloadModelType } from "./AddOralRadiologyPayloadModel"
-import { addOralRadiologyPayloadModelPrimitives, AddOralRadiologyPayloadModelSelector } from "./AddOralRadiologyPayloadModel.base"
-import { HospitalsAggregateResultModel, HospitalsAggregateResultModelType } from "./HospitalsAggregateResultModel"
-import { hospitalsAggregateResultModelPrimitives, HospitalsAggregateResultModelSelector } from "./HospitalsAggregateResultModel.base"
-import { UpdateAnaesthesiaCaseLogPayloadModel, UpdateAnaesthesiaCaseLogPayloadModelType } from "./UpdateAnaesthesiaCaseLogPayloadModel"
-import { updateAnaesthesiaCaseLogPayloadModelPrimitives, UpdateAnaesthesiaCaseLogPayloadModelSelector } from "./UpdateAnaesthesiaCaseLogPayloadModel.base"
-import { AddAcademicLogPayloadModel, AddAcademicLogPayloadModelType } from "./AddAcademicLogPayloadModel"
-import { addAcademicLogPayloadModelPrimitives, AddAcademicLogPayloadModelSelector } from "./AddAcademicLogPayloadModel.base"
-import { AnaesthesiaCriticalCareCaseLogAggregateResultModel, AnaesthesiaCriticalCareCaseLogAggregateResultModelType } from "./AnaesthesiaCriticalCareCaseLogAggregateResultModel"
-import { anaesthesiaCriticalCareCaseLogAggregateResultModelPrimitives, AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector } from "./AnaesthesiaCriticalCareCaseLogAggregateResultModel.base"
-import { CustomLogAggregateResultModel, CustomLogAggregateResultModelType } from "./CustomLogAggregateResultModel"
-import { customLogAggregateResultModelPrimitives, CustomLogAggregateResultModelSelector } from "./CustomLogAggregateResultModel.base"
-import { DeleteLogProfilePayloadModel, DeleteLogProfilePayloadModelType } from "./DeleteLogProfilePayloadModel"
-import { deleteLogProfilePayloadModelPrimitives, DeleteLogProfilePayloadModelSelector } from "./DeleteLogProfilePayloadModel.base"
-import { RotationAggregateResultModel, RotationAggregateResultModelType } from "./RotationAggregateResultModel"
-import { rotationAggregateResultModelPrimitives, RotationAggregateResultModelSelector } from "./RotationAggregateResultModel.base"
-import { UserModel, UserModelType } from "./UserModel"
-import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
-import { DeletePublicationLogPayloadModel, DeletePublicationLogPayloadModelType } from "./DeletePublicationLogPayloadModel"
-import { deletePublicationLogPayloadModelPrimitives, DeletePublicationLogPayloadModelSelector } from "./DeletePublicationLogPayloadModel.base"
-import { MultiPolygonModel, MultiPolygonModelType } from "./MultiPolygonModel"
-import { multiPolygonModelPrimitives, MultiPolygonModelSelector } from "./MultiPolygonModel.base"
-import { DeleteFormLabelsPayloadModel, DeleteFormLabelsPayloadModelType } from "./DeleteFormLabelsPayloadModel"
-import { deleteFormLabelsPayloadModelPrimitives, DeleteFormLabelsPayloadModelSelector } from "./DeleteFormLabelsPayloadModel.base"
-import { UserFeedbackModel, UserFeedbackModelType } from "./UserFeedbackModel"
-import { userFeedbackModelPrimitives, UserFeedbackModelSelector } from "./UserFeedbackModel.base"
-import { OrthopaedicsCaseLogModel, OrthopaedicsCaseLogModelType } from "./OrthopaedicsCaseLogModel"
-import { orthopaedicsCaseLogModelPrimitives, OrthopaedicsCaseLogModelSelector } from "./OrthopaedicsCaseLogModel.base"
-import { DeleteUserFeedbackPayloadModel, DeleteUserFeedbackPayloadModelType } from "./DeleteUserFeedbackPayloadModel"
-import { deleteUserFeedbackPayloadModelPrimitives, DeleteUserFeedbackPayloadModelSelector } from "./DeleteUserFeedbackPayloadModel.base"
-import { UpdateFieldsPayloadModel, UpdateFieldsPayloadModelType } from "./UpdateFieldsPayloadModel"
-import { updateFieldsPayloadModelPrimitives, UpdateFieldsPayloadModelSelector } from "./UpdateFieldsPayloadModel.base"
-import { OrthopaedicsProcedureLogModel, OrthopaedicsProcedureLogModelType } from "./OrthopaedicsProcedureLogModel"
-import { orthopaedicsProcedureLogModelPrimitives, OrthopaedicsProcedureLogModelSelector } from "./OrthopaedicsProcedureLogModel.base"
-import { OralMedicineAndRadiologyCaseLogModel, OralMedicineAndRadiologyCaseLogModelType } from "./OralMedicineAndRadiologyCaseLogModel"
-import { oralMedicineAndRadiologyCaseLogModelPrimitives, OralMedicineAndRadiologyCaseLogModelSelector } from "./OralMedicineAndRadiologyCaseLogModel.base"
-import { AddThesisCasePayloadModel, AddThesisCasePayloadModelType } from "./AddThesisCasePayloadModel"
-import { addThesisCasePayloadModelPrimitives, AddThesisCasePayloadModelSelector } from "./AddThesisCasePayloadModel.base"
-import { ThesisCaseModel, ThesisCaseModelType } from "./ThesisCaseModel"
-import { thesisCaseModelPrimitives, ThesisCaseModelSelector } from "./ThesisCaseModel.base"
-import { OralRadiologyAggregateResultModel, OralRadiologyAggregateResultModelType } from "./OralRadiologyAggregateResultModel"
-import { oralRadiologyAggregateResultModelPrimitives, OralRadiologyAggregateResultModelSelector } from "./OralRadiologyAggregateResultModel.base"
-import { AnaesthesiaCriticalCareCaseLogModel, AnaesthesiaCriticalCareCaseLogModelType } from "./AnaesthesiaCriticalCareCaseLogModel"
-import { anaesthesiaCriticalCareCaseLogModelPrimitives, AnaesthesiaCriticalCareCaseLogModelSelector } from "./AnaesthesiaCriticalCareCaseLogModel.base"
-import { OrthopaedicsProcedureLogAggregateResultModel, OrthopaedicsProcedureLogAggregateResultModelType } from "./OrthopaedicsProcedureLogAggregateResultModel"
-import { orthopaedicsProcedureLogAggregateResultModelPrimitives, OrthopaedicsProcedureLogAggregateResultModelSelector } from "./OrthopaedicsProcedureLogAggregateResultModel.base"
-import { UpdateOrthopaedicsProcedureLogPayloadModel, UpdateOrthopaedicsProcedureLogPayloadModelType } from "./UpdateOrthopaedicsProcedureLogPayloadModel"
-import { updateOrthopaedicsProcedureLogPayloadModelPrimitives, UpdateOrthopaedicsProcedureLogPayloadModelSelector } from "./UpdateOrthopaedicsProcedureLogPayloadModel.base"
-import { DeleteCustomCasePayloadModel, DeleteCustomCasePayloadModelType } from "./DeleteCustomCasePayloadModel"
-import { deleteCustomCasePayloadModelPrimitives, DeleteCustomCasePayloadModelSelector } from "./DeleteCustomCasePayloadModel.base"
-import { FacultyAggregateResultModel, FacultyAggregateResultModelType } from "./FacultyAggregateResultModel"
-import { facultyAggregateResultModelPrimitives, FacultyAggregateResultModelSelector } from "./FacultyAggregateResultModel.base"
-import { AddHospitalsPayloadModel, AddHospitalsPayloadModelType } from "./AddHospitalsPayloadModel"
-import { addHospitalsPayloadModelPrimitives, AddHospitalsPayloadModelSelector } from "./AddHospitalsPayloadModel.base"
-import { AddAnaesthesiaCaseLogPayloadModel, AddAnaesthesiaCaseLogPayloadModelType } from "./AddAnaesthesiaCaseLogPayloadModel"
-import { addAnaesthesiaCaseLogPayloadModelPrimitives, AddAnaesthesiaCaseLogPayloadModelSelector } from "./AddAnaesthesiaCaseLogPayloadModel.base"
-import { ThesisLogModel, ThesisLogModelType } from "./ThesisLogModel"
-import { thesisLogModelPrimitives, ThesisLogModelSelector } from "./ThesisLogModel.base"
-import { UpdateOralRadiologyPayloadModel, UpdateOralRadiologyPayloadModelType } from "./UpdateOralRadiologyPayloadModel"
-import { updateOralRadiologyPayloadModelPrimitives, UpdateOralRadiologyPayloadModelSelector } from "./UpdateOralRadiologyPayloadModel.base"
-import { OralMedicineAndRadiologyCaseLogAggregateResultModel, OralMedicineAndRadiologyCaseLogAggregateResultModelType } from "./OralMedicineAndRadiologyCaseLogAggregateResultModel"
-import { oralMedicineAndRadiologyCaseLogAggregateResultModelPrimitives, OralMedicineAndRadiologyCaseLogAggregateResultModelSelector } from "./OralMedicineAndRadiologyCaseLogAggregateResultModel.base"
 import { UpdateAdminWorkLogPayloadModel, UpdateAdminWorkLogPayloadModelType } from "./UpdateAdminWorkLogPayloadModel"
 import { updateAdminWorkLogPayloadModelPrimitives, UpdateAdminWorkLogPayloadModelSelector } from "./UpdateAdminWorkLogPayloadModel.base"
-import { OrthodonticsClinicalCaseLogAggregateResultModel, OrthodonticsClinicalCaseLogAggregateResultModelType } from "./OrthodonticsClinicalCaseLogAggregateResultModel"
-import { orthodonticsClinicalCaseLogAggregateResultModelPrimitives, OrthodonticsClinicalCaseLogAggregateResultModelSelector } from "./OrthodonticsClinicalCaseLogAggregateResultModel.base"
-import { UpdateFormLabelsPayloadModel, UpdateFormLabelsPayloadModelType } from "./UpdateFormLabelsPayloadModel"
-import { updateFormLabelsPayloadModelPrimitives, UpdateFormLabelsPayloadModelSelector } from "./UpdateFormLabelsPayloadModel.base"
-import { DeleteOrthodonticsPreClinicalPayloadModel, DeleteOrthodonticsPreClinicalPayloadModelType } from "./DeleteOrthodonticsPreClinicalPayloadModel"
-import { deleteOrthodonticsPreClinicalPayloadModelPrimitives, DeleteOrthodonticsPreClinicalPayloadModelSelector } from "./DeleteOrthodonticsPreClinicalPayloadModel.base"
-import { UpdateCustomCasePayloadModel, UpdateCustomCasePayloadModelType } from "./UpdateCustomCasePayloadModel"
-import { updateCustomCasePayloadModelPrimitives, UpdateCustomCasePayloadModelSelector } from "./UpdateCustomCasePayloadModel.base"
-import { DeleteRotationPayloadModel, DeleteRotationPayloadModelType } from "./DeleteRotationPayloadModel"
-import { deleteRotationPayloadModelPrimitives, DeleteRotationPayloadModelSelector } from "./DeleteRotationPayloadModel.base"
-import { DeleteAnaesthesiaChronicPainLogPayloadModel, DeleteAnaesthesiaChronicPainLogPayloadModelType } from "./DeleteAnaesthesiaChronicPainLogPayloadModel"
-import { deleteAnaesthesiaChronicPainLogPayloadModelPrimitives, DeleteAnaesthesiaChronicPainLogPayloadModelSelector } from "./DeleteAnaesthesiaChronicPainLogPayloadModel.base"
-import { DeleteFacultyPayloadModel, DeleteFacultyPayloadModelType } from "./DeleteFacultyPayloadModel"
-import { deleteFacultyPayloadModelPrimitives, DeleteFacultyPayloadModelSelector } from "./DeleteFacultyPayloadModel.base"
-import { UserAggregateResultModel, UserAggregateResultModelType } from "./UserAggregateResultModel"
-import { userAggregateResultModelPrimitives, UserAggregateResultModelSelector } from "./UserAggregateResultModel.base"
-import { DeleteAdminWorkLogPayloadModel, DeleteAdminWorkLogPayloadModelType } from "./DeleteAdminWorkLogPayloadModel"
-import { deleteAdminWorkLogPayloadModelPrimitives, DeleteAdminWorkLogPayloadModelSelector } from "./DeleteAdminWorkLogPayloadModel.base"
-import { RotationModel, RotationModelType } from "./RotationModel"
-import { rotationModelPrimitives, RotationModelSelector } from "./RotationModel.base"
-import { AcademicLogModel, AcademicLogModelType } from "./AcademicLogModel"
-import { academicLogModelPrimitives, AcademicLogModelSelector } from "./AcademicLogModel.base"
-import { AddThesisLogPayloadModel, AddThesisLogPayloadModelType } from "./AddThesisLogPayloadModel"
-import { addThesisLogPayloadModelPrimitives, AddThesisLogPayloadModelSelector } from "./AddThesisLogPayloadModel.base"
-import { CustomLogModel, CustomLogModelType } from "./CustomLogModel"
-import { customLogModelPrimitives, CustomLogModelSelector } from "./CustomLogModel.base"
-import { AddCustomCasePayloadModel, AddCustomCasePayloadModelType } from "./AddCustomCasePayloadModel"
-import { addCustomCasePayloadModelPrimitives, AddCustomCasePayloadModelSelector } from "./AddCustomCasePayloadModel.base"
-import { DeleteAcademicLogPayloadModel, DeleteAcademicLogPayloadModelType } from "./DeleteAcademicLogPayloadModel"
-import { deleteAcademicLogPayloadModelPrimitives, DeleteAcademicLogPayloadModelSelector } from "./DeleteAcademicLogPayloadModel.base"
-import { UpdateOrthodonticsClinicalCaseLogPayloadModel, UpdateOrthodonticsClinicalCaseLogPayloadModelType } from "./UpdateOrthodonticsClinicalCaseLogPayloadModel"
-import { updateOrthodonticsClinicalCaseLogPayloadModelPrimitives, UpdateOrthodonticsClinicalCaseLogPayloadModelSelector } from "./UpdateOrthodonticsClinicalCaseLogPayloadModel.base"
-import { OrthodonticsClinicalCaseLogModel, OrthodonticsClinicalCaseLogModelType } from "./OrthodonticsClinicalCaseLogModel"
-import { orthodonticsClinicalCaseLogModelPrimitives, OrthodonticsClinicalCaseLogModelSelector } from "./OrthodonticsClinicalCaseLogModel.base"
-import { AddOralMedicineAndRadiologyCaseLogPayloadModel, AddOralMedicineAndRadiologyCaseLogPayloadModelType } from "./AddOralMedicineAndRadiologyCaseLogPayloadModel"
-import { addOralMedicineAndRadiologyCaseLogPayloadModelPrimitives, AddOralMedicineAndRadiologyCaseLogPayloadModelSelector } from "./AddOralMedicineAndRadiologyCaseLogPayloadModel.base"
-import { AddLogProfilePayloadModel, AddLogProfilePayloadModelType } from "./AddLogProfilePayloadModel"
-import { addLogProfilePayloadModelPrimitives, AddLogProfilePayloadModelSelector } from "./AddLogProfilePayloadModel.base"
-import { AdminWorkLogAggregateResultModel, AdminWorkLogAggregateResultModelType } from "./AdminWorkLogAggregateResultModel"
-import { adminWorkLogAggregateResultModelPrimitives, AdminWorkLogAggregateResultModelSelector } from "./AdminWorkLogAggregateResultModel.base"
-import { PointModel, PointModelType } from "./PointModel"
-import { pointModelPrimitives, PointModelSelector } from "./PointModel.base"
-import { AddFormLabelsPayloadModel, AddFormLabelsPayloadModelType } from "./AddFormLabelsPayloadModel"
-import { addFormLabelsPayloadModelPrimitives, AddFormLabelsPayloadModelSelector } from "./AddFormLabelsPayloadModel.base"
-import { AddOrthopaedicsCaseLogPayloadModel, AddOrthopaedicsCaseLogPayloadModelType } from "./AddOrthopaedicsCaseLogPayloadModel"
-import { addOrthopaedicsCaseLogPayloadModelPrimitives, AddOrthopaedicsCaseLogPayloadModelSelector } from "./AddOrthopaedicsCaseLogPayloadModel.base"
-import { AddAdminWorkLogPayloadModel, AddAdminWorkLogPayloadModelType } from "./AddAdminWorkLogPayloadModel"
-import { addAdminWorkLogPayloadModelPrimitives, AddAdminWorkLogPayloadModelSelector } from "./AddAdminWorkLogPayloadModel.base"
-import { DeleteFieldsPayloadModel, DeleteFieldsPayloadModelType } from "./DeleteFieldsPayloadModel"
-import { deleteFieldsPayloadModelPrimitives, DeleteFieldsPayloadModelSelector } from "./DeleteFieldsPayloadModel.base"
-import { UpdateAcademicLogPayloadModel, UpdateAcademicLogPayloadModelType } from "./UpdateAcademicLogPayloadModel"
-import { updateAcademicLogPayloadModelPrimitives, UpdateAcademicLogPayloadModelSelector } from "./UpdateAcademicLogPayloadModel.base"
-import { AnaesthesiaChronicPainLogModel, AnaesthesiaChronicPainLogModelType } from "./AnaesthesiaChronicPainLogModel"
-import { anaesthesiaChronicPainLogModelPrimitives, AnaesthesiaChronicPainLogModelSelector } from "./AnaesthesiaChronicPainLogModel.base"
-import { AdminWorkLogModel, AdminWorkLogModelType } from "./AdminWorkLogModel"
-import { adminWorkLogModelPrimitives, AdminWorkLogModelSelector } from "./AdminWorkLogModel.base"
-import { DeleteOrthopaedicsCaseLogPayloadModel, DeleteOrthopaedicsCaseLogPayloadModelType } from "./DeleteOrthopaedicsCaseLogPayloadModel"
-import { deleteOrthopaedicsCaseLogPayloadModelPrimitives, DeleteOrthopaedicsCaseLogPayloadModelSelector } from "./DeleteOrthopaedicsCaseLogPayloadModel.base"
-import { AddFacultyPayloadModel, AddFacultyPayloadModelType } from "./AddFacultyPayloadModel"
-import { addFacultyPayloadModelPrimitives, AddFacultyPayloadModelSelector } from "./AddFacultyPayloadModel.base"
-import { AddFieldsPayloadModel, AddFieldsPayloadModelType } from "./AddFieldsPayloadModel"
-import { addFieldsPayloadModelPrimitives, AddFieldsPayloadModelSelector } from "./AddFieldsPayloadModel.base"
-import { UpdateLogProfilePayloadModel, UpdateLogProfilePayloadModelType } from "./UpdateLogProfilePayloadModel"
-import { updateLogProfilePayloadModelPrimitives, UpdateLogProfilePayloadModelSelector } from "./UpdateLogProfilePayloadModel.base"
-import { FieldsModel, FieldsModelType } from "./FieldsModel"
-import { fieldsModelPrimitives, FieldsModelSelector } from "./FieldsModel.base"
-import { OralRadiologyModel, OralRadiologyModelType } from "./OralRadiologyModel"
-import { oralRadiologyModelPrimitives, OralRadiologyModelSelector } from "./OralRadiologyModel.base"
-import { DeleteThesisCasePayloadModel, DeleteThesisCasePayloadModelType } from "./DeleteThesisCasePayloadModel"
-import { deleteThesisCasePayloadModelPrimitives, DeleteThesisCasePayloadModelSelector } from "./DeleteThesisCasePayloadModel.base"
-import { AddRotationPayloadModel, AddRotationPayloadModelType } from "./AddRotationPayloadModel"
-import { addRotationPayloadModelPrimitives, AddRotationPayloadModelSelector } from "./AddRotationPayloadModel.base"
-import { FacultyModel, FacultyModelType } from "./FacultyModel"
-import { facultyModelPrimitives, FacultyModelSelector } from "./FacultyModel.base"
-import { AddAnaesthesiaCriticalCareCaseLogPayloadModel, AddAnaesthesiaCriticalCareCaseLogPayloadModelType } from "./AddAnaesthesiaCriticalCareCaseLogPayloadModel"
-import { addAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives, AddAnaesthesiaCriticalCareCaseLogPayloadModelSelector } from "./AddAnaesthesiaCriticalCareCaseLogPayloadModel.base"
-import { OrthodonticsPreClinicalAggregateResultModel, OrthodonticsPreClinicalAggregateResultModelType } from "./OrthodonticsPreClinicalAggregateResultModel"
-import { orthodonticsPreClinicalAggregateResultModelPrimitives, OrthodonticsPreClinicalAggregateResultModelSelector } from "./OrthodonticsPreClinicalAggregateResultModel.base"
-import { CustomCaseModel, CustomCaseModelType } from "./CustomCaseModel"
-import { customCaseModelPrimitives, CustomCaseModelSelector } from "./CustomCaseModel.base"
-import { PointListModel, PointListModelType } from "./PointListModel"
-import { pointListModelPrimitives, PointListModelSelector } from "./PointListModel.base"
-import { AnaesthesiaCaseLogAggregateResultModel, AnaesthesiaCaseLogAggregateResultModelType } from "./AnaesthesiaCaseLogAggregateResultModel"
-import { anaesthesiaCaseLogAggregateResultModelPrimitives, AnaesthesiaCaseLogAggregateResultModelSelector } from "./AnaesthesiaCaseLogAggregateResultModel.base"
-import { AddCustomLogPayloadModel, AddCustomLogPayloadModelType } from "./AddCustomLogPayloadModel"
-import { addCustomLogPayloadModelPrimitives, AddCustomLogPayloadModelSelector } from "./AddCustomLogPayloadModel.base"
-import { DeleteHospitalsPayloadModel, DeleteHospitalsPayloadModelType } from "./DeleteHospitalsPayloadModel"
-import { deleteHospitalsPayloadModelPrimitives, DeleteHospitalsPayloadModelSelector } from "./DeleteHospitalsPayloadModel.base"
-import { UpdateRotationPayloadModel, UpdateRotationPayloadModelType } from "./UpdateRotationPayloadModel"
-import { updateRotationPayloadModelPrimitives, UpdateRotationPayloadModelSelector } from "./UpdateRotationPayloadModel.base"
-import { DeleteUserPayloadModel, DeleteUserPayloadModelType } from "./DeleteUserPayloadModel"
-import { deleteUserPayloadModelPrimitives, DeleteUserPayloadModelSelector } from "./DeleteUserPayloadModel.base"
-import { DeleteOralRadiologyPayloadModel, DeleteOralRadiologyPayloadModelType } from "./DeleteOralRadiologyPayloadModel"
-import { deleteOralRadiologyPayloadModelPrimitives, DeleteOralRadiologyPayloadModelSelector } from "./DeleteOralRadiologyPayloadModel.base"
-import { UpdateCustomLogPayloadModel, UpdateCustomLogPayloadModelType } from "./UpdateCustomLogPayloadModel"
-import { updateCustomLogPayloadModelPrimitives, UpdateCustomLogPayloadModelSelector } from "./UpdateCustomLogPayloadModel.base"
-import { ThesisCaseAggregateResultModel, ThesisCaseAggregateResultModelType } from "./ThesisCaseAggregateResultModel"
-import { thesisCaseAggregateResultModelPrimitives, ThesisCaseAggregateResultModelSelector } from "./ThesisCaseAggregateResultModel.base"
-import { UpdatePublicationLogPayloadModel, UpdatePublicationLogPayloadModelType } from "./UpdatePublicationLogPayloadModel"
-import { updatePublicationLogPayloadModelPrimitives, UpdatePublicationLogPayloadModelSelector } from "./UpdatePublicationLogPayloadModel.base"
 import { DeleteAnaesthesiaCaseLogPayloadModel, DeleteAnaesthesiaCaseLogPayloadModelType } from "./DeleteAnaesthesiaCaseLogPayloadModel"
 import { deleteAnaesthesiaCaseLogPayloadModelPrimitives, DeleteAnaesthesiaCaseLogPayloadModelSelector } from "./DeleteAnaesthesiaCaseLogPayloadModel.base"
-import { DeleteOralMedicineAndRadiologyCaseLogPayloadModel, DeleteOralMedicineAndRadiologyCaseLogPayloadModelType } from "./DeleteOralMedicineAndRadiologyCaseLogPayloadModel"
-import { deleteOralMedicineAndRadiologyCaseLogPayloadModelPrimitives, DeleteOralMedicineAndRadiologyCaseLogPayloadModelSelector } from "./DeleteOralMedicineAndRadiologyCaseLogPayloadModel.base"
-import { UpdateUserFeedbackPayloadModel, UpdateUserFeedbackPayloadModelType } from "./UpdateUserFeedbackPayloadModel"
-import { updateUserFeedbackPayloadModelPrimitives, UpdateUserFeedbackPayloadModelSelector } from "./UpdateUserFeedbackPayloadModel.base"
-import { AddOrthodonticsPreClinicalPayloadModel, AddOrthodonticsPreClinicalPayloadModelType } from "./AddOrthodonticsPreClinicalPayloadModel"
-import { addOrthodonticsPreClinicalPayloadModelPrimitives, AddOrthodonticsPreClinicalPayloadModelSelector } from "./AddOrthodonticsPreClinicalPayloadModel.base"
-import { DeleteCustomLogPayloadModel, DeleteCustomLogPayloadModelType } from "./DeleteCustomLogPayloadModel"
-import { deleteCustomLogPayloadModelPrimitives, DeleteCustomLogPayloadModelSelector } from "./DeleteCustomLogPayloadModel.base"
-import { DeleteThesisLogPayloadModel, DeleteThesisLogPayloadModelType } from "./DeleteThesisLogPayloadModel"
-import { deleteThesisLogPayloadModelPrimitives, DeleteThesisLogPayloadModelSelector } from "./DeleteThesisLogPayloadModel.base"
-import { UpdateThesisLogPayloadModel, UpdateThesisLogPayloadModelType } from "./UpdateThesisLogPayloadModel"
-import { updateThesisLogPayloadModelPrimitives, UpdateThesisLogPayloadModelSelector } from "./UpdateThesisLogPayloadModel.base"
-import { AddUserFeedbackPayloadModel, AddUserFeedbackPayloadModelType } from "./AddUserFeedbackPayloadModel"
-import { addUserFeedbackPayloadModelPrimitives, AddUserFeedbackPayloadModelSelector } from "./AddUserFeedbackPayloadModel.base"
-import { OrthodonticsPreClinicalModel, OrthodonticsPreClinicalModelType } from "./OrthodonticsPreClinicalModel"
-import { orthodonticsPreClinicalModelPrimitives, OrthodonticsPreClinicalModelSelector } from "./OrthodonticsPreClinicalModel.base"
-import { PolygonModel, PolygonModelType } from "./PolygonModel"
-import { polygonModelPrimitives, PolygonModelSelector } from "./PolygonModel.base"
-import { AcademicLogAggregateResultModel, AcademicLogAggregateResultModelType } from "./AcademicLogAggregateResultModel"
-import { academicLogAggregateResultModelPrimitives, AcademicLogAggregateResultModelSelector } from "./AcademicLogAggregateResultModel.base"
+import { UpdateCustomCasePayloadModel, UpdateCustomCasePayloadModelType } from "./UpdateCustomCasePayloadModel"
+import { updateCustomCasePayloadModelPrimitives, UpdateCustomCasePayloadModelSelector } from "./UpdateCustomCasePayloadModel.base"
+import { DeleteAnaesthesiaCriticalCareCaseLogPayloadModel, DeleteAnaesthesiaCriticalCareCaseLogPayloadModelType } from "./DeleteAnaesthesiaCriticalCareCaseLogPayloadModel"
+import { deleteAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives, DeleteAnaesthesiaCriticalCareCaseLogPayloadModelSelector } from "./DeleteAnaesthesiaCriticalCareCaseLogPayloadModel.base"
+import { DeleteOrthopaedicsCaseLogPayloadModel, DeleteOrthopaedicsCaseLogPayloadModelType } from "./DeleteOrthopaedicsCaseLogPayloadModel"
+import { deleteOrthopaedicsCaseLogPayloadModelPrimitives, DeleteOrthopaedicsCaseLogPayloadModelSelector } from "./DeleteOrthopaedicsCaseLogPayloadModel.base"
+import { AddAnaesthesiaCriticalCareCaseLogPayloadModel, AddAnaesthesiaCriticalCareCaseLogPayloadModelType } from "./AddAnaesthesiaCriticalCareCaseLogPayloadModel"
+import { addAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives, AddAnaesthesiaCriticalCareCaseLogPayloadModelSelector } from "./AddAnaesthesiaCriticalCareCaseLogPayloadModel.base"
 import { DeleteOrthodonticsClinicalCaseLogPayloadModel, DeleteOrthodonticsClinicalCaseLogPayloadModelType } from "./DeleteOrthodonticsClinicalCaseLogPayloadModel"
 import { deleteOrthodonticsClinicalCaseLogPayloadModelPrimitives, DeleteOrthodonticsClinicalCaseLogPayloadModelSelector } from "./DeleteOrthodonticsClinicalCaseLogPayloadModel.base"
-import { PublicationLogModel, PublicationLogModelType } from "./PublicationLogModel"
-import { publicationLogModelPrimitives, PublicationLogModelSelector } from "./PublicationLogModel.base"
 import { UpdateThesisCasePayloadModel, UpdateThesisCasePayloadModelType } from "./UpdateThesisCasePayloadModel"
 import { updateThesisCasePayloadModelPrimitives, UpdateThesisCasePayloadModelSelector } from "./UpdateThesisCasePayloadModel.base"
+import { ThesisCaseAggregateResultModel, ThesisCaseAggregateResultModelType } from "./ThesisCaseAggregateResultModel"
+import { thesisCaseAggregateResultModelPrimitives, ThesisCaseAggregateResultModelSelector } from "./ThesisCaseAggregateResultModel.base"
+import { AddOralMedicineCaseLogPayloadModel, AddOralMedicineCaseLogPayloadModelType } from "./AddOralMedicineCaseLogPayloadModel"
+import { addOralMedicineCaseLogPayloadModelPrimitives, AddOralMedicineCaseLogPayloadModelSelector } from "./AddOralMedicineCaseLogPayloadModel.base"
+import { AddHospitalsPayloadModel, AddHospitalsPayloadModelType } from "./AddHospitalsPayloadModel"
+import { addHospitalsPayloadModelPrimitives, AddHospitalsPayloadModelSelector } from "./AddHospitalsPayloadModel.base"
+import { OrthodonticsPreClinicalModel, OrthodonticsPreClinicalModelType } from "./OrthodonticsPreClinicalModel"
+import { orthodonticsPreClinicalModelPrimitives, OrthodonticsPreClinicalModelSelector } from "./OrthodonticsPreClinicalModel.base"
+import { AddOrthopaedicsCaseLogPayloadModel, AddOrthopaedicsCaseLogPayloadModelType } from "./AddOrthopaedicsCaseLogPayloadModel"
+import { addOrthopaedicsCaseLogPayloadModelPrimitives, AddOrthopaedicsCaseLogPayloadModelSelector } from "./AddOrthopaedicsCaseLogPayloadModel.base"
+import { DeleteHospitalsPayloadModel, DeleteHospitalsPayloadModelType } from "./DeleteHospitalsPayloadModel"
+import { deleteHospitalsPayloadModelPrimitives, DeleteHospitalsPayloadModelSelector } from "./DeleteHospitalsPayloadModel.base"
+import { DeleteOralRadiologyPayloadModel, DeleteOralRadiologyPayloadModelType } from "./DeleteOralRadiologyPayloadModel"
+import { deleteOralRadiologyPayloadModelPrimitives, DeleteOralRadiologyPayloadModelSelector } from "./DeleteOralRadiologyPayloadModel.base"
+import { OrthodonticsClinicalCaseLogModel, OrthodonticsClinicalCaseLogModelType } from "./OrthodonticsClinicalCaseLogModel"
+import { orthodonticsClinicalCaseLogModelPrimitives, OrthodonticsClinicalCaseLogModelSelector } from "./OrthodonticsClinicalCaseLogModel.base"
+import { UpdateOrthodonticsPreClinicalPayloadModel, UpdateOrthodonticsPreClinicalPayloadModelType } from "./UpdateOrthodonticsPreClinicalPayloadModel"
+import { updateOrthodonticsPreClinicalPayloadModelPrimitives, UpdateOrthodonticsPreClinicalPayloadModelSelector } from "./UpdateOrthodonticsPreClinicalPayloadModel.base"
+import { AddCustomLogPayloadModel, AddCustomLogPayloadModelType } from "./AddCustomLogPayloadModel"
+import { addCustomLogPayloadModelPrimitives, AddCustomLogPayloadModelSelector } from "./AddCustomLogPayloadModel.base"
+import { OralRadiologyAggregateResultModel, OralRadiologyAggregateResultModelType } from "./OralRadiologyAggregateResultModel"
+import { oralRadiologyAggregateResultModelPrimitives, OralRadiologyAggregateResultModelSelector } from "./OralRadiologyAggregateResultModel.base"
+import { AdminWorkLogModel, AdminWorkLogModelType } from "./AdminWorkLogModel"
+import { adminWorkLogModelPrimitives, AdminWorkLogModelSelector } from "./AdminWorkLogModel.base"
+import { AnaesthesiaCriticalCareCaseLogAggregateResultModel, AnaesthesiaCriticalCareCaseLogAggregateResultModelType } from "./AnaesthesiaCriticalCareCaseLogAggregateResultModel"
+import { anaesthesiaCriticalCareCaseLogAggregateResultModelPrimitives, AnaesthesiaCriticalCareCaseLogAggregateResultModelSelector } from "./AnaesthesiaCriticalCareCaseLogAggregateResultModel.base"
+import { DeleteFormLabelsPayloadModel, DeleteFormLabelsPayloadModelType } from "./DeleteFormLabelsPayloadModel"
+import { deleteFormLabelsPayloadModelPrimitives, DeleteFormLabelsPayloadModelSelector } from "./DeleteFormLabelsPayloadModel.base"
+import { UpdateOrthopaedicsCaseLogPayloadModel, UpdateOrthopaedicsCaseLogPayloadModelType } from "./UpdateOrthopaedicsCaseLogPayloadModel"
+import { updateOrthopaedicsCaseLogPayloadModelPrimitives, UpdateOrthopaedicsCaseLogPayloadModelSelector } from "./UpdateOrthopaedicsCaseLogPayloadModel.base"
+import { OrthopaedicsCaseLogModel, OrthopaedicsCaseLogModelType } from "./OrthopaedicsCaseLogModel"
+import { orthopaedicsCaseLogModelPrimitives, OrthopaedicsCaseLogModelSelector } from "./OrthopaedicsCaseLogModel.base"
+import { UpdatePublicationLogPayloadModel, UpdatePublicationLogPayloadModelType } from "./UpdatePublicationLogPayloadModel"
+import { updatePublicationLogPayloadModelPrimitives, UpdatePublicationLogPayloadModelSelector } from "./UpdatePublicationLogPayloadModel.base"
+import { AddFieldsPayloadModel, AddFieldsPayloadModelType } from "./AddFieldsPayloadModel"
+import { addFieldsPayloadModelPrimitives, AddFieldsPayloadModelSelector } from "./AddFieldsPayloadModel.base"
+import { OrthodonticsPreClinicalAggregateResultModel, OrthodonticsPreClinicalAggregateResultModelType } from "./OrthodonticsPreClinicalAggregateResultModel"
+import { orthodonticsPreClinicalAggregateResultModelPrimitives, OrthodonticsPreClinicalAggregateResultModelSelector } from "./OrthodonticsPreClinicalAggregateResultModel.base"
+import { FacultyAggregateResultModel, FacultyAggregateResultModelType } from "./FacultyAggregateResultModel"
+import { facultyAggregateResultModelPrimitives, FacultyAggregateResultModelSelector } from "./FacultyAggregateResultModel.base"
+import { UpdateOralMedicineCaseLogPayloadModel, UpdateOralMedicineCaseLogPayloadModelType } from "./UpdateOralMedicineCaseLogPayloadModel"
+import { updateOralMedicineCaseLogPayloadModelPrimitives, UpdateOralMedicineCaseLogPayloadModelSelector } from "./UpdateOralMedicineCaseLogPayloadModel.base"
+import { UserModel, UserModelType } from "./UserModel"
+import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
+import { AddOrthopaedicsProcedureLogPayloadModel, AddOrthopaedicsProcedureLogPayloadModelType } from "./AddOrthopaedicsProcedureLogPayloadModel"
+import { addOrthopaedicsProcedureLogPayloadModelPrimitives, AddOrthopaedicsProcedureLogPayloadModelSelector } from "./AddOrthopaedicsProcedureLogPayloadModel.base"
+import { OrthopaedicsProcedureLogAggregateResultModel, OrthopaedicsProcedureLogAggregateResultModelType } from "./OrthopaedicsProcedureLogAggregateResultModel"
+import { orthopaedicsProcedureLogAggregateResultModelPrimitives, OrthopaedicsProcedureLogAggregateResultModelSelector } from "./OrthopaedicsProcedureLogAggregateResultModel.base"
+import { PointModel, PointModelType } from "./PointModel"
+import { pointModelPrimitives, PointModelSelector } from "./PointModel.base"
+import { AddRotationPayloadModel, AddRotationPayloadModelType } from "./AddRotationPayloadModel"
+import { addRotationPayloadModelPrimitives, AddRotationPayloadModelSelector } from "./AddRotationPayloadModel.base"
+import { AddUserPayloadModel, AddUserPayloadModelType } from "./AddUserPayloadModel"
+import { addUserPayloadModelPrimitives, AddUserPayloadModelSelector } from "./AddUserPayloadModel.base"
+import { DeleteAnaesthesiaChronicPainLogPayloadModel, DeleteAnaesthesiaChronicPainLogPayloadModelType } from "./DeleteAnaesthesiaChronicPainLogPayloadModel"
+import { deleteAnaesthesiaChronicPainLogPayloadModelPrimitives, DeleteAnaesthesiaChronicPainLogPayloadModelSelector } from "./DeleteAnaesthesiaChronicPainLogPayloadModel.base"
+import { DeleteOrthopaedicsProcedureLogPayloadModel, DeleteOrthopaedicsProcedureLogPayloadModelType } from "./DeleteOrthopaedicsProcedureLogPayloadModel"
+import { deleteOrthopaedicsProcedureLogPayloadModelPrimitives, DeleteOrthopaedicsProcedureLogPayloadModelSelector } from "./DeleteOrthopaedicsProcedureLogPayloadModel.base"
+import { UpdateThesisLogPayloadModel, UpdateThesisLogPayloadModelType } from "./UpdateThesisLogPayloadModel"
+import { updateThesisLogPayloadModelPrimitives, UpdateThesisLogPayloadModelSelector } from "./UpdateThesisLogPayloadModel.base"
+import { DeleteUserPayloadModel, DeleteUserPayloadModelType } from "./DeleteUserPayloadModel"
+import { deleteUserPayloadModelPrimitives, DeleteUserPayloadModelSelector } from "./DeleteUserPayloadModel.base"
+import { UpdateRotationPayloadModel, UpdateRotationPayloadModelType } from "./UpdateRotationPayloadModel"
+import { updateRotationPayloadModelPrimitives, UpdateRotationPayloadModelSelector } from "./UpdateRotationPayloadModel.base"
+import { AnaesthesiaCaseLogModel, AnaesthesiaCaseLogModelType } from "./AnaesthesiaCaseLogModel"
+import { anaesthesiaCaseLogModelPrimitives, AnaesthesiaCaseLogModelSelector } from "./AnaesthesiaCaseLogModel.base"
+import { FieldsAggregateResultModel, FieldsAggregateResultModelType } from "./FieldsAggregateResultModel"
+import { fieldsAggregateResultModelPrimitives, FieldsAggregateResultModelSelector } from "./FieldsAggregateResultModel.base"
+import { AddFormLabelsPayloadModel, AddFormLabelsPayloadModelType } from "./AddFormLabelsPayloadModel"
+import { addFormLabelsPayloadModelPrimitives, AddFormLabelsPayloadModelSelector } from "./AddFormLabelsPayloadModel.base"
+import { DeleteAcademicLogPayloadModel, DeleteAcademicLogPayloadModelType } from "./DeleteAcademicLogPayloadModel"
+import { deleteAcademicLogPayloadModelPrimitives, DeleteAcademicLogPayloadModelSelector } from "./DeleteAcademicLogPayloadModel.base"
+import { AddAnaesthesiaCaseLogPayloadModel, AddAnaesthesiaCaseLogPayloadModelType } from "./AddAnaesthesiaCaseLogPayloadModel"
+import { addAnaesthesiaCaseLogPayloadModelPrimitives, AddAnaesthesiaCaseLogPayloadModelSelector } from "./AddAnaesthesiaCaseLogPayloadModel.base"
+import { AnaesthesiaCaseLogAggregateResultModel, AnaesthesiaCaseLogAggregateResultModelType } from "./AnaesthesiaCaseLogAggregateResultModel"
+import { anaesthesiaCaseLogAggregateResultModelPrimitives, AnaesthesiaCaseLogAggregateResultModelSelector } from "./AnaesthesiaCaseLogAggregateResultModel.base"
+import { DeleteOrthodonticsPreClinicalPayloadModel, DeleteOrthodonticsPreClinicalPayloadModelType } from "./DeleteOrthodonticsPreClinicalPayloadModel"
+import { deleteOrthodonticsPreClinicalPayloadModelPrimitives, DeleteOrthodonticsPreClinicalPayloadModelSelector } from "./DeleteOrthodonticsPreClinicalPayloadModel.base"
+import { OrthopaedicsCaseLogAggregateResultModel, OrthopaedicsCaseLogAggregateResultModelType } from "./OrthopaedicsCaseLogAggregateResultModel"
+import { orthopaedicsCaseLogAggregateResultModelPrimitives, OrthopaedicsCaseLogAggregateResultModelSelector } from "./OrthopaedicsCaseLogAggregateResultModel.base"
+import { DeleteAdminWorkLogPayloadModel, DeleteAdminWorkLogPayloadModelType } from "./DeleteAdminWorkLogPayloadModel"
+import { deleteAdminWorkLogPayloadModelPrimitives, DeleteAdminWorkLogPayloadModelSelector } from "./DeleteAdminWorkLogPayloadModel.base"
+import { DeleteCustomLogPayloadModel, DeleteCustomLogPayloadModelType } from "./DeleteCustomLogPayloadModel"
+import { deleteCustomLogPayloadModelPrimitives, DeleteCustomLogPayloadModelSelector } from "./DeleteCustomLogPayloadModel.base"
+import { AddAcademicLogPayloadModel, AddAcademicLogPayloadModelType } from "./AddAcademicLogPayloadModel"
+import { addAcademicLogPayloadModelPrimitives, AddAcademicLogPayloadModelSelector } from "./AddAcademicLogPayloadModel.base"
+import { AddFacultyPayloadModel, AddFacultyPayloadModelType } from "./AddFacultyPayloadModel"
+import { addFacultyPayloadModelPrimitives, AddFacultyPayloadModelSelector } from "./AddFacultyPayloadModel.base"
+import { AddOrthodonticsClinicalCaseLogPayloadModel, AddOrthodonticsClinicalCaseLogPayloadModelType } from "./AddOrthodonticsClinicalCaseLogPayloadModel"
+import { addOrthodonticsClinicalCaseLogPayloadModelPrimitives, AddOrthodonticsClinicalCaseLogPayloadModelSelector } from "./AddOrthodonticsClinicalCaseLogPayloadModel.base"
+import { CaseLogAggregateResultModel, CaseLogAggregateResultModelType } from "./CaseLogAggregateResultModel"
+import { caseLogAggregateResultModelPrimitives, CaseLogAggregateResultModelSelector } from "./CaseLogAggregateResultModel.base"
+import { OralMedicineCaseLogModel, OralMedicineCaseLogModelType } from "./OralMedicineCaseLogModel"
+import { oralMedicineCaseLogModelPrimitives, OralMedicineCaseLogModelSelector } from "./OralMedicineCaseLogModel.base"
+import { AddUserFeedbackPayloadModel, AddUserFeedbackPayloadModelType } from "./AddUserFeedbackPayloadModel"
+import { addUserFeedbackPayloadModelPrimitives, AddUserFeedbackPayloadModelSelector } from "./AddUserFeedbackPayloadModel.base"
+import { UserAggregateResultModel, UserAggregateResultModelType } from "./UserAggregateResultModel"
+import { userAggregateResultModelPrimitives, UserAggregateResultModelSelector } from "./UserAggregateResultModel.base"
+import { AdminWorkLogAggregateResultModel, AdminWorkLogAggregateResultModelType } from "./AdminWorkLogAggregateResultModel"
+import { adminWorkLogAggregateResultModelPrimitives, AdminWorkLogAggregateResultModelSelector } from "./AdminWorkLogAggregateResultModel.base"
+import { UpdateAnaesthesiaCriticalCareCaseLogPayloadModel, UpdateAnaesthesiaCriticalCareCaseLogPayloadModelType } from "./UpdateAnaesthesiaCriticalCareCaseLogPayloadModel"
+import { updateAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives, UpdateAnaesthesiaCriticalCareCaseLogPayloadModelSelector } from "./UpdateAnaesthesiaCriticalCareCaseLogPayloadModel.base"
+import { AddLogProfilePayloadModel, AddLogProfilePayloadModelType } from "./AddLogProfilePayloadModel"
+import { addLogProfilePayloadModelPrimitives, AddLogProfilePayloadModelSelector } from "./AddLogProfilePayloadModel.base"
+import { AddThesisLogPayloadModel, AddThesisLogPayloadModelType } from "./AddThesisLogPayloadModel"
+import { addThesisLogPayloadModelPrimitives, AddThesisLogPayloadModelSelector } from "./AddThesisLogPayloadModel.base"
+import { UpdateLogProfilePayloadModel, UpdateLogProfilePayloadModelType } from "./UpdateLogProfilePayloadModel"
+import { updateLogProfilePayloadModelPrimitives, UpdateLogProfilePayloadModelSelector } from "./UpdateLogProfilePayloadModel.base"
+import { OralMedicineCaseLogAggregateResultModel, OralMedicineCaseLogAggregateResultModelType } from "./OralMedicineCaseLogAggregateResultModel"
+import { oralMedicineCaseLogAggregateResultModelPrimitives, OralMedicineCaseLogAggregateResultModelSelector } from "./OralMedicineCaseLogAggregateResultModel.base"
+import { UpdateAcademicLogPayloadModel, UpdateAcademicLogPayloadModelType } from "./UpdateAcademicLogPayloadModel"
+import { updateAcademicLogPayloadModelPrimitives, UpdateAcademicLogPayloadModelSelector } from "./UpdateAcademicLogPayloadModel.base"
+import { AddThesisCasePayloadModel, AddThesisCasePayloadModelType } from "./AddThesisCasePayloadModel"
+import { addThesisCasePayloadModelPrimitives, AddThesisCasePayloadModelSelector } from "./AddThesisCasePayloadModel.base"
+import { CustomLogAggregateResultModel, CustomLogAggregateResultModelType } from "./CustomLogAggregateResultModel"
+import { customLogAggregateResultModelPrimitives, CustomLogAggregateResultModelSelector } from "./CustomLogAggregateResultModel.base"
+import { PublicationLogModel, PublicationLogModelType } from "./PublicationLogModel"
+import { publicationLogModelPrimitives, PublicationLogModelSelector } from "./PublicationLogModel.base"
+import { AddCaseLogPayloadModel, AddCaseLogPayloadModelType } from "./AddCaseLogPayloadModel"
+import { addCaseLogPayloadModelPrimitives, AddCaseLogPayloadModelSelector } from "./AddCaseLogPayloadModel.base"
+import { PublicationLogAggregateResultModel, PublicationLogAggregateResultModelType } from "./PublicationLogAggregateResultModel"
+import { publicationLogAggregateResultModelPrimitives, PublicationLogAggregateResultModelSelector } from "./PublicationLogAggregateResultModel.base"
+import { UpdateOrthodonticsClinicalCaseLogPayloadModel, UpdateOrthodonticsClinicalCaseLogPayloadModelType } from "./UpdateOrthodonticsClinicalCaseLogPayloadModel"
+import { updateOrthodonticsClinicalCaseLogPayloadModelPrimitives, UpdateOrthodonticsClinicalCaseLogPayloadModelSelector } from "./UpdateOrthodonticsClinicalCaseLogPayloadModel.base"
+import { ThesisLogModel, ThesisLogModelType } from "./ThesisLogModel"
+import { thesisLogModelPrimitives, ThesisLogModelSelector } from "./ThesisLogModel.base"
+import { UpdateOrthopaedicsProcedureLogPayloadModel, UpdateOrthopaedicsProcedureLogPayloadModelType } from "./UpdateOrthopaedicsProcedureLogPayloadModel"
+import { updateOrthopaedicsProcedureLogPayloadModelPrimitives, UpdateOrthopaedicsProcedureLogPayloadModelSelector } from "./UpdateOrthopaedicsProcedureLogPayloadModel.base"
 import { AddPublicationLogPayloadModel, AddPublicationLogPayloadModelType } from "./AddPublicationLogPayloadModel"
 import { addPublicationLogPayloadModelPrimitives, AddPublicationLogPayloadModelSelector } from "./AddPublicationLogPayloadModel.base"
 import { CustomCaseAggregateResultModel, CustomCaseAggregateResultModelType } from "./CustomCaseAggregateResultModel"
 import { customCaseAggregateResultModelPrimitives, CustomCaseAggregateResultModelSelector } from "./CustomCaseAggregateResultModel.base"
-import { UpdateAnaesthesiaCriticalCareCaseLogPayloadModel, UpdateAnaesthesiaCriticalCareCaseLogPayloadModelType } from "./UpdateAnaesthesiaCriticalCareCaseLogPayloadModel"
-import { updateAnaesthesiaCriticalCareCaseLogPayloadModelPrimitives, UpdateAnaesthesiaCriticalCareCaseLogPayloadModelSelector } from "./UpdateAnaesthesiaCriticalCareCaseLogPayloadModel.base"
-import { AddUserPayloadModel, AddUserPayloadModelType } from "./AddUserPayloadModel"
-import { addUserPayloadModelPrimitives, AddUserPayloadModelSelector } from "./AddUserPayloadModel.base"
+import { MultiPolygonModel, MultiPolygonModelType } from "./MultiPolygonModel"
+import { multiPolygonModelPrimitives, MultiPolygonModelSelector } from "./MultiPolygonModel.base"
+import { AcademicLogAggregateResultModel, AcademicLogAggregateResultModelType } from "./AcademicLogAggregateResultModel"
+import { academicLogAggregateResultModelPrimitives, AcademicLogAggregateResultModelSelector } from "./AcademicLogAggregateResultModel.base"
+import { DeleteCaseLogPayloadModel, DeleteCaseLogPayloadModelType } from "./DeleteCaseLogPayloadModel"
+import { deleteCaseLogPayloadModelPrimitives, DeleteCaseLogPayloadModelSelector } from "./DeleteCaseLogPayloadModel.base"
+import { ThesisCaseModel, ThesisCaseModelType } from "./ThesisCaseModel"
+import { thesisCaseModelPrimitives, ThesisCaseModelSelector } from "./ThesisCaseModel.base"
+import { AnaesthesiaCriticalCareCaseLogModel, AnaesthesiaCriticalCareCaseLogModelType } from "./AnaesthesiaCriticalCareCaseLogModel"
+import { anaesthesiaCriticalCareCaseLogModelPrimitives, AnaesthesiaCriticalCareCaseLogModelSelector } from "./AnaesthesiaCriticalCareCaseLogModel.base"
+import { HospitalsAggregateResultModel, HospitalsAggregateResultModelType } from "./HospitalsAggregateResultModel"
+import { hospitalsAggregateResultModelPrimitives, HospitalsAggregateResultModelSelector } from "./HospitalsAggregateResultModel.base"
+import { UpdateAnaesthesiaCaseLogPayloadModel, UpdateAnaesthesiaCaseLogPayloadModelType } from "./UpdateAnaesthesiaCaseLogPayloadModel"
+import { updateAnaesthesiaCaseLogPayloadModelPrimitives, UpdateAnaesthesiaCaseLogPayloadModelSelector } from "./UpdateAnaesthesiaCaseLogPayloadModel.base"
+import { CustomCaseModel, CustomCaseModelType } from "./CustomCaseModel"
+import { customCaseModelPrimitives, CustomCaseModelSelector } from "./CustomCaseModel.base"
+import { AddAdminWorkLogPayloadModel, AddAdminWorkLogPayloadModelType } from "./AddAdminWorkLogPayloadModel"
+import { addAdminWorkLogPayloadModelPrimitives, AddAdminWorkLogPayloadModelSelector } from "./AddAdminWorkLogPayloadModel.base"
+import { OrthodonticsClinicalCaseLogAggregateResultModel, OrthodonticsClinicalCaseLogAggregateResultModelType } from "./OrthodonticsClinicalCaseLogAggregateResultModel"
+import { orthodonticsClinicalCaseLogAggregateResultModelPrimitives, OrthodonticsClinicalCaseLogAggregateResultModelSelector } from "./OrthodonticsClinicalCaseLogAggregateResultModel.base"
+import { UpdateCaseLogPayloadModel, UpdateCaseLogPayloadModelType } from "./UpdateCaseLogPayloadModel"
+import { updateCaseLogPayloadModelPrimitives, UpdateCaseLogPayloadModelSelector } from "./UpdateCaseLogPayloadModel.base"
+import { PointListModel, PointListModelType } from "./PointListModel"
+import { pointListModelPrimitives, PointListModelSelector } from "./PointListModel.base"
+import { DeletePublicationLogPayloadModel, DeletePublicationLogPayloadModelType } from "./DeletePublicationLogPayloadModel"
+import { deletePublicationLogPayloadModelPrimitives, DeletePublicationLogPayloadModelSelector } from "./DeletePublicationLogPayloadModel.base"
+import { FormLabelsAggregateResultModel, FormLabelsAggregateResultModelType } from "./FormLabelsAggregateResultModel"
+import { formLabelsAggregateResultModelPrimitives, FormLabelsAggregateResultModelSelector } from "./FormLabelsAggregateResultModel.base"
+import { AnaesthesiaChronicPainLogModel, AnaesthesiaChronicPainLogModelType } from "./AnaesthesiaChronicPainLogModel"
+import { anaesthesiaChronicPainLogModelPrimitives, AnaesthesiaChronicPainLogModelSelector } from "./AnaesthesiaChronicPainLogModel.base"
+import { ThesisLogAggregateResultModel, ThesisLogAggregateResultModelType } from "./ThesisLogAggregateResultModel"
+import { thesisLogAggregateResultModelPrimitives, ThesisLogAggregateResultModelSelector } from "./ThesisLogAggregateResultModel.base"
+import { DeleteLogProfilePayloadModel, DeleteLogProfilePayloadModelType } from "./DeleteLogProfilePayloadModel"
+import { deleteLogProfilePayloadModelPrimitives, DeleteLogProfilePayloadModelSelector } from "./DeleteLogProfilePayloadModel.base"
+import { DeleteThesisLogPayloadModel, DeleteThesisLogPayloadModelType } from "./DeleteThesisLogPayloadModel"
+import { deleteThesisLogPayloadModelPrimitives, DeleteThesisLogPayloadModelSelector } from "./DeleteThesisLogPayloadModel.base"
+import { UpdateAnaesthesiaChronicPainLogPayloadModel, UpdateAnaesthesiaChronicPainLogPayloadModelType } from "./UpdateAnaesthesiaChronicPainLogPayloadModel"
+import { updateAnaesthesiaChronicPainLogPayloadModelPrimitives, UpdateAnaesthesiaChronicPainLogPayloadModelSelector } from "./UpdateAnaesthesiaChronicPainLogPayloadModel.base"
+import { UpdateFormLabelsPayloadModel, UpdateFormLabelsPayloadModelType } from "./UpdateFormLabelsPayloadModel"
+import { updateFormLabelsPayloadModelPrimitives, UpdateFormLabelsPayloadModelSelector } from "./UpdateFormLabelsPayloadModel.base"
+import { UpdateUserFeedbackPayloadModel, UpdateUserFeedbackPayloadModelType } from "./UpdateUserFeedbackPayloadModel"
+import { updateUserFeedbackPayloadModelPrimitives, UpdateUserFeedbackPayloadModelSelector } from "./UpdateUserFeedbackPayloadModel.base"
+import { LogProfileModel, LogProfileModelType } from "./LogProfileModel"
+import { logProfileModelPrimitives, LogProfileModelSelector } from "./LogProfileModel.base"
+import { AddOralRadiologyPayloadModel, AddOralRadiologyPayloadModelType } from "./AddOralRadiologyPayloadModel"
+import { addOralRadiologyPayloadModelPrimitives, AddOralRadiologyPayloadModelSelector } from "./AddOralRadiologyPayloadModel.base"
+import { AddAnaesthesiaChronicPainLogPayloadModel, AddAnaesthesiaChronicPainLogPayloadModelType } from "./AddAnaesthesiaChronicPainLogPayloadModel"
+import { addAnaesthesiaChronicPainLogPayloadModelPrimitives, AddAnaesthesiaChronicPainLogPayloadModelSelector } from "./AddAnaesthesiaChronicPainLogPayloadModel.base"
+import { DeleteFacultyPayloadModel, DeleteFacultyPayloadModelType } from "./DeleteFacultyPayloadModel"
+import { deleteFacultyPayloadModelPrimitives, DeleteFacultyPayloadModelSelector } from "./DeleteFacultyPayloadModel.base"
+import { DeleteFieldsPayloadModel, DeleteFieldsPayloadModelType } from "./DeleteFieldsPayloadModel"
+import { deleteFieldsPayloadModelPrimitives, DeleteFieldsPayloadModelSelector } from "./DeleteFieldsPayloadModel.base"
+import { DeleteThesisCasePayloadModel, DeleteThesisCasePayloadModelType } from "./DeleteThesisCasePayloadModel"
+import { deleteThesisCasePayloadModelPrimitives, DeleteThesisCasePayloadModelSelector } from "./DeleteThesisCasePayloadModel.base"
+import { FieldsModel, FieldsModelType } from "./FieldsModel"
+import { fieldsModelPrimitives, FieldsModelSelector } from "./FieldsModel.base"
+import { OralRadiologyModel, OralRadiologyModelType } from "./OralRadiologyModel"
+import { oralRadiologyModelPrimitives, OralRadiologyModelSelector } from "./OralRadiologyModel.base"
+import { HospitalsModel, HospitalsModelType } from "./HospitalsModel"
+import { hospitalsModelPrimitives, HospitalsModelSelector } from "./HospitalsModel.base"
+import { RotationModel, RotationModelType } from "./RotationModel"
+import { rotationModelPrimitives, RotationModelSelector } from "./RotationModel.base"
+import { PolygonModel, PolygonModelType } from "./PolygonModel"
+import { polygonModelPrimitives, PolygonModelSelector } from "./PolygonModel.base"
+import { AddOrthodonticsPreClinicalPayloadModel, AddOrthodonticsPreClinicalPayloadModelType } from "./AddOrthodonticsPreClinicalPayloadModel"
+import { addOrthodonticsPreClinicalPayloadModelPrimitives, AddOrthodonticsPreClinicalPayloadModelSelector } from "./AddOrthodonticsPreClinicalPayloadModel.base"
+import { UpdateHospitalsPayloadModel, UpdateHospitalsPayloadModelType } from "./UpdateHospitalsPayloadModel"
+import { updateHospitalsPayloadModelPrimitives, UpdateHospitalsPayloadModelSelector } from "./UpdateHospitalsPayloadModel.base"
+import { OrthopaedicsProcedureLogModel, OrthopaedicsProcedureLogModelType } from "./OrthopaedicsProcedureLogModel"
+import { orthopaedicsProcedureLogModelPrimitives, OrthopaedicsProcedureLogModelSelector } from "./OrthopaedicsProcedureLogModel.base"
+import { UpdateUserPayloadModel, UpdateUserPayloadModelType } from "./UpdateUserPayloadModel"
+import { updateUserPayloadModelPrimitives, UpdateUserPayloadModelSelector } from "./UpdateUserPayloadModel.base"
+import { CaseLogModel, CaseLogModelType } from "./CaseLogModel"
+import { caseLogModelPrimitives, CaseLogModelSelector } from "./CaseLogModel.base"
+import { RotationAggregateResultModel, RotationAggregateResultModelType } from "./RotationAggregateResultModel"
+import { rotationAggregateResultModelPrimitives, RotationAggregateResultModelSelector } from "./RotationAggregateResultModel.base"
+import { UpdateOralRadiologyPayloadModel, UpdateOralRadiologyPayloadModelType } from "./UpdateOralRadiologyPayloadModel"
+import { updateOralRadiologyPayloadModelPrimitives, UpdateOralRadiologyPayloadModelSelector } from "./UpdateOralRadiologyPayloadModel.base"
+import { FormLabelsModel, FormLabelsModelType } from "./FormLabelsModel"
+import { formLabelsModelPrimitives, FormLabelsModelSelector } from "./FormLabelsModel.base"
+import { DeleteCustomCasePayloadModel, DeleteCustomCasePayloadModelType } from "./DeleteCustomCasePayloadModel"
+import { deleteCustomCasePayloadModelPrimitives, DeleteCustomCasePayloadModelSelector } from "./DeleteCustomCasePayloadModel.base"
+import { UpdateFacultyPayloadModel, UpdateFacultyPayloadModelType } from "./UpdateFacultyPayloadModel"
+import { updateFacultyPayloadModelPrimitives, UpdateFacultyPayloadModelSelector } from "./UpdateFacultyPayloadModel.base"
+import { UserFeedbackModel, UserFeedbackModelType } from "./UserFeedbackModel"
+import { userFeedbackModelPrimitives, UserFeedbackModelSelector } from "./UserFeedbackModel.base"
+import { CustomLogModel, CustomLogModelType } from "./CustomLogModel"
+import { customLogModelPrimitives, CustomLogModelSelector } from "./CustomLogModel.base"
+import { UpdateCustomLogPayloadModel, UpdateCustomLogPayloadModelType } from "./UpdateCustomLogPayloadModel"
+import { updateCustomLogPayloadModelPrimitives, UpdateCustomLogPayloadModelSelector } from "./UpdateCustomLogPayloadModel.base"
+import { DeleteRotationPayloadModel, DeleteRotationPayloadModelType } from "./DeleteRotationPayloadModel"
+import { deleteRotationPayloadModelPrimitives, DeleteRotationPayloadModelSelector } from "./DeleteRotationPayloadModel.base"
+import { DeleteOralMedicineCaseLogPayloadModel, DeleteOralMedicineCaseLogPayloadModelType } from "./DeleteOralMedicineCaseLogPayloadModel"
+import { deleteOralMedicineCaseLogPayloadModelPrimitives, DeleteOralMedicineCaseLogPayloadModelSelector } from "./DeleteOralMedicineCaseLogPayloadModel.base"
+import { LogProfileAggregateResultModel, LogProfileAggregateResultModelType } from "./LogProfileAggregateResultModel"
+import { logProfileAggregateResultModelPrimitives, LogProfileAggregateResultModelSelector } from "./LogProfileAggregateResultModel.base"
+import { FacultyModel, FacultyModelType } from "./FacultyModel"
+import { facultyModelPrimitives, FacultyModelSelector } from "./FacultyModel.base"
+import { AnaesthesiaChronicPainLogAggregateResultModel, AnaesthesiaChronicPainLogAggregateResultModelType } from "./AnaesthesiaChronicPainLogAggregateResultModel"
+import { anaesthesiaChronicPainLogAggregateResultModelPrimitives, AnaesthesiaChronicPainLogAggregateResultModelSelector } from "./AnaesthesiaChronicPainLogAggregateResultModel.base"
+import { AcademicLogModel, AcademicLogModelType } from "./AcademicLogModel"
+import { academicLogModelPrimitives, AcademicLogModelSelector } from "./AcademicLogModel.base"
+import { UpdateFieldsPayloadModel, UpdateFieldsPayloadModelType } from "./UpdateFieldsPayloadModel"
+import { updateFieldsPayloadModelPrimitives, UpdateFieldsPayloadModelSelector } from "./UpdateFieldsPayloadModel.base"
+import { UserFeedbackAggregateResultModel, UserFeedbackAggregateResultModelType } from "./UserFeedbackAggregateResultModel"
+import { userFeedbackAggregateResultModelPrimitives, UserFeedbackAggregateResultModelSelector } from "./UserFeedbackAggregateResultModel.base"
+import { AddCustomCasePayloadModel, AddCustomCasePayloadModelType } from "./AddCustomCasePayloadModel"
+import { addCustomCasePayloadModelPrimitives, AddCustomCasePayloadModelSelector } from "./AddCustomCasePayloadModel.base"
+import { DeleteUserFeedbackPayloadModel, DeleteUserFeedbackPayloadModelType } from "./DeleteUserFeedbackPayloadModel"
+import { deleteUserFeedbackPayloadModelPrimitives, DeleteUserFeedbackPayloadModelSelector } from "./DeleteUserFeedbackPayloadModel.base"
 
 
-import { CustomLogOrderable } from "./CustomLogOrderableEnum"
-import { FieldsHasFilter } from "./FieldsHasFilterEnum"
-import { UserFeedbackHasFilter } from "./UserFeedbackHasFilterEnum"
-import { OrthodonticsClinicalCaseLogOrderable } from "./OrthodonticsClinicalCaseLogOrderableEnum"
-import { ThesisLogHasFilter } from "./ThesisLogHasFilterEnum"
-import { HospitalsHasFilter } from "./HospitalsHasFilterEnum"
-import { PublicationLogHasFilter } from "./PublicationLogHasFilterEnum"
-import { UserOrderable } from "./UserOrderableEnum"
-import { AnaesthesiaChronicPainLogOrderable } from "./AnaesthesiaChronicPainLogOrderableEnum"
-import { OrthodonticsClinicalCaseLogHasFilter } from "./OrthodonticsClinicalCaseLogHasFilterEnum"
-import { AnaesthesiaChronicPainLogHasFilter } from "./AnaesthesiaChronicPainLogHasFilterEnum"
-import { FacultyHasFilter } from "./FacultyHasFilterEnum"
-import { AnaesthesiaCaseLogOrderable } from "./AnaesthesiaCaseLogOrderableEnum"
+import { LogProfileHasFilter } from "./LogProfileHasFilterEnum"
 import { OrthopaedicsProcedureLogHasFilter } from "./OrthopaedicsProcedureLogHasFilterEnum"
-import { FacultyOrderable } from "./FacultyOrderableEnum"
-import { HttpMethod } from "./HttpMethodEnum"
-import { AdminWorkLogHasFilter } from "./AdminWorkLogHasFilterEnum"
 import { AnaesthesiaCriticalCareCaseLogHasFilter } from "./AnaesthesiaCriticalCareCaseLogHasFilterEnum"
-import { AnaesthesiaCriticalCareCaseLogOrderable } from "./AnaesthesiaCriticalCareCaseLogOrderableEnum"
-import { OralRadiologyHasFilter } from "./OralRadiologyHasFilterEnum"
+import { OralMedicineCaseLogOrderable } from "./OralMedicineCaseLogOrderableEnum"
+import { PublicationLogOrderable } from "./PublicationLogOrderableEnum"
 import { LogProfileOrderable } from "./LogProfileOrderableEnum"
-import { OrthopaedicsCaseLogOrderable } from "./OrthopaedicsCaseLogOrderableEnum"
-import { Mode } from "./ModeEnum"
-import { CustomLogHasFilter } from "./CustomLogHasFilterEnum"
-import { OrthodonticsPreClinicalOrderable } from "./OrthodonticsPreClinicalOrderableEnum"
-import { FormLabelsOrderable } from "./FormLabelsOrderableEnum"
-import { RotationHasFilter } from "./RotationHasFilterEnum"
-import { AnaesthesiaCaseLogHasFilter } from "./AnaesthesiaCaseLogHasFilterEnum"
-import { OrthopaedicsCaseLogHasFilter } from "./OrthopaedicsCaseLogHasFilterEnum"
-import { AcademicLogHasFilter } from "./AcademicLogHasFilterEnum"
-import { Gender } from "./GenderEnum"
+import { DgraphIndex } from "./DgraphIndexEnum"
+import { UserStatus } from "./UserStatusEnum"
+import { AnaesthesiaCaseLogOrderable } from "./AnaesthesiaCaseLogOrderableEnum"
 import { OrthodonticsPreClinicalHasFilter } from "./OrthodonticsPreClinicalHasFilterEnum"
+import { CustomLogHasFilter } from "./CustomLogHasFilterEnum"
+import { AcademicLogOrderable } from "./AcademicLogOrderableEnum"
+import { PublicationLogHasFilter } from "./PublicationLogHasFilterEnum"
+import { AnaesthesiaChronicPainLogHasFilter } from "./AnaesthesiaChronicPainLogHasFilterEnum"
+import { UserRole } from "./UserRoleEnum"
+import { OrthopaedicsCaseLogOrderable } from "./OrthopaedicsCaseLogOrderableEnum"
+import { RotationHasFilter } from "./RotationHasFilterEnum"
+import { ThesisCaseOrderable } from "./ThesisCaseOrderableEnum"
+import { RotationOrderable } from "./RotationOrderableEnum"
+import { CaseLogHasFilter } from "./CaseLogHasFilterEnum"
+import { FacultyOrderable } from "./FacultyOrderableEnum"
+import { OrthopaedicsCaseLogHasFilter } from "./OrthopaedicsCaseLogHasFilterEnum"
+import { FacultyHasFilter } from "./FacultyHasFilterEnum"
+import { UserHasFilter } from "./UserHasFilterEnum"
+import { AnaesthesiaCriticalCareCaseLogOrderable } from "./AnaesthesiaCriticalCareCaseLogOrderableEnum"
+import { HospitalsHasFilter } from "./HospitalsHasFilterEnum"
+import { CustomLogOrderable } from "./CustomLogOrderableEnum"
+import { CaseLogStatus } from "./CaseLogStatusEnum"
+import { OrthodonticsClinicalCaseLogOrderable } from "./OrthodonticsClinicalCaseLogOrderableEnum"
+import { Mode } from "./ModeEnum"
+import { HttpMethod } from "./HttpMethodEnum"
+import { CustomCaseHasFilter } from "./CustomCaseHasFilterEnum"
+import { ThesisLogHasFilter } from "./ThesisLogHasFilterEnum"
+import { ThesisCaseHasFilter } from "./ThesisCaseHasFilterEnum"
+import { AnaesthesiaChronicPainLogOrderable } from "./AnaesthesiaChronicPainLogOrderableEnum"
+import { CaseLogOrderable } from "./CaseLogOrderableEnum"
+import { UserOrderable } from "./UserOrderableEnum"
+import { UserFeedbackHasFilter } from "./UserFeedbackHasFilterEnum"
+import { AdminWorkLogOrderable } from "./AdminWorkLogOrderableEnum"
 import { OralRadiologyOrderable } from "./OralRadiologyOrderableEnum"
+import { ThesisLogOrderable } from "./ThesisLogOrderableEnum"
 import { FormLabelsHasFilter } from "./FormLabelsHasFilterEnum"
 import { FieldsOrderable } from "./FieldsOrderableEnum"
-import { UserRole } from "./UserRoleEnum"
-import { UserStatus } from "./UserStatusEnum"
-import { AcademicLogOrderable } from "./AcademicLogOrderableEnum"
-import { PublicationLogOrderable } from "./PublicationLogOrderableEnum"
-import { RotationOrderable } from "./RotationOrderableEnum"
-import { UserFeedbackOrderable } from "./UserFeedbackOrderableEnum"
-import { ThesisCaseOrderable } from "./ThesisCaseOrderableEnum"
-import { ThesisLogOrderable } from "./ThesisLogOrderableEnum"
-import { CustomCaseHasFilter } from "./CustomCaseHasFilterEnum"
-import { AdminWorkLogOrderable } from "./AdminWorkLogOrderableEnum"
-import { HospitalsOrderable } from "./HospitalsOrderableEnum"
-import { ThesisCaseHasFilter } from "./ThesisCaseHasFilterEnum"
-import { OralMedicineAndRadiologyCaseLogHasFilter } from "./OralMedicineAndRadiologyCaseLogHasFilterEnum"
+import { OralRadiologyHasFilter } from "./OralRadiologyHasFilterEnum"
+import { OrthodonticsClinicalCaseLogHasFilter } from "./OrthodonticsClinicalCaseLogHasFilterEnum"
+import { OrthodonticsPreClinicalOrderable } from "./OrthodonticsPreClinicalOrderableEnum"
 import { OrthopaedicsProcedureLogOrderable } from "./OrthopaedicsProcedureLogOrderableEnum"
+import { AcademicLogHasFilter } from "./AcademicLogHasFilterEnum"
 import { CustomCaseOrderable } from "./CustomCaseOrderableEnum"
-import { LogProfileHasFilter } from "./LogProfileHasFilterEnum"
-import { UserHasFilter } from "./UserHasFilterEnum"
-import { DgraphIndex } from "./DgraphIndexEnum"
-import { OralMedicineAndRadiologyCaseLogOrderable } from "./OralMedicineAndRadiologyCaseLogOrderableEnum"
+import { Gender } from "./GenderEnum"
+import { AnaesthesiaCaseLogHasFilter } from "./AnaesthesiaCaseLogHasFilterEnum"
+import { AdminWorkLogHasFilter } from "./AdminWorkLogHasFilterEnum"
+import { UserFeedbackOrderable } from "./UserFeedbackOrderableEnum"
+import { HospitalsOrderable } from "./HospitalsOrderableEnum"
+import { OralMedicineCaseLogHasFilter } from "./OralMedicineCaseLogHasFilterEnum"
+import { FieldsHasFilter } from "./FieldsHasFilterEnum"
+import { FormLabelsOrderable } from "./FormLabelsOrderableEnum"
 
+export type FormLabelsPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  label?: (string | null)
+}
+export type LogProfilePatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  hospitals?: (HospitalsRef | null)[] | null
+  faculties?: (FacultyRef | null)[] | null
+  rotations?: (RotationRef | null)[] | null
+}
+export type UpdateThesisLogInput = {
+  filter: ThesisLogFilter
+  set?: (ThesisLogPatch | null)
+  remove?: (ThesisLogPatch | null)
+}
+export type FieldsOrder = {
+  asc?: (FieldsOrderable | null)
+  desc?: (FieldsOrderable | null)
+  then?: (FieldsOrder | null)
+}
+export type AcademicLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  position?: (string | null)
+  activities?: (string | null)[] | null
+  title?: (string | null)
+  organiser?: (string | null)
+  supervision?: (string | null)[] | null
+  academicLogType?: (string | null)
+}
+export type CustomLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  customName?: (string | null)
+  formLabels?: (FormLabelsRef | null)[] | null
+}
+export type UpdateAnaesthesiaCriticalCareCaseLogInput = {
+  filter: AnaesthesiaCriticalCareCaseLogFilter
+  set?: (AnaesthesiaCriticalCareCaseLogPatch | null)
+  remove?: (AnaesthesiaCriticalCareCaseLogPatch | null)
+}
+export type AddLogProfileInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  hospitals?: (HospitalsRef | null)[] | null
+  faculties?: (FacultyRef | null)[] | null
+  rotations?: (RotationRef | null)[] | null
+}
+export type OrthopaedicsProcedureLogOrder = {
+  asc?: (OrthopaedicsProcedureLogOrderable | null)
+  desc?: (OrthopaedicsProcedureLogOrderable | null)
+  then?: (OrthopaedicsProcedureLogOrder | null)
+}
+export type PolygonGeoFilter = {
+  near?: (NearFilter | null)
+  within?: (WithinFilter | null)
+  contains?: (ContainsFilter | null)
+  intersects?: (IntersectsFilter | null)
+}
+export type UpdatePublicationLogInput = {
+  filter: PublicationLogFilter
+  set?: (PublicationLogPatch | null)
+  remove?: (PublicationLogPatch | null)
+}
+export type IntersectsFilter = {
+  polygon?: (PolygonRef | null)
+  multiPolygon?: (MultiPolygonRef | null)
+}
+export type UpdateCustomLogInput = {
+  filter: CustomLogFilter
+  set?: (CustomLogPatch | null)
+  remove?: (CustomLogPatch | null)
+}
+export type FloatRange = {
+  min: number
+  max: number
+}
+export type AnaesthesiaChronicPainLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  indication?: (string | null)
+  conduct?: (string | null)
+  technique?: (string | null)[] | null
+  method?: (string | null)[] | null
+  drugsUsed?: (string | null)[] | null
+  intervention?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type PointGeoFilter = {
+  near?: (NearFilter | null)
+  within?: (WithinFilter | null)
+}
+export type HospitalsRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  name?: (string | null)
+}
+export type UpdateFacultyInput = {
+  filter: FacultyFilter
+  set?: (FacultyPatch | null)
+  remove?: (FacultyPatch | null)
+}
+export type StringTermFilter = {
+  allofterms?: (string | null)
+  anyofterms?: (string | null)
+}
+export type AnaesthesiaCaseLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  weight?: (string | null)
+  height?: (string | null)
+  diagnosis?: (string | null)
+  surgicalProcedure?: (string | null)
+  speciality?: (string | null)
+  asaGrade?: (string | null)
+  typeOfSurgery?: (string | null)
+  npo?: (string | null)
+  conduct?: (string | null)
+  comorbidity?: (string | null)[] | null
+  examination?: (string | null)[] | null
+  laboratoryFindings?: (string | null)[] | null
+  typeOfAnaesthesia?: (string | null)[] | null
+  drugs?: (string | null)[] | null
+  airManagement?: (string | null)[] | null
+  regionalTechniques?: (string | null)[] | null
+  interventionalProcedures?: (string | null)[] | null
+  monitoring?: (string | null)[] | null
+  complications?: (string | null)[] | null
+  outcome?: (string | null)
+  remarks?: (string | null)
+}
+export type FacultyOrder = {
+  asc?: (FacultyOrderable | null)
+  desc?: (FacultyOrderable | null)
+  then?: (FacultyOrder | null)
+}
+export type FieldsRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  label?: (string | null)
+  value?: (string | null)
+}
+export type LogProfileRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  hospitals?: (HospitalsRef | null)[] | null
+  faculties?: (FacultyRef | null)[] | null
+  rotations?: (RotationRef | null)[] | null
+}
+export type FloatFilter = {
+  eq?: (number | null)
+  in?: (number | null)[] | null
+  le?: (number | null)
+  lt?: (number | null)
+  ge?: (number | null)
+  gt?: (number | null)
+  between?: (FloatRange | null)
+}
+export type PolygonRef = {
+  coordinates: PointListRef[]
+}
+export type AddPublicationLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  publicationType?: (string | null)
+  title?: (string | null)
+  journalName?: (string | null)
+  status?: (string | null)
+  academicLogType?: (string | null)
+}
+export type AcademicLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  has?: (AcademicLogHasFilter | null)[] | null
+  and?: (AcademicLogFilter | null)[] | null
+  or?: (AcademicLogFilter | null)[] | null
+  not?: (AcademicLogFilter | null)
+}
+export type CustomCaseFilter = {
+  id?: string[] | null
+  caseName?: (StringTermFilter | null)
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  customLogIdReference?: (StringTermFilter | null)
+  has?: (CustomCaseHasFilter | null)[] | null
+  and?: (CustomCaseFilter | null)[] | null
+  or?: (CustomCaseFilter | null)[] | null
+  not?: (CustomCaseFilter | null)
+}
+export type CustomLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  customName?: (string | null)
+  formLabels?: (FormLabelsRef | null)[] | null
+}
+export type PointRef = {
+  longitude: number
+  latitude: number
+}
+export type AddAdminWorkLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  activity?: (string | null)
+  otherActivity?: (string | null)
+  position?: (string | null)
+  organisation?: (string | null)
+  academicLogType?: (string | null)
+}
+export type FacultyRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  user?: (UserRef | null)
+}
+export type FormLabelsRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  label?: (string | null)
+}
+export type PublicationLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  publicationType?: (string | null)
+  title?: (string | null)
+  journalName?: (string | null)
+  status?: (string | null)
+  academicLogType?: (string | null)
+}
+export type AnaesthesiaCriticalCareCaseLogOrder = {
+  asc?: (AnaesthesiaCriticalCareCaseLogOrderable | null)
+  desc?: (AnaesthesiaCriticalCareCaseLogOrderable | null)
+  then?: (AnaesthesiaCriticalCareCaseLogOrder | null)
+}
+export type UpdateHospitalsInput = {
+  filter: HospitalsFilter
+  set?: (HospitalsPatch | null)
+  remove?: (HospitalsPatch | null)
+}
+export type AddRotationInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  department?: (string | null)
+  from?: (any | null)
+  to?: (any | null)
+}
+export type AddOrthodonticsPreClinicalInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  conduct?: (string | null)
+  wireBendingRecord?: (string | null)[] | null
+  roundWireLoopRecord?: (string | null)[] | null
+  loopInEdgewiseWireRecord?: (string | null)[] | null
+  solderingExerciseRecord?: (string | null)[] | null
+  cephalometricTracingRecord?: (string | null)[] | null
+  claspRecord?: (string | null)[] | null
+  springsRecord?: (string | null)[] | null
+  canineRetractorsRecord?: (string | null)[] | null
+  bowsRecord?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type AnaesthesiaChronicPainLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  intervention?: (StringTermFilter | null)
+  has?: (AnaesthesiaChronicPainLogHasFilter | null)[] | null
+  and?: (AnaesthesiaChronicPainLogFilter | null)[] | null
+  or?: (AnaesthesiaChronicPainLogFilter | null)[] | null
+  not?: (AnaesthesiaChronicPainLogFilter | null)
+}
+export type FieldsFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  label?: (StringTermFilter | null)
+  value?: (StringTermFilter | null)
+  has?: (FieldsHasFilter | null)[] | null
+  and?: (FieldsFilter | null)[] | null
+  or?: (FieldsFilter | null)[] | null
+  not?: (FieldsFilter | null)
+}
+export type OrthodonticsPreClinicalRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  conduct?: (string | null)
+  wireBendingRecord?: (string | null)[] | null
+  roundWireLoopRecord?: (string | null)[] | null
+  loopInEdgewiseWireRecord?: (string | null)[] | null
+  solderingExerciseRecord?: (string | null)[] | null
+  cephalometricTracingRecord?: (string | null)[] | null
+  claspRecord?: (string | null)[] | null
+  springsRecord?: (string | null)[] | null
+  canineRetractorsRecord?: (string | null)[] | null
+  bowsRecord?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type Int64Range = {
+  min: any
+  max: any
+}
+export type AddCustomLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  customName?: (string | null)
+  formLabels?: (FormLabelsRef | null)[] | null
+}
+export type AnaesthesiaCriticalCareCaseLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  outcome?: (StringTermFilter | null)
+  has?: (AnaesthesiaCriticalCareCaseLogHasFilter | null)[] | null
+  and?: (AnaesthesiaCriticalCareCaseLogFilter | null)[] | null
+  or?: (AnaesthesiaCriticalCareCaseLogFilter | null)[] | null
+  not?: (AnaesthesiaCriticalCareCaseLogFilter | null)
+}
+export type OralMedicineCaseLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  treatment?: (StringTermFilter | null)
+  diagnosis?: (StringTermFilter | null)
+  has?: (OralMedicineCaseLogHasFilter | null)[] | null
+  and?: (OralMedicineCaseLogFilter | null)[] | null
+  or?: (OralMedicineCaseLogFilter | null)[] | null
+  not?: (OralMedicineCaseLogFilter | null)
+}
+export type UpdateAnaesthesiaChronicPainLogInput = {
+  filter: AnaesthesiaChronicPainLogFilter
+  set?: (AnaesthesiaChronicPainLogPatch | null)
+  remove?: (AnaesthesiaChronicPainLogPatch | null)
+}
+export type DateTimeRange = {
+  min: any
+  max: any
+}
+export type UserPatch = {
+  specialReferenceIdForFaculty?: (string | null)
+  newUserVerificationCode?: (string | null)
+  userName?: (string | null)
+  userStatus?: (UserStatus | null)
+  resetPasswordCode?: (string | null)
+  name?: (string | null)
+  gender?: (Gender | null)
+  role?: (UserRole | null)
+  lastName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  countryCode?: (string | null)
+  phoneNumber?: (string | null)
+  combinePhoneNumber?: (string | null)
+  dateOfBirth?: (any | null)
+  lastDateOfCaseLogCreation?: (any | null)
+  numberOfCaseLogsCreated?: (number | null)
+  active?: (boolean | null)
+  broadSpecialty?: (string | null)
+  superSpecialty?: (string | null)
+  subSpecialty?: (string | null)
+  designation?: (string | null)
+  designationOthers?: (string | null)
+  workPlace?: (string | null)
+  city?: (string | null)
+  medicalCouncilName?: (string | null)
+  yearOfRegistration?: (any | null)
+  medicalRegistrationNumber?: (string | null)
+  verifiedMedicalRegistrationNumber?: (boolean | null)
+  academicLog?: (AcademicLogRef | null)[] | null
+  publicationLog?: (PublicationLogRef | null)[] | null
+  adminWorkLog?: (AdminWorkLogRef | null)[] | null
+  thesisLog?: (ThesisLogRef | null)[] | null
+  customLog?: (CustomLogRef | null)[] | null
+  thesisCases?: (ThesisCaseRef | null)[] | null
+  customCases?: (CustomCaseRef | null)[] | null
+  imagePath?: (string | null)
+  userFeedback?: (UserFeedbackRef | null)[] | null
+  password?: (string | null)
+}
+export type UserStatusHash = {
+  eq?: (UserStatus | null)
+  in?: (UserStatus | null)[] | null
+}
+export type CustomHttp = {
+  url: string
+  method: HttpMethod
+  body?: (string | null)
+  graphql?: (string | null)
+  mode?: (Mode | null)
+  forwardHeaders?: string[] | null
+  secretHeaders?: string[] | null
+  introspectionHeaders?: string[] | null
+  skipIntrospection?: (boolean | null)
+}
+export type RotationRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  department?: (string | null)
+  from?: (any | null)
+  to?: (any | null)
+}
+export type CustomCasePatch = {
+  caseName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  fields?: (FieldsRef | null)[] | null
+  customLogIdReference?: (string | null)
+}
+export type AddUserFeedbackInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  title?: (string | null)
+  description?: (string | null)
+  userEmail?: (string | null)
+}
+export type CustomLogOrder = {
+  asc?: (CustomLogOrderable | null)
+  desc?: (CustomLogOrderable | null)
+  then?: (CustomLogOrder | null)
+}
+export type LogProfileFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  has?: (LogProfileHasFilter | null)[] | null
+  and?: (LogProfileFilter | null)[] | null
+  or?: (LogProfileFilter | null)[] | null
+  not?: (LogProfileFilter | null)
+}
+export type AddCaseLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  createdBy?: (UserRef | null)
+  approver?: (UserRef | null)
+  logType?: (string | null)
+  rejectionMessage?: (string | null)
+  complete?: (boolean | null)
+  caseLogStatus?: (CaseLogStatus | null)
+  rotation?: (string | null)
+  hospital?: (string | null)
+  anaesthesiaCaseLog?: (AnaesthesiaCaseLogRef | null)
+  anaesthesiaChronicPainLog?: (AnaesthesiaChronicPainLogRef | null)
+  anaesthesiaCriticalCareCaseLog?: (AnaesthesiaCriticalCareCaseLogRef | null)
+  orthodonticsClinicalCaseLog?: (OrthodonticsClinicalCaseLogRef | null)
+  orthodonticsPreClinical?: (OrthodonticsPreClinicalRef | null)
+  orthopaedicsCaseLog?: (OrthopaedicsCaseLogRef | null)
+  orthopaedicsProcedureLog?: (OrthopaedicsProcedureLogRef | null)
+  oralMedicineCaseLog?: (OralMedicineCaseLogRef | null)
+  oralRadiology?: (OralRadiologyRef | null)
+}
+export type CaseLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  logType?: (StringExactFilter | null)
+  rejectionMessage?: (StringTermFilter | null)
+  complete?: (boolean | null)
+  caseLogStatus?: (CaseLogStatusHash | null)
+  rotation?: (StringTermFilter | null)
+  hospital?: (StringTermFilter | null)
+  has?: (CaseLogHasFilter | null)[] | null
+  and?: (CaseLogFilter | null)[] | null
+  or?: (CaseLogFilter | null)[] | null
+  not?: (CaseLogFilter | null)
+}
+export type OralMedicineCaseLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  procedure?: (string | null)[] | null
+  comorbidities?: (string | null)[] | null
+  lesion?: (string | null)[] | null
+  drugAllergyReaction?: (string | null)[] | null
+  habitHistory?: (string | null)[] | null
+  treatment?: (string | null)
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type UpdateFieldsInput = {
+  filter: FieldsFilter
+  set?: (FieldsPatch | null)
+  remove?: (FieldsPatch | null)
+}
+export type AddHospitalsInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  name?: (string | null)
+}
+export type ThesisCaseRef = {
+  id?: (string | null)
+  caseName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  fields?: (FieldsRef | null)[] | null
+}
+export type UpdateAcademicLogInput = {
+  filter: AcademicLogFilter
+  set?: (AcademicLogPatch | null)
+  remove?: (AcademicLogPatch | null)
+}
+export type AddCustomCaseInput = {
+  caseName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  fields?: (FieldsRef | null)[] | null
+  customLogIdReference?: (string | null)
+}
+export type RotationPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  department?: (string | null)
+  from?: (any | null)
+  to?: (any | null)
+}
+export type IntRange = {
+  min: number
+  max: number
+}
+export type StringRange = {
+  min: string
+  max: string
+}
+export type CaseLogOrder = {
+  asc?: (CaseLogOrderable | null)
+  desc?: (CaseLogOrderable | null)
+  then?: (CaseLogOrder | null)
+}
+export type OrthodonticsPreClinicalOrder = {
+  asc?: (OrthodonticsPreClinicalOrderable | null)
+  desc?: (OrthodonticsPreClinicalOrderable | null)
+  then?: (OrthodonticsPreClinicalOrder | null)
+}
+export type OrthopaedicsProcedureLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  conduct?: (string | null)
+  sites?: (string | null)
+  procedure?: (string | null)[] | null
+  procedureName?: (string | null)
+  durationOfSurgeryHours?: (string | null)
+  durationOfSurgeryMinutes?: (string | null)
+  outcome?: (string | null)
+  outcomeOther?: (string | null)
+  complication?: (string | null)
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type UpdateRotationInput = {
+  filter: RotationFilter
+  set?: (RotationPatch | null)
+  remove?: (RotationPatch | null)
+}
+export type UpdateOralRadiologyInput = {
+  filter: OralRadiologyFilter
+  set?: (OralRadiologyPatch | null)
+  remove?: (OralRadiologyPatch | null)
+}
+export type FormLabelsFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  label?: (StringTermFilter | null)
+  has?: (FormLabelsHasFilter | null)[] | null
+  and?: (FormLabelsFilter | null)[] | null
+  or?: (FormLabelsFilter | null)[] | null
+  not?: (FormLabelsFilter | null)
+}
+export type UpdateOrthodonticsPreClinicalInput = {
+  filter: OrthodonticsPreClinicalFilter
+  set?: (OrthodonticsPreClinicalPatch | null)
+  remove?: (OrthodonticsPreClinicalPatch | null)
+}
+export type UserFeedbackOrder = {
+  asc?: (UserFeedbackOrderable | null)
+  desc?: (UserFeedbackOrderable | null)
+  then?: (UserFeedbackOrder | null)
+}
+export type OrthodonticsPreClinicalFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  wireBendingRecord?: (StringTermFilter | null)
+  roundWireLoopRecord?: (StringTermFilter | null)
+  solderingExerciseRecord?: (StringTermFilter | null)
+  cephalometricTracingRecord?: (StringTermFilter | null)
+  claspRecord?: (StringTermFilter | null)
+  has?: (OrthodonticsPreClinicalHasFilter | null)[] | null
+  and?: (OrthodonticsPreClinicalFilter | null)[] | null
+  or?: (OrthodonticsPreClinicalFilter | null)[] | null
+  not?: (OrthodonticsPreClinicalFilter | null)
+}
+export type FieldsPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  label?: (string | null)
+  value?: (string | null)
+}
+export type RotationOrder = {
+  asc?: (RotationOrderable | null)
+  desc?: (RotationOrderable | null)
+  then?: (RotationOrder | null)
+}
+export type HospitalsOrder = {
+  asc?: (HospitalsOrderable | null)
+  desc?: (HospitalsOrderable | null)
+  then?: (HospitalsOrder | null)
+}
+export type DgraphDefault = {
+  value?: (string | null)
+}
+export type RotationFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  department?: (StringTermFilter | null)
+  from?: (DateTimeFilter | null)
+  to?: (DateTimeFilter | null)
+  has?: (RotationHasFilter | null)[] | null
+  and?: (RotationFilter | null)[] | null
+  or?: (RotationFilter | null)[] | null
+  not?: (RotationFilter | null)
+}
+export type StringExactFilter = {
+  eq?: (string | null)
+  in?: (string | null)[] | null
+  le?: (string | null)
+  lt?: (string | null)
+  ge?: (string | null)
+  gt?: (string | null)
+  between?: (StringRange | null)
+}
+export type OrthopaedicsCaseLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  conduct?: (StringTermFilter | null)
+  has?: (OrthopaedicsCaseLogHasFilter | null)[] | null
+  and?: (OrthopaedicsCaseLogFilter | null)[] | null
+  or?: (OrthopaedicsCaseLogFilter | null)[] | null
+  not?: (OrthopaedicsCaseLogFilter | null)
+}
 export type UpdateUserFeedbackInput = {
   filter: UserFeedbackFilter
   set?: (UserFeedbackPatch | null)
   remove?: (UserFeedbackPatch | null)
+}
+export type UserOrder = {
+  asc?: (UserOrderable | null)
+  desc?: (UserOrderable | null)
+  then?: (UserOrder | null)
+}
+export type AddOrthodonticsClinicalCaseLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  techniqueUsed?: (string | null)
+  conduct?: (string | null)
+  applianceUsed?: (string | null)[] | null
+  treatmentPlan?: (string | null)[] | null
+  outcome?: (string | null)
+  remarks?: (string | null)
+}
+export type OrthopaedicsCaseLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  conduct?: (string | null)
+  diseaseCategory?: (string | null)[] | null
+  site?: (string | null)[] | null
+  joint?: (string | null)[] | null
+  bones?: (string | null)[] | null
+  outcomes?: (string | null)[] | null
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type ThesisCaseOrder = {
+  asc?: (ThesisCaseOrderable | null)
+  desc?: (ThesisCaseOrderable | null)
+  then?: (ThesisCaseOrder | null)
+}
+export type ThesisCasePatch = {
+  caseName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  fields?: (FieldsRef | null)[] | null
+}
+export type UpdateFormLabelsInput = {
+  filter: FormLabelsFilter
+  set?: (FormLabelsPatch | null)
+  remove?: (FormLabelsPatch | null)
+}
+export type AddAnaesthesiaChronicPainLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  indication?: (string | null)
+  conduct?: (string | null)
+  technique?: (string | null)[] | null
+  method?: (string | null)[] | null
+  drugsUsed?: (string | null)[] | null
+  intervention?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type UserFeedbackRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  title?: (string | null)
+  description?: (string | null)
+  userEmail?: (string | null)
+}
+export type AnaesthesiaCaseLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  typeOfAnaesthesia?: (StringTermFilter | null)
+  drugs?: (StringTermFilter | null)
+  airManagement?: (StringTermFilter | null)
+  regionalTechniques?: (StringTermFilter | null)
+  interventionalProcedures?: (StringTermFilter | null)
+  monitoring?: (StringTermFilter | null)
+  complications?: (StringTermFilter | null)
+  outcome?: (StringTermFilter | null)
+  has?: (AnaesthesiaCaseLogHasFilter | null)[] | null
+  and?: (AnaesthesiaCaseLogFilter | null)[] | null
+  or?: (AnaesthesiaCaseLogFilter | null)[] | null
+  not?: (AnaesthesiaCaseLogFilter | null)
+}
+export type ThesisLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  thesisName?: (string | null)
+  formLabels?: (FormLabelsRef | null)[] | null
+}
+export type AddAcademicLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  position?: (string | null)
+  activities?: (string | null)[] | null
+  title?: (string | null)
+  organiser?: (string | null)
+  supervision?: (string | null)[] | null
+  academicLogType?: (string | null)
+}
+export type AddThesisLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  thesisName?: (string | null)
+  formLabels?: (FormLabelsRef | null)[] | null
+}
+export type AnaesthesiaCaseLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  weight?: (string | null)
+  height?: (string | null)
+  diagnosis?: (string | null)
+  surgicalProcedure?: (string | null)
+  speciality?: (string | null)
+  asaGrade?: (string | null)
+  typeOfSurgery?: (string | null)
+  npo?: (string | null)
+  conduct?: (string | null)
+  comorbidity?: (string | null)[] | null
+  examination?: (string | null)[] | null
+  laboratoryFindings?: (string | null)[] | null
+  typeOfAnaesthesia?: (string | null)[] | null
+  drugs?: (string | null)[] | null
+  airManagement?: (string | null)[] | null
+  regionalTechniques?: (string | null)[] | null
+  interventionalProcedures?: (string | null)[] | null
+  monitoring?: (string | null)[] | null
+  complications?: (string | null)[] | null
+  outcome?: (string | null)
+  remarks?: (string | null)
+}
+export type ThesisLogOrder = {
+  asc?: (ThesisLogOrderable | null)
+  desc?: (ThesisLogOrderable | null)
+  then?: (ThesisLogOrder | null)
+}
+export type UpdateCaseLogInput = {
+  filter: CaseLogFilter
+  set?: (CaseLogPatch | null)
+  remove?: (CaseLogPatch | null)
+}
+export type UpdateCustomCaseInput = {
+  filter: CustomCaseFilter
+  set?: (CustomCasePatch | null)
+  remove?: (CustomCasePatch | null)
+}
+export type OrthopaedicsCaseLogOrder = {
+  asc?: (OrthopaedicsCaseLogOrderable | null)
+  desc?: (OrthopaedicsCaseLogOrderable | null)
+  then?: (OrthopaedicsCaseLogOrder | null)
+}
+export type ThesisLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  thesisName?: (string | null)
+  formLabels?: (FormLabelsRef | null)[] | null
+}
+export type HospitalsFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  name?: (StringTermFilter | null)
+  has?: (HospitalsHasFilter | null)[] | null
+  and?: (HospitalsFilter | null)[] | null
+  or?: (HospitalsFilter | null)[] | null
+  not?: (HospitalsFilter | null)
+}
+export type OrthodonticsPreClinicalPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  conduct?: (string | null)
+  wireBendingRecord?: (string | null)[] | null
+  roundWireLoopRecord?: (string | null)[] | null
+  loopInEdgewiseWireRecord?: (string | null)[] | null
+  solderingExerciseRecord?: (string | null)[] | null
+  cephalometricTracingRecord?: (string | null)[] | null
+  claspRecord?: (string | null)[] | null
+  springsRecord?: (string | null)[] | null
+  canineRetractorsRecord?: (string | null)[] | null
+  bowsRecord?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type StringHashFilter = {
+  eq?: (string | null)
+  in?: (string | null)[] | null
+}
+export type AdminWorkLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  has?: (AdminWorkLogHasFilter | null)[] | null
+  and?: (AdminWorkLogFilter | null)[] | null
+  or?: (AdminWorkLogFilter | null)[] | null
+  not?: (AdminWorkLogFilter | null)
+}
+export type AnaesthesiaCriticalCareCaseLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  comorbidites?: (string | null)
+  surgicalprocedure?: (string | null)
+  complication?: (string | null)
+  outcome?: (string | null)
+  conduct?: (string | null)
+  procedures?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type GenerateMutationParams = {
+  add?: (boolean | null)
+  update?: (boolean | null)
+  delete?: (boolean | null)
+}
+export type OrthopaedicsProcedureLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  conduct?: (string | null)
+  sites?: (string | null)
+  procedure?: (string | null)[] | null
+  procedureName?: (string | null)
+  durationOfSurgeryHours?: (string | null)
+  durationOfSurgeryMinutes?: (string | null)
+  outcome?: (string | null)
+  outcomeOther?: (string | null)
+  complication?: (string | null)
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type UpdateThesisCaseInput = {
+  filter: ThesisCaseFilter
+  set?: (ThesisCasePatch | null)
+  remove?: (ThesisCasePatch | null)
+}
+export type AddOrthopaedicsCaseLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  conduct?: (string | null)
+  diseaseCategory?: (string | null)[] | null
+  site?: (string | null)[] | null
+  joint?: (string | null)[] | null
+  bones?: (string | null)[] | null
+  outcomes?: (string | null)[] | null
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type AddUserInput = {
+  specialReferenceIdForFaculty?: (string | null)
+  newUserVerificationCode?: (string | null)
+  userName?: (string | null)
+  userStatus?: (UserStatus | null)
+  resetPasswordCode?: (string | null)
+  name?: (string | null)
+  gender?: (Gender | null)
+  role?: (UserRole | null)
+  lastName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  countryCode?: (string | null)
+  phoneNumber?: (string | null)
+  combinePhoneNumber?: (string | null)
+  dateOfBirth?: (any | null)
+  lastDateOfCaseLogCreation?: (any | null)
+  numberOfCaseLogsCreated?: (number | null)
+  active?: (boolean | null)
+  broadSpecialty?: (string | null)
+  superSpecialty?: (string | null)
+  subSpecialty?: (string | null)
+  designation?: (string | null)
+  designationOthers?: (string | null)
+  workPlace?: (string | null)
+  city?: (string | null)
+  medicalCouncilName?: (string | null)
+  yearOfRegistration?: (any | null)
+  medicalRegistrationNumber?: (string | null)
+  verifiedMedicalRegistrationNumber?: (boolean | null)
+  academicLog?: (AcademicLogRef | null)[] | null
+  publicationLog?: (PublicationLogRef | null)[] | null
+  adminWorkLog?: (AdminWorkLogRef | null)[] | null
+  thesisLog?: (ThesisLogRef | null)[] | null
+  customLog?: (CustomLogRef | null)[] | null
+  thesisCases?: (ThesisCaseRef | null)[] | null
+  customCases?: (CustomCaseRef | null)[] | null
+  imagePath?: (string | null)
+  userFeedback?: (UserFeedbackRef | null)[] | null
+  password: string
+}
+export type AddAnaesthesiaCriticalCareCaseLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  comorbidites?: (string | null)
+  surgicalprocedure?: (string | null)
+  complication?: (string | null)
+  outcome?: (string | null)
+  conduct?: (string | null)
+  procedures?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type AddOralRadiologyInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  complete?: (boolean | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  procedure?: (string | null)[] | null
+  report?: (string | null)
+  diagnosis?: (string | null)
+  chiefComplaint?: (string | null)
+  caseType?: (string | null)
+  remarks?: (string | null)
+}
+export type AddOrthopaedicsProcedureLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  conduct?: (string | null)
+  sites?: (string | null)
+  procedure?: (string | null)[] | null
+  procedureName?: (string | null)
+  durationOfSurgeryHours?: (string | null)
+  durationOfSurgeryMinutes?: (string | null)
+  outcome?: (string | null)
+  outcomeOther?: (string | null)
+  complication?: (string | null)
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type OralRadiologyOrder = {
+  asc?: (OralRadiologyOrderable | null)
+  desc?: (OralRadiologyOrderable | null)
+  then?: (OralRadiologyOrder | null)
+}
+export type OrthodonticsClinicalCaseLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  techniqueUsed?: (string | null)
+  conduct?: (string | null)
+  applianceUsed?: (string | null)[] | null
+  treatmentPlan?: (string | null)[] | null
+  outcome?: (string | null)
+  remarks?: (string | null)
+}
+export type DateTimeFilter = {
+  eq?: (any | null)
+  in?: (any | null)[] | null
+  le?: (any | null)
+  lt?: (any | null)
+  ge?: (any | null)
+  gt?: (any | null)
+  between?: (DateTimeRange | null)
+}
+export type AnaesthesiaChronicPainLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  indication?: (string | null)
+  conduct?: (string | null)
+  technique?: (string | null)[] | null
+  method?: (string | null)[] | null
+  drugsUsed?: (string | null)[] | null
+  intervention?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type CaseLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  createdBy?: (UserRef | null)
+  approver?: (UserRef | null)
+  logType?: (string | null)
+  rejectionMessage?: (string | null)
+  complete?: (boolean | null)
+  caseLogStatus?: (CaseLogStatus | null)
+  rotation?: (string | null)
+  hospital?: (string | null)
+  anaesthesiaCaseLog?: (AnaesthesiaCaseLogRef | null)
+  anaesthesiaChronicPainLog?: (AnaesthesiaChronicPainLogRef | null)
+  anaesthesiaCriticalCareCaseLog?: (AnaesthesiaCriticalCareCaseLogRef | null)
+  orthodonticsClinicalCaseLog?: (OrthodonticsClinicalCaseLogRef | null)
+  orthodonticsPreClinical?: (OrthodonticsPreClinicalRef | null)
+  orthopaedicsCaseLog?: (OrthopaedicsCaseLogRef | null)
+  orthopaedicsProcedureLog?: (OrthopaedicsProcedureLogRef | null)
+  oralMedicineCaseLog?: (OralMedicineCaseLogRef | null)
+  oralRadiology?: (OralRadiologyRef | null)
+}
+export type FacultyFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  has?: (FacultyHasFilter | null)[] | null
+  and?: (FacultyFilter | null)[] | null
+  or?: (FacultyFilter | null)[] | null
+  not?: (FacultyFilter | null)
+}
+export type OralMedicineCaseLogOrder = {
+  asc?: (OralMedicineCaseLogOrderable | null)
+  desc?: (OralMedicineCaseLogOrderable | null)
+  then?: (OralMedicineCaseLogOrder | null)
+}
+export type AddOralMedicineCaseLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  procedure?: (string | null)[] | null
+  comorbidities?: (string | null)[] | null
+  lesion?: (string | null)[] | null
+  drugAllergyReaction?: (string | null)[] | null
+  habitHistory?: (string | null)[] | null
+  treatment?: (string | null)
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type CaseLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  createdBy?: (UserRef | null)
+  approver?: (UserRef | null)
+  logType?: (string | null)
+  rejectionMessage?: (string | null)
+  complete?: (boolean | null)
+  caseLogStatus?: (CaseLogStatus | null)
+  rotation?: (string | null)
+  hospital?: (string | null)
+  anaesthesiaCaseLog?: (AnaesthesiaCaseLogRef | null)
+  anaesthesiaChronicPainLog?: (AnaesthesiaChronicPainLogRef | null)
+  anaesthesiaCriticalCareCaseLog?: (AnaesthesiaCriticalCareCaseLogRef | null)
+  orthodonticsClinicalCaseLog?: (OrthodonticsClinicalCaseLogRef | null)
+  orthodonticsPreClinical?: (OrthodonticsPreClinicalRef | null)
+  orthopaedicsCaseLog?: (OrthopaedicsCaseLogRef | null)
+  orthopaedicsProcedureLog?: (OrthopaedicsProcedureLogRef | null)
+  oralMedicineCaseLog?: (OralMedicineCaseLogRef | null)
+  oralRadiology?: (OralRadiologyRef | null)
+}
+export type OrthodonticsClinicalCaseLogRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  techniqueUsed?: (string | null)
+  conduct?: (string | null)
+  applianceUsed?: (string | null)[] | null
+  treatmentPlan?: (string | null)[] | null
+  outcome?: (string | null)
+  remarks?: (string | null)
+}
+export type UserFilter = {
+  id?: string[] | null
+  specialReferenceIdForFaculty?: (StringExactFilter | null)
+  newUserVerificationCode?: (StringExactFilter | null)
+  userName?: (StringExactFilter | null)
+  userStatus?: (UserStatusHash | null)
+  name?: (StringTermFilter | null)
+  gender?: (GenderHash | null)
+  role?: (UserRoleExact | null)
+  lastName?: (StringTermFilter | null)
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  countryCode?: (StringTermFilter | null)
+  phoneNumber?: (StringTermFilter | null)
+  combinePhoneNumber?: (StringTermFilter | null)
+  dateOfBirth?: (DateTimeFilter | null)
+  lastDateOfCaseLogCreation?: (DateTimeFilter | null)
+  broadSpecialty?: (StringExactFilter | null)
+  superSpecialty?: (StringExactFilter | null)
+  subSpecialty?: (StringExactFilter | null)
+  designation?: (StringExactFilter | null)
+  designationOthers?: (StringTermFilter | null)
+  workPlace?: (StringTermFilter | null)
+  city?: (StringTermFilter | null)
+  medicalCouncilName?: (StringTermFilter | null)
+  medicalRegistrationNumber?: (StringTermFilter | null)
+  has?: (UserHasFilter | null)[] | null
+  and?: (UserFilter | null)[] | null
+  or?: (UserFilter | null)[] | null
+  not?: (UserFilter | null)
+}
+export type StringRegExpFilter = {
+  regexp?: (string | null)
+}
+export type AcademicLogOrder = {
+  asc?: (AcademicLogOrderable | null)
+  desc?: (AcademicLogOrderable | null)
+  then?: (AcademicLogOrder | null)
+}
+export type OrthopaedicsProcedureLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  conduct?: (StringTermFilter | null)
+  sites?: (StringTermFilter | null)
+  procedureName?: (StringTermFilter | null)
+  durationOfSurgeryHours?: (StringTermFilter | null)
+  durationOfSurgeryMinutes?: (StringTermFilter | null)
+  outcome?: (StringTermFilter | null)
+  outcomeOther?: (StringTermFilter | null)
+  complication?: (StringTermFilter | null)
+  diagnosis?: (StringTermFilter | null)
+  has?: (OrthopaedicsProcedureLogHasFilter | null)[] | null
+  and?: (OrthopaedicsProcedureLogFilter | null)[] | null
+  or?: (OrthopaedicsProcedureLogFilter | null)[] | null
+  not?: (OrthopaedicsProcedureLogFilter | null)
+}
+export type Int64Filter = {
+  eq?: (any | null)
+  in?: (any | null)[] | null
+  le?: (any | null)
+  lt?: (any | null)
+  ge?: (any | null)
+  gt?: (any | null)
+  between?: (Int64Range | null)
+}
+export type AddFacultyInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  user?: (UserRef | null)
+}
+export type OralRadiologyRef = {
+  id?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  complete?: (boolean | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  procedure?: (string | null)[] | null
+  report?: (string | null)
+  diagnosis?: (string | null)
+  chiefComplaint?: (string | null)
+  caseType?: (string | null)
+  remarks?: (string | null)
+}
+export type UpdateOrthopaedicsProcedureLogInput = {
+  filter: OrthopaedicsProcedureLogFilter
+  set?: (OrthopaedicsProcedureLogPatch | null)
+  remove?: (OrthopaedicsProcedureLogPatch | null)
+}
+export type FormLabelsOrder = {
+  asc?: (FormLabelsOrderable | null)
+  desc?: (FormLabelsOrderable | null)
+  then?: (FormLabelsOrder | null)
+}
+export type LogProfileOrder = {
+  asc?: (LogProfileOrderable | null)
+  desc?: (LogProfileOrderable | null)
+  then?: (LogProfileOrder | null)
+}
+export type UpdateOralMedicineCaseLogInput = {
+  filter: OralMedicineCaseLogFilter
+  set?: (OralMedicineCaseLogPatch | null)
+  remove?: (OralMedicineCaseLogPatch | null)
+}
+export type UserRef = {
+  id?: (string | null)
+  specialReferenceIdForFaculty?: (string | null)
+  newUserVerificationCode?: (string | null)
+  userName?: (string | null)
+  userStatus?: (UserStatus | null)
+  resetPasswordCode?: (string | null)
+  name?: (string | null)
+  gender?: (Gender | null)
+  role?: (UserRole | null)
+  lastName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  countryCode?: (string | null)
+  phoneNumber?: (string | null)
+  combinePhoneNumber?: (string | null)
+  dateOfBirth?: (any | null)
+  lastDateOfCaseLogCreation?: (any | null)
+  numberOfCaseLogsCreated?: (number | null)
+  active?: (boolean | null)
+  broadSpecialty?: (string | null)
+  superSpecialty?: (string | null)
+  subSpecialty?: (string | null)
+  designation?: (string | null)
+  designationOthers?: (string | null)
+  workPlace?: (string | null)
+  city?: (string | null)
+  medicalCouncilName?: (string | null)
+  yearOfRegistration?: (any | null)
+  medicalRegistrationNumber?: (string | null)
+  verifiedMedicalRegistrationNumber?: (boolean | null)
+  academicLog?: (AcademicLogRef | null)[] | null
+  publicationLog?: (PublicationLogRef | null)[] | null
+  adminWorkLog?: (AdminWorkLogRef | null)[] | null
+  thesisLog?: (ThesisLogRef | null)[] | null
+  customLog?: (CustomLogRef | null)[] | null
+  thesisCases?: (ThesisCaseRef | null)[] | null
+  customCases?: (CustomCaseRef | null)[] | null
+  imagePath?: (string | null)
+  userFeedback?: (UserFeedbackRef | null)[] | null
+  password?: (string | null)
+}
+export type NearFilter = {
+  distance: number
+  coordinate: PointRef
+}
+export type PointListRef = {
+  points: PointRef[]
+}
+export type AdminWorkLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  activity?: (string | null)
+  otherActivity?: (string | null)
+  position?: (string | null)
+  organisation?: (string | null)
+  academicLogType?: (string | null)
+}
+export type AuthRule = {
+  and?: (AuthRule | null)[] | null
+  or?: (AuthRule | null)[] | null
+  not?: (AuthRule | null)
+  rule?: (string | null)
+}
+export type PublicationLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  publicationType?: (string | null)
+  title?: (string | null)
+  journalName?: (string | null)
+  status?: (string | null)
+  academicLogType?: (string | null)
+}
+export type AnaesthesiaCriticalCareCaseLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  diagnosis?: (string | null)
+  comorbidites?: (string | null)
+  surgicalprocedure?: (string | null)
+  complication?: (string | null)
+  outcome?: (string | null)
+  conduct?: (string | null)
+  procedures?: (string | null)[] | null
+  remarks?: (string | null)
+}
+export type OrthodonticsClinicalCaseLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  diagnosis?: (StringTermFilter | null)
+  techniqueUsed?: (StringTermFilter | null)
+  applianceUsed?: (StringTermFilter | null)
+  treatmentPlan?: (StringTermFilter | null)
+  has?: (OrthodonticsClinicalCaseLogHasFilter | null)[] | null
+  and?: (OrthodonticsClinicalCaseLogFilter | null)[] | null
+  or?: (OrthodonticsClinicalCaseLogFilter | null)[] | null
+  not?: (OrthodonticsClinicalCaseLogFilter | null)
+}
+export type FacultyPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  user?: (UserRef | null)
+}
+export type UpdateOrthodonticsClinicalCaseLogInput = {
+  filter: OrthodonticsClinicalCaseLogFilter
+  set?: (OrthodonticsClinicalCaseLogPatch | null)
+  remove?: (OrthodonticsClinicalCaseLogPatch | null)
+}
+export type AnaesthesiaChronicPainLogOrder = {
+  asc?: (AnaesthesiaChronicPainLogOrderable | null)
+  desc?: (AnaesthesiaChronicPainLogOrderable | null)
+  then?: (AnaesthesiaChronicPainLogOrder | null)
+}
+export type CustomCaseRef = {
+  id?: (string | null)
+  caseName?: (string | null)
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  fields?: (FieldsRef | null)[] | null
+  customLogIdReference?: (string | null)
+}
+export type CustomLogFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  customName?: (StringTermFilter | null)
+  has?: (CustomLogHasFilter | null)[] | null
+  and?: (CustomLogFilter | null)[] | null
+  or?: (CustomLogFilter | null)[] | null
+  not?: (CustomLogFilter | null)
+}
+export type HospitalsPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  name?: (string | null)
+}
+export type WithinFilter = {
+  polygon: PolygonRef
+}
+export type OralRadiologyFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  date?: (DateTimeFilter | null)
+  report?: (StringTermFilter | null)
+  diagnosis?: (StringTermFilter | null)
+  chiefComplaint?: (StringTermFilter | null)
+  has?: (OralRadiologyHasFilter | null)[] | null
+  and?: (OralRadiologyFilter | null)[] | null
+  or?: (OralRadiologyFilter | null)[] | null
+  not?: (OralRadiologyFilter | null)
+}
+export type OrthopaedicsCaseLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  conduct?: (string | null)
+  diseaseCategory?: (string | null)[] | null
+  site?: (string | null)[] | null
+  joint?: (string | null)[] | null
+  bones?: (string | null)[] | null
+  outcomes?: (string | null)[] | null
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type IntFilter = {
+  eq?: (number | null)
+  in?: (number | null)[] | null
+  le?: (number | null)
+  lt?: (number | null)
+  ge?: (number | null)
+  gt?: (number | null)
+  between?: (IntRange | null)
+}
+export type AddAnaesthesiaCaseLogInput = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  weight?: (string | null)
+  height?: (string | null)
+  diagnosis?: (string | null)
+  surgicalProcedure?: (string | null)
+  speciality?: (string | null)
+  asaGrade?: (string | null)
+  typeOfSurgery?: (string | null)
+  npo?: (string | null)
+  conduct?: (string | null)
+  comorbidity?: (string | null)[] | null
+  examination?: (string | null)[] | null
+  laboratoryFindings?: (string | null)[] | null
+  typeOfAnaesthesia?: (string | null)[] | null
+  drugs?: (string | null)[] | null
+  airManagement?: (string | null)[] | null
+  regionalTechniques?: (string | null)[] | null
+  interventionalProcedures?: (string | null)[] | null
+  monitoring?: (string | null)[] | null
+  complications?: (string | null)[] | null
+  outcome?: (string | null)
+  remarks?: (string | null)
+}
+export type AnaesthesiaCaseLogOrder = {
+  asc?: (AnaesthesiaCaseLogOrderable | null)
+  desc?: (AnaesthesiaCaseLogOrderable | null)
+  then?: (AnaesthesiaCaseLogOrder | null)
+}
+export type CaseLogStatusHash = {
+  eq?: (CaseLogStatus | null)
+  in?: (CaseLogStatus | null)[] | null
+}
+export type OralRadiologyPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  complete?: (boolean | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  procedure?: (string | null)[] | null
+  report?: (string | null)
+  diagnosis?: (string | null)
+  chiefComplaint?: (string | null)
+  caseType?: (string | null)
+  remarks?: (string | null)
+}
+export type PublicationLogOrder = {
+  asc?: (PublicationLogOrderable | null)
+  desc?: (PublicationLogOrderable | null)
+  then?: (PublicationLogOrder | null)
+}
+export type ThesisCaseFilter = {
+  id?: string[] | null
+  caseName?: (StringTermFilter | null)
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  has?: (ThesisCaseHasFilter | null)[] | null
+  and?: (ThesisCaseFilter | null)[] | null
+  or?: (ThesisCaseFilter | null)[] | null
+  not?: (ThesisCaseFilter | null)
+}
+export type OralMedicineCaseLogPatch = {
+  createdOn?: (any | null)
+  updatedOn?: (any | null)
+  date?: (any | null)
+  patientAge?: (string | null)
+  patientSex?: (string | null)
+  procedure?: (string | null)[] | null
+  comorbidities?: (string | null)[] | null
+  lesion?: (string | null)[] | null
+  drugAllergyReaction?: (string | null)[] | null
+  habitHistory?: (string | null)[] | null
+  treatment?: (string | null)
+  diagnosis?: (string | null)
+  remarks?: (string | null)
+}
+export type UserFeedbackFilter = {
+  id?: string[] | null
+  createdOn?: (DateTimeFilter | null)
+  updatedOn?: (DateTimeFilter | null)
+  title?: (StringTermFilter | null)
+  description?: (StringTermFilter | null)
+  userEmail?: (StringExactFilter | null)
+  has?: (UserFeedbackHasFilter | null)[] | null
+  and?: (UserFeedbackFilter | null)[] | null
+  or?: (UserFeedbackFilter | null)[] | null
+  not?: (UserFeedbackFilter | null)
 }
 export type UserFeedbackPatch = {
   createdOn?: (any | null)
@@ -331,548 +1891,9 @@ export type UserRoleExact = {
   gt?: (UserRole | null)
   between?: (UserRole | null)
 }
-export type LogProfileRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  hospitals?: (HospitalsRef | null)[] | null
-  faculties?: (FacultyRef | null)[] | null
-  rotations?: (RotationRef | null)[] | null
-}
-export type OrthodonticsClinicalCaseLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  hospital?: (string | null)
-  rotation?: (string | null)
-  faculty?: (string | null)
-  diagnosis?: (string | null)
-  techniqueUsed?: (string | null)
-  conduct?: (string | null)
-  applianceUsed?: (string | null)[] | null
-  treatmentPlan?: (string | null)[] | null
-  outcome?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type UpdatePublicationLogInput = {
-  filter: PublicationLogFilter
-  set?: (PublicationLogPatch | null)
-  remove?: (PublicationLogPatch | null)
-}
-export type StringHashFilter = {
-  eq?: (string | null)
-  in?: (string | null)[] | null
-}
-export type FormLabelsRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  label?: (string | null)
-}
-export type UpdateCustomCaseInput = {
-  filter: CustomCaseFilter
-  set?: (CustomCasePatch | null)
-  remove?: (CustomCasePatch | null)
-}
-export type FacultyOrder = {
-  asc?: (FacultyOrderable | null)
-  desc?: (FacultyOrderable | null)
-  then?: (FacultyOrder | null)
-}
-export type DateTimeRange = {
-  min: any
-  max: any
-}
-export type ThesisLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  thesisName?: (StringTermFilter | null)
-  has?: (ThesisLogHasFilter | null)[] | null
-  and?: (ThesisLogFilter | null)[] | null
-  or?: (ThesisLogFilter | null)[] | null
-  not?: (ThesisLogFilter | null)
-}
-export type UserFeedbackRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  title?: (string | null)
-  description?: (string | null)
-  userEmail?: (string | null)
-}
-export type AcademicLogOrder = {
-  asc?: (AcademicLogOrderable | null)
-  desc?: (AcademicLogOrderable | null)
-  then?: (AcademicLogOrder | null)
-}
-export type AddThesisLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  thesisName?: (string | null)
-  formLabels?: (FormLabelsRef | null)[] | null
-}
-export type UpdateAcademicLogInput = {
-  filter: AcademicLogFilter
-  set?: (AcademicLogPatch | null)
-  remove?: (AcademicLogPatch | null)
-}
-export type IntRange = {
-  min: number
-  max: number
-}
-export type AddFacultyInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  firstName?: (string | null)
-  lastName?: (string | null)
-  name?: (string | null)
-  designation?: (string | null)
-  otherDesignation?: (string | null)
-  phoneNumber?: (string | null)
-}
-export type AnaesthesiaCaseLogOrder = {
-  asc?: (AnaesthesiaCaseLogOrderable | null)
-  desc?: (AnaesthesiaCaseLogOrderable | null)
-  then?: (AnaesthesiaCaseLogOrder | null)
-}
-export type OralRadiologyOrder = {
-  asc?: (OralRadiologyOrderable | null)
-  desc?: (OralRadiologyOrderable | null)
-  then?: (OralRadiologyOrder | null)
-}
-export type OralRadiologyRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  procedure?: (string | null)[] | null
-  report?: (string | null)
-  diagnosis?: (string | null)
-  chiefComplaint?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type UpdateOrthodonticsPreClinicalInput = {
-  filter: OrthodonticsPreClinicalFilter
-  set?: (OrthodonticsPreClinicalPatch | null)
-  remove?: (OrthodonticsPreClinicalPatch | null)
-}
-export type RotationRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  department?: (string | null)
-  from?: (any | null)
-  to?: (any | null)
-}
-export type CustomLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  customName?: (string | null)
-  formLabels?: (FormLabelsRef | null)[] | null
-}
-export type ThesisLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  thesisName?: (string | null)
-  formLabels?: (FormLabelsRef | null)[] | null
-}
-export type UpdateThesisLogInput = {
-  filter: ThesisLogFilter
-  set?: (ThesisLogPatch | null)
-  remove?: (ThesisLogPatch | null)
-}
-export type ThesisCasePatch = {
-  caseName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  fields?: (FieldsRef | null)[] | null
-}
-export type CustomHttp = {
-  url: string
-  method: HttpMethod
-  body?: (string | null)
-  graphql?: (string | null)
-  mode?: (Mode | null)
-  forwardHeaders?: string[] | null
-  secretHeaders?: string[] | null
-  introspectionHeaders?: string[] | null
-  skipIntrospection?: (boolean | null)
-}
-export type AnaesthesiaCriticalCareCaseLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  rotation?: (StringTermFilter | null)
-  hospital?: (StringTermFilter | null)
-  outcome?: (StringTermFilter | null)
-  has?: (AnaesthesiaCriticalCareCaseLogHasFilter | null)[] | null
-  and?: (AnaesthesiaCriticalCareCaseLogFilter | null)[] | null
-  or?: (AnaesthesiaCriticalCareCaseLogFilter | null)[] | null
-  not?: (AnaesthesiaCriticalCareCaseLogFilter | null)
-}
-export type FieldsFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  label?: (StringTermFilter | null)
-  value?: (StringTermFilter | null)
-  has?: (FieldsHasFilter | null)[] | null
-  and?: (FieldsFilter | null)[] | null
-  or?: (FieldsFilter | null)[] | null
-  not?: (FieldsFilter | null)
-}
-export type AddAcademicLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  position?: (string | null)
-  activities?: (string | null)[] | null
-  title?: (string | null)
-  organiser?: (string | null)
-  supervision?: (string | null)[] | null
-  academicLogType?: (string | null)
-}
-export type AddCustomCaseInput = {
-  caseName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  fields?: (FieldsRef | null)[] | null
-  customLogIdReference?: (string | null)
-}
-export type OrthodonticsClinicalCaseLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  hospital?: (StringTermFilter | null)
-  rotation?: (StringTermFilter | null)
-  diagnosis?: (StringTermFilter | null)
-  techniqueUsed?: (StringTermFilter | null)
-  applianceUsed?: (StringTermFilter | null)
-  treatmentPlan?: (StringTermFilter | null)
-  has?: (OrthodonticsClinicalCaseLogHasFilter | null)[] | null
-  and?: (OrthodonticsClinicalCaseLogFilter | null)[] | null
-  or?: (OrthodonticsClinicalCaseLogFilter | null)[] | null
-  not?: (OrthodonticsClinicalCaseLogFilter | null)
-}
-export type PointListRef = {
-  points: PointRef[]
-}
-export type AuthRule = {
-  and?: (AuthRule | null)[] | null
-  or?: (AuthRule | null)[] | null
-  not?: (AuthRule | null)
-  rule?: (string | null)
-}
-export type CustomLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  customName?: (StringTermFilter | null)
-  has?: (CustomLogHasFilter | null)[] | null
-  and?: (CustomLogFilter | null)[] | null
-  or?: (CustomLogFilter | null)[] | null
-  not?: (CustomLogFilter | null)
-}
-export type UserStatusHash = {
-  eq?: (UserStatus | null)
-  in?: (UserStatus | null)[] | null
-}
-export type HospitalsRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  name?: (string | null)
-}
-export type OrthodonticsClinicalCaseLogOrder = {
-  asc?: (OrthodonticsClinicalCaseLogOrderable | null)
-  desc?: (OrthodonticsClinicalCaseLogOrderable | null)
-  then?: (OrthodonticsClinicalCaseLogOrder | null)
-}
-export type OrthopaedicsProcedureLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  conduct?: (string | null)
-  sites?: (string | null)
-  procedure?: (string | null)[] | null
-  procedureName?: (string | null)
-  durationOfSurgeryHours?: (string | null)
-  durationOfSurgeryMinutes?: (string | null)
-  outcome?: (string | null)
-  outcomeOther?: (string | null)
-  complication?: (string | null)
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AddOrthopaedicsCaseLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  diseaseCategory?: (string | null)[] | null
-  conduct?: (string | null)
-  site?: (string | null)[] | null
-  joint?: (string | null)[] | null
-  bones?: (string | null)[] | null
-  outcomes?: (string | null)[] | null
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type FacultyRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  firstName?: (string | null)
-  lastName?: (string | null)
-  name?: (string | null)
-  designation?: (string | null)
-  otherDesignation?: (string | null)
-  phoneNumber?: (string | null)
-}
-export type DgraphDefault = {
-  value?: (string | null)
-}
-export type PolygonRef = {
-  coordinates: PointListRef[]
-}
-export type GenerateMutationParams = {
-  add?: (boolean | null)
-  update?: (boolean | null)
-  delete?: (boolean | null)
-}
-export type AddRotationInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  department?: (string | null)
-  from?: (any | null)
-  to?: (any | null)
-}
-export type CustomCaseRef = {
-  id?: (string | null)
-  caseName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  fields?: (FieldsRef | null)[] | null
-  customLogIdReference?: (string | null)
-}
-export type FacultyPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  firstName?: (string | null)
-  lastName?: (string | null)
-  name?: (string | null)
-  designation?: (string | null)
-  otherDesignation?: (string | null)
-  phoneNumber?: (string | null)
-}
-export type UpdateAnaesthesiaCaseLogInput = {
-  filter: AnaesthesiaCaseLogFilter
-  set?: (AnaesthesiaCaseLogPatch | null)
-  remove?: (AnaesthesiaCaseLogPatch | null)
-}
-export type FloatFilter = {
-  eq?: (number | null)
-  in?: (number | null)[] | null
-  le?: (number | null)
-  lt?: (number | null)
-  ge?: (number | null)
-  gt?: (number | null)
-  between?: (FloatRange | null)
-}
-export type UpdateAdminWorkLogInput = {
-  filter: AdminWorkLogFilter
-  set?: (AdminWorkLogPatch | null)
-  remove?: (AdminWorkLogPatch | null)
-}
-export type AddHospitalsInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  name?: (string | null)
-}
-export type PublicationLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  publicationType?: (string | null)
-  title?: (string | null)
-  journalName?: (string | null)
-  status?: (string | null)
-  academicLogType?: (string | null)
-}
-export type AddAnaesthesiaCaseLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  weight?: (string | null)
-  height?: (string | null)
-  diagnosis?: (string | null)
-  surgicalProcedure?: (string | null)
-  speciality?: (string | null)
-  asaGrade?: (string | null)
-  typeOfSurgery?: (string | null)
-  npo?: (string | null)
-  conduct?: (string | null)
-  comorbidity?: (string | null)[] | null
-  examination?: (string | null)[] | null
-  laboratoryFindings?: (string | null)[] | null
-  medicalRegistrationNumber?: (string | null)
-  typeOfAnaesthesia?: (string | null)[] | null
-  drugs?: (string | null)[] | null
-  airManagement?: (string | null)[] | null
-  regionalTechniques?: (string | null)[] | null
-  interventionalProcedures?: (string | null)[] | null
-  monitoring?: (string | null)[] | null
-  complications?: (string | null)[] | null
-  outcome?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AnaesthesiaCriticalCareCaseLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  diagnosis?: (string | null)
-  comorbidites?: (string | null)
-  surgicalprocedure?: (string | null)
-  complication?: (string | null)
-  outcome?: (string | null)
-  conduct?: (string | null)
-  procedures?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type IntersectsFilter = {
-  polygon?: (PolygonRef | null)
-  multiPolygon?: (MultiPolygonRef | null)
-}
-export type FormLabelsFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  label?: (StringTermFilter | null)
-  has?: (FormLabelsHasFilter | null)[] | null
-  and?: (FormLabelsFilter | null)[] | null
-  or?: (FormLabelsFilter | null)[] | null
-  not?: (FormLabelsFilter | null)
-}
-export type ContainsFilter = {
-  point?: (PointRef | null)
-  polygon?: (PolygonRef | null)
-}
-export type AnaesthesiaCriticalCareCaseLogOrder = {
-  asc?: (AnaesthesiaCriticalCareCaseLogOrderable | null)
-  desc?: (AnaesthesiaCriticalCareCaseLogOrderable | null)
-  then?: (AnaesthesiaCriticalCareCaseLogOrder | null)
-}
-export type LogProfileFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  has?: (LogProfileHasFilter | null)[] | null
-  and?: (LogProfileFilter | null)[] | null
-  or?: (LogProfileFilter | null)[] | null
-  not?: (LogProfileFilter | null)
-}
-export type UserFilter = {
-  id?: string[] | null
-  newUserVerificationCode?: (StringExactFilter | null)
-  userName?: (StringExactFilter | null)
-  userStatus?: (UserStatusHash | null)
-  resetPasswordCode?: (StringExactFilter | null)
-  name?: (StringTermFilter | null)
-  gender?: (GenderHash | null)
-  role?: (UserRoleExact | null)
-  lastName?: (StringTermFilter | null)
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  countryCode?: (StringTermFilter | null)
-  phoneNumber?: (StringTermFilter | null)
-  combinePhoneNumber?: (StringTermFilter | null)
-  dateOfBirth?: (DateTimeFilter | null)
-  broadSpecialty?: (StringTermFilter | null)
-  superSpecialty?: (StringTermFilter | null)
-  subSpecialty?: (StringTermFilter | null)
-  designation?: (StringTermFilter | null)
-  designationOthers?: (StringTermFilter | null)
-  workPlace?: (StringTermFilter | null)
-  city?: (StringTermFilter | null)
-  medicalCouncilName?: (StringTermFilter | null)
-  medicalRegistrationNumber?: (StringTermFilter | null)
-  has?: (UserHasFilter | null)[] | null
-  and?: (UserFilter | null)[] | null
-  or?: (UserFilter | null)[] | null
-  not?: (UserFilter | null)
-}
-export type AnaesthesiaCriticalCareCaseLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  diagnosis?: (string | null)
-  comorbidites?: (string | null)
-  surgicalprocedure?: (string | null)
-  complication?: (string | null)
-  outcome?: (string | null)
-  conduct?: (string | null)
-  procedures?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type UpdateFacultyInput = {
-  filter: FacultyFilter
-  set?: (FacultyPatch | null)
-  remove?: (FacultyPatch | null)
-}
-export type UpdateOralMedicineAndRadiologyCaseLogInput = {
-  filter: OralMedicineAndRadiologyCaseLogFilter
-  set?: (OralMedicineAndRadiologyCaseLogPatch | null)
-  remove?: (OralMedicineAndRadiologyCaseLogPatch | null)
+export type GenderHash = {
+  eq?: (Gender | null)
+  in?: (Gender | null)[] | null
 }
 export type AddFieldsInput = {
   createdOn?: (any | null)
@@ -880,771 +1901,25 @@ export type AddFieldsInput = {
   label?: (string | null)
   value?: (string | null)
 }
-export type AddOrthodonticsPreClinicalInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  rotation?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  conduct?: (string | null)
-  wireBendingRecord?: (string | null)[] | null
-  roundWireLoopRecord?: (string | null)[] | null
-  loopInEdgewiseWireRecord?: (string | null)[] | null
-  solderingExerciseRecord?: (string | null)[] | null
-  cephalometricTracingRecord?: (string | null)[] | null
-  claspRecord?: (string | null)[] | null
-  springsRecord?: (string | null)[] | null
-  canineRetractorsRecord?: (string | null)[] | null
-  bowsRecord?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type OralRadiologyFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  hospital?: (StringTermFilter | null)
-  rotation?: (StringTermFilter | null)
-  procedure?: (StringTermFilter | null)
-  report?: (StringTermFilter | null)
-  diagnosis?: (StringTermFilter | null)
-  chiefComplaint?: (StringTermFilter | null)
-  has?: (OralRadiologyHasFilter | null)[] | null
-  and?: (OralRadiologyFilter | null)[] | null
-  or?: (OralRadiologyFilter | null)[] | null
-  not?: (OralRadiologyFilter | null)
-}
-export type OrthodonticsPreClinicalFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  hospital?: (StringTermFilter | null)
-  rotation?: (StringTermFilter | null)
-  wireBendingRecord?: (StringTermFilter | null)
-  roundWireLoopRecord?: (StringTermFilter | null)
-  solderingExerciseRecord?: (StringTermFilter | null)
-  cephalometricTracingRecord?: (StringTermFilter | null)
-  claspRecord?: (StringTermFilter | null)
-  has?: (OrthodonticsPreClinicalHasFilter | null)[] | null
-  and?: (OrthodonticsPreClinicalFilter | null)[] | null
-  or?: (OrthodonticsPreClinicalFilter | null)[] | null
-  not?: (OrthodonticsPreClinicalFilter | null)
-}
-export type WithinFilter = {
-  polygon: PolygonRef
-}
-export type AddOrthodonticsClinicalCaseLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  hospital?: (string | null)
-  rotation?: (string | null)
-  faculty?: (string | null)
-  diagnosis?: (string | null)
-  techniqueUsed?: (string | null)
-  conduct?: (string | null)
-  applianceUsed?: (string | null)[] | null
-  treatmentPlan?: (string | null)[] | null
-  outcome?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AnaesthesiaChronicPainLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  diagnosis?: (string | null)
-  indication?: (string | null)
-  conduct?: (string | null)
-  technique?: (string | null)[] | null
-  method?: (string | null)[] | null
-  drugsUsed?: (string | null)[] | null
-  intervention?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type OrthopaedicsProcedureLogOrder = {
-  asc?: (OrthopaedicsProcedureLogOrderable | null)
-  desc?: (OrthopaedicsProcedureLogOrderable | null)
-  then?: (OrthopaedicsProcedureLogOrder | null)
-}
-export type AcademicLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  has?: (AcademicLogHasFilter | null)[] | null
-  and?: (AcademicLogFilter | null)[] | null
-  or?: (AcademicLogFilter | null)[] | null
-  not?: (AcademicLogFilter | null)
-}
-export type AnaesthesiaChronicPainLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  diagnosis?: (string | null)
-  indication?: (string | null)
-  conduct?: (string | null)
-  technique?: (string | null)[] | null
-  method?: (string | null)[] | null
-  drugsUsed?: (string | null)[] | null
-  intervention?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type GenderHash = {
-  eq?: (Gender | null)
-  in?: (Gender | null)[] | null
-}
-export type AddOralMedicineAndRadiologyCaseLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  procedure?: (string | null)[] | null
-  comorbidities?: (string | null)[] | null
-  lesion?: (string | null)[] | null
-  drugAllergyReaction?: (string | null)[] | null
-  habitHistory?: (string | null)[] | null
-  treatment?: (string | null)
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type OrthopaedicsCaseLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  diseaseCategory?: (string | null)[] | null
-  conduct?: (string | null)
-  site?: (string | null)[] | null
-  joint?: (string | null)[] | null
-  bones?: (string | null)[] | null
-  outcomes?: (string | null)[] | null
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
 export type AddThesisCaseInput = {
   caseName?: (string | null)
   createdOn?: (any | null)
   updatedOn?: (any | null)
   fields?: (FieldsRef | null)[] | null
 }
-export type RotationFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  department?: (StringTermFilter | null)
-  from?: (DateTimeFilter | null)
-  to?: (DateTimeFilter | null)
-  has?: (RotationHasFilter | null)[] | null
-  and?: (RotationFilter | null)[] | null
-  or?: (RotationFilter | null)[] | null
-  not?: (RotationFilter | null)
-}
-export type UserFeedbackOrder = {
-  asc?: (UserFeedbackOrderable | null)
-  desc?: (UserFeedbackOrderable | null)
-  then?: (UserFeedbackOrder | null)
-}
-export type OralRadiologyPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  procedure?: (string | null)[] | null
-  report?: (string | null)
-  diagnosis?: (string | null)
-  chiefComplaint?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type OrthodonticsPreClinicalOrder = {
-  asc?: (OrthodonticsPreClinicalOrderable | null)
-  desc?: (OrthodonticsPreClinicalOrderable | null)
-  then?: (OrthodonticsPreClinicalOrder | null)
+export type AdminWorkLogOrder = {
+  asc?: (AdminWorkLogOrderable | null)
+  desc?: (AdminWorkLogOrderable | null)
+  then?: (AdminWorkLogOrder | null)
 }
 export type UpdateLogProfileInput = {
   filter: LogProfileFilter
   set?: (LogProfilePatch | null)
   remove?: (LogProfilePatch | null)
 }
-export type StringExactFilter = {
-  eq?: (string | null)
-  in?: (string | null)[] | null
-  le?: (string | null)
-  lt?: (string | null)
-  ge?: (string | null)
-  gt?: (string | null)
-  between?: (StringRange | null)
-}
-export type RotationOrder = {
-  asc?: (RotationOrderable | null)
-  desc?: (RotationOrderable | null)
-  then?: (RotationOrder | null)
-}
-export type Int64Range = {
-  min: any
-  max: any
-}
-export type HospitalsOrder = {
-  asc?: (HospitalsOrderable | null)
-  desc?: (HospitalsOrderable | null)
-  then?: (HospitalsOrder | null)
-}
-export type LogProfilePatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  hospitals?: (HospitalsRef | null)[] | null
-  faculties?: (FacultyRef | null)[] | null
-  rotations?: (RotationRef | null)[] | null
-}
-export type UpdateOrthodonticsClinicalCaseLogInput = {
-  filter: OrthodonticsClinicalCaseLogFilter
-  set?: (OrthodonticsClinicalCaseLogPatch | null)
-  remove?: (OrthodonticsClinicalCaseLogPatch | null)
-}
-export type AddLogProfileInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  hospitals?: (HospitalsRef | null)[] | null
-  faculties?: (FacultyRef | null)[] | null
-  rotations?: (RotationRef | null)[] | null
-}
-export type AnaesthesiaCaseLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  rotation?: (StringTermFilter | null)
-  hospital?: (StringTermFilter | null)
-  medicalRegistrationNumber?: (StringTermFilter | null)
-  typeOfAnaesthesia?: (StringTermFilter | null)
-  drugs?: (StringTermFilter | null)
-  airManagement?: (StringTermFilter | null)
-  regionalTechniques?: (StringTermFilter | null)
-  interventionalProcedures?: (StringTermFilter | null)
-  monitoring?: (StringTermFilter | null)
-  complications?: (StringTermFilter | null)
-  outcome?: (StringTermFilter | null)
-  has?: (AnaesthesiaCaseLogHasFilter | null)[] | null
-  and?: (AnaesthesiaCaseLogFilter | null)[] | null
-  or?: (AnaesthesiaCaseLogFilter | null)[] | null
-  not?: (AnaesthesiaCaseLogFilter | null)
-}
-export type FloatRange = {
-  min: number
-  max: number
-}
-export type PointRef = {
-  longitude: number
-  latitude: number
-}
-export type FieldsOrder = {
-  asc?: (FieldsOrderable | null)
-  desc?: (FieldsOrderable | null)
-  then?: (FieldsOrder | null)
-}
-export type OralMedicineAndRadiologyCaseLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  procedure?: (string | null)[] | null
-  comorbidities?: (string | null)[] | null
-  lesion?: (string | null)[] | null
-  drugAllergyReaction?: (string | null)[] | null
-  habitHistory?: (string | null)[] | null
-  treatment?: (string | null)
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AnaesthesiaChronicPainLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  rotation?: (StringTermFilter | null)
-  hospital?: (StringTermFilter | null)
-  intervention?: (StringTermFilter | null)
-  has?: (AnaesthesiaChronicPainLogHasFilter | null)[] | null
-  and?: (AnaesthesiaChronicPainLogFilter | null)[] | null
-  or?: (AnaesthesiaChronicPainLogFilter | null)[] | null
-  not?: (AnaesthesiaChronicPainLogFilter | null)
-}
-export type CustomCaseOrder = {
-  asc?: (CustomCaseOrderable | null)
-  desc?: (CustomCaseOrderable | null)
-  then?: (CustomCaseOrder | null)
-}
-export type OrthodonticsPreClinicalPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  rotation?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  conduct?: (string | null)
-  wireBendingRecord?: (string | null)[] | null
-  roundWireLoopRecord?: (string | null)[] | null
-  loopInEdgewiseWireRecord?: (string | null)[] | null
-  solderingExerciseRecord?: (string | null)[] | null
-  cephalometricTracingRecord?: (string | null)[] | null
-  claspRecord?: (string | null)[] | null
-  springsRecord?: (string | null)[] | null
-  canineRetractorsRecord?: (string | null)[] | null
-  bowsRecord?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type StringTermFilter = {
-  allofterms?: (string | null)
-  anyofterms?: (string | null)
-}
-export type UpdateOralRadiologyInput = {
-  filter: OralRadiologyFilter
-  set?: (OralRadiologyPatch | null)
-  remove?: (OralRadiologyPatch | null)
-}
-export type UserFeedbackFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  title?: (StringTermFilter | null)
-  description?: (StringTermFilter | null)
-  userEmail?: (StringTermFilter | null)
-  has?: (UserFeedbackHasFilter | null)[] | null
-  and?: (UserFeedbackFilter | null)[] | null
-  or?: (UserFeedbackFilter | null)[] | null
-  not?: (UserFeedbackFilter | null)
-}
-export type ThesisCaseOrder = {
-  asc?: (ThesisCaseOrderable | null)
-  desc?: (ThesisCaseOrderable | null)
-  then?: (ThesisCaseOrder | null)
-}
-export type UserRef = {
-  id?: (string | null)
-  newUserVerificationCode?: (string | null)
-  userName?: (string | null)
-  userStatus?: (UserStatus | null)
-  resetPasswordCode?: (string | null)
-  name?: (string | null)
-  gender?: (Gender | null)
-  role?: (UserRole | null)
-  lastName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  countryCode?: (string | null)
-  phoneNumber?: (string | null)
-  combinePhoneNumber?: (string | null)
-  dateOfBirth?: (any | null)
-  active?: (boolean | null)
-  broadSpecialty?: (string | null)
-  superSpecialty?: (string | null)
-  subSpecialty?: (string | null)
-  designation?: (string | null)
-  designationOthers?: (string | null)
-  workPlace?: (string | null)
-  city?: (string | null)
-  medicalCouncilName?: (string | null)
-  yearOfRegistration?: (any | null)
-  medicalRegistrationNumber?: (string | null)
-  verifiedMedicalRegistrationNumber?: (boolean | null)
-  targetedCaseLogNumber?: (number | null)
-  anaesthesiaCaseLog?: (AnaesthesiaCaseLogRef | null)[] | null
-  anaesthesiaChronicPainLog?: (AnaesthesiaChronicPainLogRef | null)[] | null
-  anaesthesiaCriticalCareCaseLog?: (AnaesthesiaCriticalCareCaseLogRef | null)[] | null
-  orthodonticsClinicalCaseLog?: (OrthodonticsClinicalCaseLogRef | null)[] | null
-  orthodonticsPreClinical?: (OrthodonticsPreClinicalRef | null)[] | null
-  orthopaedicsCaseLog?: (OrthopaedicsCaseLogRef | null)[] | null
-  orthopaedicsProcedureLog?: (OrthopaedicsProcedureLogRef | null)[] | null
-  oralMedicineAndRadiologyCaseLog?: (OralMedicineAndRadiologyCaseLogRef | null)[] | null
-  oralRadiology?: (OralRadiologyRef | null)[] | null
-  academicLog?: (AcademicLogRef | null)[] | null
-  publicationLog?: (PublicationLogRef | null)[] | null
-  adminWorkLog?: (AdminWorkLogRef | null)[] | null
-  thesisLog?: (ThesisLogRef | null)[] | null
-  customLog?: (CustomLogRef | null)[] | null
-  thesisCases?: (ThesisCaseRef | null)[] | null
-  customCases?: (CustomCaseRef | null)[] | null
-  logProfile?: (LogProfileRef | null)
-  imagePath?: (string | null)
-  userFeedback?: (UserFeedbackRef | null)[] | null
-  password?: (string | null)
-}
-export type CustomCaseFilter = {
-  id?: string[] | null
-  caseName?: (StringTermFilter | null)
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  customLogIdReference?: (StringTermFilter | null)
-  has?: (CustomCaseHasFilter | null)[] | null
-  and?: (CustomCaseFilter | null)[] | null
-  or?: (CustomCaseFilter | null)[] | null
-  not?: (CustomCaseFilter | null)
-}
-export type AddOrthopaedicsProcedureLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  conduct?: (string | null)
-  sites?: (string | null)
-  procedure?: (string | null)[] | null
-  procedureName?: (string | null)
-  durationOfSurgeryHours?: (string | null)
-  durationOfSurgeryMinutes?: (string | null)
-  outcome?: (string | null)
-  outcomeOther?: (string | null)
-  complication?: (string | null)
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type DateTimeFilter = {
-  eq?: (any | null)
-  in?: (any | null)[] | null
-  le?: (any | null)
-  lt?: (any | null)
-  ge?: (any | null)
-  gt?: (any | null)
-  between?: (DateTimeRange | null)
-}
-export type AdminWorkLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  activity?: (string | null)
-  otherActivity?: (string | null)
-  position?: (string | null)
-  organisation?: (string | null)
-  academicLogType?: (string | null)
-}
-export type PublicationLogOrder = {
-  asc?: (PublicationLogOrderable | null)
-  desc?: (PublicationLogOrderable | null)
-  then?: (PublicationLogOrder | null)
-}
-export type UpdateFieldsInput = {
-  filter: FieldsFilter
-  set?: (FieldsPatch | null)
-  remove?: (FieldsPatch | null)
-}
-export type AddOralRadiologyInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  procedure?: (string | null)[] | null
-  report?: (string | null)
-  diagnosis?: (string | null)
-  chiefComplaint?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type OralMedicineAndRadiologyCaseLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  procedure?: (string | null)[] | null
-  comorbidities?: (string | null)[] | null
-  lesion?: (string | null)[] | null
-  drugAllergyReaction?: (string | null)[] | null
-  habitHistory?: (string | null)[] | null
-  treatment?: (string | null)
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AddFormLabelsInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  label?: (string | null)
-}
-export type StringFullTextFilter = {
-  alloftext?: (string | null)
-  anyoftext?: (string | null)
-}
-export type OrthodonticsClinicalCaseLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  hospital?: (string | null)
-  rotation?: (string | null)
-  faculty?: (string | null)
-  diagnosis?: (string | null)
-  techniqueUsed?: (string | null)
-  conduct?: (string | null)
-  applianceUsed?: (string | null)[] | null
-  treatmentPlan?: (string | null)[] | null
-  outcome?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type UpdateAnaesthesiaCriticalCareCaseLogInput = {
-  filter: AnaesthesiaCriticalCareCaseLogFilter
-  set?: (AnaesthesiaCriticalCareCaseLogPatch | null)
-  remove?: (AnaesthesiaCriticalCareCaseLogPatch | null)
-}
-export type AnaesthesiaCaseLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  weight?: (string | null)
-  height?: (string | null)
-  diagnosis?: (string | null)
-  surgicalProcedure?: (string | null)
-  speciality?: (string | null)
-  asaGrade?: (string | null)
-  typeOfSurgery?: (string | null)
-  npo?: (string | null)
-  conduct?: (string | null)
-  comorbidity?: (string | null)[] | null
-  examination?: (string | null)[] | null
-  laboratoryFindings?: (string | null)[] | null
-  medicalRegistrationNumber?: (string | null)
-  typeOfAnaesthesia?: (string | null)[] | null
-  drugs?: (string | null)[] | null
-  airManagement?: (string | null)[] | null
-  regionalTechniques?: (string | null)[] | null
-  interventionalProcedures?: (string | null)[] | null
-  monitoring?: (string | null)[] | null
-  complications?: (string | null)[] | null
-  outcome?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type CustomLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  customName?: (string | null)
-  formLabels?: (FormLabelsRef | null)[] | null
-}
-export type FormLabelsPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  label?: (string | null)
-}
-export type ThesisLogOrder = {
-  asc?: (ThesisLogOrderable | null)
-  desc?: (ThesisLogOrderable | null)
-  then?: (ThesisLogOrder | null)
-}
-export type OrthodonticsPreClinicalRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  rotation?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  conduct?: (string | null)
-  wireBendingRecord?: (string | null)[] | null
-  roundWireLoopRecord?: (string | null)[] | null
-  loopInEdgewiseWireRecord?: (string | null)[] | null
-  solderingExerciseRecord?: (string | null)[] | null
-  cephalometricTracingRecord?: (string | null)[] | null
-  claspRecord?: (string | null)[] | null
-  springsRecord?: (string | null)[] | null
-  canineRetractorsRecord?: (string | null)[] | null
-  bowsRecord?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AddAnaesthesiaChronicPainLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  diagnosis?: (string | null)
-  indication?: (string | null)
-  conduct?: (string | null)
-  technique?: (string | null)[] | null
-  method?: (string | null)[] | null
-  drugsUsed?: (string | null)[] | null
-  intervention?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type AdminWorkLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  has?: (AdminWorkLogHasFilter | null)[] | null
-  and?: (AdminWorkLogFilter | null)[] | null
-  or?: (AdminWorkLogFilter | null)[] | null
-  not?: (AdminWorkLogFilter | null)
-}
-export type AnaesthesiaCaseLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  weight?: (string | null)
-  height?: (string | null)
-  diagnosis?: (string | null)
-  surgicalProcedure?: (string | null)
-  speciality?: (string | null)
-  asaGrade?: (string | null)
-  typeOfSurgery?: (string | null)
-  npo?: (string | null)
-  conduct?: (string | null)
-  comorbidity?: (string | null)[] | null
-  examination?: (string | null)[] | null
-  laboratoryFindings?: (string | null)[] | null
-  medicalRegistrationNumber?: (string | null)
-  typeOfAnaesthesia?: (string | null)[] | null
-  drugs?: (string | null)[] | null
-  airManagement?: (string | null)[] | null
-  regionalTechniques?: (string | null)[] | null
-  interventionalProcedures?: (string | null)[] | null
-  monitoring?: (string | null)[] | null
-  complications?: (string | null)[] | null
-  outcome?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type FieldsRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  label?: (string | null)
-  value?: (string | null)
-}
-export type OralMedicineAndRadiologyCaseLogOrder = {
-  asc?: (OralMedicineAndRadiologyCaseLogOrderable | null)
-  desc?: (OralMedicineAndRadiologyCaseLogOrderable | null)
-  then?: (OralMedicineAndRadiologyCaseLogOrder | null)
-}
-export type FacultyFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  firstName?: (StringTermFilter | null)
-  lastName?: (StringTermFilter | null)
-  name?: (StringTermFilter | null)
-  designation?: (StringTermFilter | null)
-  otherDesignation?: (StringTermFilter | null)
-  phoneNumber?: (StringTermFilter | null)
-  has?: (FacultyHasFilter | null)[] | null
-  and?: (FacultyFilter | null)[] | null
-  or?: (FacultyFilter | null)[] | null
-  not?: (FacultyFilter | null)
-}
-export type PublicationLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  publicationType?: (string | null)
-  title?: (string | null)
-  journalName?: (string | null)
-  status?: (string | null)
-  academicLogType?: (string | null)
-}
-export type UserOrder = {
-  asc?: (UserOrderable | null)
-  desc?: (UserOrderable | null)
-  then?: (UserOrder | null)
-}
-export type StringRange = {
-  min: string
-  max: string
-}
-export type IntFilter = {
-  eq?: (number | null)
-  in?: (number | null)[] | null
-  le?: (number | null)
-  lt?: (number | null)
-  ge?: (number | null)
-  gt?: (number | null)
-  between?: (IntRange | null)
+export type ContainsFilter = {
+  point?: (PointRef | null)
+  polygon?: (PolygonRef | null)
 }
 export type GenerateQueryParams = {
   get?: (boolean | null)
@@ -1652,268 +1927,14 @@ export type GenerateQueryParams = {
   password?: (boolean | null)
   aggregate?: (boolean | null)
 }
-export type PolygonGeoFilter = {
-  near?: (NearFilter | null)
-  within?: (WithinFilter | null)
-  contains?: (ContainsFilter | null)
-  intersects?: (IntersectsFilter | null)
+export type StringFullTextFilter = {
+  alloftext?: (string | null)
+  anyoftext?: (string | null)
 }
-export type ThesisCaseRef = {
-  id?: (string | null)
-  caseName?: (string | null)
+export type AddFormLabelsInput = {
   createdOn?: (any | null)
   updatedOn?: (any | null)
-  fields?: (FieldsRef | null)[] | null
-}
-export type UserPatch = {
-  newUserVerificationCode?: (string | null)
-  userName?: (string | null)
-  userStatus?: (UserStatus | null)
-  resetPasswordCode?: (string | null)
-  name?: (string | null)
-  gender?: (Gender | null)
-  role?: (UserRole | null)
-  lastName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  countryCode?: (string | null)
-  phoneNumber?: (string | null)
-  combinePhoneNumber?: (string | null)
-  dateOfBirth?: (any | null)
-  active?: (boolean | null)
-  broadSpecialty?: (string | null)
-  superSpecialty?: (string | null)
-  subSpecialty?: (string | null)
-  designation?: (string | null)
-  designationOthers?: (string | null)
-  workPlace?: (string | null)
-  city?: (string | null)
-  medicalCouncilName?: (string | null)
-  yearOfRegistration?: (any | null)
-  medicalRegistrationNumber?: (string | null)
-  verifiedMedicalRegistrationNumber?: (boolean | null)
-  targetedCaseLogNumber?: (number | null)
-  anaesthesiaCaseLog?: (AnaesthesiaCaseLogRef | null)[] | null
-  anaesthesiaChronicPainLog?: (AnaesthesiaChronicPainLogRef | null)[] | null
-  anaesthesiaCriticalCareCaseLog?: (AnaesthesiaCriticalCareCaseLogRef | null)[] | null
-  orthodonticsClinicalCaseLog?: (OrthodonticsClinicalCaseLogRef | null)[] | null
-  orthodonticsPreClinical?: (OrthodonticsPreClinicalRef | null)[] | null
-  orthopaedicsCaseLog?: (OrthopaedicsCaseLogRef | null)[] | null
-  orthopaedicsProcedureLog?: (OrthopaedicsProcedureLogRef | null)[] | null
-  oralMedicineAndRadiologyCaseLog?: (OralMedicineAndRadiologyCaseLogRef | null)[] | null
-  oralRadiology?: (OralRadiologyRef | null)[] | null
-  academicLog?: (AcademicLogRef | null)[] | null
-  publicationLog?: (PublicationLogRef | null)[] | null
-  adminWorkLog?: (AdminWorkLogRef | null)[] | null
-  thesisLog?: (ThesisLogRef | null)[] | null
-  customLog?: (CustomLogRef | null)[] | null
-  thesisCases?: (ThesisCaseRef | null)[] | null
-  customCases?: (CustomCaseRef | null)[] | null
-  logProfile?: (LogProfileRef | null)
-  imagePath?: (string | null)
-  userFeedback?: (UserFeedbackRef | null)[] | null
-  password?: (string | null)
-}
-export type CustomLogOrder = {
-  asc?: (CustomLogOrderable | null)
-  desc?: (CustomLogOrderable | null)
-  then?: (CustomLogOrder | null)
-}
-export type OrthopaedicsProcedureLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  conduct?: (string | null)
-  sites?: (string | null)
-  procedure?: (string | null)[] | null
-  procedureName?: (string | null)
-  durationOfSurgeryHours?: (string | null)
-  durationOfSurgeryMinutes?: (string | null)
-  outcome?: (string | null)
-  outcomeOther?: (string | null)
-  complication?: (string | null)
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type RotationPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  department?: (string | null)
-  from?: (any | null)
-  to?: (any | null)
-}
-export type UpdateAnaesthesiaChronicPainLogInput = {
-  filter: AnaesthesiaChronicPainLogFilter
-  set?: (AnaesthesiaChronicPainLogPatch | null)
-  remove?: (AnaesthesiaChronicPainLogPatch | null)
-}
-export type AdminWorkLogOrder = {
-  asc?: (AdminWorkLogOrderable | null)
-  desc?: (AdminWorkLogOrderable | null)
-  then?: (AdminWorkLogOrder | null)
-}
-export type LogProfileOrder = {
-  asc?: (LogProfileOrderable | null)
-  desc?: (LogProfileOrderable | null)
-  then?: (LogProfileOrder | null)
-}
-export type OralMedicineAndRadiologyCaseLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  hospital?: (StringTermFilter | null)
-  rotation?: (StringTermFilter | null)
-  procedure?: (StringTermFilter | null)
-  comorbidities?: (StringTermFilter | null)
-  lesion?: (StringTermFilter | null)
-  drugAllergyReaction?: (StringTermFilter | null)
-  habitHistory?: (StringTermFilter | null)
-  treatment?: (StringTermFilter | null)
-  diagnosis?: (StringTermFilter | null)
-  has?: (OralMedicineAndRadiologyCaseLogHasFilter | null)[] | null
-  and?: (OralMedicineAndRadiologyCaseLogFilter | null)[] | null
-  or?: (OralMedicineAndRadiologyCaseLogFilter | null)[] | null
-  not?: (OralMedicineAndRadiologyCaseLogFilter | null)
-}
-export type OrthopaedicsCaseLogRef = {
-  id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  rotation?: (string | null)
-  diseaseCategory?: (string | null)[] | null
-  conduct?: (string | null)
-  site?: (string | null)[] | null
-  joint?: (string | null)[] | null
-  bones?: (string | null)[] | null
-  outcomes?: (string | null)[] | null
-  diagnosis?: (string | null)
-  caseType?: (string | null)
-  remarks?: (string | null)
-}
-export type UpdateHospitalsInput = {
-  filter: HospitalsFilter
-  set?: (HospitalsPatch | null)
-  remove?: (HospitalsPatch | null)
-}
-export type UpdateRotationInput = {
-  filter: RotationFilter
-  set?: (RotationPatch | null)
-  remove?: (RotationPatch | null)
-}
-export type AdminWorkLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  activity?: (string | null)
-  otherActivity?: (string | null)
-  position?: (string | null)
-  organisation?: (string | null)
-  academicLogType?: (string | null)
-}
-export type AddCustomLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  customName?: (string | null)
-  formLabels?: (FormLabelsRef | null)[] | null
-}
-export type AddPublicationLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  publicationType?: (string | null)
-  title?: (string | null)
-  journalName?: (string | null)
-  status?: (string | null)
-  academicLogType?: (string | null)
-}
-export type AddUserInput = {
-  newUserVerificationCode?: (string | null)
-  userName?: (string | null)
-  userStatus?: (UserStatus | null)
-  resetPasswordCode?: (string | null)
-  name?: (string | null)
-  gender?: (Gender | null)
-  role?: (UserRole | null)
-  lastName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  countryCode?: (string | null)
-  phoneNumber?: (string | null)
-  combinePhoneNumber?: (string | null)
-  dateOfBirth?: (any | null)
-  active?: (boolean | null)
-  broadSpecialty?: (string | null)
-  superSpecialty?: (string | null)
-  subSpecialty?: (string | null)
-  designation?: (string | null)
-  designationOthers?: (string | null)
-  workPlace?: (string | null)
-  city?: (string | null)
-  medicalCouncilName?: (string | null)
-  yearOfRegistration?: (any | null)
-  medicalRegistrationNumber?: (string | null)
-  verifiedMedicalRegistrationNumber?: (boolean | null)
-  targetedCaseLogNumber?: (number | null)
-  anaesthesiaCaseLog?: (AnaesthesiaCaseLogRef | null)[] | null
-  anaesthesiaChronicPainLog?: (AnaesthesiaChronicPainLogRef | null)[] | null
-  anaesthesiaCriticalCareCaseLog?: (AnaesthesiaCriticalCareCaseLogRef | null)[] | null
-  orthodonticsClinicalCaseLog?: (OrthodonticsClinicalCaseLogRef | null)[] | null
-  orthodonticsPreClinical?: (OrthodonticsPreClinicalRef | null)[] | null
-  orthopaedicsCaseLog?: (OrthopaedicsCaseLogRef | null)[] | null
-  orthopaedicsProcedureLog?: (OrthopaedicsProcedureLogRef | null)[] | null
-  oralMedicineAndRadiologyCaseLog?: (OralMedicineAndRadiologyCaseLogRef | null)[] | null
-  oralRadiology?: (OralRadiologyRef | null)[] | null
-  academicLog?: (AcademicLogRef | null)[] | null
-  publicationLog?: (PublicationLogRef | null)[] | null
-  adminWorkLog?: (AdminWorkLogRef | null)[] | null
-  thesisLog?: (ThesisLogRef | null)[] | null
-  customLog?: (CustomLogRef | null)[] | null
-  thesisCases?: (ThesisCaseRef | null)[] | null
-  customCases?: (CustomCaseRef | null)[] | null
-  logProfile?: (LogProfileRef | null)
-  imagePath?: (string | null)
-  userFeedback?: (UserFeedbackRef | null)[] | null
-  password: string
-}
-export type UpdateFormLabelsInput = {
-  filter: FormLabelsFilter
-  set?: (FormLabelsPatch | null)
-  remove?: (FormLabelsPatch | null)
-}
-export type UpdateThesisCaseInput = {
-  filter: ThesisCaseFilter
-  set?: (ThesisCasePatch | null)
-  remove?: (ThesisCasePatch | null)
-}
-export type NearFilter = {
-  distance: number
-  coordinate: PointRef
-}
-export type HospitalsPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  name?: (string | null)
-}
-export type MultiPolygonRef = {
-  polygons: PolygonRef[]
-}
-export type StringRegExpFilter = {
-  regexp?: (string | null)
+  label?: (string | null)
 }
 export type PublicationLogFilter = {
   id?: string[] | null
@@ -1924,15 +1945,6 @@ export type PublicationLogFilter = {
   and?: (PublicationLogFilter | null)[] | null
   or?: (PublicationLogFilter | null)[] | null
   not?: (PublicationLogFilter | null)
-}
-export type UpdateOrthopaedicsCaseLogInput = {
-  filter: OrthopaedicsCaseLogFilter
-  set?: (OrthopaedicsCaseLogPatch | null)
-  remove?: (OrthopaedicsCaseLogPatch | null)
-}
-export type PointGeoFilter = {
-  near?: (NearFilter | null)
-  within?: (WithinFilter | null)
 }
 export type AcademicLogRef = {
   id?: (string | null)
@@ -1946,104 +1958,31 @@ export type AcademicLogRef = {
   supervision?: (string | null)[] | null
   academicLogType?: (string | null)
 }
-export type AddAnaesthesiaCriticalCareCaseLogInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  rotation?: (string | null)
-  hospital?: (string | null)
-  faculty?: (string | null)
-  complete?: (boolean | null)
-  patientAge?: (string | null)
-  patientSex?: (string | null)
-  diagnosis?: (string | null)
-  comorbidites?: (string | null)
-  surgicalprocedure?: (string | null)
-  complication?: (string | null)
-  outcome?: (string | null)
-  conduct?: (string | null)
-  procedures?: (string | null)[] | null
-  caseType?: (string | null)
-  remarks?: (string | null)
+export type OrthodonticsClinicalCaseLogOrder = {
+  asc?: (OrthodonticsClinicalCaseLogOrderable | null)
+  desc?: (OrthodonticsClinicalCaseLogOrderable | null)
+  then?: (OrthodonticsClinicalCaseLogOrder | null)
 }
-export type AddUserFeedbackInput = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  title?: (string | null)
-  description?: (string | null)
-  userEmail?: (string | null)
+export type UpdateUserInput = {
+  filter: UserFilter
+  set?: (UserPatch | null)
+  remove?: (UserPatch | null)
 }
-export type FormLabelsOrder = {
-  asc?: (FormLabelsOrderable | null)
-  desc?: (FormLabelsOrderable | null)
-  then?: (FormLabelsOrder | null)
-}
-export type OrthopaedicsCaseLogFilter = {
+export type ThesisLogFilter = {
   id?: string[] | null
   createdOn?: (DateTimeFilter | null)
   updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  hospital?: (StringTermFilter | null)
-  rotation?: (StringTermFilter | null)
-  diseaseCategory?: (StringTermFilter | null)
-  site?: (StringTermFilter | null)
-  joint?: (StringTermFilter | null)
-  bones?: (StringTermFilter | null)
-  outcomes?: (StringTermFilter | null)
-  diagnosis?: (StringTermFilter | null)
-  has?: (OrthopaedicsCaseLogHasFilter | null)[] | null
-  and?: (OrthopaedicsCaseLogFilter | null)[] | null
-  or?: (OrthopaedicsCaseLogFilter | null)[] | null
-  not?: (OrthopaedicsCaseLogFilter | null)
+  thesisName?: (StringTermFilter | null)
+  has?: (ThesisLogHasFilter | null)[] | null
+  and?: (ThesisLogFilter | null)[] | null
+  or?: (ThesisLogFilter | null)[] | null
+  not?: (ThesisLogFilter | null)
 }
-export type Int64Filter = {
-  eq?: (any | null)
-  in?: (any | null)[] | null
-  le?: (any | null)
-  lt?: (any | null)
-  ge?: (any | null)
-  gt?: (any | null)
-  between?: (Int64Range | null)
+export type MultiPolygonRef = {
+  polygons: PolygonRef[]
 }
-export type UpdateOrthopaedicsProcedureLogInput = {
-  filter: OrthopaedicsProcedureLogFilter
-  set?: (OrthopaedicsProcedureLogPatch | null)
-  remove?: (OrthopaedicsProcedureLogPatch | null)
-}
-export type AcademicLogPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  date?: (any | null)
-  position?: (string | null)
-  activities?: (string | null)[] | null
-  title?: (string | null)
-  organiser?: (string | null)
-  supervision?: (string | null)[] | null
-  academicLogType?: (string | null)
-}
-export type UpdateCustomLogInput = {
-  filter: CustomLogFilter
-  set?: (CustomLogPatch | null)
-  remove?: (CustomLogPatch | null)
-}
-export type HospitalsFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  name?: (StringTermFilter | null)
-  has?: (HospitalsHasFilter | null)[] | null
-  and?: (HospitalsFilter | null)[] | null
-  or?: (HospitalsFilter | null)[] | null
-  not?: (HospitalsFilter | null)
-}
-export type ThesisLogRef = {
+export type AdminWorkLogRef = {
   id?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  thesisName?: (string | null)
-  formLabels?: (FormLabelsRef | null)[] | null
-}
-export type AddAdminWorkLogInput = {
   createdOn?: (any | null)
   updatedOn?: (any | null)
   date?: (any | null)
@@ -2053,91 +1992,53 @@ export type AddAdminWorkLogInput = {
   organisation?: (string | null)
   academicLogType?: (string | null)
 }
-export type AnaesthesiaChronicPainLogOrder = {
-  asc?: (AnaesthesiaChronicPainLogOrderable | null)
-  desc?: (AnaesthesiaChronicPainLogOrderable | null)
-  then?: (AnaesthesiaChronicPainLogOrder | null)
+export type CustomCaseOrder = {
+  asc?: (CustomCaseOrderable | null)
+  desc?: (CustomCaseOrderable | null)
+  then?: (CustomCaseOrder | null)
 }
-export type CustomCasePatch = {
-  caseName?: (string | null)
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  fields?: (FieldsRef | null)[] | null
-  customLogIdReference?: (string | null)
+export type UpdateAdminWorkLogInput = {
+  filter: AdminWorkLogFilter
+  set?: (AdminWorkLogPatch | null)
+  remove?: (AdminWorkLogPatch | null)
 }
-export type FieldsPatch = {
-  createdOn?: (any | null)
-  updatedOn?: (any | null)
-  label?: (string | null)
-  value?: (string | null)
+export type UpdateAnaesthesiaCaseLogInput = {
+  filter: AnaesthesiaCaseLogFilter
+  set?: (AnaesthesiaCaseLogPatch | null)
+  remove?: (AnaesthesiaCaseLogPatch | null)
 }
-export type OrthopaedicsCaseLogOrder = {
-  asc?: (OrthopaedicsCaseLogOrderable | null)
-  desc?: (OrthopaedicsCaseLogOrderable | null)
-  then?: (OrthopaedicsCaseLogOrder | null)
-}
-export type OrthopaedicsProcedureLogFilter = {
-  id?: string[] | null
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  date?: (DateTimeFilter | null)
-  hospital?: (StringTermFilter | null)
-  rotation?: (StringTermFilter | null)
-  sites?: (StringTermFilter | null)
-  procedure?: (StringTermFilter | null)
-  procedureName?: (StringTermFilter | null)
-  durationOfSurgeryHours?: (StringTermFilter | null)
-  durationOfSurgeryMinutes?: (StringTermFilter | null)
-  outcome?: (StringTermFilter | null)
-  outcomeOther?: (StringTermFilter | null)
-  complication?: (StringTermFilter | null)
-  diagnosis?: (StringTermFilter | null)
-  has?: (OrthopaedicsProcedureLogHasFilter | null)[] | null
-  and?: (OrthopaedicsProcedureLogFilter | null)[] | null
-  or?: (OrthopaedicsProcedureLogFilter | null)[] | null
-  not?: (OrthopaedicsProcedureLogFilter | null)
-}
-export type ThesisCaseFilter = {
-  id?: string[] | null
-  caseName?: (StringTermFilter | null)
-  createdOn?: (DateTimeFilter | null)
-  updatedOn?: (DateTimeFilter | null)
-  has?: (ThesisCaseHasFilter | null)[] | null
-  and?: (ThesisCaseFilter | null)[] | null
-  or?: (ThesisCaseFilter | null)[] | null
-  not?: (ThesisCaseFilter | null)
-}
-export type UpdateUserInput = {
-  filter: UserFilter
-  set?: (UserPatch | null)
-  remove?: (UserPatch | null)
+export type UpdateOrthopaedicsCaseLogInput = {
+  filter: OrthopaedicsCaseLogFilter
+  set?: (OrthopaedicsCaseLogPatch | null)
+  remove?: (OrthopaedicsCaseLogPatch | null)
 }
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  logProfiles: ObservableMap<string, LogProfileModelType>,
-  hospitals: ObservableMap<string, HospitalsModelType>,
-  formLabels: ObservableMap<string, FormLabelsModelType>,
-  anaesthesiaCaseLogs: ObservableMap<string, AnaesthesiaCaseLogModelType>,
-  users: ObservableMap<string, UserModelType>,
-  userFeedbacks: ObservableMap<string, UserFeedbackModelType>,
+  orthodonticsPreClinicals: ObservableMap<string, OrthodonticsPreClinicalModelType>,
+  orthodonticsClinicalCaseLogs: ObservableMap<string, OrthodonticsClinicalCaseLogModelType>,
+  adminWorkLogs: ObservableMap<string, AdminWorkLogModelType>,
   orthopaedicsCaseLogs: ObservableMap<string, OrthopaedicsCaseLogModelType>,
-  orthopaedicsProcedureLogs: ObservableMap<string, OrthopaedicsProcedureLogModelType>,
-  oralMedicineAndRadiologyCaseLogs: ObservableMap<string, OralMedicineAndRadiologyCaseLogModelType>,
+  users: ObservableMap<string, UserModelType>,
+  anaesthesiaCaseLogs: ObservableMap<string, AnaesthesiaCaseLogModelType>,
+  oralMedicineCaseLogs: ObservableMap<string, OralMedicineCaseLogModelType>,
+  publicationLogs: ObservableMap<string, PublicationLogModelType>,
+  thesisLogs: ObservableMap<string, ThesisLogModelType>,
   thesisCases: ObservableMap<string, ThesisCaseModelType>,
   anaesthesiaCriticalCareCaseLogs: ObservableMap<string, AnaesthesiaCriticalCareCaseLogModelType>,
-  thesisLogs: ObservableMap<string, ThesisLogModelType>,
-  rotations: ObservableMap<string, RotationModelType>,
-  academicLogs: ObservableMap<string, AcademicLogModelType>,
-  customLogs: ObservableMap<string, CustomLogModelType>,
-  orthodonticsClinicalCaseLogs: ObservableMap<string, OrthodonticsClinicalCaseLogModelType>,
+  customCases: ObservableMap<string, CustomCaseModelType>,
   anaesthesiaChronicPainLogs: ObservableMap<string, AnaesthesiaChronicPainLogModelType>,
-  adminWorkLogs: ObservableMap<string, AdminWorkLogModelType>,
+  logProfiles: ObservableMap<string, LogProfileModelType>,
   fields: ObservableMap<string, FieldsModelType>,
   oralRadiologies: ObservableMap<string, OralRadiologyModelType>,
+  hospitals: ObservableMap<string, HospitalsModelType>,
+  rotations: ObservableMap<string, RotationModelType>,
+  orthopaedicsProcedureLogs: ObservableMap<string, OrthopaedicsProcedureLogModelType>,
+  caseLogs: ObservableMap<string, CaseLogModelType>,
+  formLabels: ObservableMap<string, FormLabelsModelType>,
+  userFeedbacks: ObservableMap<string, UserFeedbackModelType>,
+  customLogs: ObservableMap<string, CustomLogModelType>,
   faculties: ObservableMap<string, FacultyModelType>,
-  customCases: ObservableMap<string, CustomCaseModelType>,
-  orthodonticsPreClinicals: ObservableMap<string, OrthodonticsPreClinicalModelType>,
-  publicationLogs: ObservableMap<string, PublicationLogModelType>
+  academicLogs: ObservableMap<string, AcademicLogModelType>
 }
 
 
@@ -2149,6 +2050,9 @@ queryGetUser="queryGetUser",
 queryCheckUserPassword="queryCheckUserPassword",
 queryQueryUser="queryQueryUser",
 queryAggregateUser="queryAggregateUser",
+queryGetCaseLog="queryGetCaseLog",
+queryQueryCaseLog="queryQueryCaseLog",
+queryAggregateCaseLog="queryAggregateCaseLog",
 queryGetUserFeedback="queryGetUserFeedback",
 queryQueryUserFeedback="queryQueryUserFeedback",
 queryAggregateUserFeedback="queryAggregateUserFeedback",
@@ -2191,9 +2095,9 @@ queryAggregateOrthopaedicsCaseLog="queryAggregateOrthopaedicsCaseLog",
 queryGetOrthopaedicsProcedureLog="queryGetOrthopaedicsProcedureLog",
 queryQueryOrthopaedicsProcedureLog="queryQueryOrthopaedicsProcedureLog",
 queryAggregateOrthopaedicsProcedureLog="queryAggregateOrthopaedicsProcedureLog",
-queryGetOralMedicineAndRadiologyCaseLog="queryGetOralMedicineAndRadiologyCaseLog",
-queryQueryOralMedicineAndRadiologyCaseLog="queryQueryOralMedicineAndRadiologyCaseLog",
-queryAggregateOralMedicineAndRadiologyCaseLog="queryAggregateOralMedicineAndRadiologyCaseLog",
+queryGetOralMedicineCaseLog="queryGetOralMedicineCaseLog",
+queryQueryOralMedicineCaseLog="queryQueryOralMedicineCaseLog",
+queryAggregateOralMedicineCaseLog="queryAggregateOralMedicineCaseLog",
 queryGetOralRadiology="queryGetOralRadiology",
 queryQueryOralRadiology="queryQueryOralRadiology",
 queryAggregateOralRadiology="queryAggregateOralRadiology",
@@ -2223,6 +2127,9 @@ export enum RootStoreBaseMutations {
 mutateAddUser="mutateAddUser",
 mutateUpdateUser="mutateUpdateUser",
 mutateDeleteUser="mutateDeleteUser",
+mutateAddCaseLog="mutateAddCaseLog",
+mutateUpdateCaseLog="mutateUpdateCaseLog",
+mutateDeleteCaseLog="mutateDeleteCaseLog",
 mutateAddUserFeedback="mutateAddUserFeedback",
 mutateUpdateUserFeedback="mutateUpdateUserFeedback",
 mutateDeleteUserFeedback="mutateDeleteUserFeedback",
@@ -2265,9 +2172,9 @@ mutateDeleteOrthopaedicsCaseLog="mutateDeleteOrthopaedicsCaseLog",
 mutateAddOrthopaedicsProcedureLog="mutateAddOrthopaedicsProcedureLog",
 mutateUpdateOrthopaedicsProcedureLog="mutateUpdateOrthopaedicsProcedureLog",
 mutateDeleteOrthopaedicsProcedureLog="mutateDeleteOrthopaedicsProcedureLog",
-mutateAddOralMedicineAndRadiologyCaseLog="mutateAddOralMedicineAndRadiologyCaseLog",
-mutateUpdateOralMedicineAndRadiologyCaseLog="mutateUpdateOralMedicineAndRadiologyCaseLog",
-mutateDeleteOralMedicineAndRadiologyCaseLog="mutateDeleteOralMedicineAndRadiologyCaseLog",
+mutateAddOralMedicineCaseLog="mutateAddOralMedicineCaseLog",
+mutateUpdateOralMedicineCaseLog="mutateUpdateOralMedicineCaseLog",
+mutateDeleteOralMedicineCaseLog="mutateDeleteOralMedicineCaseLog",
 mutateAddOralRadiology="mutateAddOralRadiology",
 mutateUpdateOralRadiology="mutateUpdateOralRadiology",
 mutateDeleteOralRadiology="mutateDeleteOralRadiology",
@@ -2299,32 +2206,33 @@ mutateDeleteRotation="mutateDeleteRotation"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['LogProfile', () => LogProfileModel], ['FormLabelsAggregateResult', () => FormLabelsAggregateResultModel], ['UpdateOrthopaedicsCaseLogPayload', () => UpdateOrthopaedicsCaseLogPayloadModel], ['ThesisLogAggregateResult', () => ThesisLogAggregateResultModel], ['DeleteOrthopaedicsProcedureLogPayload', () => DeleteOrthopaedicsProcedureLogPayloadModel], ['UpdateOralMedicineAndRadiologyCaseLogPayload', () => UpdateOralMedicineAndRadiologyCaseLogPayloadModel], ['OrthopaedicsCaseLogAggregateResult', () => OrthopaedicsCaseLogAggregateResultModel], ['UserFeedbackAggregateResult', () => UserFeedbackAggregateResultModel], ['Hospitals', () => HospitalsModel], ['AnaesthesiaChronicPainLogAggregateResult', () => AnaesthesiaChronicPainLogAggregateResultModel], ['DeleteAnaesthesiaCriticalCareCaseLogPayload', () => DeleteAnaesthesiaCriticalCareCaseLogPayloadModel], ['UpdateHospitalsPayload', () => UpdateHospitalsPayloadModel], ['FormLabels', () => FormLabelsModel], ['FieldsAggregateResult', () => FieldsAggregateResultModel], ['UpdateUserPayload', () => UpdateUserPayloadModel], ['AddOrthodonticsClinicalCaseLogPayload', () => AddOrthodonticsClinicalCaseLogPayloadModel], ['UpdateFacultyPayload', () => UpdateFacultyPayloadModel], ['PublicationLogAggregateResult', () => PublicationLogAggregateResultModel], ['UpdateOrthodonticsPreClinicalPayload', () => UpdateOrthodonticsPreClinicalPayloadModel], ['AnaesthesiaCaseLog', () => AnaesthesiaCaseLogModel], ['LogProfileAggregateResult', () => LogProfileAggregateResultModel], ['AddOrthopaedicsProcedureLogPayload', () => AddOrthopaedicsProcedureLogPayloadModel], ['UpdateAnaesthesiaChronicPainLogPayload', () => UpdateAnaesthesiaChronicPainLogPayloadModel], ['AddAnaesthesiaChronicPainLogPayload', () => AddAnaesthesiaChronicPainLogPayloadModel], ['AddOralRadiologyPayload', () => AddOralRadiologyPayloadModel], ['HospitalsAggregateResult', () => HospitalsAggregateResultModel], ['UpdateAnaesthesiaCaseLogPayload', () => UpdateAnaesthesiaCaseLogPayloadModel], ['AddAcademicLogPayload', () => AddAcademicLogPayloadModel], ['AnaesthesiaCriticalCareCaseLogAggregateResult', () => AnaesthesiaCriticalCareCaseLogAggregateResultModel], ['CustomLogAggregateResult', () => CustomLogAggregateResultModel], ['DeleteLogProfilePayload', () => DeleteLogProfilePayloadModel], ['RotationAggregateResult', () => RotationAggregateResultModel], ['User', () => UserModel], ['DeletePublicationLogPayload', () => DeletePublicationLogPayloadModel], ['MultiPolygon', () => MultiPolygonModel], ['DeleteFormLabelsPayload', () => DeleteFormLabelsPayloadModel], ['UserFeedback', () => UserFeedbackModel], ['OrthopaedicsCaseLog', () => OrthopaedicsCaseLogModel], ['DeleteUserFeedbackPayload', () => DeleteUserFeedbackPayloadModel], ['UpdateFieldsPayload', () => UpdateFieldsPayloadModel], ['OrthopaedicsProcedureLog', () => OrthopaedicsProcedureLogModel], ['OralMedicineAndRadiologyCaseLog', () => OralMedicineAndRadiologyCaseLogModel], ['AddThesisCasePayload', () => AddThesisCasePayloadModel], ['ThesisCase', () => ThesisCaseModel], ['OralRadiologyAggregateResult', () => OralRadiologyAggregateResultModel], ['AnaesthesiaCriticalCareCaseLog', () => AnaesthesiaCriticalCareCaseLogModel], ['OrthopaedicsProcedureLogAggregateResult', () => OrthopaedicsProcedureLogAggregateResultModel], ['UpdateOrthopaedicsProcedureLogPayload', () => UpdateOrthopaedicsProcedureLogPayloadModel], ['DeleteCustomCasePayload', () => DeleteCustomCasePayloadModel], ['FacultyAggregateResult', () => FacultyAggregateResultModel], ['AddHospitalsPayload', () => AddHospitalsPayloadModel], ['AddAnaesthesiaCaseLogPayload', () => AddAnaesthesiaCaseLogPayloadModel], ['ThesisLog', () => ThesisLogModel], ['UpdateOralRadiologyPayload', () => UpdateOralRadiologyPayloadModel], ['OralMedicineAndRadiologyCaseLogAggregateResult', () => OralMedicineAndRadiologyCaseLogAggregateResultModel], ['UpdateAdminWorkLogPayload', () => UpdateAdminWorkLogPayloadModel], ['OrthodonticsClinicalCaseLogAggregateResult', () => OrthodonticsClinicalCaseLogAggregateResultModel], ['UpdateFormLabelsPayload', () => UpdateFormLabelsPayloadModel], ['DeleteOrthodonticsPreClinicalPayload', () => DeleteOrthodonticsPreClinicalPayloadModel], ['UpdateCustomCasePayload', () => UpdateCustomCasePayloadModel], ['DeleteRotationPayload', () => DeleteRotationPayloadModel], ['DeleteAnaesthesiaChronicPainLogPayload', () => DeleteAnaesthesiaChronicPainLogPayloadModel], ['DeleteFacultyPayload', () => DeleteFacultyPayloadModel], ['UserAggregateResult', () => UserAggregateResultModel], ['DeleteAdminWorkLogPayload', () => DeleteAdminWorkLogPayloadModel], ['Rotation', () => RotationModel], ['AcademicLog', () => AcademicLogModel], ['AddThesisLogPayload', () => AddThesisLogPayloadModel], ['CustomLog', () => CustomLogModel], ['AddCustomCasePayload', () => AddCustomCasePayloadModel], ['DeleteAcademicLogPayload', () => DeleteAcademicLogPayloadModel], ['UpdateOrthodonticsClinicalCaseLogPayload', () => UpdateOrthodonticsClinicalCaseLogPayloadModel], ['OrthodonticsClinicalCaseLog', () => OrthodonticsClinicalCaseLogModel], ['AddOralMedicineAndRadiologyCaseLogPayload', () => AddOralMedicineAndRadiologyCaseLogPayloadModel], ['AddLogProfilePayload', () => AddLogProfilePayloadModel], ['AdminWorkLogAggregateResult', () => AdminWorkLogAggregateResultModel], ['Point', () => PointModel], ['AddFormLabelsPayload', () => AddFormLabelsPayloadModel], ['AddOrthopaedicsCaseLogPayload', () => AddOrthopaedicsCaseLogPayloadModel], ['AddAdminWorkLogPayload', () => AddAdminWorkLogPayloadModel], ['DeleteFieldsPayload', () => DeleteFieldsPayloadModel], ['UpdateAcademicLogPayload', () => UpdateAcademicLogPayloadModel], ['AnaesthesiaChronicPainLog', () => AnaesthesiaChronicPainLogModel], ['AdminWorkLog', () => AdminWorkLogModel], ['DeleteOrthopaedicsCaseLogPayload', () => DeleteOrthopaedicsCaseLogPayloadModel], ['AddFacultyPayload', () => AddFacultyPayloadModel], ['AddFieldsPayload', () => AddFieldsPayloadModel], ['UpdateLogProfilePayload', () => UpdateLogProfilePayloadModel], ['Fields', () => FieldsModel], ['OralRadiology', () => OralRadiologyModel], ['DeleteThesisCasePayload', () => DeleteThesisCasePayloadModel], ['AddRotationPayload', () => AddRotationPayloadModel], ['Faculty', () => FacultyModel], ['AddAnaesthesiaCriticalCareCaseLogPayload', () => AddAnaesthesiaCriticalCareCaseLogPayloadModel], ['OrthodonticsPreClinicalAggregateResult', () => OrthodonticsPreClinicalAggregateResultModel], ['CustomCase', () => CustomCaseModel], ['PointList', () => PointListModel], ['AnaesthesiaCaseLogAggregateResult', () => AnaesthesiaCaseLogAggregateResultModel], ['AddCustomLogPayload', () => AddCustomLogPayloadModel], ['DeleteHospitalsPayload', () => DeleteHospitalsPayloadModel], ['UpdateRotationPayload', () => UpdateRotationPayloadModel], ['DeleteUserPayload', () => DeleteUserPayloadModel], ['DeleteOralRadiologyPayload', () => DeleteOralRadiologyPayloadModel], ['UpdateCustomLogPayload', () => UpdateCustomLogPayloadModel], ['ThesisCaseAggregateResult', () => ThesisCaseAggregateResultModel], ['UpdatePublicationLogPayload', () => UpdatePublicationLogPayloadModel], ['DeleteAnaesthesiaCaseLogPayload', () => DeleteAnaesthesiaCaseLogPayloadModel], ['DeleteOralMedicineAndRadiologyCaseLogPayload', () => DeleteOralMedicineAndRadiologyCaseLogPayloadModel], ['UpdateUserFeedbackPayload', () => UpdateUserFeedbackPayloadModel], ['AddOrthodonticsPreClinicalPayload', () => AddOrthodonticsPreClinicalPayloadModel], ['DeleteCustomLogPayload', () => DeleteCustomLogPayloadModel], ['DeleteThesisLogPayload', () => DeleteThesisLogPayloadModel], ['UpdateThesisLogPayload', () => UpdateThesisLogPayloadModel], ['AddUserFeedbackPayload', () => AddUserFeedbackPayloadModel], ['OrthodonticsPreClinical', () => OrthodonticsPreClinicalModel], ['Polygon', () => PolygonModel], ['AcademicLogAggregateResult', () => AcademicLogAggregateResultModel], ['DeleteOrthodonticsClinicalCaseLogPayload', () => DeleteOrthodonticsClinicalCaseLogPayloadModel], ['PublicationLog', () => PublicationLogModel], ['UpdateThesisCasePayload', () => UpdateThesisCasePayloadModel], ['AddPublicationLogPayload', () => AddPublicationLogPayloadModel], ['CustomCaseAggregateResult', () => CustomCaseAggregateResultModel], ['UpdateAnaesthesiaCriticalCareCaseLogPayload', () => UpdateAnaesthesiaCriticalCareCaseLogPayloadModel], ['AddUserPayload', () => AddUserPayloadModel]], ['LogProfile', 'Hospitals', 'FormLabels', 'AnaesthesiaCaseLog', 'User', 'UserFeedback', 'OrthopaedicsCaseLog', 'OrthopaedicsProcedureLog', 'OralMedicineAndRadiologyCaseLog', 'ThesisCase', 'AnaesthesiaCriticalCareCaseLog', 'ThesisLog', 'Rotation', 'AcademicLog', 'CustomLog', 'OrthodonticsClinicalCaseLog', 'AnaesthesiaChronicPainLog', 'AdminWorkLog', 'Fields', 'OralRadiology', 'Faculty', 'CustomCase', 'OrthodonticsPreClinical', 'PublicationLog'], "js"))
+  .extend(configureStoreMixin([['UpdateAdminWorkLogPayload', () => UpdateAdminWorkLogPayloadModel], ['DeleteAnaesthesiaCaseLogPayload', () => DeleteAnaesthesiaCaseLogPayloadModel], ['UpdateCustomCasePayload', () => UpdateCustomCasePayloadModel], ['DeleteAnaesthesiaCriticalCareCaseLogPayload', () => DeleteAnaesthesiaCriticalCareCaseLogPayloadModel], ['DeleteOrthopaedicsCaseLogPayload', () => DeleteOrthopaedicsCaseLogPayloadModel], ['AddAnaesthesiaCriticalCareCaseLogPayload', () => AddAnaesthesiaCriticalCareCaseLogPayloadModel], ['DeleteOrthodonticsClinicalCaseLogPayload', () => DeleteOrthodonticsClinicalCaseLogPayloadModel], ['UpdateThesisCasePayload', () => UpdateThesisCasePayloadModel], ['ThesisCaseAggregateResult', () => ThesisCaseAggregateResultModel], ['AddOralMedicineCaseLogPayload', () => AddOralMedicineCaseLogPayloadModel], ['AddHospitalsPayload', () => AddHospitalsPayloadModel], ['OrthodonticsPreClinical', () => OrthodonticsPreClinicalModel], ['AddOrthopaedicsCaseLogPayload', () => AddOrthopaedicsCaseLogPayloadModel], ['DeleteHospitalsPayload', () => DeleteHospitalsPayloadModel], ['DeleteOralRadiologyPayload', () => DeleteOralRadiologyPayloadModel], ['OrthodonticsClinicalCaseLog', () => OrthodonticsClinicalCaseLogModel], ['UpdateOrthodonticsPreClinicalPayload', () => UpdateOrthodonticsPreClinicalPayloadModel], ['AddCustomLogPayload', () => AddCustomLogPayloadModel], ['OralRadiologyAggregateResult', () => OralRadiologyAggregateResultModel], ['AdminWorkLog', () => AdminWorkLogModel], ['AnaesthesiaCriticalCareCaseLogAggregateResult', () => AnaesthesiaCriticalCareCaseLogAggregateResultModel], ['DeleteFormLabelsPayload', () => DeleteFormLabelsPayloadModel], ['UpdateOrthopaedicsCaseLogPayload', () => UpdateOrthopaedicsCaseLogPayloadModel], ['OrthopaedicsCaseLog', () => OrthopaedicsCaseLogModel], ['UpdatePublicationLogPayload', () => UpdatePublicationLogPayloadModel], ['AddFieldsPayload', () => AddFieldsPayloadModel], ['OrthodonticsPreClinicalAggregateResult', () => OrthodonticsPreClinicalAggregateResultModel], ['FacultyAggregateResult', () => FacultyAggregateResultModel], ['UpdateOralMedicineCaseLogPayload', () => UpdateOralMedicineCaseLogPayloadModel], ['User', () => UserModel], ['AddOrthopaedicsProcedureLogPayload', () => AddOrthopaedicsProcedureLogPayloadModel], ['OrthopaedicsProcedureLogAggregateResult', () => OrthopaedicsProcedureLogAggregateResultModel], ['Point', () => PointModel], ['AddRotationPayload', () => AddRotationPayloadModel], ['AddUserPayload', () => AddUserPayloadModel], ['DeleteAnaesthesiaChronicPainLogPayload', () => DeleteAnaesthesiaChronicPainLogPayloadModel], ['DeleteOrthopaedicsProcedureLogPayload', () => DeleteOrthopaedicsProcedureLogPayloadModel], ['UpdateThesisLogPayload', () => UpdateThesisLogPayloadModel], ['DeleteUserPayload', () => DeleteUserPayloadModel], ['UpdateRotationPayload', () => UpdateRotationPayloadModel], ['AnaesthesiaCaseLog', () => AnaesthesiaCaseLogModel], ['FieldsAggregateResult', () => FieldsAggregateResultModel], ['AddFormLabelsPayload', () => AddFormLabelsPayloadModel], ['DeleteAcademicLogPayload', () => DeleteAcademicLogPayloadModel], ['AddAnaesthesiaCaseLogPayload', () => AddAnaesthesiaCaseLogPayloadModel], ['AnaesthesiaCaseLogAggregateResult', () => AnaesthesiaCaseLogAggregateResultModel], ['DeleteOrthodonticsPreClinicalPayload', () => DeleteOrthodonticsPreClinicalPayloadModel], ['OrthopaedicsCaseLogAggregateResult', () => OrthopaedicsCaseLogAggregateResultModel], ['DeleteAdminWorkLogPayload', () => DeleteAdminWorkLogPayloadModel], ['DeleteCustomLogPayload', () => DeleteCustomLogPayloadModel], ['AddAcademicLogPayload', () => AddAcademicLogPayloadModel], ['AddFacultyPayload', () => AddFacultyPayloadModel], ['AddOrthodonticsClinicalCaseLogPayload', () => AddOrthodonticsClinicalCaseLogPayloadModel], ['CaseLogAggregateResult', () => CaseLogAggregateResultModel], ['OralMedicineCaseLog', () => OralMedicineCaseLogModel], ['AddUserFeedbackPayload', () => AddUserFeedbackPayloadModel], ['UserAggregateResult', () => UserAggregateResultModel], ['AdminWorkLogAggregateResult', () => AdminWorkLogAggregateResultModel], ['UpdateAnaesthesiaCriticalCareCaseLogPayload', () => UpdateAnaesthesiaCriticalCareCaseLogPayloadModel], ['AddLogProfilePayload', () => AddLogProfilePayloadModel], ['AddThesisLogPayload', () => AddThesisLogPayloadModel], ['UpdateLogProfilePayload', () => UpdateLogProfilePayloadModel], ['OralMedicineCaseLogAggregateResult', () => OralMedicineCaseLogAggregateResultModel], ['UpdateAcademicLogPayload', () => UpdateAcademicLogPayloadModel], ['AddThesisCasePayload', () => AddThesisCasePayloadModel], ['CustomLogAggregateResult', () => CustomLogAggregateResultModel], ['PublicationLog', () => PublicationLogModel], ['AddCaseLogPayload', () => AddCaseLogPayloadModel], ['PublicationLogAggregateResult', () => PublicationLogAggregateResultModel], ['UpdateOrthodonticsClinicalCaseLogPayload', () => UpdateOrthodonticsClinicalCaseLogPayloadModel], ['ThesisLog', () => ThesisLogModel], ['UpdateOrthopaedicsProcedureLogPayload', () => UpdateOrthopaedicsProcedureLogPayloadModel], ['AddPublicationLogPayload', () => AddPublicationLogPayloadModel], ['CustomCaseAggregateResult', () => CustomCaseAggregateResultModel], ['MultiPolygon', () => MultiPolygonModel], ['AcademicLogAggregateResult', () => AcademicLogAggregateResultModel], ['DeleteCaseLogPayload', () => DeleteCaseLogPayloadModel], ['ThesisCase', () => ThesisCaseModel], ['AnaesthesiaCriticalCareCaseLog', () => AnaesthesiaCriticalCareCaseLogModel], ['HospitalsAggregateResult', () => HospitalsAggregateResultModel], ['UpdateAnaesthesiaCaseLogPayload', () => UpdateAnaesthesiaCaseLogPayloadModel], ['CustomCase', () => CustomCaseModel], ['AddAdminWorkLogPayload', () => AddAdminWorkLogPayloadModel], ['OrthodonticsClinicalCaseLogAggregateResult', () => OrthodonticsClinicalCaseLogAggregateResultModel], ['UpdateCaseLogPayload', () => UpdateCaseLogPayloadModel], ['PointList', () => PointListModel], ['DeletePublicationLogPayload', () => DeletePublicationLogPayloadModel], ['FormLabelsAggregateResult', () => FormLabelsAggregateResultModel], ['AnaesthesiaChronicPainLog', () => AnaesthesiaChronicPainLogModel], ['ThesisLogAggregateResult', () => ThesisLogAggregateResultModel], ['DeleteLogProfilePayload', () => DeleteLogProfilePayloadModel], ['DeleteThesisLogPayload', () => DeleteThesisLogPayloadModel], ['UpdateAnaesthesiaChronicPainLogPayload', () => UpdateAnaesthesiaChronicPainLogPayloadModel], ['UpdateFormLabelsPayload', () => UpdateFormLabelsPayloadModel], ['UpdateUserFeedbackPayload', () => UpdateUserFeedbackPayloadModel], ['LogProfile', () => LogProfileModel], ['AddOralRadiologyPayload', () => AddOralRadiologyPayloadModel], ['AddAnaesthesiaChronicPainLogPayload', () => AddAnaesthesiaChronicPainLogPayloadModel], ['DeleteFacultyPayload', () => DeleteFacultyPayloadModel], ['DeleteFieldsPayload', () => DeleteFieldsPayloadModel], ['DeleteThesisCasePayload', () => DeleteThesisCasePayloadModel], ['Fields', () => FieldsModel], ['OralRadiology', () => OralRadiologyModel], ['Hospitals', () => HospitalsModel], ['Rotation', () => RotationModel], ['Polygon', () => PolygonModel], ['AddOrthodonticsPreClinicalPayload', () => AddOrthodonticsPreClinicalPayloadModel], ['UpdateHospitalsPayload', () => UpdateHospitalsPayloadModel], ['OrthopaedicsProcedureLog', () => OrthopaedicsProcedureLogModel], ['UpdateUserPayload', () => UpdateUserPayloadModel], ['CaseLog', () => CaseLogModel], ['RotationAggregateResult', () => RotationAggregateResultModel], ['UpdateOralRadiologyPayload', () => UpdateOralRadiologyPayloadModel], ['FormLabels', () => FormLabelsModel], ['DeleteCustomCasePayload', () => DeleteCustomCasePayloadModel], ['UpdateFacultyPayload', () => UpdateFacultyPayloadModel], ['UserFeedback', () => UserFeedbackModel], ['CustomLog', () => CustomLogModel], ['UpdateCustomLogPayload', () => UpdateCustomLogPayloadModel], ['DeleteRotationPayload', () => DeleteRotationPayloadModel], ['DeleteOralMedicineCaseLogPayload', () => DeleteOralMedicineCaseLogPayloadModel], ['LogProfileAggregateResult', () => LogProfileAggregateResultModel], ['Faculty', () => FacultyModel], ['AnaesthesiaChronicPainLogAggregateResult', () => AnaesthesiaChronicPainLogAggregateResultModel], ['AcademicLog', () => AcademicLogModel], ['UpdateFieldsPayload', () => UpdateFieldsPayloadModel], ['UserFeedbackAggregateResult', () => UserFeedbackAggregateResultModel], ['AddCustomCasePayload', () => AddCustomCasePayloadModel], ['DeleteUserFeedbackPayload', () => DeleteUserFeedbackPayloadModel]], ['OrthodonticsPreClinical', 'OrthodonticsClinicalCaseLog', 'AdminWorkLog', 'OrthopaedicsCaseLog', 'User', 'AnaesthesiaCaseLog', 'OralMedicineCaseLog', 'PublicationLog', 'ThesisLog', 'ThesisCase', 'AnaesthesiaCriticalCareCaseLog', 'CustomCase', 'AnaesthesiaChronicPainLog', 'LogProfile', 'Fields', 'OralRadiology', 'Hospitals', 'Rotation', 'OrthopaedicsProcedureLog', 'CaseLog', 'FormLabels', 'UserFeedback', 'CustomLog', 'Faculty', 'AcademicLog'], "js"))
   .props({
-    logProfiles: types.optional(types.map(types.late((): any => LogProfileModel)), {}),
-    hospitals: types.optional(types.map(types.late((): any => HospitalsModel)), {}),
-    formLabels: types.optional(types.map(types.late((): any => FormLabelsModel)), {}),
-    anaesthesiaCaseLogs: types.optional(types.map(types.late((): any => AnaesthesiaCaseLogModel)), {}),
-    users: types.optional(types.map(types.late((): any => UserModel)), {}),
-    userFeedbacks: types.optional(types.map(types.late((): any => UserFeedbackModel)), {}),
+    orthodonticsPreClinicals: types.optional(types.map(types.late((): any => OrthodonticsPreClinicalModel)), {}),
+    orthodonticsClinicalCaseLogs: types.optional(types.map(types.late((): any => OrthodonticsClinicalCaseLogModel)), {}),
+    adminWorkLogs: types.optional(types.map(types.late((): any => AdminWorkLogModel)), {}),
     orthopaedicsCaseLogs: types.optional(types.map(types.late((): any => OrthopaedicsCaseLogModel)), {}),
-    orthopaedicsProcedureLogs: types.optional(types.map(types.late((): any => OrthopaedicsProcedureLogModel)), {}),
-    oralMedicineAndRadiologyCaseLogs: types.optional(types.map(types.late((): any => OralMedicineAndRadiologyCaseLogModel)), {}),
+    users: types.optional(types.map(types.late((): any => UserModel)), {}),
+    anaesthesiaCaseLogs: types.optional(types.map(types.late((): any => AnaesthesiaCaseLogModel)), {}),
+    oralMedicineCaseLogs: types.optional(types.map(types.late((): any => OralMedicineCaseLogModel)), {}),
+    publicationLogs: types.optional(types.map(types.late((): any => PublicationLogModel)), {}),
+    thesisLogs: types.optional(types.map(types.late((): any => ThesisLogModel)), {}),
     thesisCases: types.optional(types.map(types.late((): any => ThesisCaseModel)), {}),
     anaesthesiaCriticalCareCaseLogs: types.optional(types.map(types.late((): any => AnaesthesiaCriticalCareCaseLogModel)), {}),
-    thesisLogs: types.optional(types.map(types.late((): any => ThesisLogModel)), {}),
-    rotations: types.optional(types.map(types.late((): any => RotationModel)), {}),
-    academicLogs: types.optional(types.map(types.late((): any => AcademicLogModel)), {}),
-    customLogs: types.optional(types.map(types.late((): any => CustomLogModel)), {}),
-    orthodonticsClinicalCaseLogs: types.optional(types.map(types.late((): any => OrthodonticsClinicalCaseLogModel)), {}),
+    customCases: types.optional(types.map(types.late((): any => CustomCaseModel)), {}),
     anaesthesiaChronicPainLogs: types.optional(types.map(types.late((): any => AnaesthesiaChronicPainLogModel)), {}),
-    adminWorkLogs: types.optional(types.map(types.late((): any => AdminWorkLogModel)), {}),
+    logProfiles: types.optional(types.map(types.late((): any => LogProfileModel)), {}),
     fields: types.optional(types.map(types.late((): any => FieldsModel)), {}),
     oralRadiologies: types.optional(types.map(types.late((): any => OralRadiologyModel)), {}),
+    hospitals: types.optional(types.map(types.late((): any => HospitalsModel)), {}),
+    rotations: types.optional(types.map(types.late((): any => RotationModel)), {}),
+    orthopaedicsProcedureLogs: types.optional(types.map(types.late((): any => OrthopaedicsProcedureLogModel)), {}),
+    caseLogs: types.optional(types.map(types.late((): any => CaseLogModel)), {}),
+    formLabels: types.optional(types.map(types.late((): any => FormLabelsModel)), {}),
+    userFeedbacks: types.optional(types.map(types.late((): any => UserFeedbackModel)), {}),
+    customLogs: types.optional(types.map(types.late((): any => CustomLogModel)), {}),
     faculties: types.optional(types.map(types.late((): any => FacultyModel)), {}),
-    customCases: types.optional(types.map(types.late((): any => CustomCaseModel)), {}),
-    orthodonticsPreClinicals: types.optional(types.map(types.late((): any => OrthodonticsPreClinicalModel)), {}),
-    publicationLogs: types.optional(types.map(types.late((): any => PublicationLogModel)), {})
+    academicLogs: types.optional(types.map(types.late((): any => AcademicLogModel)), {})
   })
   .actions(self => ({
     queryGetUser(variables: { id?: (string | null), userName?: (string | null) }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -2345,6 +2253,21 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     queryAggregateUser(variables: { filter?: (UserFilter | null) }, resultSelector: string | ((qb: UserAggregateResultModelSelector) => UserAggregateResultModelSelector) = userAggregateResultModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ aggregateUser: UserAggregateResultModelType }>(`query aggregateUser($filter: UserFilter) { aggregateUser(filter: $filter) {
         ${typeof resultSelector === "function" ? resultSelector(new UserAggregateResultModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryGetCaseLog(variables: { id: string }, resultSelector: string | ((qb: CaseLogModelSelector) => CaseLogModelSelector) = caseLogModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getCaseLog: CaseLogModelType }>(`query getCaseLog($id: ID!) { getCaseLog(id: $id) {
+        ${typeof resultSelector === "function" ? resultSelector(new CaseLogModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryQueryCaseLog(variables: { filter?: (CaseLogFilter | null), order?: (CaseLogOrder | null), first?: (number | null), offset?: (number | null) }, resultSelector: string | ((qb: CaseLogModelSelector) => CaseLogModelSelector) = caseLogModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ queryCaseLog: CaseLogModelType[] }>(`query queryCaseLog($filter: CaseLogFilter, $order: CaseLogOrder, $first: Int, $offset: Int) { queryCaseLog(filter: $filter, order: $order, first: $first, offset: $offset) {
+        ${typeof resultSelector === "function" ? resultSelector(new CaseLogModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
+    queryAggregateCaseLog(variables: { filter?: (CaseLogFilter | null) }, resultSelector: string | ((qb: CaseLogAggregateResultModelSelector) => CaseLogAggregateResultModelSelector) = caseLogAggregateResultModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ aggregateCaseLog: CaseLogAggregateResultModelType }>(`query aggregateCaseLog($filter: CaseLogFilter) { aggregateCaseLog(filter: $filter) {
+        ${typeof resultSelector === "function" ? resultSelector(new CaseLogAggregateResultModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryGetUserFeedback(variables: { id: string }, resultSelector: string | ((qb: UserFeedbackModelSelector) => UserFeedbackModelSelector) = userFeedbackModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -2557,19 +2480,19 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new OrthopaedicsProcedureLogAggregateResultModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryGetOralMedicineAndRadiologyCaseLog(variables: { id: string }, resultSelector: string | ((qb: OralMedicineAndRadiologyCaseLogModelSelector) => OralMedicineAndRadiologyCaseLogModelSelector) = oralMedicineAndRadiologyCaseLogModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ getOralMedicineAndRadiologyCaseLog: OralMedicineAndRadiologyCaseLogModelType }>(`query getOralMedicineAndRadiologyCaseLog($id: ID!) { getOralMedicineAndRadiologyCaseLog(id: $id) {
-        ${typeof resultSelector === "function" ? resultSelector(new OralMedicineAndRadiologyCaseLogModelSelector()).toString() : resultSelector}
+    queryGetOralMedicineCaseLog(variables: { id: string }, resultSelector: string | ((qb: OralMedicineCaseLogModelSelector) => OralMedicineCaseLogModelSelector) = oralMedicineCaseLogModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ getOralMedicineCaseLog: OralMedicineCaseLogModelType }>(`query getOralMedicineCaseLog($id: ID!) { getOralMedicineCaseLog(id: $id) {
+        ${typeof resultSelector === "function" ? resultSelector(new OralMedicineCaseLogModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryQueryOralMedicineAndRadiologyCaseLog(variables: { filter?: (OralMedicineAndRadiologyCaseLogFilter | null), order?: (OralMedicineAndRadiologyCaseLogOrder | null), first?: (number | null), offset?: (number | null) }, resultSelector: string | ((qb: OralMedicineAndRadiologyCaseLogModelSelector) => OralMedicineAndRadiologyCaseLogModelSelector) = oralMedicineAndRadiologyCaseLogModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ queryOralMedicineAndRadiologyCaseLog: OralMedicineAndRadiologyCaseLogModelType[] }>(`query queryOralMedicineAndRadiologyCaseLog($filter: OralMedicineAndRadiologyCaseLogFilter, $order: OralMedicineAndRadiologyCaseLogOrder, $first: Int, $offset: Int) { queryOralMedicineAndRadiologyCaseLog(filter: $filter, order: $order, first: $first, offset: $offset) {
-        ${typeof resultSelector === "function" ? resultSelector(new OralMedicineAndRadiologyCaseLogModelSelector()).toString() : resultSelector}
+    queryQueryOralMedicineCaseLog(variables: { filter?: (OralMedicineCaseLogFilter | null), order?: (OralMedicineCaseLogOrder | null), first?: (number | null), offset?: (number | null) }, resultSelector: string | ((qb: OralMedicineCaseLogModelSelector) => OralMedicineCaseLogModelSelector) = oralMedicineCaseLogModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ queryOralMedicineCaseLog: OralMedicineCaseLogModelType[] }>(`query queryOralMedicineCaseLog($filter: OralMedicineCaseLogFilter, $order: OralMedicineCaseLogOrder, $first: Int, $offset: Int) { queryOralMedicineCaseLog(filter: $filter, order: $order, first: $first, offset: $offset) {
+        ${typeof resultSelector === "function" ? resultSelector(new OralMedicineCaseLogModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryAggregateOralMedicineAndRadiologyCaseLog(variables: { filter?: (OralMedicineAndRadiologyCaseLogFilter | null) }, resultSelector: string | ((qb: OralMedicineAndRadiologyCaseLogAggregateResultModelSelector) => OralMedicineAndRadiologyCaseLogAggregateResultModelSelector) = oralMedicineAndRadiologyCaseLogAggregateResultModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ aggregateOralMedicineAndRadiologyCaseLog: OralMedicineAndRadiologyCaseLogAggregateResultModelType }>(`query aggregateOralMedicineAndRadiologyCaseLog($filter: OralMedicineAndRadiologyCaseLogFilter) { aggregateOralMedicineAndRadiologyCaseLog(filter: $filter) {
-        ${typeof resultSelector === "function" ? resultSelector(new OralMedicineAndRadiologyCaseLogAggregateResultModelSelector()).toString() : resultSelector}
+    queryAggregateOralMedicineCaseLog(variables: { filter?: (OralMedicineCaseLogFilter | null) }, resultSelector: string | ((qb: OralMedicineCaseLogAggregateResultModelSelector) => OralMedicineCaseLogAggregateResultModelSelector) = oralMedicineCaseLogAggregateResultModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ aggregateOralMedicineCaseLog: OralMedicineCaseLogAggregateResultModelType }>(`query aggregateOralMedicineCaseLog($filter: OralMedicineCaseLogFilter) { aggregateOralMedicineCaseLog(filter: $filter) {
+        ${typeof resultSelector === "function" ? resultSelector(new OralMedicineCaseLogAggregateResultModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryGetOralRadiology(variables: { id: string }, resultSelector: string | ((qb: OralRadiologyModelSelector) => OralRadiologyModelSelector) = oralRadiologyModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -2705,6 +2628,21 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     mutateDeleteUser(variables: { filter: UserFilter }, resultSelector: string | ((qb: DeleteUserPayloadModelSelector) => DeleteUserPayloadModelSelector) = deleteUserPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ deleteUser: DeleteUserPayloadModelType }>(`mutation deleteUser($filter: UserFilter!) { deleteUser(filter: $filter) {
         ${typeof resultSelector === "function" ? resultSelector(new DeleteUserPayloadModelSelector()).toString() : resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
+    mutateAddCaseLog(variables: { input: AddCaseLogInput[] }, resultSelector: string | ((qb: AddCaseLogPayloadModelSelector) => AddCaseLogPayloadModelSelector) = addCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
+      return self.mutate<{ addCaseLog: AddCaseLogPayloadModelType }>(`mutation addCaseLog($input: [AddCaseLogInput!]!) { addCaseLog(input: $input) {
+        ${typeof resultSelector === "function" ? resultSelector(new AddCaseLogPayloadModelSelector()).toString() : resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
+    mutateUpdateCaseLog(variables: { input: UpdateCaseLogInput }, resultSelector: string | ((qb: UpdateCaseLogPayloadModelSelector) => UpdateCaseLogPayloadModelSelector) = updateCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
+      return self.mutate<{ updateCaseLog: UpdateCaseLogPayloadModelType }>(`mutation updateCaseLog($input: UpdateCaseLogInput!) { updateCaseLog(input: $input) {
+        ${typeof resultSelector === "function" ? resultSelector(new UpdateCaseLogPayloadModelSelector()).toString() : resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
+    mutateDeleteCaseLog(variables: { filter: CaseLogFilter }, resultSelector: string | ((qb: DeleteCaseLogPayloadModelSelector) => DeleteCaseLogPayloadModelSelector) = deleteCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
+      return self.mutate<{ deleteCaseLog: DeleteCaseLogPayloadModelType }>(`mutation deleteCaseLog($filter: CaseLogFilter!) { deleteCaseLog(filter: $filter) {
+        ${typeof resultSelector === "function" ? resultSelector(new DeleteCaseLogPayloadModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateAddUserFeedback(variables: { input: AddUserFeedbackInput[] }, resultSelector: string | ((qb: AddUserFeedbackPayloadModelSelector) => AddUserFeedbackPayloadModelSelector) = addUserFeedbackPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
@@ -2917,19 +2855,19 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new DeleteOrthopaedicsProcedureLogPayloadModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateAddOralMedicineAndRadiologyCaseLog(variables: { input: AddOralMedicineAndRadiologyCaseLogInput[] }, resultSelector: string | ((qb: AddOralMedicineAndRadiologyCaseLogPayloadModelSelector) => AddOralMedicineAndRadiologyCaseLogPayloadModelSelector) = addOralMedicineAndRadiologyCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ addOralMedicineAndRadiologyCaseLog: AddOralMedicineAndRadiologyCaseLogPayloadModelType }>(`mutation addOralMedicineAndRadiologyCaseLog($input: [AddOralMedicineAndRadiologyCaseLogInput!]!) { addOralMedicineAndRadiologyCaseLog(input: $input) {
-        ${typeof resultSelector === "function" ? resultSelector(new AddOralMedicineAndRadiologyCaseLogPayloadModelSelector()).toString() : resultSelector}
+    mutateAddOralMedicineCaseLog(variables: { input: AddOralMedicineCaseLogInput[] }, resultSelector: string | ((qb: AddOralMedicineCaseLogPayloadModelSelector) => AddOralMedicineCaseLogPayloadModelSelector) = addOralMedicineCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
+      return self.mutate<{ addOralMedicineCaseLog: AddOralMedicineCaseLogPayloadModelType }>(`mutation addOralMedicineCaseLog($input: [AddOralMedicineCaseLogInput!]!) { addOralMedicineCaseLog(input: $input) {
+        ${typeof resultSelector === "function" ? resultSelector(new AddOralMedicineCaseLogPayloadModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateUpdateOralMedicineAndRadiologyCaseLog(variables: { input: UpdateOralMedicineAndRadiologyCaseLogInput }, resultSelector: string | ((qb: UpdateOralMedicineAndRadiologyCaseLogPayloadModelSelector) => UpdateOralMedicineAndRadiologyCaseLogPayloadModelSelector) = updateOralMedicineAndRadiologyCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ updateOralMedicineAndRadiologyCaseLog: UpdateOralMedicineAndRadiologyCaseLogPayloadModelType }>(`mutation updateOralMedicineAndRadiologyCaseLog($input: UpdateOralMedicineAndRadiologyCaseLogInput!) { updateOralMedicineAndRadiologyCaseLog(input: $input) {
-        ${typeof resultSelector === "function" ? resultSelector(new UpdateOralMedicineAndRadiologyCaseLogPayloadModelSelector()).toString() : resultSelector}
+    mutateUpdateOralMedicineCaseLog(variables: { input: UpdateOralMedicineCaseLogInput }, resultSelector: string | ((qb: UpdateOralMedicineCaseLogPayloadModelSelector) => UpdateOralMedicineCaseLogPayloadModelSelector) = updateOralMedicineCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
+      return self.mutate<{ updateOralMedicineCaseLog: UpdateOralMedicineCaseLogPayloadModelType }>(`mutation updateOralMedicineCaseLog($input: UpdateOralMedicineCaseLogInput!) { updateOralMedicineCaseLog(input: $input) {
+        ${typeof resultSelector === "function" ? resultSelector(new UpdateOralMedicineCaseLogPayloadModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateDeleteOralMedicineAndRadiologyCaseLog(variables: { filter: OralMedicineAndRadiologyCaseLogFilter }, resultSelector: string | ((qb: DeleteOralMedicineAndRadiologyCaseLogPayloadModelSelector) => DeleteOralMedicineAndRadiologyCaseLogPayloadModelSelector) = deleteOralMedicineAndRadiologyCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ deleteOralMedicineAndRadiologyCaseLog: DeleteOralMedicineAndRadiologyCaseLogPayloadModelType }>(`mutation deleteOralMedicineAndRadiologyCaseLog($filter: OralMedicineAndRadiologyCaseLogFilter!) { deleteOralMedicineAndRadiologyCaseLog(filter: $filter) {
-        ${typeof resultSelector === "function" ? resultSelector(new DeleteOralMedicineAndRadiologyCaseLogPayloadModelSelector()).toString() : resultSelector}
+    mutateDeleteOralMedicineCaseLog(variables: { filter: OralMedicineCaseLogFilter }, resultSelector: string | ((qb: DeleteOralMedicineCaseLogPayloadModelSelector) => DeleteOralMedicineCaseLogPayloadModelSelector) = deleteOralMedicineCaseLogPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {
+      return self.mutate<{ deleteOralMedicineCaseLog: DeleteOralMedicineCaseLogPayloadModelType }>(`mutation deleteOralMedicineCaseLog($filter: OralMedicineCaseLogFilter!) { deleteOralMedicineCaseLog(filter: $filter) {
+        ${typeof resultSelector === "function" ? resultSelector(new DeleteOralMedicineCaseLogPayloadModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateAddOralRadiology(variables: { input: AddOralRadiologyInput[] }, resultSelector: string | ((qb: AddOralRadiologyPayloadModelSelector) => AddOralRadiologyPayloadModelSelector) = addOralRadiologyPayloadModelPrimitives.toString(), optimisticUpdate?: () => void) {

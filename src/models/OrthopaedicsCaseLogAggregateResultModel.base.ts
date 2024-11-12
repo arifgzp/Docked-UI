@@ -23,22 +23,14 @@ export const OrthopaedicsCaseLogAggregateResultModelBase = ModelBase
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
     dateMin: types.union(types.undefined, types.null, types.frozen()),
     dateMax: types.union(types.undefined, types.null, types.frozen()),
-    hospitalMin: types.union(types.undefined, types.null, types.string),
-    hospitalMax: types.union(types.undefined, types.null, types.string),
-    facultyMin: types.union(types.undefined, types.null, types.string),
-    facultyMax: types.union(types.undefined, types.null, types.string),
     patientAgeMin: types.union(types.undefined, types.null, types.string),
     patientAgeMax: types.union(types.undefined, types.null, types.string),
     patientSexMin: types.union(types.undefined, types.null, types.string),
     patientSexMax: types.union(types.undefined, types.null, types.string),
-    rotationMin: types.union(types.undefined, types.null, types.string),
-    rotationMax: types.union(types.undefined, types.null, types.string),
     conductMin: types.union(types.undefined, types.null, types.string),
     conductMax: types.union(types.undefined, types.null, types.string),
     diagnosisMin: types.union(types.undefined, types.null, types.string),
     diagnosisMax: types.union(types.undefined, types.null, types.string),
-    caseTypeMin: types.union(types.undefined, types.null, types.string),
-    caseTypeMax: types.union(types.undefined, types.null, types.string),
     remarksMin: types.union(types.undefined, types.null, types.string),
     remarksMax: types.union(types.undefined, types.null, types.string),
   })
@@ -56,22 +48,14 @@ export class OrthopaedicsCaseLogAggregateResultModelSelector extends QueryBuilde
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
   get dateMin() { return this.__attr(`dateMin`) }
   get dateMax() { return this.__attr(`dateMax`) }
-  get hospitalMin() { return this.__attr(`hospitalMin`) }
-  get hospitalMax() { return this.__attr(`hospitalMax`) }
-  get facultyMin() { return this.__attr(`facultyMin`) }
-  get facultyMax() { return this.__attr(`facultyMax`) }
   get patientAgeMin() { return this.__attr(`patientAgeMin`) }
   get patientAgeMax() { return this.__attr(`patientAgeMax`) }
   get patientSexMin() { return this.__attr(`patientSexMin`) }
   get patientSexMax() { return this.__attr(`patientSexMax`) }
-  get rotationMin() { return this.__attr(`rotationMin`) }
-  get rotationMax() { return this.__attr(`rotationMax`) }
   get conductMin() { return this.__attr(`conductMin`) }
   get conductMax() { return this.__attr(`conductMax`) }
   get diagnosisMin() { return this.__attr(`diagnosisMin`) }
   get diagnosisMax() { return this.__attr(`diagnosisMax`) }
-  get caseTypeMin() { return this.__attr(`caseTypeMin`) }
-  get caseTypeMax() { return this.__attr(`caseTypeMax`) }
   get remarksMin() { return this.__attr(`remarksMin`) }
   get remarksMax() { return this.__attr(`remarksMax`) }
 }
@@ -79,4 +63,4 @@ export function selectFromOrthopaedicsCaseLogAggregateResult() {
   return new OrthopaedicsCaseLogAggregateResultModelSelector()
 }
 
-export const orthopaedicsCaseLogAggregateResultModelPrimitives = selectFromOrthopaedicsCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.rotationMin.rotationMax.conductMin.conductMax.diagnosisMin.diagnosisMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax
+export const orthopaedicsCaseLogAggregateResultModelPrimitives = selectFromOrthopaedicsCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.conductMin.conductMax.diagnosisMin.diagnosisMax.remarksMin.remarksMax

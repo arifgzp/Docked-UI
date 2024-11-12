@@ -18,5 +18,4 @@ export const OralRadiologyModel = OralRadiologyModelBase.actions((self) => ({
 }));
 
 export const updateOralRadiologyPayloadModelSelector =
-	selectFromOralRadiology().createdOn.updatedOn.date.hospital.faculty.complete.patientAge.patientSex.rotation.procedure.report.diagnosis
-		.chiefComplaint.caseType.remarks;
+	selectFromOralRadiology().createdOn.updatedOn.date.patientAge.patientSex.procedure.report.diagnosis.chiefComplaint.remarks;

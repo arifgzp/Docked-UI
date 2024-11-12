@@ -11,15 +11,11 @@ export enum AnaesthesiaChronicPainLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-rotation="rotation",
-hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
 diagnosis="diagnosis",
 indication="indication",
 conduct="conduct",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -30,14 +26,10 @@ export const AnaesthesiaChronicPainLogOrderableEnumType = types.enumeration("Ana
         "createdOn",
   "updatedOn",
   "date",
-  "rotation",
-  "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
   "diagnosis",
   "indication",
   "conduct",
-  "caseType",
   "remarks",
       ])

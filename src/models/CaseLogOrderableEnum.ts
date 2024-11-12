@@ -10,10 +10,10 @@ import { types } from "mobx-state-tree"
 export enum CaseLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
-date="date",
-hospital="hospital",
-faculty="faculty",
-medicalRegistrationNumber="medicalRegistrationNumber"
+logType="logType",
+rejectionMessage="rejectionMessage",
+rotation="rotation",
+hospital="hospital"
 }
 
 /**
@@ -22,8 +22,8 @@ medicalRegistrationNumber="medicalRegistrationNumber"
 export const CaseLogOrderableEnumType = types.enumeration("CaseLogOrderable", [
         "createdOn",
   "updatedOn",
-  "date",
+  "logType",
+  "rejectionMessage",
+  "rotation",
   "hospital",
-  "faculty",
-  "medicalRegistrationNumber",
       ])

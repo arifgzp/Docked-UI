@@ -20,10 +20,6 @@ export const AnaesthesiaCaseLogModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
-    rotation: types.union(types.undefined, types.null, types.string),
-    hospital: types.union(types.undefined, types.null, types.string),
-    faculty: types.union(types.undefined, types.null, types.string),
-    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
     weight: types.union(types.undefined, types.null, types.string),
@@ -38,7 +34,6 @@ export const AnaesthesiaCaseLogModelBase = ModelBase
     comorbidity: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     examination: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     laboratoryFindings: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    medicalRegistrationNumber: types.union(types.undefined, types.null, types.string),
     typeOfAnaesthesia: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     drugs: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     airManagement: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
@@ -47,7 +42,6 @@ export const AnaesthesiaCaseLogModelBase = ModelBase
     monitoring: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     complications: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     outcome: types.union(types.undefined, types.null, types.string),
-    caseType: types.union(types.undefined, types.null, types.string),
     remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
@@ -61,10 +55,6 @@ export class AnaesthesiaCaseLogModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
-  get rotation() { return this.__attr(`rotation`) }
-  get hospital() { return this.__attr(`hospital`) }
-  get faculty() { return this.__attr(`faculty`) }
-  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
   get weight() { return this.__attr(`weight`) }
@@ -79,7 +69,6 @@ export class AnaesthesiaCaseLogModelSelector extends QueryBuilder {
   get comorbidity() { return this.__attr(`comorbidity`) }
   get examination() { return this.__attr(`examination`) }
   get laboratoryFindings() { return this.__attr(`laboratoryFindings`) }
-  get medicalRegistrationNumber() { return this.__attr(`medicalRegistrationNumber`) }
   get typeOfAnaesthesia() { return this.__attr(`typeOfAnaesthesia`) }
   get drugs() { return this.__attr(`drugs`) }
   get airManagement() { return this.__attr(`airManagement`) }
@@ -88,11 +77,10 @@ export class AnaesthesiaCaseLogModelSelector extends QueryBuilder {
   get monitoring() { return this.__attr(`monitoring`) }
   get complications() { return this.__attr(`complications`) }
   get outcome() { return this.__attr(`outcome`) }
-  get caseType() { return this.__attr(`caseType`) }
   get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromAnaesthesiaCaseLog() {
   return new AnaesthesiaCaseLogModelSelector()
 }
 
-export const anaesthesiaCaseLogModelPrimitives = selectFromAnaesthesiaCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.complete.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality.asaGrade.typeOfSurgery.npo.conduct.comorbidity.examination.laboratoryFindings.medicalRegistrationNumber.typeOfAnaesthesia.drugs.airManagement.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.caseType.remarks
+export const anaesthesiaCaseLogModelPrimitives = selectFromAnaesthesiaCaseLog().createdOn.updatedOn.date.patientAge.patientSex.weight.height.diagnosis.surgicalProcedure.speciality.asaGrade.typeOfSurgery.npo.conduct.comorbidity.examination.laboratoryFindings.typeOfAnaesthesia.drugs.airManagement.regionalTechniques.interventionalProcedures.monitoring.complications.outcome.remarks

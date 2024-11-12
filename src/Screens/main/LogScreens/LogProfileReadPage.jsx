@@ -197,63 +197,35 @@ const LogProfileReadPage = ({ navigation, route }) => {
 	useEffect(() => {
 		const fetchLogProfile = async () => {
 			try {
-				const logProfileData = toJS(AppStore.UserLogProfile);
-				console.log("logProfileData", logProfileData);
-				if (logProfileData) {
-					const hospitalList = logProfileData.hospitals.map((hospital) => {
+				const query = store.fetchUserLogProfile(AppStore.UserName);
+				setQuery(query);
+				const finishFetchingLogProfile = await query;
+				if (finishFetchingLogProfile) {
+					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					const hospitalList = userData.logProfile.hospitals.map((hospital) => {
 						delete hospital.id;
 						delete hospital.__typename;
 						return hospital;
 					});
-					const facultiesList = logProfileData.faculties.map((faculty) => {
+					const facultiesList = userData.logProfile.faculties.map((faculty) => {
 						delete faculty.id;
 						delete faculty.__typename;
 						return faculty;
 					});
-					const rotationsList = logProfileData.rotations.map((rotation) => {
+					const rotationsList = userData.logProfile.rotations.map((rotation) => {
 						delete rotation.id;
 						delete rotation.__typename;
 						return rotation;
 					});
 					reset({
-						hospital: logProfileData.hospital,
-						department: logProfileData.rotations[0]?.department ? logProfileData.rotations[0]?.department : null,
-						rotations: logProfileData.rotations[0],
+						hospital: userData.logProfile.hospital,
+						from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
+						to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
 					});
+					console.log("facultiesList", facultiesList);
 					setHospitalList(hospitalList);
 					setFacultyList(facultiesList);
 					setRotationList(rotationsList);
-				} else {
-					const query = store.fetchUserLogProfile(AppStore.UserName);
-					setQuery(query);
-					const finishFetchingLogProfile = await query;
-					if (finishFetchingLogProfile) {
-						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-						const hospitalList = userData.logProfile.hospitals.map((hospital) => {
-							delete hospital.id;
-							delete hospital.__typename;
-							return hospital;
-						});
-						const facultiesList = userData.logProfile.faculties.map((faculty) => {
-							delete faculty.id;
-							delete faculty.__typename;
-							return faculty;
-						});
-						const rotationsList = userData.logProfile.rotations.map((rotation) => {
-							delete rotation.id;
-							delete rotation.__typename;
-							return rotation;
-						});
-						reset({
-							hospital: userData.logProfile.hospital,
-							from: new Date(userData.logProfile.rotations[0]?.from || new Date()),
-							to: new Date(userData.logProfile.rotations[0]?.to || new Date()),
-						});
-						console.log("facultiesList", facultiesList);
-						setHospitalList(hospitalList);
-						setFacultyList(facultiesList);
-						setRotationList(rotationsList);
-					}
 				}
 			} catch (error) {
 				console.log(error);
@@ -318,22 +290,16 @@ const LogProfileReadPage = ({ navigation, route }) => {
 												<VStack>
 													<VStack>
 														<Text fontFamily='Inter_SemiBold' fontSize={14} alignSelf='flex-start' color='#0F0F10'>
-															Dr. {faculty.firstName} {faculty.lastName}
+															Dr. {faculty?.user?.name}
 														</Text>
 														<Text size='xs' color='#4D5356'>
-															{faculty.designation === "Others" ? faculty.otherDesignation : faculty.designation}
+															{faculty?.user?.designation === "Others" ? faculty?.user?.otherDesignation : faculty?.user?.designation}
 														</Text>
 													</VStack>
 													<HStack py='$1'>
-														<Text size='xs'>+91 {faculty.phoneNumber}</Text>
+														<Text size='xs'>+91 {faculty?.user?.phoneNumber}</Text>
 													</HStack>
 												</VStack>
-												<HStack space='xs' alignItems='center' alignSelf='flex-start'>
-													<Box width={15} height={15} borderRadius='$full' backgroundColor='#CC3F0C'></Box>
-													<Text color='#CC3F0C' size='xs'>
-														To be Verified
-													</Text>
-												</HStack>
 											</HStack>
 										);
 									})

@@ -111,12 +111,9 @@ const SpecialCaseLogSelectOptions = ({
 
 	const handleOnSave = useCallback(
 		(selectedNodes) => {
-			console.log("is this the data I am getting from the treeview component?", selectedNodes);
-			//console.log("MUDIT+++>", parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 			setValue(activeTreeSelector, parserToConvertTreeFromIntoDataBaseForm(selectedNodes, activeTreeSelector)[activeTreeSelector]);
 			setShowTreeView(false);
 			setActiveTreeNode("");
-			//setActiveTreeSelectorValue({ ...activeTreeSelectorValue, [activeTreeSelector]: selectedNodes });
 			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [activeTreeSelector]: selectedNodes }));
 		},
 		[activeTreeSelector]
@@ -165,20 +162,20 @@ const SpecialCaseLogSelectOptions = ({
 	};
 
 	useEffect(() => {
-		console.log("SpecialCaseLogSelectOptions useEffect");
+		//console.log("SpecialCaseLogSelectOptions useEffect");
 		specialOptions.forEach((option) => {
 			const data = caseLogData[option.id];
 			const treeSelectorValue_Formatted = parserForConvertingIntoTreeFormData(data, getTreeConfigData(option.id));
-			console.log("SpecialCaseLogSelectOptions >> treeSelectorValue_Formatted", treeSelectorValue_Formatted);
+			//console.log("SpecialCaseLogSelectOptions >> treeSelectorValue_Formatted", treeSelectorValue_Formatted);
 			setActiveTreeSelectorValue((prevState) => ({ ...prevState, [option.id]: treeSelectorValue_Formatted }));
 		});
 	}, [caseLogData, specialOptions]);
 
-	console.log("SpecialCaseLogSelectOptions >> caseLogData", caseLogData);
+	//console.log("SpecialCaseLogSelectOptions >> caseLogData", caseLogData);
 	return (
 		<VStack alignItems='center' gap='$4' px='$4'>
 			{specialOptions.map((option) => {
-				console.log(activeTreeSelectorValue[option.id]);
+				//console.log(activeTreeSelectorValue[option.id]);
 				if (!isEmpty(activeTreeSelectorValue[option.id])) {
 					return (
 						<VStack key={option.id} bg='#E6E3DB' borderRadius={25} w={"$full"}>

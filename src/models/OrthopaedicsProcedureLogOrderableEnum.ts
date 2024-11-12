@@ -11,11 +11,8 @@ export enum OrthopaedicsProcedureLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
-rotation="rotation",
 conduct="conduct",
 sites="sites",
 procedureName="procedureName",
@@ -25,7 +22,6 @@ outcome="outcome",
 outcomeOther="outcomeOther",
 complication="complication",
 diagnosis="diagnosis",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -36,11 +32,8 @@ export const OrthopaedicsProcedureLogOrderableEnumType = types.enumeration("Orth
         "createdOn",
   "updatedOn",
   "date",
-  "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
-  "rotation",
   "conduct",
   "sites",
   "procedureName",
@@ -50,6 +43,5 @@ export const OrthopaedicsProcedureLogOrderableEnumType = types.enumeration("Orth
   "outcomeOther",
   "complication",
   "diagnosis",
-  "caseType",
   "remarks",
       ])

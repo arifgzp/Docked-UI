@@ -45,7 +45,6 @@ function noop() {}
 
 const BranchNode = observer((props) => {
 	const { node, level, selectionBreadcrumbKey, expandedNodeKeys, onNodePress } = props;
-	console.log("BranchNode Render .............. | ", node.name);
 
 	const nodeId = node["id"];
 	const isExpanded = expandedNodeKeys[nodeId];
@@ -83,14 +82,12 @@ const BranchNode = observer((props) => {
 
 const LeafNode = observer((props) => {
 	const { node, selectType, level, selectedNodeKeys, selectionBreadcrumbKey, onNodePress, onSelectNode } = props;
-	console.log("LeafNode Render .............. | ", node.name);
 
 	const handleOnChange = (event) => {
 		const value = event.nativeEvent.text;
 		const selectedValues = selectedNodeKeys[selectionBreadcrumbKey] || [];
 		const updatedValues = selectedValues.filter((v) => !v.includes(node.id));
 		updatedValues.push(`${node.id}#V#${value}${node.unit ? `#V#${node.unit}` : ""}`);
-		console.log("updatedValues", updatedValues);
 		onSelectNode(selectionBreadcrumbKey, updatedValues);
 		event.stopPropagation();
 	};
@@ -99,7 +96,6 @@ const LeafNode = observer((props) => {
 		case "multiple":
 			switch (node.inputType) {
 				case "text":
-					console.log("selectedNodeKeys >> Render", selectedNodeKeys);
 					const selectedValues = selectedNodeKeys[selectionBreadcrumbKey];
 					const textValue = find(selectedValues, (value) => value?.includes(node.id));
 					const value = textValue ? textValue.split("#V#")[1] : "";
@@ -154,8 +150,6 @@ const ChildrenWrapper = observer((props) => {
 		return null;
 	}
 
-	console.log("ChildrenWrapper Render ..............");
-
 	switch (selectType) {
 		case "multiple":
 			const checkBoxValues = selectedNodeKeys[selectionBreadcrumbKey] || [];
@@ -185,8 +179,6 @@ const ChildrenWrapper = observer((props) => {
 });
 
 const TreeNode = observer((props) => {
-	console.log("TreeNode Render ..............");
-	//console.log("Tree View", nodes);
 	const {
 		nodes,
 		level,
@@ -231,7 +223,7 @@ class TreeView extends React.Component {
 
 	constructor(props) {
 		super(props);
-		console.log("Tree View Create ..............");
+
 		makeObservable(this, {
 			expandedNodeKeys: observable,
 			selectedNodeKeys: observable,
@@ -249,14 +241,12 @@ class TreeView extends React.Component {
 
 	setInitialState = (isReset = false) => {
 		let defaultExpandedNodeKeys = { [this.props.activeTreeSelector]: true };
-		console.log("getInitialState >>>>> initialActiveNode >> ", this.props.initialActiveNode);
+
 		if (!isReset && this.props.initialActiveNode) {
 			forEach(this.props.initialActiveNode.split("/"), (nodeId) => {
 				defaultExpandedNodeKeys[nodeId] = true;
-				console.log("getInitialState >>>>> for >> defaultExpandedNodeKeys >> ", defaultExpandedNodeKeys);
 			});
 		}
-		console.log("getInitialState >>>>> defaultExpandedNodeKeys >> ", defaultExpandedNodeKeys);
 		this.expandedNodeKeys = defaultExpandedNodeKeys;
 		this.selectedNodeKeys = this.props.initialData || {};
 		this.showModal = this.props.showTreeView;
@@ -281,18 +271,14 @@ class TreeView extends React.Component {
 	expandNode = (id) => this.updateNodeKeyById(id, true);
 
 	selectNode = (id, value) => {
-		console.log(">>>>>>>>>>>>  selectNode ", id, value);
 		this.selectedNodeKeys[id] = value;
 	};
 
 	clearNodeSelection = (id) => {
-		//console.log(">>>>>>>>>>>>  clearNodeSelection id to be deleted", id);
-		//console.log(">>>>>>>>>>>>  clearNodeSelection state ", this.state.selectedNodeKeys);
 		delete this.selectedNodeKeys[id];
 	};
 
 	toggleCollapse = (id) => {
-		//console.log(">>>>>>>>>>>>   toggleCollapse ", id);
 		const method = this.isExpanded(id) ? "collapseNode" : "expandNode";
 		this[method](id);
 	};
@@ -302,8 +288,6 @@ class TreeView extends React.Component {
 		if (node.type === "leaf") {
 			nodePressResult = false;
 		}
-		console.log("handleNodePressed**********************************", nodePressResult);
-
 		if (nodePressResult !== false && this.hasChildrenNodes(node)) {
 			this.toggleCollapse(node["id"]);
 		}
@@ -314,8 +298,6 @@ class TreeView extends React.Component {
 	};
 
 	closeModal = () => {
-		//this.setState({ showModal: false });
-		//console.log("closeModal >>>>>>>>>>>>>>>>>", this.state.expandedNodeKeys);
 		this.props.onCancel();
 		this.resetState();
 	};
@@ -330,11 +312,9 @@ class TreeView extends React.Component {
 	};
 
 	componentDidUpdate(prevProps) {
-		//console.log("componentDidUpdate >>> ", this.state);
 		const hasDataUpdated = prevProps.data !== this.props.data;
 		const hasActiveTreeSelectorUpdated = prevProps.activeTreeSelector !== this.props.activeTreeSelector;
 		if (hasDataUpdated || hasActiveTreeSelectorUpdated) {
-			//console.log("componentDidUpdate >>> reset !!!!!!!!!!!!!!!!");
 			this.setInitialState();
 		}
 
@@ -344,8 +324,6 @@ class TreeView extends React.Component {
 	}
 
 	render() {
-		//console.log(this.props);
-		console.log("Tree View Render ..............");
 		const rootNode = this.props.data[0];
 
 		return (

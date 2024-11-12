@@ -22,5 +22,5 @@ export const OralMedicineAndRadiologyCaseLogModel = OralMedicineAndRadiologyCase
 }));
 
 export const updateOralMedicineAndRadiologyCaseLogPayloadModelSelector =
-	selectFromOralMedicineAndRadiologyCaseLog().createdOn.updatedOn.date.hospital.faculty.complete.patientAge.patientSex.rotation.procedure
-		.comorbidities.lesion.drugAllergyReaction.habitHistory.treatment.diagnosis.caseType.remarks;
+	selectFromOralMedicineAndRadiologyCaseLog().createdOn.updatedOn.date.patientAge.patientSex.procedure.comorbidities.lesion.drugAllergyReaction
+		.habitHistory.treatment.diagnosis.remarks;

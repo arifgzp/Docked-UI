@@ -14,6 +14,10 @@ import {
 	ScrollView,
 	Text,
 	VStack,
+	Center,
+	Divider,
+	Textarea,
+	TextareaInput,
 } from "@gluestack-ui/themed";
 import { format, subDays, subMonths, subYears, isWithinInterval } from "date-fns";
 import DatePicker from "react-native-date-picker";
@@ -69,6 +73,7 @@ import {
 	SelectItem,
 } from "@gluestack-ui/themed";
 import { ChevronDownIcon } from "@gluestack-ui/themed";
+import appStoreInstance from "../../../../../stores/AppStore";
 
 const CaseLogTab = () => {
 	const isReady = useIsReady();
@@ -79,6 +84,12 @@ const CaseLogTab = () => {
 	//const [cardDetails, setCardDetails] = useState([]);
 	const navigation = useNavigation();
 	const [showModal, setShowModal] = useState(false);
+	const [showApprovalModal, setShowApprovalModal] = useState(false);
+	const [showApproveModal, setShowApproveModal] = useState(false);
+	const [showRejectModal, setShowRejectModal] = useState(false);
+	const [rejectReason, setRejectReason] = useState("");
+	const [cardToHandle, setCardToHandle] = useState(null);
+	const [selectedCard, setSelectedCard] = useState(null);
 	const ref = useRef(null);
 	const [caseLogToBeDeleted, setCaseLogToBeDeleted] = useState();
 	const [cardToRender, setCardToRender] = useState();
@@ -145,10 +156,10 @@ const CaseLogTab = () => {
 		setSelectedDateFilter("Custom range");
 	}, []);
 
-	const handleButtonPress = useCallback(
-		(button, id, caseType) => {
+	const handleEditButtonPress = useCallback(
+		(button, id, logType, logTypeID) => {
 			if (button === "CaseLogEditScreen") {
-				navigation.navigate("CaseLogEditScreen", { id, caseType });
+				navigation.navigate("CaseLogEditScreen", { id, logType, logTypeID });
 			}
 		},
 		[navigation]
@@ -159,7 +170,6 @@ const CaseLogTab = () => {
 		forEach(configData, (config) => {
 			if (config.id == key) {
 				label = config.name;
-				//console.log("!!!!! Match Found ", label);
 				return false;
 			} else if (config.children) {
 				label = getTreeNodeLabel(key, config.children);
@@ -168,110 +178,110 @@ const CaseLogTab = () => {
 				}
 			}
 		});
-		//console.log("Finakl LAbel >>>>> ", label);
 		return label;
 	};
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const fetchAnaesthesiaData = async () => {
-					const fetchQuery1 = store.fetchAnaesthesiaCaseLogByUser(AppStore.UserName);
-					setQuery(fetchQuery1);
-					await fetchQuery1;
-
-					const fetchQuery2 = store.fetchAnaesthesiaChronicPainLogByUser(AppStore.UserName);
-					setQuery(fetchQuery2);
-					await fetchQuery2;
-
-					const fetchQuery3 = store.fetchAnaesthesiaCriticalCareCaseLogByUser(AppStore.UserName);
-					setQuery(fetchQuery3);
-					await fetchQuery3;
-				};
-
-				switch (AppStore.UserBroadSpecialty) {
-					case "Orthodontics":
-						const fetchQuery5 = store.fetchOrthodonticsClinicalCaseLogByUser(AppStore.UserName);
-						setQuery(fetchQuery5);
-						await fetchQuery5;
-
-						const fetchQuery7 = store.fetchOrthodonticsPreClinicalByUser(AppStore.UserName);
-						setQuery(fetchQuery7);
-						await fetchQuery7;
-						break;
-
-					case "Orthopaedics":
-						const fetchQuery4 = store.fetchOrthopaedicsCaseLogByUser(AppStore.UserName);
-						setQuery(fetchQuery4);
-						await fetchQuery4;
-
-						const fetchQuery6 = store.fetchOrthopaedicsProcedureLogUser(AppStore.UserName);
-						setQuery(fetchQuery6);
-						await fetchQuery6;
-
-						break;
-
-					case "OralMedicineAndRadiology":
-						const fetchQuery9 = store.fetchOralMedicineAndRadiologyCaseLogByUser(AppStore.UserName);
-						setQuery(fetchQuery9);
-						await fetchQuery9;
-
-						const fetchQuery8 = store.fetchOralRadiologyByUser(AppStore.UserName);
-						setQuery(fetchQuery8);
-						await fetchQuery8;
-
-						break;
-					default:
-						await fetchAnaesthesiaData();
-				}
-			} catch (error) {
-				console.log(error);
-			}
+		const fetchCaseLogData = async () => {
+			store.clearCaseLogList();
+			const fetchCaseLogQuery = store.fetchCaseLogsByUser(AppStore.UserName);
+			setQuery(fetchCaseLogQuery);
+			await fetchCaseLogQuery;
 		};
 
 		if (isFocused) {
-			const timer = setTimeout(() => {
-				fetchData();
-			}, 500);
-
-			return () => clearTimeout(timer); // Cleanup to prevent memory leaks if component unmounts
+			fetchCaseLogData();
 		}
-	}, [AppStore.UserBroadSpecialty, isFocused]);
+	}, []);
 
 	const handleDeleteCaseLog = useCallback((card) => {
 		setShowModal(true);
+		console.log("now this is the that is going to be deleted,", card);
 		setCaseLogToBeDeleted(card);
 	}, []);
 
 	const handleOnConfirmDeleteCaseLog = async () => {
-		try {
-			let typename = caseLogToBeDeleted.__typename;
-			let modifiedTypename = typename.charAt(0).toLowerCase() + typename.slice(1);
-			console.log("modifiedTypename", modifiedTypename);
-			setShowModal(false);
-			const updateUserQuery = store.updateUser(AppStore.UserId, { remove: { [modifiedTypename]: { id: caseLogToBeDeleted.id } } });
-			setQuery(updateUserQuery);
-			const data = await updateUserQuery;
-			if (data) {
-				AppStore.setLogProfile(data.updateUser.user[0].logProfile);
-				const rootStoreAPIName = `delete${caseLogToBeDeleted.__typename}`;
-				const rootStoreAPIRef = store[rootStoreAPIName];
-				if (!rootStoreAPIRef) {
-					const message = `please check rootStoreAPIRef. not found in root store trying to find=>message ${rootStoreAPIName}`;
-					console.error(message);
-					throw new Error(message);
-				}
-				let query = rootStoreAPIRef([caseLogToBeDeleted.id]);
-				if (query) {
-					console.log("Query from query delete with caseLogToBeDeleted ID", caseLogToBeDeleted.id, query);
-					setQuery(query);
+		if (caseLogToBeDeleted.caseLogStatus !== "CREATED") {
+			return;
+		}
 
-					setCaseLogToBeDeleted(null);
-					await query;
+		switch (caseLogToBeDeleted.logType) {
+			case "CaseLog":
+				logTypeToBeRemoved = "anaesthesiaCaseLog";
+				logTypeToBeDeleted = "deleteAnaesthesiaCaseLog";
+				break;
+			case "ChronicPain":
+				logTypeToBeRemoved = "anaesthesiaChronicPainLog";
+				logTypeToBeDeleted = "deleteAnaesthesiaChronicPainLog";
+				break;
+			case "CriticalCareCaseLog":
+				logTypeToBeRemoved = "anaesthesiaCriticalCareCaseLog";
+				logTypeToBeDeleted = "deleteAnaesthesiaCriticalCareCaseLog";
+				break;
+			case "OrthopaedicsCaseLog":
+				logTypeToBeRemoved = "orthopaedicsCaseLog";
+				logTypeToBeDeleted = "deleteOrthopaedicsCaseLog";
+				break;
+			case "OrthopaedicsProcedureLog":
+				logTypeToBeRemoved = "orthopaedicsProcedureLog";
+				logTypeToBeDeleted = "deleteOrthopaedicsProcedureLog";
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				logTypeToBeRemoved = "orthodonticsClinicalCaseLog";
+				logTypeToBeDeleted = "deleteOrthodonticsClinicalCaseLog";
+				break;
+			case "OrthodonticsPreClinical":
+				logTypeToBeRemoved = "orthodonticsPreClinical";
+				logTypeToBeDeleted = "deleteOrthodonticsPreClinical";
+				break;
+			case "OralMedicineCaseLog":
+				logTypeToBeRemoved = "oralMedicineCaseLog";
+				logTypeToBeDeleted = "deleteOralMedicineCaseLog";
+				break;
+			case "OralRadiology":
+				logTypeToBeRemoved = "oralRadiology";
+				logTypeToBeDeleted = "deleteOralRadiology";
+				break;
+			default:
+				throw new Error("Invalid case log type");
+		}
+
+		try {
+			const removeLogTypeQuery = store.updateCaseLog(caseLogToBeDeleted.id, {
+				remove: { [logTypeToBeRemoved]: { id: caseLogToBeDeleted[logTypeToBeRemoved].id } },
+			});
+			setQuery(removeLogTypeQuery);
+			const removeLogTypeQueryData = await removeLogTypeQuery;
+			if (removeLogTypeQueryData) {
+				const deleteLogTypeQuery = store[logTypeToBeDeleted]([logTypeToBeRemoved].id);
+				setQuery(deleteLogTypeQuery);
+				const deleteLogTypeQueryData = await deleteLogTypeQuery;
+				if (deleteLogTypeQueryData) {
+					const updateUserQuery = store.updateUser(AppStore.UserId, { remove: { caseLogs: { id: caseLogToBeDeleted.id } } });
+					setQuery(updateUserQuery);
+					const data = await updateUserQuery;
+					if (data) {
+						const rootStoreAPIName = `deleteCaseLog`;
+						const rootStoreAPIRef = store[rootStoreAPIName];
+						if (!rootStoreAPIRef) {
+							const message = `please check rootStoreAPIRef. not found in root store trying to find=>message ${rootStoreAPIName}`;
+							console.error(message);
+							throw new Error(message);
+						}
+						let query = rootStoreAPIRef([caseLogToBeDeleted.id]);
+						if (query) {
+							console.log("Query from query delete with caseLogToBeDeleted ID", caseLogToBeDeleted.id, query);
+							setQuery(query);
+							setCaseLogToBeDeleted(null);
+							await query;
+						}
+					}
 				}
 			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setShowModal(false);
 		}
 	};
 
@@ -581,143 +591,94 @@ const CaseLogTab = () => {
 		return caseType.replace(/([A-Z])/g, " $1").trim();
 	};
 
-	const CardToRender = ({ config, card, index }) => {
-		return (
-			<Card key={card.id || index} variant='filled' m='$3' width='$100%' borderRadius='$3xl' p='$0'>
-				{card.complete === false && <Box width={12} height={12} borderRadius='$full' backgroundColor='#CC3F0C' position='absolute' />}
-				<VStack width='$100%' space='xs' pb='$3'>
-					<HStack width='$100%' pt='$3' pl='$5' pr='$1' justifyContent='space-between' alignItems='center'>
-						<VStack>
-							{card.complete === false && (
-								<Text size='xs' fontFamily='Inter_Medium' color='#CC3F0C'>
-									Incomplete
-								</Text>
-							)}
-							<HStack space='sm'>
-								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-									Date{getOfSurgeryTitle(card.caseType)}
-								</Text>
-								<Text size='xs' fontFamily='Inter_Bold' color='#000'>
-									{card.date ? format(new Date(card.date), "d/MM/yyyy") : "--"}
-								</Text>
-							</HStack>
-						</VStack>
-						<HStack alignItems='center'>
-							<Button bg='transparent' height={30} borderRadius='$full' size='xs' onPress={() => handleDeleteCaseLog(card)} ref={ref}>
-								<ButtonIcon as={Ionicons} size={20} name='trash' color='#367B71' />
-							</Button>
-							<Button
-								bg='transparent'
-								onPress={() => handleButtonPress("CaseLogEditScreen", card?.id, card?.caseType)}
-								height={30}
-								borderRadius='$full'
-								size='xs'>
-								<ButtonIcon as={Ionicons} size={20} name='create' color='#367B71' />
-							</Button>
-						</HStack>
-					</HStack>
+	const getConfigForCard = (card) => {
+		if (card.anaesthesiaCaseLog) {
+			return AnesthesiaCaseLogCardViewConfig;
+		}
 
-					{("patientAge" in card || "patientSex" in card) && (
-						<HStack pt='$2' pb='$2' space='3xl' backgroundColor='#DDDDDD'>
-							<HStack pl='$5' space='sm'>
-								<Text size='xs'>Patient Age:</Text>
-								<Text size='xs' fontFamily='Inter_Bold'>
-									{card.patientAge ? `${card.patientAge} years` : "--"}
-								</Text>
-							</HStack>
-							<HStack space='sm'>
-								<Text size='xs'>Sex:</Text>
-								<Text size='xs' fontFamily='Inter_Bold'>
-									{card.patientSex || "--"}
-								</Text>
-							</HStack>
-						</HStack>
-					)}
+		if (card.orthopaedicsProcedureLog) {
+			return OrthopaedicsProcedureLogCardViewConfig;
+		}
 
-					{config.map((item, index) => (
-						<HStack key={index} pr='$3' pl='$5' space='sm'>
-							<Text size='xs'>{item.label}:</Text>
-							{"secondValue" in item ? (
-								<Text size='xs' fontFamily='Inter_Bold'>
-									{card[item.value] ? (
-										<>
-											{card[item.value]} {item.valueUnits}
-											{card[item.secondValue] ? (
-												<>
-													{" "}
-													{card[item.secondValue]} {item.secondValueUnits}
-												</>
-											) : (
-												" --"
-											)}
-										</>
-									) : (
-										"--"
-									)}
-								</Text>
-							) : item.multipleSelectValues ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{getMultipleSelectSingleLayerValues(card, item) || "--"}
-								</Text>
-							) : item.firstParentOptionToDisplay ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{firstParentOptionToDisplay(card, item) || "--"}
-								</Text>
-							) : item.onlySpecificOptionsForAnesthesiaCaseLogCard ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{getonlySpecificOptionsValuesForAnesthesiaCaseLogCard(card, item) || "--"}
-								</Text>
-							) : item.parentFollowedByFirstChild ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{getParentFollowedByFirstChild(card, item) || "--"}
-								</Text>
-							) : item.parentofSelectedValues ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{getParentofSelectedValues(card, item) || "--"}
-								</Text>
-							) : item.preciseValuesForOralMedicineCaseLogProcedure ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{getPreciseValuesForOralMedicineCaseLogProcedure(card, item) || "--"}
-								</Text>
-							) : item.preciseValuesForOralRadiology ? (
-								<Text flex={1} size='xs' fontFamily='Inter_Bold'>
-									{getpreciseValuesForOralRadiology(card, item) || "--"}
-								</Text>
-							) : (
-								<Text size='xs' fontFamily='Inter_Bold'>
-									{card[item.value] || "--"}
-								</Text>
-							)}
-						</HStack>
-					))}
-					<HStack key={index} pt='$2' pr='$3' pl='$5' space='sm' justifyContent='flex-end'>
-						<Badge size='sm' variant='outline' action='muted'>
-							<BadgeText>{formatCaseType(card.caseType)}</BadgeText>
-						</Badge>
-					</HStack>
-				</VStack>
-			</Card>
-		);
+		if (card.orthopaedicsCaseLog) {
+			return OrthopaedicsCaseLogCardViewConfig;
+		}
+
+		if (card.anaesthesiaChronicPainLog) {
+			return AnesthesiaChronicPainCardLogViewConfig;
+		}
+
+		if (card.anaesthesiaCriticalCareCaseLog) {
+			return AnesthesiaCriticalCareCardLogViewConfig;
+		}
+
+		if (card.oralRadiology) {
+			return OralRadiologyCardLogViewConfig;
+		}
+
+		if (card.oralMedicineCaseLog) {
+			return OralMedicineCaseLogCardLogViewConfig;
+		}
+
+		return [];
 	};
 
-	const getConfigForCard = (card) => {
-		switch (card.__typename) {
-			case "OrthopaedicsProcedureLog":
-				return OrthopaedicsProcedureLogCardViewConfig;
-			case "OrthopaedicsCaseLog":
-				return OrthopaedicsCaseLogCardViewConfig;
-			case "AnaesthesiaCaseLog":
-				return AnesthesiaCaseLogCardViewConfig;
-			case "AnaesthesiaChronicPainLog":
-				return AnesthesiaChronicPainCardLogViewConfig;
-			case "AnaesthesiaCriticalCareCaseLog":
-				return AnesthesiaCriticalCareCardLogViewConfig;
-			case "OralRadiology":
-				return OralRadiologyCardLogViewConfig;
-			case "OralMedicineAndRadiologyCaseLog":
-				return OralMedicineCaseLogCardLogViewConfig;
-			default:
-				return [];
+	const getCard = (card) => {
+		if (card.anaesthesiaCaseLog) {
+			return card.anaesthesiaCaseLog;
+		}
+
+		if (card.orthopaedicsProcedureLog) {
+			return card.orthopaedicsProcedureLog;
+		}
+
+		if (card.orthopaedicsCaseLog) {
+			return card.orthopaedicsCaseLog;
+		}
+
+		if (card.anaesthesiaChronicPainLog) {
+			return card.anaesthesiaChronicPainLog;
+		}
+
+		if (card.anaesthesiaCriticalCareCaseLog) {
+			return card.anaesthesiaCriticalCareCaseLog;
+		}
+
+		if (card.oralRadiology) {
+			return card.oralRadiology;
+		}
+
+		if (card.oralMedicineCaseLog) {
+			return card.oralMedicineCaseLog;
+		}
+
+		return [];
+	};
+
+	const handleSubmitForApproval = (card) => {
+		setSelectedCard(card);
+		setShowApprovalModal(true);
+	};
+
+	const confirmSubmitForApproval = async () => {
+		try {
+			if (selectedCard.approver) {
+				const query = store.updateUserCaseLog(selectedCard.approver.id, {
+					set: { caseLogs: { id: selectedCard.id } },
+				});
+				setQuery(query);
+				const data = await query;
+				if (data) {
+					const caseQuery = store.updateCaseLog(selectedCard.id, { set: { caseLogStatus: "PENDING" } });
+					setQuery(caseQuery);
+					await caseQuery;
+				}
+			}
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setShowApprovalModal(false);
+			setSelectedCard(null);
 		}
 	};
 
@@ -766,120 +727,204 @@ const CaseLogTab = () => {
 			);
 		}
 	};
+	const getRandomColor = (name) => {
+		// Google Meet-like colors
+		const colors = [
+			"#1A73E8", // Blue
+			"#EA4335", // Red
+			"#34A853", // Green
+			"#FBBC05", // Yellow
+			"#8AB4F8", // Light blue
+			"#F28B82", // Light red
+			"#CCFF90", // Light green
+			"#FDD663", // Light yellow
+			"#4285F4", // Google blue
+			"#DB4437", // Google red
+			"#0F9D58", // Google green
+			"#F4B400", // Google yellow
+		];
 
-	const LogbookCard = ({ card, config, onEdit, onDelete }) => (
-		<Card bg='#E6E3DB' elevation={4} p='$0' py='$2' variant='filled' width='$96%' borderRadius='$3xl' borderWidth={1}>
-			<VStack space='xs'>
-				<VStack>
-					<HStack px='$4' justifyContent='space-between' alignItems='center'>
-						{config.slice(0, 1).map((item, index) => renderField(item, card, index))}
-						<HStack alignItems='center' justifyContent='flex-end' space='lg'>
-							<Button bg='transparent' size='md' className='rounded-full p-3.5' px='$0' onPress={() => onDelete(card)} borderRadius='$full'>
-								<ButtonIcon as={Ionicons} name='trash' color='#CC3F0C' />
-							</Button>
-							<Button
-								bg='transparent'
-								size='md'
-								className='rounded-full p-3.5'
-								px='$0'
-								onPress={() => onEdit("CaseLogEditScreen", card?.id, card?.caseType)}
-								borderRadius='$full'>
-								<ButtonIcon as={Ionicons} name='create' color='#367B71' />
-							</Button>
-						</HStack>
-					</HStack>
-					<HStack px='$4' justifyContent='space-between' alignItems='center'>
-						<HStack>
-							{config.slice(1, 3).map((item, index) => {
-								return (
-									<Text
-										key={item.label}
-										fontSize={item.isDate ? 12 : 14}
-										fontWeight={item.isDate ? "bold" : "bold"}
-										color={item.isDate ? "#979797" : "#0F0F10"}>
-										{item.isAge ? (card[item.value] ? `${card[item.value]}yrs / ` : "-- / ") : card[item.value] ? card[item.value] : "--"}
+		// Use the name string to generate a consistent index
+		const charSum = name.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+		return colors[charSum % colors.length];
+	};
+
+	const onApprove = async (card) => {
+		setCardToHandle(card);
+		setShowApproveModal(true);
+	};
+
+	const onReject = (card) => {
+		setCardToHandle(card);
+		setShowRejectModal(true);
+	};
+
+	const handleConfirmApproval = async () => {
+		try {
+			const approveQuery = store.updateCaseLog(cardToHandle.id, {
+				set: { caseLogStatus: "APPROVED" },
+			});
+			setQuery(approveQuery);
+			await approveQuery;
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setShowApproveModal(false);
+			setCardToHandle(null);
+		}
+	};
+
+	const handleConfirmReject = async () => {
+		try {
+			const rejectQuery = store.updateCaseLog(cardToHandle.id, {
+				set: {
+					caseLogStatus: "REJECTED",
+					rejectionMessage: rejectReason,
+				},
+			});
+			setQuery(rejectQuery);
+			await rejectQuery;
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setShowRejectModal(false);
+			setCardToHandle(null);
+			setRejectReason("");
+		}
+	};
+
+	const LogbookCard = ({ mainCard, card, config, onEdit, onDelete }) => {
+		return (
+			<Card
+				bg='#E6E3DB'
+				elevation={4}
+				p='$0'
+				pt='$2'
+				pb={!card.rejectionMessage && "$2"}
+				variant='filled'
+				width='$96%'
+				borderRadius='$3xl'
+				borderWidth={1}>
+				<VStack space='xs'>
+					<VStack>
+						{card.createdBy && appStoreInstance.UserRole === "FACULTY" && (
+							<Box>
+								<HStack pb='$2' px='$4' justifyContent='space-between' alignItems='center'>
+									<Center w='$8' h='$8' borderRadius='$full' borderWidth={1} borderColor='#000' bg={getRandomColor(card.createdBy.name)}>
+										<Text color='white' fontSize='$lg' fontWeight='$bold'>
+											{card.createdBy.name.charAt(0).toUpperCase()}
+										</Text>
+									</Center>
+									<Text pl='$3' flex={1} fontSize={12} color='#000' fontWeight='$bold'>
+										Dr. {card.createdBy.name}
 									</Text>
-								);
-							})}
-						</HStack>
-						{config.slice(3, 4).map((item, index) =>
-							card[item.value] ? (
-								<Box key={index} bg='#CC3F0C' px='$2' py='$1'>
-									<Text fontFamily='Inter_Bold' fontSize={10} color='#FFF'>
-										{card[item.value]}
-									</Text>
-								</Box>
-							) : (
-								<Box key={index}></Box>
-							)
+
+									{card.caseLogStatus === "PENDING" && appStoreInstance.UserRole === "FACULTY" && (
+										<HStack alignItems='center' justifyContent='flex-end' space='lg'>
+											<Button bg='transparent' size='md' className='rounded-full p-3.5' px='$0' onPress={() => onReject(card)} borderRadius='$full'>
+												<ButtonIcon size={35} as={Ionicons} name='close-circle-outline' color='#CC3F0C' />
+											</Button>
+											<Button bg='transparent' size='md' className='rounded-full p-3.5' px='$0' onPress={() => onApprove(card)} borderRadius='$full'>
+												<ButtonIcon size={35} as={Ionicons} name='checkmark-circle-outline' color='#367B71' />
+											</Button>
+										</HStack>
+									)}
+								</HStack>
+								<Divider bg='#000' />
+							</Box>
 						)}
-					</HStack>
+						<HStack pt={card.caseLogStatus === "PENDING" ? "$2" : "$0"} px='$4' justifyContent='space-between' alignItems='center'>
+							{config.slice(0, 1).map((item, index) => renderField(item, mainCard, index))}
+							{card.caseLogStatus !== "PENDING" && card.createdBy.id === appStoreInstance.UserId && (
+								<HStack alignItems='center' justifyContent='flex-end' space='lg'>
+									<Button bg='transparent' size='md' className='rounded-full p-3.5' px='$0' onPress={() => onDelete(card)} borderRadius='$full'>
+										<ButtonIcon as={Ionicons} name='trash' color='#CC3F0C' />
+									</Button>
+									<Button
+										bg='transparent'
+										size='md'
+										className='rounded-full p-3.5'
+										px='$0'
+										onPress={() => onEdit("CaseLogEditScreen", card?.id, card?.logType, mainCard.id)}
+										borderRadius='$full'>
+										<ButtonIcon as={Ionicons} name='create' color='#367B71' />
+									</Button>
+								</HStack>
+							)}
+						</HStack>
+						<HStack px='$4' justifyContent='space-between' alignItems='center'>
+							<HStack>
+								{config.slice(1, 3).map((item, index) => {
+									return (
+										<Text
+											key={item.label}
+											fontSize={item.isDate ? 12 : 14}
+											fontWeight={item.isDate ? "bold" : "bold"}
+											color={item.isDate ? "#979797" : "#0F0F10"}>
+											{item.isAge ? (card[item.value] ? `${card[item.value]}yrs / ` : "-- / ") : card[item.value] ? card[item.value] : "--"}
+										</Text>
+									);
+								})}
+							</HStack>
+							{config.slice(3, 4).map((item, index) =>
+								card[item.value] ? (
+									<Box key={index} bg='#CC3F0C' px='$2' py='$1'>
+										<Text fontFamily='Inter_Bold' fontSize={10} color='#FFF'>
+											{card[item.value]}
+										</Text>
+									</Box>
+								) : (
+									<Box key={index}></Box>
+								)
+							)}
+						</HStack>
+					</VStack>
+					<Box height={5} bg='rgba(151, 151, 151, 0.17)' width='$100%'></Box>
+					<Box pb='$1' px='$4'>
+						{config.slice(2).map((item, index) => renderField(item, mainCard, index + 2))}
+					</Box>
+					{card.complete && card.caseLogStatus === "CREATED" && card.approver && (
+						<Box px='$4'>
+							<Button
+								onPress={() => handleSubmitForApproval(card)}
+								backgroundColor='#transparent'
+								borderColor='#367B71'
+								borderWidth={1}
+								borderRadius='$full'
+								size='xs'>
+								<ButtonText color='#000'>Submit For approval</ButtonText>
+							</Button>
+						</Box>
+					)}
+					{card.rejectionMessage && (
+						<VStack space='lg' p='$4' borderBottomLeftRadius='$3xl' borderBottomRightRadius='$3xl' bg='rgba(204, 63, 12, 0.09)'>
+							<Text color='#CC3F0C' fontSize={12} fontFamily='Inter_Medium'>
+								{card.rejectionMessage}
+							</Text>
+							{appStoreInstance.UserRole === "RESIDENTS" && (
+								<Box px='$4'>
+									<Button
+										onPress={() => {
+											/* */
+										}}
+										backgroundColor='#transparent'
+										borderColor='#367B71'
+										borderWidth={1}
+										borderRadius='$full'
+										size='xs'>
+										<ButtonText color='#000'>Review Again</ButtonText>
+									</Button>
+								</Box>
+							)}
+						</VStack>
+					)}
 				</VStack>
-				<Box height={5} bg='rgba(151, 151, 151, 0.17)' width='$100%'></Box>
-				<Box pb='$1' px='$4'>
-					{config.slice(2).map((item, index) => renderField(item, card, index + 2))}
-				</Box>
-			</VStack>
-		</Card>
-	);
-
-	const MemoizedLogbookCard = React.memo(LogbookCard);
+			</Card>
+		);
+	};
 
 	let cardDetails = [];
-	switch (AppStore.UserBroadSpecialty) {
-		case "Orthodontics":
-			cardDetails.push(...store.OrthodonticsClinicalCaseLogList, ...store.OrthodonticsPreClinicalList);
-			break;
-
-		case "Orthopaedics":
-			cardDetails.push(...store.OrthopaedicsCaseLogList, ...store.OrthopaedicsProcedureLogList);
-			break;
-
-		case "OralMedicineAndRadiology":
-			cardDetails.push(...store.OralMedicineAndRadiologyCaseLogsList, ...store.OralRadiologiesList);
-			break;
-		default:
-			cardDetails.push(...store.AnaesthesiaCaseLogList, ...store.AnaesthesiaChronicPainLogList, ...store.AnaesthesiaCriticalCareCaseLogList);
-			break;
-	}
-	cardDetails = orderBy(cardDetails, ["updatedOn"], ["desc"]);
-
-	const filteredCardDetails = useMemo(() => {
-		return cardDetails.filter((card) => {
-			const passesLogTypeFilter =
-				selectedFilter === "" ||
-				selectedFilter === "All" ||
-				(() => {
-					switch (AppStore.UserBroadSpecialty) {
-						case "OralMedicineAndRadiology":
-							return selectedFilter === "Oral Medicine" ? card.caseType === "OralMedicineCaseLog" : card.caseType === "OralRadiology";
-						case "Anaesthesiology":
-							return selectedFilter === "Case Log"
-								? card.caseType === "CaseLog"
-								: selectedFilter === "Chronic Pain"
-								? card.caseType === "ChronicPain"
-								: card.caseType === "CriticalCareCaseLog";
-						case "Orthopaedics":
-							return selectedFilter === "Case Log" ? card.caseType === "OrthopaedicsCaseLog" : card.caseType === "OrthopaedicsProcedureLog";
-						case "Orthodontics":
-							return selectedFilter === "Clinical Case Log"
-								? card.caseType === "OrthodonticsClinicalCaseLog"
-								: card.caseType === "OrthodonticsPreClinical";
-						default:
-							return true;
-					}
-				})();
-
-			const passesDateFilter =
-				selectedDateFilter === "" ||
-				selectedDateFilter === "Any time" ||
-				(selectedDateFilter === "Custom range" && isCustomDateRangeActive
-					? isWithinInterval(new Date(card.date), { start: fromDate, end: toDate })
-					: new Date(card.date) < getDateThreshold(selectedDateFilter));
-
-			return passesLogTypeFilter && passesDateFilter;
-		});
-	}, [cardDetails, selectedFilter, selectedDateFilter, isCustomDateRangeActive, fromDate, toDate, AppStore.UserBroadSpecialty]);
+	cardDetails.push(...store.CaseLogsList);
 
 	if (!isReady) {
 		return <IsReadyLoader />;
@@ -955,13 +1000,19 @@ const CaseLogTab = () => {
 						)}
 					</VStack>
 					<VStack space='sm' width='$100%' alignItems='center'>
-						{filteredCardDetails.length > 0 ? (
-							filteredCardDetails.map((card) => {
+						{cardDetails.length > 0 ? (
+							cardDetails.map((card) => {
 								return (
 									<HStack key={card.id} width='$100%' alignItems='center'>
-										<Box w='$50%' position='absolute' height='$60%' bg='#367B71'></Box>
+										<Box w='$50%' position='absolute' height='$60%' bg={card.caseLogStatus === "APPROVED" ? "#367B71" : "#CC3F0C"}></Box>
 										<Box pl='$4' width='$100%'>
-											<LogbookCard card={card} config={getConfigForCard(card)} onEdit={handleButtonPress} onDelete={handleDeleteCaseLog} />
+											<LogbookCard
+												mainCard={getCard(card)}
+												card={card}
+												config={getConfigForCard(card)}
+												onEdit={handleEditButtonPress}
+												onDelete={handleDeleteCaseLog}
+											/>
 										</Box>
 									</HStack>
 								);
@@ -972,6 +1023,7 @@ const CaseLogTab = () => {
 							</Box>
 						)}
 					</VStack>
+					{/* Delete Modal */}
 					<Modal
 						isOpen={showModal}
 						onClose={() => {
@@ -983,7 +1035,7 @@ const CaseLogTab = () => {
 						<ModalContent>
 							<ModalHeader>
 								<Heading color='#CC3F0C' size='md' className='text-typography-950'>
-									Delete!!!
+									Delete Case log entry
 								</Heading>
 								<ModalCloseButton>
 									<Icon
@@ -1006,10 +1058,137 @@ const CaseLogTab = () => {
 										onPress={() => {
 											setShowModal(false);
 										}}>
-										<ButtonText>No</ButtonText>
+										<ButtonText>Cancel</ButtonText>
 									</Button>
 									<Button size='sm' variant='primary' bg='#CC3F0C' onPress={handleOnConfirmDeleteCaseLog}>
+										<ButtonText>Delete</ButtonText>
+									</Button>
+								</HStack>
+							</ModalFooter>
+						</ModalContent>
+					</Modal>
+
+					{/* Approval Modal */}
+					<Modal
+						isOpen={showApprovalModal}
+						onClose={() => {
+							setShowApprovalModal(false);
+							setSelectedCard(null);
+						}}
+						finalFocusRef={ref}
+						size='md'>
+						<ModalBackdrop />
+						<ModalContent>
+							<ModalHeader>
+								<Heading size='md'>Are you sure you want to send for Approval?</Heading>
+								<ModalCloseButton>
+									<Icon as={CloseIcon} size='md' />
+								</ModalCloseButton>
+							</ModalHeader>
+							<ModalBody>
+								<Text size='sm'>Once sent for approval, the editing for this case log will be stopped.</Text>
+							</ModalBody>
+							<ModalFooter>
+								<HStack w='$50%' justifyContent='space-between'>
+									<Button
+										size='sm'
+										variant='secondary'
+										onPress={() => {
+											setShowApprovalModal(false);
+											setSelectedCard(null);
+										}}>
+										<ButtonText>No</ButtonText>
+									</Button>
+									<Button size='sm' variant='primary' bg='#367B71' onPress={confirmSubmitForApproval}>
 										<ButtonText>Yes</ButtonText>
+									</Button>
+								</HStack>
+							</ModalFooter>
+						</ModalContent>
+					</Modal>
+					{/* Approve Modal */}
+					<Modal
+						isOpen={showApproveModal}
+						onClose={() => {
+							setShowApproveModal(false);
+							setCardToHandle(null);
+						}}
+						finalFocusRef={ref}
+						size='md'>
+						<ModalBackdrop />
+						<ModalContent>
+							<ModalHeader>
+								<Heading color='#367B71' size='md'>
+									Approve Case Log
+								</Heading>
+								<ModalCloseButton>
+									<Icon as={CloseIcon} size='md' />
+								</ModalCloseButton>
+							</ModalHeader>
+							<ModalBody>
+								<Text size='sm'>Are you sure you want to approve this case log entry?</Text>
+							</ModalBody>
+							<ModalFooter>
+								<HStack w='$50%' justifyContent='space-between'>
+									<Button
+										size='sm'
+										variant='secondary'
+										onPress={() => {
+											setShowApproveModal(false);
+											setCardToHandle(null);
+										}}>
+										<ButtonText>Cancel</ButtonText>
+									</Button>
+									<Button size='sm' variant='primary' bg='#367B71' onPress={handleConfirmApproval}>
+										<ButtonText>Approve</ButtonText>
+									</Button>
+								</HStack>
+							</ModalFooter>
+						</ModalContent>
+					</Modal>
+
+					{/* Reject Modal */}
+					<Modal
+						isOpen={showRejectModal}
+						onClose={() => {
+							setShowRejectModal(false);
+							setCardToHandle(null);
+							setRejectReason("");
+						}}
+						finalFocusRef={ref}
+						size='md'>
+						<ModalBackdrop />
+						<ModalContent>
+							<ModalHeader>
+								<Heading color='#CC3F0C' size='md'>
+									Reject Case Log
+								</Heading>
+								<ModalCloseButton>
+									<Icon as={CloseIcon} size='md' />
+								</ModalCloseButton>
+							</ModalHeader>
+							<ModalBody>
+								<VStack space='md'>
+									<Text size='sm'>Please provide a reason for rejection:</Text>
+									<Textarea size='md' w='$full'>
+										<TextareaInput placeholder='Enter rejection reason...' value={rejectReason} onChangeText={setRejectReason} />
+									</Textarea>
+								</VStack>
+							</ModalBody>
+							<ModalFooter>
+								<HStack w='$50%' justifyContent='space-between'>
+									<Button
+										size='sm'
+										variant='secondary'
+										onPress={() => {
+											setShowRejectModal(false);
+											setCardToHandle(null);
+											setRejectReason("");
+										}}>
+										<ButtonText>Cancel</ButtonText>
+									</Button>
+									<Button size='sm' variant='primary' bg='#CC3F0C' onPress={handleConfirmReject} disabled={!rejectReason.trim()}>
+										<ButtonText>Reject</ButtonText>
 									</Button>
 								</HStack>
 							</ModalFooter>

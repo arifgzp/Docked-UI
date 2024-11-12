@@ -49,6 +49,7 @@ const specialAnesthesiaCaseLogsOption = [
 	{ id: "comorbidity", name: "Comorbidity" },
 	{ id: "examination", name: "Examination" },
 	{ id: "typeOfAnaesthesia", name: "Type of Anesthesia" },
+	{ id: "laboratoryFindings", name: "Labotratory Findings" },
 	{ id: "drugs", name: "Drugs" },
 	{ id: "airManagement", name: "Airway Management" },
 	{ id: "regionalTechniques", name: "Regional Techniques" },

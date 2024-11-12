@@ -70,7 +70,7 @@ const CaselogDropDownOptions = ({
 	readOnly,
 	prefilledData,
 	formFields,
-	readOnlyFaculty,
+	readOnlyapprover,
 	caseLogData,
 	inputRefs,
 	scrollToInput,
@@ -79,6 +79,7 @@ const CaselogDropDownOptions = ({
 	setOpenSelectField,
 	focusOnField,
 	allFields,
+	facultyData,
 }) => {
 	const queryInfo = useQuery();
 	const { store, setQuery } = queryInfo;
@@ -86,7 +87,7 @@ const CaselogDropDownOptions = ({
 	const [showActionSheet, setShowActionsheet] = useState(false);
 	const [date, setDate] = useState(caseLogData?.date ? format(new Date(caseLogData.date), "dd / MM / yyyy") : "--/--/--");
 	const [dateForModal, setDateForModal] = useState(caseLogData?.date ? new Date(caseLogData?.date) : new Date());
-
+	console.log("formState.isDirty", formState.isDirty);
 	const handleSelectPress = useCallback(
 		(fieldUid) => {
 			// Open the Select first
@@ -104,7 +105,10 @@ const CaselogDropDownOptions = ({
 	};
 
 	const handleHospitalSelect = (value) => {
+		console.log("wat is the value,", value);
 		setValue("hospital", value);
+		appStoreInstance.setIsFormDirty(true);
+
 		// Instead of calling handleNext, we'll open the date picker directly
 		setOpen(true);
 	};
@@ -118,8 +122,10 @@ const CaselogDropDownOptions = ({
 	};
 
 	const handleFacultySelect = (value) => {
-		setValue("faculty", value);
-		handleNext("faculty");
+		appStoreInstance.setIsFormDirty(true);
+		console.log("wat is the value,", { id: value.id });
+		setValue("approver", { id: value.id });
+		handleNext("approver");
 	};
 
 	useEffect(() => {
@@ -139,9 +145,9 @@ const CaselogDropDownOptions = ({
 	console.log("data for edit", caseLogData);
 	console.log("prefilledData Mudit test", prefilledData);
 	const rotationForEdit = caseLogData?.rotation;
-	const rotations = prefilledData?.rotations;
+	const rotations = prefilledData?.rotation;
 	const hospital = caseLogData?.hospital ?? prefilledData?.hospital;
-	const faculty = caseLogData?.faculty ?? prefilledData?.faculty;
+	const faculty = facultyData?.name ?? prefilledData?.faculty;
 	const activeRotation = rotations ? rotations[rotations.length - 1] : null;
 	console.log("activeRotation", activeRotation);
 	const activeRotationFrom = activeRotation?.from ? format(parseISO(activeRotation.from), "dd MMM yyyy") : null;
@@ -184,7 +190,7 @@ const CaselogDropDownOptions = ({
 									onOpen={() => setOpenSelectField("hospital")}
 									onClose={() => setOpenSelectField(null)}
 									onSelect={() => {}} // This is handled by handleHospitalSelect
-									readOnly={readOnlyFaculty}
+									readOnly={readOnlyapprover}
 								/>
 							);
 						}}
@@ -207,29 +213,33 @@ const CaselogDropDownOptions = ({
 				<Box>
 					<Controller
 						control={control}
-						key='faculty'
-						name='faculty'
+						key='approver'
+						name='approver'
 						render={({ field: { onChange, onBlur, value } }) => {
+							const facultyOptions =
+								prefilledData?.faculty?.map((item) => ({
+									label: item.user.name,
+									value: {
+										id: item.user.id,
+										name: item.user.name,
+										specialReferenceIdForFaculty: item.user.specialReferenceIdForFaculty,
+									},
+								})) || [];
+
 							return (
 								<CustomSelect
 									field={{
 										name: "Faculty",
-										uid: "faculty",
-										options: prefilledData?.faculty.map((item) => {
-											console.log("itemitemitemitemitemitem", item);
-											return {
-												label: `${item?.firstName || ""} ${item?.lastName || ""}`,
-												value: `${item?.firstName || ""} ${item?.lastName || ""}`,
-											};
-										}),
+										uid: "approver",
+										options: facultyOptions,
 									}}
 									value={value}
 									onChange={handleFacultySelect}
-									isOpen={openSelectField === "faculty"}
-									onOpen={() => setOpenSelectField("faculty")}
+									isOpen={openSelectField === "approver"}
+									onOpen={() => setOpenSelectField("approver")}
 									onClose={() => setOpenSelectField(null)}
-									onSelect={() => {}} // This is handled by handleFacultySelect
-									readOnly={readOnlyFaculty}
+									onSelect={() => {}}
+									readOnly={readOnlyapprover}
 								/>
 							);
 						}}

@@ -8,7 +8,8 @@ import { types } from "mobx-state-tree"
  */
 
 export enum UserRole {
-  DOCTOR="DOCTOR",
+  HOD="HOD",
+FACULTY="FACULTY",
 RESIDENTS="RESIDENTS",
 ADMIN="ADMIN"
 }
@@ -17,7 +18,8 @@ ADMIN="ADMIN"
 * UserRole
 */
 export const UserRoleEnumType = types.enumeration("UserRole", [
-        "DOCTOR",
+        "HOD",
+  "FACULTY",
   "RESIDENTS",
   "ADMIN",
       ])

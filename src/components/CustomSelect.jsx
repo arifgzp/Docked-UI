@@ -9,12 +9,12 @@ import {
 	ActionsheetItem,
 	Text,
 	Box,
+	HStack,
+	Icon,
+	Divider,
+	ScrollView,
 } from "@gluestack-ui/themed";
-import { HStack } from "@gluestack-ui/themed";
-import { Icon } from "@gluestack-ui/themed";
 import { ChevronDown } from "lucide-react-native";
-import { Divider } from "@gluestack-ui/themed";
-import { ScrollView } from "@gluestack-ui/themed";
 
 const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelect, readOnly }) => {
 	const screenHeight = Dimensions.get("window").height;
@@ -34,20 +34,22 @@ const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelec
 	};
 
 	const getText = () => {
-		if (typeof value === "string") {
-			return value;
+		if (!value) return "";
+
+		// Handle object with name property
+		if (typeof value === "object" && value.name) {
+			return value.name;
 		}
 
-		if (Array.isArray(value) && value[0] && typeof value[0] === "object") {
-			return `${value[0].firstName || ""} ${value[0].lastName || ""}`.trim();
-		}
+		// Find the matching option based on the current value
+		const selectedOption = field.options?.find((opt) => {
+			if (typeof opt.value === "object" && opt.value?.id && typeof value === "object") {
+				return opt.value.id === value.id;
+			}
+			return opt.value === value;
+		});
 
-		if (value && field?.options) {
-			const option = field.options.find((opt) => opt.value === value);
-			return option ? option.label : value;
-		}
-
-		return "";
+		return selectedOption?.label || value || "";
 	};
 
 	return (
@@ -67,7 +69,10 @@ const CustomSelect = ({ field, value, onChange, isOpen, onOpen, onClose, onSelec
 					<Divider borderWidth={0.1} />
 					<ScrollView w='$full'>
 						{field?.options?.map((option, index) => (
-							<ActionsheetItem bg={index % 2 === 0 ? "$warmGray100" : "#FFF"} key={option.value} onPress={() => handleOptionSelect(option.value)}>
+							<ActionsheetItem
+								bg={index % 2 === 0 ? "$warmGray100" : "#FFF"}
+								key={typeof option.value === "object" ? option.value.id : option.value}
+								onPress={() => handleOptionSelect(option.value)}>
 								<Text>{option.label}</Text>
 							</ActionsheetItem>
 						))}

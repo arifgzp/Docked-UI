@@ -12,13 +12,11 @@ export enum OralMedicineAndRadiologyCaseLogOrderable {
 updatedOn="updatedOn",
 date="date",
 hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
 rotation="rotation",
 treatment="treatment",
 diagnosis="diagnosis",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -30,12 +28,10 @@ export const OralMedicineAndRadiologyCaseLogOrderableEnumType = types.enumeratio
   "updatedOn",
   "date",
   "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
   "rotation",
   "treatment",
   "diagnosis",
-  "caseType",
   "remarks",
       ])

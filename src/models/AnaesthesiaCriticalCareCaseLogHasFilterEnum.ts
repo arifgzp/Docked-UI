@@ -11,10 +11,6 @@ export enum AnaesthesiaCriticalCareCaseLogHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-rotation="rotation",
-hospital="hospital",
-faculty="faculty",
-complete="complete",
 patientAge="patientAge",
 patientSex="patientSex",
 diagnosis="diagnosis",
@@ -24,7 +20,6 @@ complication="complication",
 outcome="outcome",
 conduct="conduct",
 procedures="procedures",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -35,10 +30,6 @@ export const AnaesthesiaCriticalCareCaseLogHasFilterEnumType = types.enumeration
         "createdOn",
   "updatedOn",
   "date",
-  "rotation",
-  "hospital",
-  "faculty",
-  "complete",
   "patientAge",
   "patientSex",
   "diagnosis",
@@ -48,6 +39,5 @@ export const AnaesthesiaCriticalCareCaseLogHasFilterEnumType = types.enumeration
   "outcome",
   "conduct",
   "procedures",
-  "caseType",
   "remarks",
       ])

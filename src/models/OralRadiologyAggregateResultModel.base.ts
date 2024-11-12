@@ -23,16 +23,10 @@ export const OralRadiologyAggregateResultModelBase = ModelBase
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
     dateMin: types.union(types.undefined, types.null, types.frozen()),
     dateMax: types.union(types.undefined, types.null, types.frozen()),
-    hospitalMin: types.union(types.undefined, types.null, types.string),
-    hospitalMax: types.union(types.undefined, types.null, types.string),
-    facultyMin: types.union(types.undefined, types.null, types.string),
-    facultyMax: types.union(types.undefined, types.null, types.string),
     patientAgeMin: types.union(types.undefined, types.null, types.string),
     patientAgeMax: types.union(types.undefined, types.null, types.string),
     patientSexMin: types.union(types.undefined, types.null, types.string),
     patientSexMax: types.union(types.undefined, types.null, types.string),
-    rotationMin: types.union(types.undefined, types.null, types.string),
-    rotationMax: types.union(types.undefined, types.null, types.string),
     reportMin: types.union(types.undefined, types.null, types.string),
     reportMax: types.union(types.undefined, types.null, types.string),
     diagnosisMin: types.union(types.undefined, types.null, types.string),
@@ -58,16 +52,10 @@ export class OralRadiologyAggregateResultModelSelector extends QueryBuilder {
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
   get dateMin() { return this.__attr(`dateMin`) }
   get dateMax() { return this.__attr(`dateMax`) }
-  get hospitalMin() { return this.__attr(`hospitalMin`) }
-  get hospitalMax() { return this.__attr(`hospitalMax`) }
-  get facultyMin() { return this.__attr(`facultyMin`) }
-  get facultyMax() { return this.__attr(`facultyMax`) }
   get patientAgeMin() { return this.__attr(`patientAgeMin`) }
   get patientAgeMax() { return this.__attr(`patientAgeMax`) }
   get patientSexMin() { return this.__attr(`patientSexMin`) }
   get patientSexMax() { return this.__attr(`patientSexMax`) }
-  get rotationMin() { return this.__attr(`rotationMin`) }
-  get rotationMax() { return this.__attr(`rotationMax`) }
   get reportMin() { return this.__attr(`reportMin`) }
   get reportMax() { return this.__attr(`reportMax`) }
   get diagnosisMin() { return this.__attr(`diagnosisMin`) }
@@ -83,4 +71,4 @@ export function selectFromOralRadiologyAggregateResult() {
   return new OralRadiologyAggregateResultModelSelector()
 }
 
-export const oralRadiologyAggregateResultModelPrimitives = selectFromOralRadiologyAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.rotationMin.rotationMax.reportMin.reportMax.diagnosisMin.diagnosisMax.chiefComplaintMin.chiefComplaintMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax
+export const oralRadiologyAggregateResultModelPrimitives = selectFromOralRadiologyAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.reportMin.reportMax.diagnosisMin.diagnosisMax.chiefComplaintMin.chiefComplaintMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax

@@ -27,12 +27,6 @@ export const OrthodonticsClinicalCaseLogAggregateResultModelBase = ModelBase
     patientAgeMax: types.union(types.undefined, types.null, types.string),
     patientSexMin: types.union(types.undefined, types.null, types.string),
     patientSexMax: types.union(types.undefined, types.null, types.string),
-    hospitalMin: types.union(types.undefined, types.null, types.string),
-    hospitalMax: types.union(types.undefined, types.null, types.string),
-    rotationMin: types.union(types.undefined, types.null, types.string),
-    rotationMax: types.union(types.undefined, types.null, types.string),
-    facultyMin: types.union(types.undefined, types.null, types.string),
-    facultyMax: types.union(types.undefined, types.null, types.string),
     diagnosisMin: types.union(types.undefined, types.null, types.string),
     diagnosisMax: types.union(types.undefined, types.null, types.string),
     techniqueUsedMin: types.union(types.undefined, types.null, types.string),
@@ -41,8 +35,6 @@ export const OrthodonticsClinicalCaseLogAggregateResultModelBase = ModelBase
     conductMax: types.union(types.undefined, types.null, types.string),
     outcomeMin: types.union(types.undefined, types.null, types.string),
     outcomeMax: types.union(types.undefined, types.null, types.string),
-    caseTypeMin: types.union(types.undefined, types.null, types.string),
-    caseTypeMax: types.union(types.undefined, types.null, types.string),
     remarksMin: types.union(types.undefined, types.null, types.string),
     remarksMax: types.union(types.undefined, types.null, types.string),
   })
@@ -64,12 +56,6 @@ export class OrthodonticsClinicalCaseLogAggregateResultModelSelector extends Que
   get patientAgeMax() { return this.__attr(`patientAgeMax`) }
   get patientSexMin() { return this.__attr(`patientSexMin`) }
   get patientSexMax() { return this.__attr(`patientSexMax`) }
-  get hospitalMin() { return this.__attr(`hospitalMin`) }
-  get hospitalMax() { return this.__attr(`hospitalMax`) }
-  get rotationMin() { return this.__attr(`rotationMin`) }
-  get rotationMax() { return this.__attr(`rotationMax`) }
-  get facultyMin() { return this.__attr(`facultyMin`) }
-  get facultyMax() { return this.__attr(`facultyMax`) }
   get diagnosisMin() { return this.__attr(`diagnosisMin`) }
   get diagnosisMax() { return this.__attr(`diagnosisMax`) }
   get techniqueUsedMin() { return this.__attr(`techniqueUsedMin`) }
@@ -78,8 +64,6 @@ export class OrthodonticsClinicalCaseLogAggregateResultModelSelector extends Que
   get conductMax() { return this.__attr(`conductMax`) }
   get outcomeMin() { return this.__attr(`outcomeMin`) }
   get outcomeMax() { return this.__attr(`outcomeMax`) }
-  get caseTypeMin() { return this.__attr(`caseTypeMin`) }
-  get caseTypeMax() { return this.__attr(`caseTypeMax`) }
   get remarksMin() { return this.__attr(`remarksMin`) }
   get remarksMax() { return this.__attr(`remarksMax`) }
 }
@@ -87,4 +71,4 @@ export function selectFromOrthodonticsClinicalCaseLogAggregateResult() {
   return new OrthodonticsClinicalCaseLogAggregateResultModelSelector()
 }
 
-export const orthodonticsClinicalCaseLogAggregateResultModelPrimitives = selectFromOrthodonticsClinicalCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.hospitalMin.hospitalMax.rotationMin.rotationMax.facultyMin.facultyMax.diagnosisMin.diagnosisMax.techniqueUsedMin.techniqueUsedMax.conductMin.conductMax.outcomeMin.outcomeMax.caseTypeMin.caseTypeMax.remarksMin.remarksMax
+export const orthodonticsClinicalCaseLogAggregateResultModelPrimitives = selectFromOrthodonticsClinicalCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.patientAgeMin.patientAgeMax.patientSexMin.patientSexMax.diagnosisMin.diagnosisMax.techniqueUsedMin.techniqueUsedMax.conductMin.conductMax.outcomeMin.outcomeMax.remarksMin.remarksMax

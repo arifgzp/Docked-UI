@@ -155,6 +155,7 @@ const sendFeatureUsageDataToBigQueryForAdminAnalytics = (featureName, startTime,
 };
 
 const sendCaseLogDataToBigQueryForAdminAnalytics = (data, startTime, endTime) => {
+	console.log("is this function sendCaseLogDataToBigQueryForAdminAnalytics,", data);
 	const dateTime = getCurrentDateTime();
 	return {
 		dataset: "admin_reports",
@@ -162,7 +163,7 @@ const sendCaseLogDataToBigQueryForAdminAnalytics = (data, startTime, endTime) =>
 		data: removeNullValues({
 			user_id: appStoreInstance.UserId,
 			caseLogId: data.id,
-			caseType: data.caseType,
+			caseType: data.__typename,
 			contributionType: data.conduct,
 			caseLogSessionDuration: (new Date(endTime) - new Date(startTime)) / 1000,
 			specialization: appStoreInstance.UserBroadSpecialty,

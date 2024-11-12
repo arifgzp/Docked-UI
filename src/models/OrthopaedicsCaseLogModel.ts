@@ -18,5 +18,4 @@ export const OrthopaedicsCaseLogModel = OrthopaedicsCaseLogModelBase.actions((se
 }));
 
 export const updateOrthopaedicsCaseLogModelSelector =
-	selectFromOrthopaedicsCaseLog().createdOn.updatedOn.date.hospital.faculty.patientAge.patientSex.rotation.diseaseCategory.site.joint.bones.outcomes
-		.diagnosis.caseType;
+	selectFromOrthopaedicsCaseLog().createdOn.updatedOn.date.patientAge.patientSex.diseaseCategory.site.joint.bones.outcomes.diagnosis;

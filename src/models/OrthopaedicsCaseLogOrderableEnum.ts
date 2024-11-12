@@ -11,14 +11,10 @@ export enum OrthopaedicsCaseLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
-rotation="rotation",
 conduct="conduct",
 diagnosis="diagnosis",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -29,13 +25,9 @@ export const OrthopaedicsCaseLogOrderableEnumType = types.enumeration("Orthopaed
         "createdOn",
   "updatedOn",
   "date",
-  "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
-  "rotation",
   "conduct",
   "diagnosis",
-  "caseType",
   "remarks",
       ])

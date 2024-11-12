@@ -3,6 +3,7 @@ import { LogProfileModelBase, selectFromLogProfile } from "./LogProfileModel.bas
 import { facultyModelSelector } from "./FacultyModel";
 import { rotationModelSelector } from "./RotationModel";
 import { hospitalsModelPrimitives } from "./HospitalsModel.base";
+import { facultySelectorWithUser } from "./FacultyModelWithUserSelector";
 
 /* The TypeScript type of an instance of LogProfileModel */
 export interface LogProfileModelType extends Instance<typeof LogProfileModel.Type> {}
@@ -22,5 +23,5 @@ export const LogProfileModel = LogProfileModelBase.actions((self) => ({
 
 export const fetchLogProfileModelSelector = selectFromLogProfile()
 	.hospitals(hospitalsModelPrimitives)
-	.faculties(facultyModelSelector)
-	.rotations(rotationModelSelector);
+	.rotations(rotationModelSelector)
+	.faculties(facultyModelSelector);

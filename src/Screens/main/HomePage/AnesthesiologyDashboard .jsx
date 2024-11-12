@@ -66,6 +66,7 @@ import Loader from "../../../components/Loader";
 import IsReadyLoader from "../../../components/IsReadyLoader";
 import useIsReady from "../../../hooks/useIsReady";
 import { toJS } from "mobx";
+import ApprovalListInTheDashboard from "../../../components/ApprovalListInTheDashboard";
 
 function filterCouductData(arr) {
 	arr.forEach((item) => {
@@ -165,13 +166,16 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 		{ title: "Assisted", value: appStoreInstance.AssistedAnalyticsCount || 0 },
 		{ title: "Performed", value: appStoreInstance.PerformedAnalyticsCount || 0 },
 	];
+
 	const ASATimePeriods = ["Daily", "Weekly", "Monthly"];
+
 	const anaesthesiaTypes = [
 		{ title: "General Anesthesia", count: appStoreInstance.GeneralAnesthesiaAnalyticsCount || 0 },
 		{ title: "Regional Anesthesia", count: appStoreInstance.RegionalAnesthesiaAnalyticsCount || 0 },
 		{ title: "TIVA", count: appStoreInstance.TIVAAnalyticsCount || 0 },
 		{ title: "Monitored Anesthesia Care", count: appStoreInstance.MontioredAnesthesiaCareAnalyticsCount || 0 },
 	];
+
 	const top3TimePeriods = ["Daily", "Weekly", "Monthly"];
 	const [selectedTop3Period, setSelectedTop3Period] = useState("Daily");
 	const getRegionalTechniquesData = () => {
@@ -212,22 +216,6 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 				return [];
 		}
 	};
-
-	const regionalTechniques = [
-		{ title: "Interscalene", value: "05" },
-		{ title: "Popliteal and saphenous", value: "02" },
-		{ title: "Erector Spinae Plane", value: "01" },
-	];
-	const chronicPainLog = [
-		{ title: "Stellate Ganglion Block", value: "05" },
-		{ title: "Superior Hypogastric Plexus Block", value: "02" },
-		{ title: "Acromio-Clavicular joint injection", value: "01" },
-	];
-
-	const CriticalCareProcedures = [
-		{ title: "Arterial Lines", value: "25" },
-		{ title: "Central Venous Lines", value: "18" },
-	];
 
 	const [activeIndex, setActiveIndex] = useState(0);
 
@@ -629,6 +617,35 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 			setAsaGradeData(setDefaultASAGradeData());
 		}
 	}, [selectedPeriod, asaGradeDailyData, asaGradeWeeklyData, asaGradeMonthlyData]);
+
+	useEffect(() => {
+		const fetchCaseLogsForApproval = async () => {
+			// Return early if not faculty
+			if (appStoreInstance.UserRole !== "FACULTY") {
+				return;
+			}
+
+			try {
+				store.clearCaseLogList();
+				const query = store.fetchCaseLogsForFacultyLeftForApproval(appStoreInstance.UserName, appStoreInstance.UserId);
+				setQuery(query);
+
+				const finishFetchingCaseLogsForApproval = await query;
+				if (finishFetchingCaseLogsForApproval) {
+					console.log("finishFetchingCaseLogsForApproval: ", finishFetchingCaseLogsForApproval);
+					const fetchProfileData = finishFetchingCaseLogsForApproval.queryUser[0];
+					// Do something with fetchProfileData if needed
+				}
+			} catch (error) {
+				console.error("Error fetching case logs:", error);
+			}
+		};
+
+		if (isFocused) {
+			fetchCaseLogsForApproval();
+		}
+	}, [isFocused, appStoreInstance.UserRole, appStoreInstance.UserName, appStoreInstance.UserId, store]);
+
 	const casesLoggedData = transformBigQueryDataIntoGraphFormat(
 		aggerateDailyCaseLogData || [],
 		aggerateMonthlyCaseLogData || [],
@@ -645,6 +662,11 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 			</Box>
 		);
 	}
+
+	let cardDetails = [];
+	cardDetails.push(...store.CaseLogsList);
+
+	console.log("what is cardDetails for caseloglists", cardDetails);
 
 	return (
 		<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
@@ -677,6 +699,7 @@ const AnesthesiologyDashboard = ({ navigation }) => {
 								</Pressable>
 							</HStack>
 						</Box>
+						{appStoreInstance.UserRole === "FACULTY" && cardDetails.length > 0 && <ApprovalListInTheDashboard card={cardDetails} />}
 
 						<Box p='$4'>
 							<VStack space='xl'>

@@ -10,12 +10,7 @@ import { types } from "mobx-state-tree"
 export enum FacultyHasFilter {
   createdOn="createdOn",
 updatedOn="updatedOn",
-firstName="firstName",
-lastName="lastName",
-name="name",
-designation="designation",
-otherDesignation="otherDesignation",
-phoneNumber="phoneNumber"
+user="user"
 }
 
 /**
@@ -24,10 +19,5 @@ phoneNumber="phoneNumber"
 export const FacultyHasFilterEnumType = types.enumeration("FacultyHasFilter", [
         "createdOn",
   "updatedOn",
-  "firstName",
-  "lastName",
-  "name",
-  "designation",
-  "otherDesignation",
-  "phoneNumber",
+  "user",
       ])

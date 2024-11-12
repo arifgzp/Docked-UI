@@ -11,11 +11,7 @@ export enum OrthodonticsPreClinicalOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-hospital="hospital",
-rotation="rotation",
-faculty="faculty",
 conduct="conduct",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -26,10 +22,6 @@ export const OrthodonticsPreClinicalOrderableEnumType = types.enumeration("Ortho
         "createdOn",
   "updatedOn",
   "date",
-  "hospital",
-  "rotation",
-  "faculty",
   "conduct",
-  "caseType",
   "remarks",
       ])

@@ -22,5 +22,5 @@ export const AnaesthesiaCriticalCareCaseLogModel = AnaesthesiaCriticalCareCaseLo
 }));
 
 export const updatedAnesthesiaCritcalCareCaseLogModelSelector =
-	selectFromAnaesthesiaCriticalCareCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.diagnosis.comorbidites
-		.surgicalprocedure.complication.outcome.procedures.caseType;
+	selectFromAnaesthesiaCriticalCareCaseLog().createdOn.updatedOn.date.patientAge.patientSex.diagnosis.comorbidites.surgicalprocedure.complication
+		.outcome.procedures;

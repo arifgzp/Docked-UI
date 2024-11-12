@@ -22,5 +22,4 @@ export const AnaesthesiaChronicPainLogModel = AnaesthesiaChronicPainLogModelBase
 }));
 
 export const updatedAnesthesiaChronicPainLogModelSelector =
-	selectFromAnaesthesiaChronicPainLog().createdOn.updatedOn.date.rotation.hospital.faculty.patientAge.patientSex.diagnosis.indication.technique.method
-		.drugsUsed.intervention.caseType;
+	selectFromAnaesthesiaChronicPainLog().createdOn.updatedOn.date.patientAge.patientSex.diagnosis.indication.technique.method.drugsUsed.intervention;

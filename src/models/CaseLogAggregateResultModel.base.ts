@@ -21,14 +21,14 @@ export const CaseLogAggregateResultModelBase = ModelBase
     createdOnMax: types.union(types.undefined, types.null, types.frozen()),
     updatedOnMin: types.union(types.undefined, types.null, types.frozen()),
     updatedOnMax: types.union(types.undefined, types.null, types.frozen()),
-    dateMin: types.union(types.undefined, types.null, types.frozen()),
-    dateMax: types.union(types.undefined, types.null, types.frozen()),
+    logTypeMin: types.union(types.undefined, types.null, types.string),
+    logTypeMax: types.union(types.undefined, types.null, types.string),
+    rejectionMessageMin: types.union(types.undefined, types.null, types.string),
+    rejectionMessageMax: types.union(types.undefined, types.null, types.string),
+    rotationMin: types.union(types.undefined, types.null, types.string),
+    rotationMax: types.union(types.undefined, types.null, types.string),
     hospitalMin: types.union(types.undefined, types.null, types.string),
     hospitalMax: types.union(types.undefined, types.null, types.string),
-    facultyMin: types.union(types.undefined, types.null, types.string),
-    facultyMax: types.union(types.undefined, types.null, types.string),
-    medicalRegistrationNumberMin: types.union(types.undefined, types.null, types.string),
-    medicalRegistrationNumberMax: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -42,17 +42,17 @@ export class CaseLogAggregateResultModelSelector extends QueryBuilder {
   get createdOnMax() { return this.__attr(`createdOnMax`) }
   get updatedOnMin() { return this.__attr(`updatedOnMin`) }
   get updatedOnMax() { return this.__attr(`updatedOnMax`) }
-  get dateMin() { return this.__attr(`dateMin`) }
-  get dateMax() { return this.__attr(`dateMax`) }
+  get logTypeMin() { return this.__attr(`logTypeMin`) }
+  get logTypeMax() { return this.__attr(`logTypeMax`) }
+  get rejectionMessageMin() { return this.__attr(`rejectionMessageMin`) }
+  get rejectionMessageMax() { return this.__attr(`rejectionMessageMax`) }
+  get rotationMin() { return this.__attr(`rotationMin`) }
+  get rotationMax() { return this.__attr(`rotationMax`) }
   get hospitalMin() { return this.__attr(`hospitalMin`) }
   get hospitalMax() { return this.__attr(`hospitalMax`) }
-  get facultyMin() { return this.__attr(`facultyMin`) }
-  get facultyMax() { return this.__attr(`facultyMax`) }
-  get medicalRegistrationNumberMin() { return this.__attr(`medicalRegistrationNumberMin`) }
-  get medicalRegistrationNumberMax() { return this.__attr(`medicalRegistrationNumberMax`) }
 }
 export function selectFromCaseLogAggregateResult() {
   return new CaseLogAggregateResultModelSelector()
 }
 
-export const caseLogAggregateResultModelPrimitives = selectFromCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.dateMin.dateMax.hospitalMin.hospitalMax.facultyMin.facultyMax.medicalRegistrationNumberMin.medicalRegistrationNumberMax
+export const caseLogAggregateResultModelPrimitives = selectFromCaseLogAggregateResult().count.createdOnMin.createdOnMax.updatedOnMin.updatedOnMax.logTypeMin.logTypeMax.rejectionMessageMin.rejectionMessageMax.rotationMin.rotationMax.hospitalMin.hospitalMax

@@ -11,9 +11,6 @@ export enum AnaesthesiaCriticalCareCaseLogOrderable {
   createdOn="createdOn",
 updatedOn="updatedOn",
 date="date",
-rotation="rotation",
-hospital="hospital",
-faculty="faculty",
 patientAge="patientAge",
 patientSex="patientSex",
 diagnosis="diagnosis",
@@ -22,7 +19,6 @@ surgicalprocedure="surgicalprocedure",
 complication="complication",
 outcome="outcome",
 conduct="conduct",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -33,9 +29,6 @@ export const AnaesthesiaCriticalCareCaseLogOrderableEnumType = types.enumeration
         "createdOn",
   "updatedOn",
   "date",
-  "rotation",
-  "hospital",
-  "faculty",
   "patientAge",
   "patientSex",
   "diagnosis",
@@ -44,6 +37,5 @@ export const AnaesthesiaCriticalCareCaseLogOrderableEnumType = types.enumeration
   "complication",
   "outcome",
   "conduct",
-  "caseType",
   "remarks",
       ])

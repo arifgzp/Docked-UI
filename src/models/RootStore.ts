@@ -8,8 +8,6 @@ import {
 	fetchLogProfileModelSelector,
 	userModelPrimitives,
 	selectFromUpdateLogProfilePayload,
-	updateLogProfileModelSelector,
-	fetchUserLogProfileModel,
 	selectFromUpdateAnaesthesiaCaseLogPayload,
 	updatedAnesthesiaCaseLogModelSelector,
 	selectFromAddAnaesthesiaChronicPainLogPayload,
@@ -20,17 +18,10 @@ import {
 	updatedAnesthesiaCritcalCareCaseLogModelSelector,
 	anaesthesiaChronicPainLogModelPrimitives,
 	anaesthesiaCriticalCareCaseLogModelPrimitives,
-	AnaesthesiaCaseLogByModelSelector,
-	AnaesthesiaChronicPainLogByModelSelector,
-	AnaesthesiaCriticalCareCaseLogByModelSelector,
-	OrthopaedicsCaseLogByModelSelector,
-	OrthodonticsClinicalCaseLogByModelSelector,
 	selectFromUpdateOrthopaedicsCaseLogPayload,
 	updateOrthopaedicsCaseLogModelSelector,
 	selectFromUpdateOrthodonticsClinicalCaseLogPayload,
 	updateOrthodonticsClinicalCaseLogSelector,
-	OrthopaedicsProcedureLogByModelSelector,
-	OrthodonticsClinicalPreClinicalByModelSelector,
 	selectFromUpdateOrthopaedicsProcedureLogPayload,
 	updateOrthopaedicsProcedureLogModelSelector,
 	selectFromUpdateOrthodonticsPreClinicalPayload,
@@ -56,11 +47,6 @@ import {
 	PublicationLogByModelSelector,
 	selectFromUpdatePublicationLogPayload,
 	updatePublicationLogPayloadModelSelector,
-	OralMedicineAndRadiologyCaseLogByModelSelector,
-	selectFromUpdateOralMedicineAndRadiologyCaseLogPayload,
-	updateOralMedicineAndRadiologyCaseLogPayloadModelSelector,
-	deleteOralMedicineAndRadiologyCaseLogPayloadModelPrimitives,
-	OralRadiologyByModelSelector,
 	selectFromUpdateOralRadiologyPayload,
 	deleteOralRadiologyPayloadModelPrimitives,
 	updateOralRadiologyPayloadModelSelector,
@@ -84,9 +70,27 @@ import {
 	selectFromUpdateUserFeedbackPayload,
 	updateUserFeedbackModelPrimitives,
 	deleteUserFeedbackPayloadModelPrimitives,
+	userWithLogProfileSelector,
+	userWithOralMedicineCaseLogSelector,
+	userWithCaseLogSelector,
+	selectFromUpdateCaseLogPayload,
+	updateCaseLogSelector,
+	oralMedicineCaseLogModelPrimitives,
+	selectFromUpdateOralMedicineCaseLogPayload,
+	userWithOralRadiologyCaseLogSelector,
+	userWithAnaesthesiaCaseLogSelector,
+	userWithAnaesthesiaChronicPainLogSelector,
+	userWithOrthopaedicsCaseLogSelector,
+	userWithAnaesthesiaCritcalCareLogSelector,
+	userWithOrthopaedicsProcedureLogSelector,
+	userWithOrthodonticsClinicalCaseLogSelector,
+	userWithOrthodonticsPreClinicalSelector,
+	deleteOralMedicineCaseLogPayloadModelPrimitives,
+	fetchCaseLogsWithPendingForApproval,
 } from ".";
 import { values } from "mobx";
 import { Query } from "mst-gql";
+import { facultySelectorWithUser } from "./FacultyModelWithUserSelector";
 
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
@@ -132,7 +136,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		const variables = {
 			filter: { userName: { eq: userName } },
 		};
-		const fetchUserResultSelector = fetchUserLogProfileModel.toString();
+		const fetchUserResultSelector = userWithLogProfileSelector().toString();
 		const fetchUserQuery: Query = self.queryQueryUser(variables, fetchUserResultSelector);
 		console.log("********** fetchUserLogProfile Query STARTS **********");
 		console.log({ query: fetchUserQuery.query });
@@ -145,11 +149,11 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		const dataFilter = {
 			id: userId,
 		};
-		console.log("userId", userId);
+		console.log("userId when saving updatedLogProfile profile.", userId);
 		console.log("updatedUserInfo", updatedLogProfileInfo);
 		const setDataPatch = updatedLogProfileInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(updateLogProfileModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithLogProfileSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserLogProfile Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -166,7 +170,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedAnaesthesiaCaseLogInfo);
 		const setDataPatch = updatedAnaesthesiaCaseLogInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(AnaesthesiaCaseLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithAnaesthesiaCaseLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserAnaesthesiaCaseLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -183,7 +187,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedAnaesthesiaChronicPainInfo);
 		const setDataPatch = updatedAnaesthesiaChronicPainInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(AnaesthesiaChronicPainLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithAnaesthesiaChronicPainLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserAnaesthesiaChronicPainLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -200,7 +204,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedAnaesthesiaCritcalCareCaseLogInfo);
 		const setDataPatch = updatedAnaesthesiaCritcalCareCaseLogInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(AnaesthesiaCriticalCareCaseLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithAnaesthesiaCritcalCareLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserAnaesthesiaCritcalCareCaseLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -217,7 +221,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedOrthopaedicsCaseLog);
 		const setDataPatch = updatedOrthopaedicsCaseLog;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(OrthopaedicsCaseLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithOrthopaedicsCaseLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserOrthopaedicsCaseLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -234,7 +238,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedOrthopaedicsProcedureLog);
 		const setDataPatch = updatedOrthopaedicsProcedureLog;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(OrthopaedicsProcedureLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithOrthopaedicsProcedureLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserOrthopaedicsProcedureLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -251,7 +255,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedOrthodonticsClinicalCaseLog);
 		const setDataPatch = updatedOrthodonticsClinicalCaseLog;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(OrthodonticsClinicalCaseLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithOrthodonticsClinicalCaseLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserOrthodonticsClinicalCaseLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -268,7 +272,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedOrthodonticsPreClinical);
 		const setDataPatch = updatedOrthodonticsPreClinical;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(OrthodonticsClinicalPreClinicalByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithOrthodonticsPreClinicalSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserOrthodonticsPreClinical Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -423,133 +427,6 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log(updateOrthodonticsPreClinicalQuery.variables);
 		console.log("********** updateOrthodonticsPreClinical Query ENDS **********");
 		return updateOrthodonticsPreClinicalQuery;
-	},
-
-	fetchAnaesthesiaCaseLogByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchAnaesthesiaCaseLogByUserSelector = AnaesthesiaCaseLogByModelSelector.toString();
-		const fetchAnaesthesiaCaseLogByUserQuery = self.queryQueryUser(variables, fetchAnaesthesiaCaseLogByUserSelector);
-		console.log("********** fetchAnaesthesiaCaseLogByUser Query STARTS **********");
-		console.log(fetchAnaesthesiaCaseLogByUserQuery.query);
-		console.log(fetchAnaesthesiaCaseLogByUserQuery.variables);
-		console.log("********** fetchAnaesthesiaCaseLogByUser Query ENDS **********");
-		return fetchAnaesthesiaCaseLogByUserQuery;
-	},
-
-	fetchAnaesthesiaChronicPainLogByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchAnaesthesiaChronicPainLogByUserSelector = AnaesthesiaChronicPainLogByModelSelector.toString();
-		const fetchAnaesthesiaCaseLogByUserQuery = self.queryQueryUser(variables, fetchAnaesthesiaChronicPainLogByUserSelector);
-		console.log("********** fetchAnaesthesiaChronicPainLogByUser Query STARTS **********");
-		console.log(fetchAnaesthesiaCaseLogByUserQuery.query);
-		console.log(fetchAnaesthesiaCaseLogByUserQuery.variables);
-		console.log("********** fetchAnaesthesiaChronicPainLogByUser Query ENDS **********");
-		return fetchAnaesthesiaCaseLogByUserQuery;
-	},
-
-	fetchAnaesthesiaCriticalCareCaseLogByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchAnaesthesiaCriticalCareCaseLogByUserSelector = AnaesthesiaCriticalCareCaseLogByModelSelector.toString();
-		const fetchAnaesthesiaCaseLogByUserQuery = self.queryQueryUser(variables, fetchAnaesthesiaCriticalCareCaseLogByUserSelector);
-		console.log("********** fetchAnaesthesiaCriticalCareCaseLogByUser Query STARTS **********");
-		console.log(fetchAnaesthesiaCaseLogByUserQuery.query);
-		console.log(fetchAnaesthesiaCaseLogByUserQuery.variables);
-		console.log("********** fetchAnaesthesiaCriticalCareCaseLogByUser Query ENDS **********");
-		return fetchAnaesthesiaCaseLogByUserQuery;
-	},
-
-	fetchOrthopaedicsCaseLogByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchOrthopaedicsCaseLogByUserSelector = OrthopaedicsCaseLogByModelSelector.toString();
-		const fetchOrthopaedicsCaseLogByUserQuery = self.queryQueryUser(variables, fetchOrthopaedicsCaseLogByUserSelector);
-		console.log("********** fetchOrthopaedicsCaseLogByUser Query STARTS **********");
-		console.log(fetchOrthopaedicsCaseLogByUserQuery.query);
-		console.log(fetchOrthopaedicsCaseLogByUserQuery.variables);
-		console.log("********** fetchOrthopaedicsCaseLogByUser Query ENDS **********");
-		return fetchOrthopaedicsCaseLogByUserQuery;
-	},
-
-	fetchOrthopaedicsProcedureLogUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchOrthopaedicsProcedureLogUserSelector = OrthopaedicsProcedureLogByModelSelector.toString();
-		const fetchOrthopaedicsProcedureLogUserQuery = self.queryQueryUser(variables, fetchOrthopaedicsProcedureLogUserSelector);
-		console.log("********** fetchOrthopaedicsProcedureLogUser Query STARTS **********");
-		console.log(fetchOrthopaedicsProcedureLogUserQuery.query);
-		console.log(fetchOrthopaedicsProcedureLogUserQuery.variables);
-		console.log("********** fetchOrthopaedicsProcedureLogUser Query ENDS **********");
-		return fetchOrthopaedicsProcedureLogUserQuery;
-	},
-
-	fetchOrthodonticsClinicalCaseLogByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchOrthodonticsClinicalCaseLogByUserSelector = OrthodonticsClinicalCaseLogByModelSelector.toString();
-		const fetchOrthodonticsClinicalCaseLogByUserQuery = self.queryQueryUser(variables, fetchOrthodonticsClinicalCaseLogByUserSelector);
-		console.log("********** fetchOrthodonticsClinicalCaseLogByUser Query STARTS **********");
-		console.log(fetchOrthodonticsClinicalCaseLogByUserQuery.query);
-		console.log(fetchOrthodonticsClinicalCaseLogByUserQuery.variables);
-		console.log("********** fetchOrthodonticsClinicalCaseLogByUser Query ENDS **********");
-		return fetchOrthodonticsClinicalCaseLogByUserQuery;
-	},
-
-	fetchOrthodonticsPreClinicalByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchOrthodonticsPreClinicalByUserSelector = OrthodonticsClinicalPreClinicalByModelSelector.toString();
-		const fetchOrthodonticsPreClinicalByUserQuery = self.queryQueryUser(variables, fetchOrthodonticsPreClinicalByUserSelector);
-		console.log("********** fetchOrthodonticsPreClinicalByUser Query STARTS **********");
-		console.log(fetchOrthodonticsPreClinicalByUserQuery.query);
-		console.log(fetchOrthodonticsPreClinicalByUserQuery.variables);
-		console.log("********** fetchOrthodonticsPreClinicalByUser Query ENDS **********");
-		return fetchOrthodonticsPreClinicalByUserQuery;
-	},
-
-	fetchAnaesthesiaCaseLog() {
-		const inputVariable = {};
-		const fetchAnaesthesiaCaseLogSelector = anaesthesiaCaseLogModelPrimitives.toString();
-		const fetchAnaesthesiaCaseLogQuery = self.queryQueryAnaesthesiaCaseLog(inputVariable, fetchAnaesthesiaCaseLogSelector);
-		console.log("********** fetchAnaesthesiaCaseLog Query STARTS **********");
-		console.log(fetchAnaesthesiaCaseLogQuery.query);
-		console.log(fetchAnaesthesiaCaseLogQuery.variables);
-		console.log("********** fetchAnaesthesiaCaseLog Query ENDS **********");
-		return fetchAnaesthesiaCaseLogQuery;
-	},
-
-	fetchAnaesthesiaChronicPainLog() {
-		const inputVariable = {};
-		const fetchAnaesthesiaChronicPainLogSelector = anaesthesiaChronicPainLogModelPrimitives.toString();
-		const fetchAnaesthesiaChronicPainLogQuery = self.queryQueryAnaesthesiaChronicPainLog(inputVariable, fetchAnaesthesiaChronicPainLogSelector);
-		console.log("********** fetchAnaesthesiaChronicPainLog Query STARTS **********");
-		console.log(fetchAnaesthesiaChronicPainLogQuery.query);
-		console.log(fetchAnaesthesiaChronicPainLogQuery.variables);
-		console.log("********** fetchAnaesthesiaChronicPainLog Query ENDS **********");
-		return fetchAnaesthesiaChronicPainLogQuery;
-	},
-
-	fetchAnaesthesiaCriticalCareCaseLog() {
-		const inputVariable = {};
-		const fetchAnaesthesiaCriticalCareCaseLogSelector = anaesthesiaCriticalCareCaseLogModelPrimitives.toString();
-		const fetchAnaesthesiaCriticalCareCaseLogQuery = self.queryQueryAnaesthesiaCriticalCareCaseLog(
-			inputVariable,
-			fetchAnaesthesiaCriticalCareCaseLogSelector
-		);
-		console.log("********** fetchAnaesthesiaCriticalCareCaseLog Query STARTS **********");
-		console.log(fetchAnaesthesiaCriticalCareCaseLogQuery.query);
-		console.log(fetchAnaesthesiaCriticalCareCaseLogQuery.variables);
-		console.log("********** fetchAnaesthesiaCriticalCareCaseLog Query ENDS **********");
-		return fetchAnaesthesiaCriticalCareCaseLogQuery;
 	},
 
 	deleteOrthodonticsPreClinical(OrthodonticsPreClinicalList: []) {
@@ -909,7 +786,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 	},
 
 	// OralMedicineAndRadiologyCaseLog queries
-	updateUserOralMedicineAndRadiologyCaseLog(userId, updatedCaseLogInfo) {
+	updateUserOralMedicineCaseLog(userId, updatedCaseLogInfo) {
 		const dataFilter = {
 			id: userId,
 		};
@@ -917,53 +794,40 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedCaseLogInfo);
 		const setDataPatch = updatedCaseLogInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(OralMedicineAndRadiologyCaseLogByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithOralMedicineCaseLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
-		console.log("********** updateUserOralMedicineAndRadiologyCaseLog Query STARTS **********");
+		console.log("********** updateUserOralMedicineCaseLog Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
 		console.log(updateUserQuery.variables);
-		console.log("********** updateUserOralMedicineAndRadiologyCaseLog Query ENDS **********");
+		console.log("********** updateUserOralMedicineCaseLog Query ENDS **********");
 		return updateUserQuery;
 	},
 
-	updateOralMedicineAndRadiologyCaseLog(caseLogId, updatedCaseLogInfo) {
+	updateOralMedicineCaseLog(caseLogId, updatedCaseLogInfo) {
 		const dataFilter = {
 			id: caseLogId,
 		};
-		console.log("caseLogId", caseLogId);
-		console.log("updatedCaseLogInfo", updatedCaseLogInfo);
+		console.log("OralMedicineId", caseLogId);
+		console.log("updatedOralMedicineInfo", updatedCaseLogInfo);
 		const setDataPatch = updatedCaseLogInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateCaseLogResultSelector = selectFromUpdateOralMedicineAndRadiologyCaseLogPayload()
-			.oralMedicineAndRadiologyCaseLog(updateOralMedicineAndRadiologyCaseLogPayloadModelSelector)
+		const updateCaseLogResultSelector = selectFromUpdateOralMedicineCaseLogPayload()
+			.oralMedicineCaseLog(oralMedicineCaseLogModelPrimitives)
 			.toString();
-		const updateCaseLogQuery: Query = self.mutateUpdateOralMedicineAndRadiologyCaseLog(inputVariable, updateCaseLogResultSelector);
-		console.log("********** updateOralMedicineAndRadiologyCaseLog Query STARTS **********");
+		const updateCaseLogQuery: Query = self.mutateUpdateOralMedicineCaseLog(inputVariable, updateCaseLogResultSelector);
+		console.log("********** updateOralMedicineCaseLog Query STARTS **********");
 		console.log({ query: updateCaseLogQuery.query });
 		console.log(updateCaseLogQuery.variables);
-		console.log("********** updateOralMedicineAndRadiologyCaseLog Query ENDS **********");
+		console.log("********** updateOralMedicineCaseLog Query ENDS **********");
 		return updateCaseLogQuery;
 	},
 
-	fetchOralMedicineAndRadiologyCaseLogByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchCaseLogByUserSelector = OralMedicineAndRadiologyCaseLogByModelSelector.toString();
-		const fetchCaseLogByUserQuery = self.queryQueryUser(variables, fetchCaseLogByUserSelector);
-		console.log("********** fetchOralMedicineAndRadiologyCaseLogByUser Query STARTS **********");
-		console.log(fetchCaseLogByUserQuery.query);
-		console.log(fetchCaseLogByUserQuery.variables);
-		console.log("********** fetchOralMedicineAndRadiologyCaseLogByUser Query ENDS **********");
-		return fetchCaseLogByUserQuery;
-	},
-
-	deleteOralMedicineAndRadiologyCaseLog(CaseLogList: []) {
+	deleteOralMedicineCaseLog(CaseLogList: []) {
 		const filterVariable = { filter: { id: CaseLogList } };
-		const resultSelector = deleteOralMedicineAndRadiologyCaseLogPayloadModelPrimitives.toString();
+		const resultSelector = deleteOralMedicineCaseLogPayloadModelPrimitives.toString();
 		const optimisticDelete = () => {
 			forEach(CaseLogList, (CaseLogID: string) => {
-				destroy(self.oralMedicineAndRadiologyCaseLogs.get(CaseLogID));
+				destroy(self.oralMedicineCaseLogs.get(CaseLogID));
 			});
 			const queryKeyList = self.__queryCache.keys();
 			for (let queryKey of queryKeyList) {
@@ -972,11 +836,11 @@ export const RootStore = RootStoreBase.actions((self) => ({
 				}
 			}
 		};
-		console.log("**** deleteOralMedicineAndRadiologyCaseLog Query STARTS ****");
+		console.log("**** deleteOralMedicineCaseLog Query STARTS ****");
 		console.log(resultSelector);
 		console.log(filterVariable);
-		console.log("**** deleteOralMedicineAndRadiologyCaseLog Query ENDS ****");
-		return self.mutateDeleteOralMedicineAndRadiologyCaseLog(filterVariable, resultSelector, optimisticDelete);
+		console.log("**** deleteOralMedicineCaseLog Query ENDS ****");
+		return self.mutateDeleteOralMedicineCaseLog(filterVariable, resultSelector, optimisticDelete);
 	},
 
 	// OralRadiology queries
@@ -988,7 +852,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log("updatedUserInfo", updatedOralRadiologyInfo);
 		const setDataPatch = updatedOralRadiologyInfo;
 		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
-		const updateUserResultSelector = selectFromUpdateUserPayload().user(OralRadiologyByModelSelector).toString();
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithOralRadiologyCaseLogSelector()).toString();
 		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
 		console.log("********** updateUserOralRadiology Query STARTS **********");
 		console.log({ query: updateUserQuery.query });
@@ -1014,19 +878,6 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		console.log(updateOralRadiologyQuery.variables);
 		console.log("********** updateOralRadiology Query ENDS **********");
 		return updateOralRadiologyQuery;
-	},
-
-	fetchOralRadiologyByUser(userName: string) {
-		const variables = {
-			filter: { userName: { eq: userName } },
-		};
-		const fetchOralRadiologyByUserSelector = OralRadiologyByModelSelector.toString();
-		const fetchOralRadiologyByUserQuery = self.queryQueryUser(variables, fetchOralRadiologyByUserSelector);
-		console.log("********** fetchOralRadiologyByUser Query STARTS **********");
-		console.log(fetchOralRadiologyByUserQuery.query);
-		console.log(fetchOralRadiologyByUserQuery.variables);
-		console.log("********** fetchOralRadiologyByUser Query ENDS **********");
-		return fetchOralRadiologyByUserQuery;
 	},
 
 	deleteOralRadiology(OralRadiologyList: []) {
@@ -1398,6 +1249,104 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return self.mutateDeleteUserFeedback(filterVariable, resultSelector, optimisticDelete);
 	},
 
+	searchFaculty(searchParams) {
+		const variables = {
+			filter: { and: { specialReferenceIdForFaculty: { eq: searchParams.searchString }, role: { eq: "FACULTY" } } },
+		};
+		const fetchUserResultSelector = userModelPrimitives.toString();
+		const searchFacultyQuery = self.queryQueryUser(variables, fetchUserResultSelector);
+		console.log("********** searchFaculty Query STARTS **********");
+		console.log({ query: searchFacultyQuery.query });
+		console.log(searchFacultyQuery.variables);
+		console.log("********** searchFaculty Query ENDS **********");
+		return searchFacultyQuery;
+	},
+
+	fetchCaseLogsByUser(userName: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchCaseLogByUserSelector = userWithCaseLogSelector().toString();
+		const fetchCaseLogByUserQuery = self.queryQueryUser(variables, fetchCaseLogByUserSelector);
+		console.log("********** fetchCaseLogsByUser Query STARTS **********");
+		console.log(fetchCaseLogByUserQuery.query);
+		console.log(fetchCaseLogByUserQuery.variables);
+		console.log("********** fetchCaseLogsByUser Query ENDS **********");
+		return fetchCaseLogByUserQuery;
+	},
+
+	fetchCaseLogsForFacultyLeftForApproval(userName: string, approverId: string) {
+		const variables = {
+			filter: { userName: { eq: userName } },
+		};
+		const fetchCaseLogByUserSelector = fetchCaseLogsWithPendingForApproval(approverId).toString();
+		const fetchCaseLogByUserQuery = self.queryQueryUser(variables, fetchCaseLogByUserSelector);
+		console.log("********** fetchCaseLogsForFacultyLeftForApproval Query STARTS **********");
+		console.log(fetchCaseLogByUserQuery.query);
+		console.log(fetchCaseLogByUserQuery.variables);
+		console.log("********** fetchCaseLogsForFacultyLeftForApproval Query ENDS **********");
+		return fetchCaseLogByUserQuery;
+	},
+
+	updateCaseLog(caseLogId, updatedCaseLogInfo) {
+		const dataFilter = {
+			id: caseLogId,
+		};
+		console.log("caseLogId", caseLogId);
+		console.log("updatedCaseLogInfo", updatedCaseLogInfo);
+		const setDataPatch = updatedCaseLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateCaseLogResultSelector = selectFromUpdateCaseLogPayload().caseLog(updateCaseLogSelector).toString();
+		const updateCaseLogQuery: Query = self.mutateUpdateCaseLog(inputVariable, updateCaseLogResultSelector);
+		console.log("********** updateCaseLog Query STARTS **********");
+		console.log({ query: updateCaseLogQuery.query });
+		console.log(updateCaseLogQuery.variables);
+		console.log("********** updateCaseLog Query ENDS **********");
+		return updateCaseLogQuery;
+	},
+
+	deleteCaseLog(CaseLogList: []) {
+		const filterVariable = { filter: { id: CaseLogList } };
+		const resultSelector = deleteOrthodonticsPreClinicalPayloadModelPrimitives.toString();
+		const optimisticDelete = () => {
+			forEach(CaseLogList, (CaseLogID: string) => {
+				destroy(self.caseLogs.get(CaseLogID));
+			});
+			const queryKeyList = self.__queryCache.keys();
+			for (let queryKey of queryKeyList) {
+				if (queryKey.includes("queryCaseLog")) {
+					self.__queryCache.delete(queryKey);
+				}
+			}
+		};
+		console.log("**** deleteCaseLog Query STARTS ****");
+		console.log(resultSelector);
+		console.log(filterVariable);
+		console.log("**** deleteCaseLog Query ENDS ****");
+		return self.mutateDeleteOrthodonticsPreClinical(filterVariable, resultSelector, optimisticDelete);
+	},
+
+	updateUserCaseLog(userId, updatedCaseLogInfo) {
+		const dataFilter = {
+			id: userId,
+		};
+		console.log("userId", userId);
+		console.log("updatedUserInfo", updatedCaseLogInfo);
+		const setDataPatch = updatedCaseLogInfo;
+		const inputVariable = { input: { filter: dataFilter, ...setDataPatch } };
+		const updateUserResultSelector = selectFromUpdateUserPayload().user(userWithCaseLogSelector()).toString();
+		const updateUserQuery: Query = self.mutateUpdateUser(inputVariable, updateUserResultSelector);
+		console.log("********** updateUserCaseLog Query STARTS **********");
+		console.log({ query: updateUserQuery.query });
+		console.log(updateUserQuery.variables);
+		console.log("********** updateUserCaseLog Query ENDS **********");
+		return updateUserQuery;
+	},
+
+	clearCaseLogList() {
+		self.caseLogs.clear();
+	},
+
 	resetAllData() {
 		self.users.clear();
 		self.faculties.clear();
@@ -1417,6 +1366,7 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		self.customLogs.clear();
 		self.thesisCases.clear();
 		self.customCases.clear();
+		self.caseLogs.clear();
 		self.userFeedbacks.clear();
 	},
 })).views((self) => ({
@@ -1476,12 +1426,12 @@ export const RootStore = RootStoreBase.actions((self) => ({
 		return values(self.orthodonticsPreClinicals).filter((obj) => obj.id == id);
 	},
 
-	get OralMedicineAndRadiologyCaseLogsList() {
-		return values(self.oralMedicineAndRadiologyCaseLogs);
+	get OralMedicineCaseLogsList() {
+		return values(self.oralMedicineCaseLogs);
 	},
 
-	getOralMedicineAndRadiologyCaseLogsById(id) {
-		return values(self.oralMedicineAndRadiologyCaseLogs).filter((obj) => obj.id == id);
+	getOralMedicineCaseLogsById(id) {
+		return values(self.oralMedicineCaseLogs).filter((obj) => obj.id == id);
 	},
 
 	get OralRadiologiesList() {
@@ -1545,5 +1495,17 @@ export const RootStore = RootStoreBase.actions((self) => ({
 
 	getCustomCaseById(id) {
 		return values(self.customCases).filter((obj) => obj.id == id);
+	},
+
+	get LogProfileList() {
+		return values(self.logProfiles);
+	},
+
+	get CaseLogsList() {
+		return values(self.caseLogs);
+	},
+
+	getCaseLogsById(id) {
+		return values(self.caseLogs).filter((obj) => obj.id == id);
 	},
 }));

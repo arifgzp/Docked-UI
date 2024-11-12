@@ -20,12 +20,9 @@ export const OralRadiologyModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
-    hospital: types.union(types.undefined, types.null, types.string),
-    faculty: types.union(types.undefined, types.null, types.string),
     complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
-    rotation: types.union(types.undefined, types.null, types.string),
     procedure: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     report: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
@@ -44,12 +41,9 @@ export class OralRadiologyModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
-  get hospital() { return this.__attr(`hospital`) }
-  get faculty() { return this.__attr(`faculty`) }
   get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
-  get rotation() { return this.__attr(`rotation`) }
   get procedure() { return this.__attr(`procedure`) }
   get report() { return this.__attr(`report`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
@@ -61,4 +55,4 @@ export function selectFromOralRadiology() {
   return new OralRadiologyModelSelector()
 }
 
-export const oralRadiologyModelPrimitives = selectFromOralRadiology().createdOn.updatedOn.date.hospital.faculty.complete.patientAge.patientSex.rotation.procedure.report.diagnosis.chiefComplaint.caseType.remarks
+export const oralRadiologyModelPrimitives = selectFromOralRadiology().createdOn.updatedOn.date.complete.patientAge.patientSex.procedure.report.diagnosis.chiefComplaint.caseType.remarks

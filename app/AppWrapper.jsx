@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "../src/models";
 import appStoreInstance from "../src/stores/AppStore";
-
+import { Ionicons } from "@expo/vector-icons";
 import LoginPage from "../src/Screens/auth/LoginPage";
 import RegisterPage from "../src/Screens/auth/RegisterPage";
 import RegisterMobileNumberPage from "../src/Screens/auth/RegisterMobileNumber";
@@ -38,6 +38,7 @@ import {
 	captureRetentionRateDate,
 	captureReturningUserDate,
 } from "../src/components/BigQueryFunctions/AdminDashboardAnalyticalQueries";
+import { Clock, Plus } from "lucide-react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -60,7 +61,11 @@ const createAuthStack = () => (
 		<Stack.Screen
 			name='ResetPasswordScreen'
 			component={ResetPasswordScreen}
-			options={{ title: "Reset Password", headerShown: true, headerStyle: { backgroundColor: "#E6E3DB" } }}
+			options={{
+				title: "Reset Password",
+				headerShown: true,
+				headerStyle: { backgroundColor: "#E6E3DB" },
+			}}
 		/>
 		<Stack.Screen name='PasswordResetSuccessfully' component={PasswordResetSuccessfully} options={{ title: "", headerShown: false }} />
 		<Stack.Screen name='Profile Setup Page' component={DockedProfile} options={{ title: "", headerShown: false }} />
@@ -68,7 +73,11 @@ const createAuthStack = () => (
 		<Stack.Screen
 			name='NotificationsScreen'
 			component={NotificationsScreen}
-			options={{ title: "Notifications", headerStyle: { backgroundColor: "#E8EEF3" }, headerTitleAlign: "center" }}
+			options={{
+				title: "Notifications",
+				headerStyle: { backgroundColor: "#E8EEF3" },
+				headerTitleAlign: "center",
+			}}
 		/>
 	</Stack.Navigator>
 );
@@ -92,7 +101,11 @@ const createVerificationPendingStack = () => (
 		<Stack.Screen
 			name='ResetPasswordScreen'
 			component={ResetPasswordScreen}
-			options={{ title: "Reset Password", headerShown: true, headerStyle: { backgroundColor: "#E6E3DB" } }}
+			options={{
+				title: "Reset Password",
+				headerShown: true,
+				headerStyle: { backgroundColor: "#E6E3DB" },
+			}}
 		/>
 		<Stack.Screen name='PasswordResetSuccessfully' component={PasswordResetSuccessfully} options={{ title: "", headerShown: false }} />
 		<Stack.Screen name='Profile Setup Page' component={DockedProfile} options={{ title: "", headerShown: false }} />
@@ -100,7 +113,11 @@ const createVerificationPendingStack = () => (
 		<Stack.Screen
 			name='NotificationsScreen'
 			component={NotificationsScreen}
-			options={{ title: "Notifications", headerStyle: { backgroundColor: "#E8EEF3" }, headerTitleAlign: "center" }}
+			options={{
+				title: "Notifications",
+				headerStyle: { backgroundColor: "#E8EEF3" },
+				headerTitleAlign: "center",
+			}}
 		/>
 	</Stack.Navigator>
 );
@@ -124,7 +141,11 @@ const createMainLandinggStack = () => (
 		<Stack.Screen
 			name='ResetPasswordScreen'
 			component={ResetPasswordScreen}
-			options={{ title: "Reset Password", headerShown: true, headerStyle: { backgroundColor: "#E6E3DB" } }}
+			options={{
+				title: "Reset Password",
+				headerShown: true,
+				headerStyle: { backgroundColor: "#E6E3DB" },
+			}}
 		/>
 		<Stack.Screen name='PasswordResetSuccessfully' component={PasswordResetSuccessfully} options={{ title: "", headerShown: false }} />
 		<Stack.Screen name='Profile Setup Page' component={DockedProfile} options={{ title: "", headerShown: false }} />
@@ -132,7 +153,11 @@ const createMainLandinggStack = () => (
 		<Stack.Screen
 			name='NotificationsScreen'
 			component={NotificationsScreen}
-			options={{ title: "Notifications", headerStyle: { backgroundColor: "#E8EEF3" }, headerTitleAlign: "center" }}
+			options={{
+				title: "Notifications",
+				headerStyle: { backgroundColor: "#E8EEF3" },
+				headerTitleAlign: "center",
+			}}
 		/>
 	</Stack.Navigator>
 );
@@ -156,7 +181,11 @@ const createWizardPendingStack = () => (
 		<Stack.Screen
 			name='ResetPasswordScreen'
 			component={ResetPasswordScreen}
-			options={{ title: "Reset Password", headerShown: true, headerStyle: { backgroundColor: "#E6E3DB" } }}
+			options={{
+				title: "Reset Password",
+				headerShown: true,
+				headerStyle: { backgroundColor: "#E6E3DB" },
+			}}
 		/>
 		<Stack.Screen name='PasswordResetSuccessfully' component={PasswordResetSuccessfully} options={{ title: "", headerShown: false }} />
 		<Stack.Screen name='Profile Setup Page' component={DockedProfile} options={{ title: "", headerShown: false }} />
@@ -164,7 +193,11 @@ const createWizardPendingStack = () => (
 		<Stack.Screen
 			name='NotificationsScreen'
 			component={NotificationsScreen}
-			options={{ title: "Notifications", headerStyle: { backgroundColor: "#E8EEF3" }, headerTitleAlign: "center" }}
+			options={{
+				title: "Notifications",
+				headerStyle: { backgroundColor: "#E8EEF3" },
+				headerTitleAlign: "center",
+			}}
 		/>
 	</Stack.Navigator>
 );
@@ -179,7 +212,7 @@ const AppWrapper = () => {
 	const infoRef = useRef(null);
 
 	useEffect(() => {
-		// Whenever `isUsesrSignedIn` or `UserStatus` changes, update the `navKey`
+		// Whenever isUsesrSignedIn or UserStatus changes, update the navKey
 		setNavKey((prevKey) => prevKey + 1);
 	}, [appStoreInstance.isUserSignedIn, appStoreInstance.UserStatus]);
 
@@ -191,6 +224,7 @@ const AppWrapper = () => {
 					setQuery(userQuery);
 					const finishFetchingUserProfile = await userQuery;
 					if (finishFetchingUserProfile) {
+						let data = {};
 						const fetchProfileData = finishFetchingUserProfile.queryUser[0];
 						console.log("finishFetchingUserProfile.queryUser[0] for the firt time", finishFetchingUserProfile.queryUser[0]);
 						appStoreInstance.setSuperSpecialty(fetchProfileData.superSpecialty);
@@ -204,27 +238,15 @@ const AppWrapper = () => {
 						appStoreInstance.setMedicalRegistrationNumber(fetchProfileData.medicalRegistrationNumber);
 						appStoreInstance.setImagePath(fetchProfileData.imagePath);
 						appStoreInstance.setUserStatus(fetchProfileData.userStatus);
-						appStoreInstance.setCaseLogNumbers(fetchProfileData.targetedCaseLogNumber);
-						appStoreInstance.setLastCaseLogged(fetchProfileData.dateOfBirth);
+						appStoreInstance.setCaseLogNumbers(fetchProfileData.numberOfCaseLogsCreated);
+						appStoreInstance.setLastCaseLogged(fetchProfileData.lastDateOfCaseLogCreation);
 
-						// const currentActiveUserData = captureCurrentActiveUsers(
-						// 	"CurrentActiveUserData",
-						// 	finishFetchingUserProfile.queryUser[0].id,
-						// 	new Date().toISOString()
-						// );
-						// const retentionRateData = captureRetentionRateDate(
-						// 	"RetentionRateDate",
-						// 	finishFetchingUserProfile.queryUser[0].id,
-						// 	new Date().toISOString()
-						// );
-						// const captureReturningUserDateData = captureReturningUserDate(
-						// 	"ReturningUserDat",
-						// 	finishFetchingUserProfile.queryUser[0].id,
-						// 	new Date().toISOString()
-						// );
-						// console.log("currentActiveUserData", currentActiveUserData);
-						// console.log("captureRetentionRateDate", retentionRateData);
-						// console.log("captureReturningUserDateData", captureReturningUserDateData);
+						data.userId = appStoreInstance.UserId;
+						data.userName = appStoreInstance.UserName;
+						data.event = "SIGN_IN";
+						data.name = fetchProfileData.name || "User";
+						data.token = appStoreInstance.NotificationToken;
+						appStoreInstance.createSignInSchedule(data);
 					}
 				} catch (error) {
 					console.log(error);
@@ -298,16 +320,6 @@ const AppWrapper = () => {
 		<>
 			<StatusBar translucent backgroundColor='$transparent' barStyle='dark-content' />
 			<NavigationContainer key={navKey}>{renderStack()}</NavigationContainer>
-			{/* <HStack space='md' justifyContent='center' p='$4'>
-				<Button onPress={openCongratulationModal} ref={congratulationRef}>
-					<ButtonText>Congratulations</ButtonText>
-				</Button>
-				<Button onPress={openInfoModal} ref={infoRef} variant='outline'>
-					<ButtonText>Information</ButtonText>
-				</Button>
-			</HStack> */}
-
-			{/* Congratulation Modal */}
 			<Modal isOpen={showCongratulationModal} onClose={() => setShowCongratulationModal(false)} finalFocusRef={congratulationRef} size='lg'>
 				<ModalBackdrop />
 				<ModalContent>
@@ -335,29 +347,22 @@ const AppWrapper = () => {
 			</Modal>
 
 			{/* Information Modal */}
-			<Modal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} finalFocusRef={infoRef} size='lg'>
+			<Modal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} finalFocusRef={infoRef} size='sm'>
 				<ModalBackdrop />
-				<ModalContent>
-					<ModalHeader>
-						<Heading size='xl' color='#CC3F0C'>
-							Not Logged In!
-						</Heading>
-						<ModalCloseButton>
-							<Icon as={CloseIcon} size='sm' color='$gray400' />
-						</ModalCloseButton>
-					</ModalHeader>
-					<ModalBody>
-						<Box p='$4' borderRadius='$lg'>
-							<Text size='md' color='#CC3F0C'>
-								You haven't logged in for more than 48 hours now!
-							</Text>
-						</Box>
-					</ModalBody>
-					<ModalFooter>
-						<Button onPress={() => setShowInfoModal(false)} variant='primary'>
-							<ButtonText>Create a log now</ButtonText>
-						</Button>
-					</ModalFooter>
+				<ModalContent bg='#CC3F0C' borderRadius='$xl' p='$4' w='$80' maxWidth='90%' alignSelf='center' borderWidth={1} borderColor='#FFFFFF'>
+					<HStack space='sm' alignItems='center' mb='$2' p='$1'>
+						<Ionicons name='alert-circle-outline' size={26} color='#FFFFFF' />
+						<Text color='$white' fontWeight='$medium' size='sm'>
+							You haven't logged in for more than 48 hours now!
+						</Text>
+					</HStack>
+
+					<Button onPress={() => setShowInfoModal(false)} variant='solid' bg='$white' borderRadius='$full' size='sm' mt='$2'>
+						<HStack space='sm' alignItems='center' px='$2'>
+							<Icon as={Plus} color='#CC3F0C' size='sm' />
+							<ButtonText color='#CC3F0C'>Create a new log</ButtonText>
+						</HStack>
+					</Button>
 				</ModalContent>
 			</Modal>
 		</>

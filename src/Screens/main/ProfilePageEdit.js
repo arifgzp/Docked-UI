@@ -176,6 +176,10 @@ const specialtyList = {
 		],
 		SubSpeciality: [],
 	},
+	OralMedicineAndRadiology: {
+		SuperSpeciality: [],
+		SubSpeciality: [],
+	},
 };
 
 const ProfilePageEdit = ({ navigation }) => {

@@ -46,6 +46,8 @@ type User @secret(field: "password") {
     phoneNumber: String @search @dgraph(pred:"phoneNumber")
     combinePhoneNumber: String @search @dgraph(pred:"combinePhoneNumber")
     dateOfBirth: DateTime @search @dgraph(pred:"dateOfBirth")
+    lastDateOfCaseLogCreation: DateTime @search @dgraph(pred:"lastDateOfCaseLogCreation")
+    numberOfCaseLogsCreated: Int @dgraph(pred:"numberOfCaseLogsCreated")
     active: Boolean @dgraph(pred:"active")
     broadSpecialty: String @search(by:[exact]) @dgraph(pred:"broadSpecialty")
     superSpecialty: String @search(by:[exact]) @dgraph(pred:"superSpecialty")

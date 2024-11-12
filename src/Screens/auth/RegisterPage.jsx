@@ -149,6 +149,7 @@ const RegisterPage = ({ navigation, route }) => {
 				userName: formData.email,
 				password: formData.password,
 				phoneNumber: enteredNumber,
+				specialReferenceIdForFaculty: enteredNumber,
 				userStatus: "VERIFICATION_REQUIRED",
 			});
 

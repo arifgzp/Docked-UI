@@ -146,11 +146,10 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	const [key, setKey] = useState(0);
 	const { isDirty } = formState;
 	const toast = useToast();
-	const [caseLogPrefilledData, setCaseLogPreFilledData] = useState();
 	const caseLogPrefilledRef = useRef();
 	const [buttonPressed, setButtonPressed] = useState({ active: false, screenName: "" });
 	const buttonPressedRef = useRef();
-	const allFields = ["hospital", "date", "faculty", ...getCaseLogFields(caseLogFormToGet).map((field) => field.uid), "outcomeOther"];
+	const allFields = ["hospital", "date", "approver", ...getCaseLogFields(caseLogFormToGet).map((field) => field.uid), "outcomeOther"];
 
 	const scrollViewRef = useRef(null);
 	const inputRefs = useRef({});
@@ -192,7 +191,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		if (
 			[
 				"hospital",
-				"faculty",
+				"approver",
 				...getCaseLogFields(caseLogFormToGet)
 					.filter((f) => f.type === "select-single")
 					.map((f) => f.uid),
@@ -208,13 +207,38 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 
 	const handleSaveClick = async (formData) => {
 		setButtonPressed({ active: true, screenName: "RootLogBook" });
+		let data = {};
+
 		buttonPressedRef.current = { active: true, screenName: "RootLogBook" };
 		console.log("FormData for Case Logs to be manual saving added", formData);
 		console.log("caseLogFromToGet", caseLogFormToGet);
-		formData.complete = true;
+		data.complete = true;
+		data.createdOn = data.updatedOn = formatRFC3339(new Date());
 		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
 		formData.date = formatRFC3339(formData.date);
-		formData.caseType = caseLogFormToGet;
+		data.logType = caseLogFormToGet;
+		data.caseLogStatus = "CREATED";
+
+		if (formData.approver?.id) {
+			data.approver = { id: formData.approver.id };
+		}
+
+		if (formData.rotation) {
+			data.rotation = formData.rotation;
+		}
+
+		if (formData.hospital) {
+			data.hospital = formData.hospital;
+		}
+
+		delete formData.approver;
+		delete formData.rotation;
+		delete formData.hospital;
+
+		data.createdBy = { id: AppStore.UserId };
+
+		console.log("whole case log then type", data, formData);
+
 		let queryToRun;
 		let caseLogToUpdate;
 
@@ -248,8 +272,8 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				caseLogToUpdate = "orthodonticsPreClinical";
 				break;
 			case "OralMedicineCaseLog":
-				queryToRun = "updateUserOralMedicineAndRadiologyCaseLog";
-				caseLogToUpdate = "oralMedicineAndRadiologyCaseLog";
+				queryToRun = "updateUserOralMedicineCaseLog";
+				caseLogToUpdate = "oralMedicineCaseLog";
 				break;
 			case "OralRadiology":
 				queryToRun = "updateUserOralRadiology";
@@ -259,31 +283,173 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 				throw new Error("Invalid case log type");
 		}
 
+		data[caseLogToUpdate] = formData;
+
+		console.log("what is data? data.caseLogToUpdatedata.caseLogToUpdate", data);
+
 		console.log("queryToRun", queryToRun);
 		console.log("caseLogToUpdate", caseLogToUpdate);
 
 		try {
-			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
+			const query = store[queryToRun](AppStore.UserId, { set: { caseLogs: data } });
 			setQuery(query);
-			const data = await query;
-			if (data) {
-				console.log("data after making a case log", data);
+			const queryData = await query;
+			if (queryData) {
+				console.log("data after making a case log", queryData);
 				let dataOfLog;
 				switch (caseLogFormToGet) {
 					case "CaseLog":
-						dataOfLog = data.updateUser.user[0].anaesthesiaCaseLog[data.updateUser.user[0].anaesthesiaCaseLog.length - 1];
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].anaesthesiaCaseLog;
 						break;
 					case "ChronicPain":
-						dataOfLog = data.updateUser.user[0].anaesthesiaChronicPainLog[data.updateUser.user[0].anaesthesiaChronicPainLog.length - 1];
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].anaesthesiaChronicPainLog;
 						break;
 					case "CriticalCareCaseLog":
-						dataOfLog = data.updateUser.user[0].anaesthesiaCriticalCareCaseLog[data.updateUser.user[0].anaesthesiaCriticalCareCaseLog.length - 1];
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].anaesthesiaCriticalCareCaseLog;
 						break;
 					case "OrthopaedicsCaseLog":
-						dataOfLog = data.updateUser.user[0].orthopaedicsCaseLog[data.updateUser.user[0].orthopaedicsCaseLog.length - 1];
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].orthopaedicsCaseLog;
 						break;
 					case "OrthopaedicsProcedureLog":
-						dataOfLog = data.updateUser.user[0].orthopaedicsProcedureLog[data.updateUser.user[0].orthopaedicsProcedureLog.length - 1];
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].orthopaedicsProcedureLog;
+						break;
+					default:
+						break;
+				}
+				console.log("what is the dataogLog", dataOfLog);
+
+				const analyticsDataForAdminDashboard = sendCaseLogDataToBigQueryForAdminAnalytics(dataOfLog, startTime, new Date().toISOString());
+				console.log("analyticsDataForAdminDashboard", analyticsDataForAdminDashboard);
+				appStoreInstance.sendDataToBigQuery(analyticsDataForAdminDashboard);
+
+				const analyticsDataForUserDashobard = sendCaseLogDataToBigQueryForUserDashboard(caseLogFormToGet, dataOfLog);
+				console.log("analyticsDataForUserDashobard", analyticsDataForUserDashobard);
+				appStoreInstance.sendDataToBigQuery(analyticsDataForUserDashobard);
+
+				const appFeatureUsageForAdminDashboard = sendFeatureUsageDataToBigQueryForAdminAnalytics("Case Log", startTime, new Date().toISOString());
+				console.log("appFeatureUsageForAdminDashboard", appFeatureUsageForAdminDashboard);
+				appStoreInstance.sendDataToBigQuery(appFeatureUsageForAdminDashboard);
+
+				const updateUserQuery = store.updateUser(AppStore.UserId, {
+					set: { numberOfCaseLogsCreated: appStoreInstance.CaseLogNumbers + 1, lastDateOfCaseLogCreation: formatRFC3339(new Date()) },
+				});
+				setQuery(updateUserQuery);
+				const updateUser = await updateUserQuery;
+				if (updateUser) {
+					appStoreInstance.setCaseLogNumbers(appStoreInstance.CaseLogNumbers + 1);
+					appStoreInstance.setLastCaseLogged(formatRFC3339(new Date()));
+				}
+			}
+			reset();
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleAutoSave = async (formData) => {
+		let data = {};
+		console.log("FormData for Case Logs to be manual saving added", formData);
+		console.log("caseLogFromToGet", caseLogFormToGet);
+		data.complete = true;
+		data.createdOn = data.updatedOn = formatRFC3339(new Date());
+		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
+		formData.date = formatRFC3339(formData.date);
+		data.logType = caseLogFormToGet;
+		data.caseLogStatus = "CREATED";
+
+		if (formData.approver?.id) {
+			data.approver = { id: formData.approver.id };
+		}
+
+		if (formData.rotation) {
+			data.rotation = formData.rotation;
+		}
+
+		if (formData.hospital) {
+			data.hospital = formData.hospital;
+		}
+
+		delete formData.approver;
+		delete formData.rotation;
+		delete formData.hospital;
+
+		data.createdBy = { id: AppStore.UserId };
+
+		console.log("whole case log then type", data, formData);
+
+		let queryToRun;
+		let caseLogToUpdate;
+
+		switch (caseLogFormToGet) {
+			case "CaseLog":
+				queryToRun = "updateUserAnaesthesiaCaseLog";
+				caseLogToUpdate = "anaesthesiaCaseLog";
+				break;
+			case "ChronicPain":
+				queryToRun = "updateUserAnaesthesiaChronicPainLog";
+				caseLogToUpdate = "anaesthesiaChronicPainLog";
+				break;
+			case "CriticalCareCaseLog":
+				queryToRun = "updateUserAnaesthesiaCritcalCareCaseLog";
+				caseLogToUpdate = "anaesthesiaCriticalCareCaseLog";
+				break;
+			case "OrthopaedicsCaseLog":
+				queryToRun = "updateUserOrthopaedicsCaseLog";
+				caseLogToUpdate = "orthopaedicsCaseLog";
+				break;
+			case "OrthopaedicsProcedureLog":
+				queryToRun = "updateUserOrthopaedicsProcedureLog";
+				caseLogToUpdate = "orthopaedicsProcedureLog";
+				break;
+			case "OrthodonticsClinicalCaseLog":
+				queryToRun = "updateUserOrthodonticsClinicalCaseLog";
+				caseLogToUpdate = "orthodonticsClinicalCaseLog";
+				break;
+			case "OrthodonticsPreClinical":
+				queryToRun = "updateUserOrthodonticsPreClinical";
+				caseLogToUpdate = "orthodonticsPreClinical";
+				break;
+			case "OralMedicineCaseLog":
+				queryToRun = "updateUserOralMedicineCaseLog";
+				caseLogToUpdate = "oralMedicineCaseLog";
+				break;
+			case "OralRadiology":
+				queryToRun = "updateUserOralRadiology";
+				caseLogToUpdate = "oralRadiology";
+				break;
+			default:
+				throw new Error("Invalid case log type");
+		}
+
+		data[caseLogToUpdate] = formData;
+
+		console.log("queryToRun", queryToRun);
+		console.log("caseLogToUpdate", caseLogToUpdate);
+
+		console.log("what is data? data.caseLogToUpdatedata.caseLogToUpdate", data);
+
+		try {
+			const query = store[queryToRun](AppStore.UserId, { set: { caseLogs: data } });
+			setQuery(query);
+			const queryData = await query;
+			if (queryData) {
+				console.log("data after making a case log", queryData);
+				let dataOfLog;
+				switch (caseLogFormToGet) {
+					case "CaseLog":
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].anaesthesiaCaseLog;
+						break;
+					case "ChronicPain":
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].anaesthesiaChronicPainLog;
+						break;
+					case "CriticalCareCaseLog":
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].anaesthesiaCriticalCareCaseLog;
+						break;
+					case "OrthopaedicsCaseLog":
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].orthopaedicsCaseLog;
+						break;
+					case "OrthopaedicsProcedureLog":
+						dataOfLog = queryData.updateUser.user[0].caseLogs[queryData.updateUser.user[0].caseLogs.length - 1].orthopaedicsProcedureLog;
 						break;
 					default:
 						break;
@@ -318,86 +484,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		}
 	};
 
-	const handleAutoSave = async (formData) => {
-		console.log("FormData for Case Logs to be from auto saving added", formData);
-		console.log("caseLogFromToGet", caseLogFormToGet);
-		formData.complete = false;
-		formData.createdOn = formData.updatedOn = formatRFC3339(new Date());
-		formData.date = formatRFC3339(formData.date);
-		formData.caseType = caseLogFormToGet;
-		let queryToRun;
-		let caseLogToUpdate;
-
-		switch (caseLogFormToGet) {
-			case "CaseLog":
-				queryToRun = "updateUserAnaesthesiaCaseLog";
-				caseLogToUpdate = "anaesthesiaCaseLog";
-				break;
-			case "ChronicPain":
-				queryToRun = "updateUserAnaesthesiaChronicPainLog";
-				caseLogToUpdate = "anaesthesiaChronicPainLog";
-				break;
-			case "CriticalCareCaseLog":
-				queryToRun = "updateUserAnaesthesiaCritcalCareCaseLog";
-				caseLogToUpdate = "anaesthesiaCriticalCareCaseLog";
-				break;
-			case "OrthopaedicsCaseLog":
-				queryToRun = "updateUserOrthopaedicsCaseLog";
-				caseLogToUpdate = "orthopaedicsCaseLog";
-				break;
-			case "OrthopaedicsProcedureLog":
-				queryToRun = "updateUserOrthopaedicsProcedureLog";
-				caseLogToUpdate = "orthopaedicsProcedureLog";
-				break;
-			case "OrthodonticsClinicalCaseLog":
-				queryToRun = "updateUserOrthodonticsClinicalCaseLog";
-				caseLogToUpdate = "orthodonticsClinicalCaseLog";
-				break;
-			case "OrthodonticsPreClinical":
-				queryToRun = "updateUserOrthodonticsPreClinical";
-				caseLogToUpdate = "orthodonticsPreClinical";
-				break;
-			case "OralMedicineCaseLog":
-				queryToRun = "updateUserOralMedicineAndRadiologyCaseLog";
-				caseLogToUpdate = "oralMedicineAndRadiologyCaseLog";
-				break;
-			case "OralRadiology":
-				queryToRun = "updateUserOralRadiology";
-				caseLogToUpdate = "oralRadiology";
-				break;
-			default:
-				throw new Error("Invalid case log type");
-		}
-
-		console.log("queryToRun", queryToRun);
-		console.log("caseLogToUpdate", caseLogToUpdate);
-
-		try {
-			const query = store[queryToRun](AppStore.UserId, { set: { [caseLogToUpdate]: formData } });
-			setQuery(query);
-			const data = await query;
-			if (data) {
-				const updateUserQuery = store.updateUser(AppStore.UserId, {
-					set: { targetedCaseLogNumber: appStoreInstance.CaseLogNumbers + 1, dateOfBirth: formatRFC3339(new Date()) },
-				});
-				setQuery(updateUserQuery);
-				const updateUser = await updateUserQuery;
-				if (updateUser) {
-					appStoreInstance.setCaseLogNumbers(appStoreInstance.CaseLogNumbers + 1);
-					appStoreInstance.setLastCaseLogged(formatRFC3339(new Date()));
-				}
-			}
-			reset();
-		} catch (error) {
-			console.log(error);
-		} finally {
-			reset();
-			console.log("is dirty when only the case log changes...", appStoreInstance.IsformDirty);
-			appStoreInstance.setIsFormDirty(false);
-			setValue("hospital", null);
-		}
-	};
-
 	const handleNavigateToLogProfile = () => {
 		setButtonPressed({ active: true, screenName: "LogProfilePage" });
 	};
@@ -405,7 +491,7 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	useEffect(() => {
 		buttonPressedRef.current = { active: false, screenName: "" };
 		reset({
-			faculty: null,
+			approver: null,
 			date: new Date(),
 		});
 	}, []);
@@ -413,40 +499,24 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	useEffect(() => {
 		const fetchLogProfilePrefilledData = async () => {
 			try {
-				const logProfileData = toJS(AppStore.UserLogProfile);
-				console.log("logProfileData", logProfileData);
-				if (logProfileData) {
-					const facultiesList = logProfileData.faculties;
-					const rotationsList = logProfileData.rotations;
-					const hospitalData = logProfileData.hospitals;
-					console.log("facultiesListfromAPPSTORE", facultiesList);
-					console.log("rotationsListfromAPPSTORE", rotationsList);
-					console.log("hospitalDatafromAPPSTORE", hospitalData);
-					console.log("rotations[0].departmentfromAPPSTORE", rotationsList[0]?.department);
-					setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
+				const query = store.fetchUserLogProfile(AppStore.UserName);
+				setQuery(query);
+				const finishFetchingLogProfile = await query;
+				console.log("finishFetchingLogProfile", finishFetchingLogProfile);
+				if (finishFetchingLogProfile) {
+					console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
+					const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
+					AppStore.setLogProfile(userDataForLogProfile);
+					const userData = toJS(finishFetchingLogProfile.queryUser[0]);
+					const facultiesList = userData.logProfile.faculties;
+					const rotationsList = userData.logProfile.rotations;
+					const hospitalData = userData.logProfile.hospitals;
+					console.log("facultiesList", facultiesList);
+					console.log("rotationsList", rotationsList);
+					console.log("hospitalData", hospitalData);
+					console.log("rotations[0].department", rotationsList[0]?.department);
 					caseLogPrefilledRef.current = { hospital: hospitalData, faculty: facultiesList, rotations: rotationsList };
 					setValue("rotation", rotationsList[0]?.department);
-				} else {
-					const query = store.fetchUserLogProfile(AppStore.UserName);
-					setQuery(query);
-					const finishFetchingLogProfile = await query;
-					console.log("finishFetchingLogProfile", finishFetchingLogProfile);
-					if (finishFetchingLogProfile) {
-						console.log("finishFetchingLogProfile.data.queryUser[0]", finishFetchingLogProfile.queryUser[0]);
-						const userDataForLogProfile = finishFetchingLogProfile.queryUser[0].logProfile;
-						AppStore.setLogProfile(userDataForLogProfile);
-						const userData = toJS(finishFetchingLogProfile.queryUser[0]);
-						const facultiesList = userData.logProfile.faculties;
-						const rotationsList = userData.logProfile.rotations;
-						const hospitalData = userData.logProfile.hospitals;
-						console.log("facultiesList", facultiesList);
-						console.log("rotationsList", rotationsList);
-						console.log("hospitalData", hospitalData);
-						console.log("rotations[0].department", rotationsList[0]?.department);
-						setCaseLogPreFilledData({ hospital: hospitalData, faculty: facultiesList, rotations: rotationsList });
-						caseLogPrefilledRef.current = { hospital: hospitalData, faculty: facultiesList, rotations: rotationsList };
-						setValue("rotation", rotationsList[0]?.department);
-					}
 				}
 			} catch (error) {
 				console.log(error);
@@ -455,9 +525,6 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 		if (isFocused) {
 			fetchLogProfilePrefilledData();
 		}
-		return () => {
-			setCaseLogPreFilledData(null);
-		};
 	}, [isFocused]);
 
 	useEffect(() => {
@@ -537,24 +604,30 @@ const CaseLogFormScreen = ({ navigation, route }) => {
 	}, [isDirty]);
 
 	console.log("!!!!!!!!!!!!!!! Route Change DETECTED Rendering with caseLogFormToGet", caseLogFormToGet);
-	console.log("caseLogPrefilledData for test", caseLogPrefilledData);
 
 	if (!isReady) {
 		return <IsReadyLoader />;
 	}
 
+	let logprofileData = {};
+
+	console.log("what is log profile", store.LogProfileList);
+	logprofileData.faculty = store.LogProfileList[store.LogProfileList.length - 1]?.faculties || null;
+	logprofileData.hospital = store.LogProfileList[store.LogProfileList.length - 1]?.hospitals || null;
+	logprofileData.rotation = store.LogProfileList[store.LogProfileList.length - 1]?.rotations || null;
+
 	return (
 		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "height" : "height"} style={{ flex: 1, zIndex: 999 }} keyboardShouldPersistTaps='handled'>
 			<Loader queryInfo={queryInfo} showSuccessMsg={false} navigation={navigation}>
 				<Box flex={1} w='$100%' backgroundColor='$secondaryBackground'>
-					{caseLogPrefilledData ? (
+					{store.LogProfileList.length > 0 ? (
 						<>
 							<ScrollView ref={scrollViewRef} keyboardShouldPersistTaps='handled'>
 								<Box paddingTop={10} justifyContent='center' alignItems='center' gap='$6'>
 									<Box width={"$100%"}>
 										<CaselogDropDownOptions
 											formFields={getCaseLogFields(caseLogFormToGet)}
-											prefilledData={caseLogPrefilledData}
+											prefilledData={logprofileData}
 											control={control}
 											setValue={setValue}
 											formState={formState}

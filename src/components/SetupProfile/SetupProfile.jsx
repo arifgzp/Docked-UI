@@ -61,6 +61,13 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 				data.imagePath = filePath;
 			}
 			data.userStatus = "REGISTERED";
+			if (data.designation == "Senior Resident" || data.designation == "Junior Resident" || data.designation == "Others") {
+				data.role = "RESIDENTS";
+			} else if (data.designation == "Head of Department" || data.designation == "Professor") {
+				data.role = "HOD";
+			} else {
+				data.role = "FACULTY";
+			}
 			try {
 				setIsLoading(true);
 				const query = store.updateUser(appStoreInstance.UserId, { set: data });
@@ -162,6 +169,14 @@ const SetupProfile = ({ config, navigation, enteredMail, enteredPassword }) => {
 	const handleSkip = async (data) => {
 		console.log("data when skipping the create profile", data);
 		data.userStatus = "REGISTERED";
+		if (data.designation == "Senior Resident" || data.designation == "Junior Resident" || data.designation == "Others") {
+			data.role = "RESIDENTS";
+		} else if (data.designation == "Head of Department" || data.designation == "Professor") {
+			data.role = "HOD";
+		} else {
+			data.role = "FACULTY";
+		}
+		console.log("whats the role, ", data.role);
 		try {
 			setIsLoading(true);
 			const query = store.updateUser(AppStore.UserId, { set: data });

@@ -13,14 +13,10 @@ updatedOn="updatedOn",
 date="date",
 patientAge="patientAge",
 patientSex="patientSex",
-hospital="hospital",
-rotation="rotation",
-faculty="faculty",
 diagnosis="diagnosis",
 techniqueUsed="techniqueUsed",
 conduct="conduct",
 outcome="outcome",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -33,13 +29,9 @@ export const OrthodonticsClinicalCaseLogOrderableEnumType = types.enumeration("O
   "date",
   "patientAge",
   "patientSex",
-  "hospital",
-  "rotation",
-  "faculty",
   "diagnosis",
   "techniqueUsed",
   "conduct",
   "outcome",
-  "caseType",
   "remarks",
       ])

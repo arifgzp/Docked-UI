@@ -303,20 +303,20 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 						<ModalBody>
 							<VStack space='md'>
 								<Text>This changes will be reflected in all the cases created using this log</Text>
-								{changes.added.length > 0 && (
-									<VStack space='sm'>
-										<Text color='$success700' fontWeight='$bold'>
-											New Fields to be Added:
-										</Text>
-										{changes.added.map((field, index) => (
-											<Text key={index} pl='$2'>
-												• {field}
-											</Text>
-										))}
-									</VStack>
-								)}
+								{/* {changes.added.length > 0 && (
+                  <VStack space="sm">
+                    <Text color="$success700" fontWeight="$bold">
+                      New Fields to be Added:
+                    </Text>
+                    {changes.added.map((field, index) => (
+                      <Text key={index} pl="$2">
+                        • {field}
+                      </Text>
+                    ))}
+                  </VStack>
+                )} */}
 
-								{changes.removed.length > 0 && (
+								{/* {changes.removed.length > 0 && (
 									<VStack space='sm'>
 										<Text color='$error700' fontWeight='$bold'>
 											Fields to be Removed:
@@ -327,12 +327,12 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 											</Text>
 										))}
 									</VStack>
-								)}
+								)} */}
 							</VStack>
 						</ModalBody>
 						<ModalFooter>
-							<HStack w='$90%' justifyContent='space-between'>
-								<Button size='sm' variant='secondary' onPress={() => setShowChangeModal(false)}>
+							<HStack w='$65%' justifyContent='space-between'>
+								<Button size='sm' variant='secondary' onPress={() => setShowChangeModal(false)} borderWidth={1} borderColor='#1e1e1e'>
 									<ButtonText>Cancel</ButtonText>
 								</Button>
 								<Button
@@ -341,8 +341,10 @@ const CustomLogFormScreen = ({ navigation, route }) => {
 									onPress={() => {
 										setShowChangeModal(false);
 										processUpdate(control._formValues);
-									}}>
-									<ButtonText>Confirm Changes</ButtonText>
+									}}
+									borderWidth={1}
+									borderColor='#1e1e1e'>
+									<ButtonText>Confirm</ButtonText>
 								</Button>
 							</HStack>
 						</ModalFooter>

@@ -1,5 +1,6 @@
 import { Instance } from "mobx-state-tree";
 import { FacultyModelBase, selectFromFaculty } from "./FacultyModel.base";
+import { userModelPrimitives } from "./UserModel.base";
 
 /* The TypeScript type of an instance of FacultyModel */
 export interface FacultyModelType extends Instance<typeof FacultyModel.Type> {}
@@ -17,4 +18,4 @@ export const FacultyModel = FacultyModelBase.actions((self) => ({
 	},
 }));
 
-export const facultyModelSelector = selectFromFaculty().createdOn.updatedOn.name.designation.phoneNumber.otherDesignation.firstName.lastName;
+export const facultyModelSelector = selectFromFaculty().createdOn.updatedOn.user(userModelPrimitives);

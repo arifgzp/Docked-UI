@@ -20,10 +20,6 @@ export const AnaesthesiaCriticalCareCaseLogModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
-    rotation: types.union(types.undefined, types.null, types.string),
-    hospital: types.union(types.undefined, types.null, types.string),
-    faculty: types.union(types.undefined, types.null, types.string),
-    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
@@ -33,7 +29,6 @@ export const AnaesthesiaCriticalCareCaseLogModelBase = ModelBase
     outcome: types.union(types.undefined, types.null, types.string),
     conduct: types.union(types.undefined, types.null, types.string),
     procedures: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    caseType: types.union(types.undefined, types.null, types.string),
     remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
@@ -47,10 +42,6 @@ export class AnaesthesiaCriticalCareCaseLogModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
-  get rotation() { return this.__attr(`rotation`) }
-  get hospital() { return this.__attr(`hospital`) }
-  get faculty() { return this.__attr(`faculty`) }
-  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
@@ -60,11 +51,10 @@ export class AnaesthesiaCriticalCareCaseLogModelSelector extends QueryBuilder {
   get outcome() { return this.__attr(`outcome`) }
   get conduct() { return this.__attr(`conduct`) }
   get procedures() { return this.__attr(`procedures`) }
-  get caseType() { return this.__attr(`caseType`) }
   get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromAnaesthesiaCriticalCareCaseLog() {
   return new AnaesthesiaCriticalCareCaseLogModelSelector()
 }
 
-export const anaesthesiaCriticalCareCaseLogModelPrimitives = selectFromAnaesthesiaCriticalCareCaseLog().createdOn.updatedOn.date.rotation.hospital.faculty.complete.patientAge.patientSex.diagnosis.comorbidites.surgicalprocedure.complication.outcome.conduct.procedures.caseType.remarks
+export const anaesthesiaCriticalCareCaseLogModelPrimitives = selectFromAnaesthesiaCriticalCareCaseLog().createdOn.updatedOn.date.patientAge.patientSex.diagnosis.comorbidites.surgicalprocedure.complication.outcome.conduct.procedures.remarks

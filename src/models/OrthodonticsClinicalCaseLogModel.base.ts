@@ -20,19 +20,14 @@ export const OrthodonticsClinicalCaseLogModelBase = ModelBase
     createdOn: types.union(types.undefined, types.null, types.frozen()),
     updatedOn: types.union(types.undefined, types.null, types.frozen()),
     date: types.union(types.undefined, types.null, types.frozen()),
-    complete: types.union(types.undefined, types.null, types.boolean),
     patientAge: types.union(types.undefined, types.null, types.string),
     patientSex: types.union(types.undefined, types.null, types.string),
-    hospital: types.union(types.undefined, types.null, types.string),
-    rotation: types.union(types.undefined, types.null, types.string),
-    faculty: types.union(types.undefined, types.null, types.string),
     diagnosis: types.union(types.undefined, types.null, types.string),
     techniqueUsed: types.union(types.undefined, types.null, types.string),
     conduct: types.union(types.undefined, types.null, types.string),
     applianceUsed: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     treatmentPlan: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     outcome: types.union(types.undefined, types.null, types.string),
-    caseType: types.union(types.undefined, types.null, types.string),
     remarks: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
@@ -46,23 +41,18 @@ export class OrthodonticsClinicalCaseLogModelSelector extends QueryBuilder {
   get createdOn() { return this.__attr(`createdOn`) }
   get updatedOn() { return this.__attr(`updatedOn`) }
   get date() { return this.__attr(`date`) }
-  get complete() { return this.__attr(`complete`) }
   get patientAge() { return this.__attr(`patientAge`) }
   get patientSex() { return this.__attr(`patientSex`) }
-  get hospital() { return this.__attr(`hospital`) }
-  get rotation() { return this.__attr(`rotation`) }
-  get faculty() { return this.__attr(`faculty`) }
   get diagnosis() { return this.__attr(`diagnosis`) }
   get techniqueUsed() { return this.__attr(`techniqueUsed`) }
   get conduct() { return this.__attr(`conduct`) }
   get applianceUsed() { return this.__attr(`applianceUsed`) }
   get treatmentPlan() { return this.__attr(`treatmentPlan`) }
   get outcome() { return this.__attr(`outcome`) }
-  get caseType() { return this.__attr(`caseType`) }
   get remarks() { return this.__attr(`remarks`) }
 }
 export function selectFromOrthodonticsClinicalCaseLog() {
   return new OrthodonticsClinicalCaseLogModelSelector()
 }
 
-export const orthodonticsClinicalCaseLogModelPrimitives = selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.complete.patientAge.patientSex.hospital.rotation.faculty.diagnosis.techniqueUsed.conduct.applianceUsed.treatmentPlan.outcome.caseType.remarks
+export const orthodonticsClinicalCaseLogModelPrimitives = selectFromOrthodonticsClinicalCaseLog().createdOn.updatedOn.date.patientAge.patientSex.diagnosis.techniqueUsed.conduct.applianceUsed.treatmentPlan.outcome.remarks

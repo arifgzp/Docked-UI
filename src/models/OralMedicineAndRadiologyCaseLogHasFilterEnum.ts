@@ -12,8 +12,6 @@ export enum OralMedicineAndRadiologyCaseLogHasFilter {
 updatedOn="updatedOn",
 date="date",
 hospital="hospital",
-faculty="faculty",
-complete="complete",
 patientAge="patientAge",
 patientSex="patientSex",
 rotation="rotation",
@@ -24,7 +22,6 @@ drugAllergyReaction="drugAllergyReaction",
 habitHistory="habitHistory",
 treatment="treatment",
 diagnosis="diagnosis",
-caseType="caseType",
 remarks="remarks"
 }
 
@@ -36,8 +33,6 @@ export const OralMedicineAndRadiologyCaseLogHasFilterEnumType = types.enumeratio
   "updatedOn",
   "date",
   "hospital",
-  "faculty",
-  "complete",
   "patientAge",
   "patientSex",
   "rotation",
@@ -48,6 +43,5 @@ export const OralMedicineAndRadiologyCaseLogHasFilterEnumType = types.enumeratio
   "habitHistory",
   "treatment",
   "diagnosis",
-  "caseType",
   "remarks",
       ])

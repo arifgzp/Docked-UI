@@ -22,5 +22,5 @@ export const OrthopaedicsProcedureLogModel = OrthopaedicsProcedureLogModelBase.a
 }));
 
 export const updateOrthopaedicsProcedureLogModelSelector =
-	selectFromOrthopaedicsProcedureLog().createdOn.updatedOn.date.hospital.faculty.patientAge.patientSex.rotation.conduct.sites.procedure.procedureName
-		.outcome.complication.diagnosis.caseType.remarks;
+	selectFromOrthopaedicsProcedureLog().createdOn.updatedOn.date.patientAge.patientSex.conduct.sites.procedure.procedureName.outcome.complication
+		.diagnosis.remarks;
